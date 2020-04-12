@@ -2050,8 +2050,8 @@ __webpack_require__.r(__webpack_exports__);
       console.log('auth_location:' + location);
 
       if (location.indexOf("jv.") > 0) {
-        console.log("close stuff");
-        this.auth_window.close();
+        console.log("close stuff"); // this.auth_window.close();
+
         window.location = '/cabinet';
       }
     },

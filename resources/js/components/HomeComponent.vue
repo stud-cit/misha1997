@@ -34,7 +34,7 @@
                     console.log('auth_location:' + location);
                     if (location.indexOf("jv.") > 0){
                         console.log("close stuff");
-                        this.auth_window.close();
+                        // this.auth_window.close();
                         window.location = '/cabinet';
                     }
                 },
