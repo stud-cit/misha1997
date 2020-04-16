@@ -49,8 +49,8 @@ class PassportController extends Controller
         $person = json_decode(file_get_contents($cabinet_api . 'getPerson?key=' . $key . '&token=' . $cabinet_service_token), true);
 
         if ($person['status'] == 'OK') {
-            $personInfo1 = json_decode(file_get_contents($cabinet_api . 'getPersonInfo1?key=' . $key . '&token=' . $cabinet_service_token), true);
 
+            $personInfo1 = json_decode(file_get_contents($cabinet_api . 'getPersonInfo1?key=' . $key . '&token=' . $cabinet_service_token), true);
         }
         else{
             return response()->json(['error' => 'UnAuthorised'], 401);
