@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class AutorsAliases extends Model
+{
+    protected $table = 'autors_aliases';
+
+    protected $fillable = [
+        'surname_initials',
+        'autors_id'
+    ];
+}
