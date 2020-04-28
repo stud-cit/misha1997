@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             AuthorsPublicationsSeeder::class,
             ArticlesSeeder::class,
             RatingIndicatorsSeeder::class,
-            PatentsSeeder::class
+            PatentsSeeder::class,
+            CountriesSeeder::class
         ]);
     }
 }
