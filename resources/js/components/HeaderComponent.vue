@@ -1,7 +1,7 @@
 <template>
 
     <header class="header">
-        111
+        <div class="logo"><img src="img/logo.svg" alt=""></div>
     </header>
 
 </template>

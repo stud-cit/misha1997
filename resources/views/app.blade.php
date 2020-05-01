@@ -9,6 +9,7 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link href="css/app.css" rel="stylesheet">
+        <link href="css/site.css" rel="stylesheet">
 
         <!-- Styles -->
 
@@ -17,7 +18,7 @@
     <div id="app">
         <header-component></header-component>
         <router-view></router-view>
-        <footer-component></footer-component>
+
     </div>
     </body>
     <script src="js/app.js"></script>
