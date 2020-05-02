@@ -1,14 +1,14 @@
 <template>
-    <div>
+
     <div class=" auth-block">
         <div class="container">
-        <h1 class="title">Виконайте авторизацію</h1>
-        <p class="description">Щоб почати працювати на веб-сервісі SCIPUB, авторизуйтесь через особистий кабінет СумДУ.</p>
-        <div class="text-center"><a href="#" class="open_auth" @click="open_auth">Авторизуватись через кабінет СумДУ</a></div>
+            <h1 class="title">Виконайте авторизацію</h1>
+            <p class="description">Щоб почати працювати на веб-сервісі SCIPUB, авторизуйтесь через особистий кабінет СумДУ.</p>
+            <div class="text-center"><a href="#" class="open_auth" @click="open_auth">Авторизуватись через кабінет СумДУ</a></div>
         </div>
     </div>
 
-    </div>
+
 </template>
 
 <script>
@@ -29,27 +29,27 @@
         methods: {
 
 
-                conditional_reload(){
-                    let location = '';
-                    try {
-                        location = this.auth_window.location.toString()
-                    } catch (err){
-                        console.log(err);
-                    }
-                    console.log('auth_location:' + location);
-                    if (location.indexOf("jv.") > 0){
-                        console.log("close stuff");
-                        // this.auth_window.close();
-                        window.location = '/cabinet';
-                    }
-                },
-                open_auth(){
-                    const strWindowFeatures = "menubar=no,location=no,resizable=no,scrollbars=yes,status=no,width=600,height=600";
-                    this.auth_window = window.open("http://cabinet.sumdu.edu.ua/index/service/7tvvT6CG", "Вход/Реєстрація через Кабинет",strWindowFeatures);
-                    console.log(this.auth_window);
-                    setInterval(this.conditional_reload, 250);
-                    return false;
+            conditional_reload(){
+                let location = '';
+                try {
+                    location = this.auth_window.location.toString()
+                } catch (err){
+                    console.log(err);
                 }
+                console.log('auth_location:' + location);
+                if (location.indexOf("jv.") > 0){
+                    console.log("close stuff");
+                    // this.auth_window.close();
+                    window.location = '/cabinet';
+                }
+            },
+            open_auth(){
+                const strWindowFeatures = "menubar=no,location=no,resizable=no,scrollbars=yes,status=no,width=600,height=600";
+                this.auth_window = window.open("http://cabinet.sumdu.edu.ua/index/service/7tvvT6CG", "Вход/Реєстрація через Кабинет",strWindowFeatures);
+                console.log(this.auth_window);
+                setInterval(this.conditional_reload, 250);
+                return false;
+            }
 
             // isOpenedRegistration() {
             //     axios
