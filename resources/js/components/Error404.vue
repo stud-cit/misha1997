@@ -35,7 +35,7 @@
 
     }
 </script>
-<style>
+<style scoped>
     .page-nav{
         font-family: Montserrat;
         font-size: 18pt;

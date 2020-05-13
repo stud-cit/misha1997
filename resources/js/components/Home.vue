@@ -41,7 +41,7 @@
 
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
     .page-list{
         margin-top: 50px;
         display: flex;

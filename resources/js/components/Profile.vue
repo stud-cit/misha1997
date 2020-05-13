@@ -113,16 +113,8 @@
 
     }
 </script>
-<style lang="scss">
-    .page-title{
-        margin-top: 40px;
-        font-family: Montserrat;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 40px;
-        text-align: center;
-        color: #18A0FB;
-    }
+<style lang="scss" scoped>
+
     .profile-info{
         margin-top: 90px;
         .info-item{
