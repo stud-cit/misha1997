@@ -4,6 +4,7 @@ import Home from "./components/Home";
 import Auth from "./components/Auth";
 import Profile from "./components/Profile";
 import Publications from "./components/Publications";
+import Users from "./components/Users";
 import Error404 from './components/Error404';
 Vue.use(Router);
 
@@ -29,6 +30,11 @@ export default new Router({
             path: '/publications',
             name: 'publications',
             component: Publications
+        },
+        {
+            path: '/users',
+            name: 'users',
+            component: Users
         },
         {
             path: '*',
