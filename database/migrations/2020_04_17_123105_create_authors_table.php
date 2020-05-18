@@ -17,6 +17,7 @@ class CreateAuthorsTable extends Migration
             $table->id();
             $table->integer('guid');
             $table->string('job');
+            $table->string('name');
             $table->string('country');
             $table->string('h_index');
             $table->integer('scopus_autor_id');

@@ -14,6 +14,10 @@ Route::get('publications', 'PublicationsController@getAll');
 Route::get('publication/{id}', 'PublicationsController@getId');
 Route::post('publication/{type}/{autors_id}', 'PublicationsController@post');
 
+Route::get('country', 'PublicationsController@getCountry');
+
+Route::get('roles', 'AuthorsController@getRoles');
+
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'PassportController@details');
 });

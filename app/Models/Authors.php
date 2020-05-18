@@ -10,6 +10,7 @@ class Authors extends Model
 
     protected $fillable = [
         'guid',
+        'name',
         'job',
         'country',
         'h_index',

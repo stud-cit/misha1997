@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Authors;
+use App\Models\Roles;
 
 class AuthorsController extends Controller
 {
@@ -20,5 +21,9 @@ class AuthorsController extends Controller
         $data = $request->all();
         $response = $model->create($data);
         return response()->json($response);
+    }
+    function getRoles() {
+        $data = Roles::get();
+        return response()->json($data);
     }
 }

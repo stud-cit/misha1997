@@ -8,7 +8,7 @@
                 <h2 class="item-title">Прізвище, ім’я, по-батькові *</h2>
 
                 <div class="value-block">
-                    <p class="item-value">Бабій Євгеній Андрійович</p>
+                    <input class="item-value" type="text" v-model="data.name">
                     <button class="alias-btn add-alias">Додати псевдонім</button>
                 </div>
             </div>
@@ -22,15 +22,26 @@
             </div>
             <div class="info-item">
 
-
                 <div class="value-block">
                     <div class="w-40">
                         <h2 class="item-title">Роль *</h2>
-                        <p class="item-value">Автор</p>
+                        <select class="item-value" v-model="data.roles_id">
+                            <option 
+                                v-for="(item, index) in roles" 
+                                :key="index" 
+                                :value="item.id"
+                            >{{item.name}}</option>
+                        </select>
                     </div>
                     <div class="w-40">
                         <h2 class="item-title">Країна *</h2>
-                        <p class="item-value">Країна</p>
+                        <select class="item-value" v-model="data.country">
+                            <option 
+                                v-for="(item, index) in country" 
+                                :key="index" 
+                                :value="item.name"
+                            >{{item.name}}</option>
+                        </select>
                     </div>
 
                 </div>
@@ -40,46 +51,46 @@
                 <h2 class="item-title">Індекс Хірша</h2>
 
                 <div class="value-block">
-                    <p class="item-value">1</p>
+                    <input class="item-value" type="text" v-model="data.h_index">
                 </div>
             </div>
             <div class="info-item">
                 <h2 class="item-title">Research ID</h2>
 
                 <div class="value-block">
-                    <p class="item-value">1</p>
+                    <input class="item-value" type="text" v-model="data.scopus_researcher_id">
                 </div>
             </div>
             <div class="info-item">
                 <h2 class="item-title">ORCID-посилання</h2>
 
                 <div class="value-block">
-                    <p class="item-value">1</p>
+                    <input class="item-value" type="text" v-model="data.orcid">
                 </div>
             </div>
             <div class="info-item">
                 <h2 class="item-title">Шифр групи студента * </h2>
 
                 <div class="value-block">
-                    <p class="item-value">1</p>
+                    <input class="item-value" type="text" v-model="data.academic_code">
                 </div>
             </div>
             <div class="info-item">
                 <h2 class="item-title">Робоча почта користувача *  </h2>
 
                 <div class="value-block">
-                    <p class="item-value">1</p>
+                    <input class="item-value" type="text" v-model="data.email">
                 </div>
             </div>
             <div class="info-item">
                 <h2 class="item-title">Научне звання *  </h2>
 
                 <div class="value-block">
-                    <p class="item-value">1</p>
+                    <input class="item-value" type="text" v-model="data.job">
                 </div>
             </div>
             <div class="text-center">
-                <button class="btn save-btn">Створити</button>
+                <button class="btn save-btn" @click="save()">Зберегти</button>
                 <router-link :to="{name: 'home'}" class="back-link">Назад на головну</router-link>
             </div>
 
@@ -96,19 +107,52 @@
         data() {
             return {
                 access: true,
-
+                data: {
+                    name: "",
+                    roles_id: "",
+                    country: "",
+                    h_index: "",
+                    scopus_researcher_id: "",
+                    academic_code: "",
+                    orcid: "",
+                    email: "",
+                    job: "",
+                    role: {
+                        name: ""
+                    }
+                },
+                country: [],
+                roles: []
             };
         },
         components: {
 
         },
-        created () {
-
+        mounted () {
+            this.getData();
+            this.getCountry();
+            this.getRoles();
         },
         methods: {
+            getData() {
+                var id = 1;
+                axios.get('/api/author/'+id).then(response => {
+                    this.data = response.data;
+                })
+            },
+            getCountry() {
+                axios.get('/api/country').then(response => {
+                    this.country = response.data;
+                })
+            },
+            getRoles() {
+                axios.get('/api/roles').then(response => {
+                    this.roles = response.data;
+                })
+            },
+            save() {
 
-
-
+            }
         },
 
     }

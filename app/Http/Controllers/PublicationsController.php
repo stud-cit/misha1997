@@ -14,6 +14,7 @@ use App\Models\Abstracts;
 use App\Models\Manuals;
 use App\Models\Monographs;
 use App\Models\AuthorsPublications;
+use App\Models\Countries;
 
 class PublicationsController extends Controller
 {
@@ -53,4 +54,10 @@ class PublicationsController extends Controller
 
         return response('ok', 200);
     }
+
+    function getCountry() {
+        $data = Countries::get();
+        return response()->json($data);
+    }
+
 }

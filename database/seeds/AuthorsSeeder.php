@@ -14,6 +14,7 @@ class AuthorsSeeder extends Seeder
         DB::table('authors')->insert([
             'guid' => 1,
             'job' => 'СумДУ',
+            'name' => 'Test Test Test',
             'country' => 'Україна',
             'h_index' => 1,
             'scopus_autor_id' => 1,
