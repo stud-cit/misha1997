@@ -38616,7 +38616,7 @@ var render = function() {
         "div",
         { staticClass: "page-nav" },
         [
-          _c("router-link", { attrs: { to: { name: "index" } } }, [
+          _c("router-link", { attrs: { to: { name: "home" } } }, [
             _c("i", { staticClass: "fa fa-angle-left mr-3" }),
             _vm._v("\n                повернутися на головну\n            ")
           ])

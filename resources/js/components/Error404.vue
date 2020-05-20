@@ -3,7 +3,7 @@
     <section class="sections main-section">
         <div class="container">
             <div class="page-nav">
-                <router-link  :to="{ name: 'index'}">
+                <router-link  :to="{ name: 'home'}">
                     <i class="fa fa-angle-left mr-3"></i>
                     повернутися на головну
                 </router-link>
