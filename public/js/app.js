@@ -2183,15 +2183,70 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      access: true
+      access: true,
+      data: {
+        name: "",
+        roles_id: "",
+        country: "",
+        h_index: "",
+        scopus_researcher_id: "",
+        academic_code: "",
+        orcid: "",
+        email: "",
+        job: "",
+        role: {
+          name: ""
+        }
+      },
+      country: [],
+      roles: []
     };
   },
   components: {},
-  created: function created() {},
-  methods: {}
+  mounted: function mounted() {
+    this.getData();
+    this.getCountry();
+    this.getRoles();
+  },
+  methods: {
+    getData: function getData() {
+      var _this = this;
+
+      var id = 1;
+      axios.get('/api/author/' + id).then(function (response) {
+        _this.data = response.data;
+      });
+    },
+    getCountry: function getCountry() {
+      var _this2 = this;
+
+      axios.get('/api/country').then(function (response) {
+        _this2.country = response.data;
+      });
+    },
+    getRoles: function getRoles() {
+      var _this3 = this;
+
+      axios.get('/api/roles').then(function (response) {
+        _this3.roles = response.data;
+      });
+    },
+    save: function save() {}
+  }
 });
 
 /***/ }),
@@ -38776,29 +38831,322 @@ var render = function() {
     _c("h1", { staticClass: "page-title" }, [_vm._v("Перегляд профілю")]),
     _vm._v(" "),
     _c("div", { staticClass: "profile-info" }, [
+      _c("div", { staticClass: "info-item" }, [
+        _c("h2", { staticClass: "item-title" }, [
+          _vm._v("Прізвище, ім’я, по-батькові *")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "value-block" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.data.name,
+                expression: "data.name"
+              }
+            ],
+            staticClass: "item-value",
+            attrs: { type: "text" },
+            domProps: { value: _vm.data.name },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.data, "name", $event.target.value)
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("button", { staticClass: "alias-btn add-alias" }, [
+            _vm._v("Додати псевдонім")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
       _vm._m(0),
       _vm._v(" "),
-      _vm._m(1),
+      _c("div", { staticClass: "info-item" }, [
+        _c("div", { staticClass: "value-block" }, [
+          _c("div", { staticClass: "w-40" }, [
+            _c("h2", { staticClass: "item-title" }, [_vm._v("Роль *")]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.data.roles_id,
+                    expression: "data.roles_id"
+                  }
+                ],
+                staticClass: "item-value",
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.data,
+                      "roles_id",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  }
+                }
+              },
+              _vm._l(_vm.roles, function(item, index) {
+                return _c(
+                  "option",
+                  { key: index, domProps: { value: item.id } },
+                  [_vm._v(_vm._s(item.name))]
+                )
+              }),
+              0
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "w-40" }, [
+            _c("h2", { staticClass: "item-title" }, [_vm._v("Країна *")]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.data.country,
+                    expression: "data.country"
+                  }
+                ],
+                staticClass: "item-value",
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.data,
+                      "country",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  }
+                }
+              },
+              _vm._l(_vm.country, function(item, index) {
+                return _c(
+                  "option",
+                  { key: index, domProps: { value: item.name } },
+                  [_vm._v(_vm._s(item.name))]
+                )
+              }),
+              0
+            )
+          ])
+        ])
+      ]),
       _vm._v(" "),
-      _vm._m(2),
+      _c("div", { staticClass: "info-item" }, [
+        _c("h2", { staticClass: "item-title" }, [_vm._v("Індекс Хірша")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "value-block" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.data.h_index,
+                expression: "data.h_index"
+              }
+            ],
+            staticClass: "item-value",
+            attrs: { type: "text" },
+            domProps: { value: _vm.data.h_index },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.data, "h_index", $event.target.value)
+              }
+            }
+          })
+        ])
+      ]),
       _vm._v(" "),
-      _vm._m(3),
+      _c("div", { staticClass: "info-item" }, [
+        _c("h2", { staticClass: "item-title" }, [_vm._v("Research ID")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "value-block" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.data.scopus_researcher_id,
+                expression: "data.scopus_researcher_id"
+              }
+            ],
+            staticClass: "item-value",
+            attrs: { type: "text" },
+            domProps: { value: _vm.data.scopus_researcher_id },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.data, "scopus_researcher_id", $event.target.value)
+              }
+            }
+          })
+        ])
+      ]),
       _vm._v(" "),
-      _vm._m(4),
+      _c("div", { staticClass: "info-item" }, [
+        _c("h2", { staticClass: "item-title" }, [_vm._v("ORCID-посилання")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "value-block" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.data.orcid,
+                expression: "data.orcid"
+              }
+            ],
+            staticClass: "item-value",
+            attrs: { type: "text" },
+            domProps: { value: _vm.data.orcid },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.data, "orcid", $event.target.value)
+              }
+            }
+          })
+        ])
+      ]),
       _vm._v(" "),
-      _vm._m(5),
+      _c("div", { staticClass: "info-item" }, [
+        _c("h2", { staticClass: "item-title" }, [
+          _vm._v("Шифр групи студента * ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "value-block" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.data.academic_code,
+                expression: "data.academic_code"
+              }
+            ],
+            staticClass: "item-value",
+            attrs: { type: "text" },
+            domProps: { value: _vm.data.academic_code },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.data, "academic_code", $event.target.value)
+              }
+            }
+          })
+        ])
+      ]),
       _vm._v(" "),
-      _vm._m(6),
+      _c("div", { staticClass: "info-item" }, [
+        _c("h2", { staticClass: "item-title" }, [
+          _vm._v("Робоча почта користувача *  ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "value-block" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.data.email,
+                expression: "data.email"
+              }
+            ],
+            staticClass: "item-value",
+            attrs: { type: "text" },
+            domProps: { value: _vm.data.email },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.data, "email", $event.target.value)
+              }
+            }
+          })
+        ])
+      ]),
       _vm._v(" "),
-      _vm._m(7),
-      _vm._v(" "),
-      _vm._m(8),
+      _c("div", { staticClass: "info-item" }, [
+        _c("h2", { staticClass: "item-title" }, [_vm._v("Научне звання *  ")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "value-block" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.data.job,
+                expression: "data.job"
+              }
+            ],
+            staticClass: "item-value",
+            attrs: { type: "text" },
+            domProps: { value: _vm.data.job },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.data, "job", $event.target.value)
+              }
+            }
+          })
+        ])
+      ]),
       _vm._v(" "),
       _c(
         "div",
         { staticClass: "text-center" },
         [
-          _c("button", { staticClass: "btn save-btn" }, [_vm._v("Створити")]),
+          _c(
+            "button",
+            {
+              staticClass: "btn save-btn",
+              on: {
+                click: function($event) {
+                  return _vm.save()
+                }
+              }
+            },
+            [_vm._v("Зберегти")]
+          ),
           _vm._v(" "),
           _c(
             "router-link",
@@ -38817,26 +39165,6 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "info-item" }, [
-      _c("h2", { staticClass: "item-title" }, [
-        _vm._v("Прізвище, ім’я, по-батькові *")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "value-block" }, [
-        _c("p", { staticClass: "item-value" }, [
-          _vm._v("Бабій Євгеній Андрійович")
-        ]),
-        _vm._v(" "),
-        _c("button", { staticClass: "alias-btn add-alias" }, [
-          _vm._v("Додати псевдонім")
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "info-item" }, [
       _c("h2", { staticClass: "item-title" }, [_vm._v("Псевдонім автора")]),
       _vm._v(" "),
       _c("div", { staticClass: "value-block" }, [
@@ -38847,102 +39175,6 @@ var staticRenderFns = [
         _c("button", { staticClass: "alias-btn delete-alias" }, [
           _vm._v("Видалити псевдонім")
         ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "info-item" }, [
-      _c("div", { staticClass: "value-block" }, [
-        _c("div", { staticClass: "w-40" }, [
-          _c("h2", { staticClass: "item-title" }, [_vm._v("Роль *")]),
-          _vm._v(" "),
-          _c("p", { staticClass: "item-value" }, [_vm._v("Автор")])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "w-40" }, [
-          _c("h2", { staticClass: "item-title" }, [_vm._v("Країна *")]),
-          _vm._v(" "),
-          _c("p", { staticClass: "item-value" }, [_vm._v("Країна")])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "info-item" }, [
-      _c("h2", { staticClass: "item-title" }, [_vm._v("Індекс Хірша")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "value-block" }, [
-        _c("p", { staticClass: "item-value" }, [_vm._v("1")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "info-item" }, [
-      _c("h2", { staticClass: "item-title" }, [_vm._v("Research ID")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "value-block" }, [
-        _c("p", { staticClass: "item-value" }, [_vm._v("1")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "info-item" }, [
-      _c("h2", { staticClass: "item-title" }, [_vm._v("ORCID-посилання")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "value-block" }, [
-        _c("p", { staticClass: "item-value" }, [_vm._v("1")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "info-item" }, [
-      _c("h2", { staticClass: "item-title" }, [
-        _vm._v("Шифр групи студента * ")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "value-block" }, [
-        _c("p", { staticClass: "item-value" }, [_vm._v("1")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "info-item" }, [
-      _c("h2", { staticClass: "item-title" }, [
-        _vm._v("Робоча почта користувача *  ")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "value-block" }, [
-        _c("p", { staticClass: "item-value" }, [_vm._v("1")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "info-item" }, [
-      _c("h2", { staticClass: "item-title" }, [_vm._v("Научне звання *  ")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "value-block" }, [
-        _c("p", { staticClass: "item-value" }, [_vm._v("1")])
       ])
     ])
   }
