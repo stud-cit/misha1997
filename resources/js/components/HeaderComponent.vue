@@ -1,7 +1,29 @@
 <template>
 
     <header class="header">
-        <div class="logo"><img src="img/logo.svg" alt=""></div>
+<!--        <div class="logo"><img src="img/logo.svg" alt=""></div>-->
+        <nav class="navbar navbar-expand-lg navbar-light ">
+            <a class="navbar-brand" href=""><img src="img/logo.svg" alt=""></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon" ></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav" v-if="navbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item ">
+                        <a class="nav-link" href="#">Головна <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Підтримка</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Профіль</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Сповіщення</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
 </template>
@@ -11,31 +33,52 @@
     export default {
         data() {
             return {
-
-
+                navbar: true,
             };
         },
         components: {
 
         },
         created () {
-
+            this.checkAuth();
         },
         methods: {
+            checkAuth(){
+                if(this.$route.name == "auth"){
+                    this.navbar = false;
+                }
+            }
 
-            // isOpenedRegistration() {
-            //     axios
-            //         .get('/is-opened-registration')
-            //         .then( ( response ) => {
-            //             this.isRegistration = response.data;
-            //         })
-            //         .catch( ( error ) => console.error(error) )
-            // }
         },
 
     }
 </script>
-<style scoped>
-
+<style scoped lang="scss">
+    .navbar-toggler-icon{
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(21, 73, 150, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    .navbar-toggler{
+        border-color: rgba(21, 73, 150, 0.9);
+        outline: none;
+    }
+    .navbar-brand{
+        margin-right: 20px;
+    }
+    .navbar-expand-lg{
+        .navbar-nav{
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding-right: 220px;
+            li{
+                font-family: Montserrat;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 20px;
+                text-align: center;
+                color: #A6A6A6;
+            }
+        }
+    }
 </style>
 

@@ -51,26 +51,15 @@
                 return false;
             }
 
-            // isOpenedRegistration() {
-            //     axios
-            //         .get('/is-opened-registration')
-            //         .then( ( response ) => {
-            //             this.isRegistration = response.data;
-            //         })
-            //         .catch( ( error ) => console.error(error) )
-            // }
+
         },
 
     }
 </script>
 <style lang="scss" scoped>
     .auth-block{
-        /*width: 100%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);*/
-        margin-top: 20vh;
+
+        margin-top: 15vh;
     }
     .title{
         font-family: Montserrat;
