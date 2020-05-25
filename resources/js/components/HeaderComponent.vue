@@ -1,7 +1,7 @@
 <template>
 
     <header class="header">
-<!--        <div class="logo"><img src="img/logo.svg" alt=""></div>-->
+
         <nav class="navbar navbar-expand-lg navbar-light ">
             <a class="navbar-brand" href=""><img src="img/logo.svg" alt=""></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,7 +19,7 @@
                         <a class="nav-link" href="#">Профіль</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Сповіщення</a>
+                        <a class="nav-link note" href="#">Сповіщення&nbsp;<span class="number">2</span></a>
                     </li>
                 </ul>
             </div>
@@ -77,6 +77,21 @@
                 font-size: 20px;
                 text-align: center;
                 color: #A6A6A6;
+                .number{
+
+                    border-radius: 50%;
+                    background: #6293DB;
+                    padding: 2px 7px;
+                    font-family: Montserrat;
+                    color: #fff;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 18px;
+                }
+
+            }
+            .note{
+                color: #6293DB;
             }
         }
     }
