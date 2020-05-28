@@ -17,6 +17,7 @@ class CreatePublicationsTable extends Migration
             $table->id();
             $table->string('title');
             $table->foreignId('science_type_id');
+            $table->string('type');
             $table->string('impact_factor');
             $table->integer('sub_db_index');
             $table->string('quartil');

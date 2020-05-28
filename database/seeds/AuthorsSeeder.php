@@ -25,7 +25,8 @@ class AuthorsSeeder extends Seeder
             'is_student' => 0,
             'academic_code' => '000',
             'email' => 'test@gmail.com',
-            'roles_id' => 1
+            'roles_id' => 1,
+            'department_id' => 1
         ]);
     }
 }

@@ -9,7 +9,7 @@ use App\Models\Roles;
 class AuthorsController extends Controller
 {
     function getAll() {
-        $data = Authors::get();
+        $data = Authors::with('role')->get();
         return response()->json($data);
     }
     function getId($id) {

@@ -29,6 +29,7 @@ class CreateAuthorsTable extends Migration
             $table->string('academic_code');
             $table->string('email');
             $table->foreignId('roles_id');
+            $table->integer('department_id');
             $table->timestamps();
         });
 

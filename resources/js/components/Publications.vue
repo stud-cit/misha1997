@@ -48,31 +48,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td scope="row">1</td>
-                    <td>тези</td>
-                    <td>Петренко Пилип Вікторович</td>
-                    <td>Нові технології</td>
-                    <td>2016</td>
-                    <td>2222</td>
+                <tr v-for="(item, index) in data" :key="index">
+                    <td scope="row">{{ index+1 }}</td>
+                    <td>{{ item.publications.type }}</td>
+                    <td>{{ item.autors.name }}</td>
+                    <td>{{ item.publications.title }}</td>
+                    <td>{{ item.publications.date.slice(0,4) }}</td>
+                    <td>{{ item.publications.sub_db_index }}</td>
                 </tr>
-                <tr>
-                    <td scope="row">2</td>
-                    <td>тези</td>
-                    <td>Петренко Пилип Вікторович</td>
-                    <td>Нові технології</td>
-                    <td>2016</td>
-                    <td>2222</td>
-                </tr>
-                <tr>
-                    <td scope="row">3</td>
-                    <td>тези</td>
-                    <td>Петренко Пилип Вікторович</td>
-                    <td>Нові технології</td>
-                    <td>2016</td>
-                    <td>2222</td>
-                </tr>
-
                 </tbody>
             </table>
         </div>
@@ -84,19 +67,21 @@
         data() {
             return {
                 fullSearch: false,
-
+                data: []
             };
         },
         components: {
 
         },
-        created () {
-
+        mounted () {
+            this.getData();
         },
         methods: {
-
-
-
+            getData() {
+                axios.get('/api/publications').then(response => {
+                    this.data = response.data
+                })
+            },
         },
 
     }

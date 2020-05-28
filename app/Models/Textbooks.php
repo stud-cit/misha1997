@@ -17,7 +17,7 @@ class Textbooks extends Model
         'editor_name',
         'number_pages',
         'languages',
-        'doi'
+        'doi',
         'publications_id'
     ];
 }

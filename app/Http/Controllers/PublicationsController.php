@@ -19,7 +19,7 @@ use App\Models\Countries;
 class PublicationsController extends Controller
 {
     function getAll() {
-        $data = Publications::get();
+        $data = AuthorsPublications::with("autors", "publications")->get();
         return response()->json($data);
     }
     function getId($id) {

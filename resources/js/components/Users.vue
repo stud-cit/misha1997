@@ -28,35 +28,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td scope="row">1</td>
-                    <td>автор</td>
-                    <td>Петренко Пилип Вікторович</td>
-                    <td>e.petrnko@mai.co</td>
-                    <td>Фаультет фызичного виховання</td>
-                    <td>Кафедра фізкультури</td>
-                </tr>
-                <tr>
-                    <td scope="row">1</td>
-                    <td>автор</td>
-                    <td>Петренко Пилип Вікторович</td>
-                    <td>e.petrnko@mai.co</td>
-                    <td>Фаультет фызичного виховання</td>
-                    <td>Кафедра фізкультури</td>
-                </tr>
-                <tr>
-                    <td scope="row">1</td>
-                    <td>автор</td>
-                    <td>Петренко Пилип Вікторович</td>
-                    <td>e.petrnko@mai.co</td>
-                    <td>Фаультет фызичного виховання</td>
-                    <td>Кафедра фізкультури</td>
-                </tr>
-                <tr>
-                    <td scope="row">1</td>
-                    <td>автор</td>
-                    <td>Петренко Пилип Вікторович</td>
-                    <td>e.petrnko@mai.co</td>
+                <tr v-for="(item, index) in data" :key="item.id">
+                    <td scope="row">{{ index+1 }}</td>
+                    <td>{{ item.role.name }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.email }}</td>
                     <td>Фаультет фызичного виховання</td>
                     <td>Кафедра фізкультури</td>
                 </tr>
@@ -71,20 +47,21 @@
     export default {
         data() {
             return {
-                fullSearch: false,
-
+                data: []
             };
         },
         components: {
 
         },
-        created () {
-
+        mounted () {
+            this.getData();
         },
         methods: {
-
-
-
+            getData() {
+                axios.get('/api/authors').then(response => {
+                    this.data = response.data
+                })
+            },
         },
 
     }

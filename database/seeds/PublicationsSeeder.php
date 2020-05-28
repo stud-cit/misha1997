@@ -14,6 +14,7 @@ class PublicationsSeeder extends Seeder
         DB::table('publications')->insert([
             'title' => 'Test',
             'science_type_id' => 1,
+            'type' => 'Стаття',
             'impact_factor' => 'test',
             'sub_db_index' => 1,
             'quartil' => 'test',
@@ -32,6 +33,7 @@ class PublicationsSeeder extends Seeder
         DB::table('publications')->insert([
             'title' => 'Test 2',
             'science_type_id' => 2,
+            'type' => 'Стаття',
             'impact_factor' => 'test 2',
             'sub_db_index' => 1,
             'quartil' => 'test 2',
