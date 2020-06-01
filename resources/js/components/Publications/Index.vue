@@ -59,6 +59,7 @@
                 </tbody>
             </table>
         </div>
+        <router-view></router-view>
     </div>
 </template>
 

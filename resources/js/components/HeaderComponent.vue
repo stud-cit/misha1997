@@ -3,23 +3,25 @@
     <header class="header">
 
         <nav class="navbar navbar-expand-lg navbar-light ">
-            <a class="navbar-brand" href=""><img src="img/logo.svg" alt=""></a>
+            <a class="navbar-brand" href=""><img src="/img/logo.svg" alt=""></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon" ></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav" v-if="navbar">
                 <ul class="navbar-nav">
                     <li class="nav-item ">
-                        <a class="nav-link" href="#">Головна <span class="sr-only">(current)</span></a>
+                        <router-link class="nav-link" exist :to="{name: 'home'}" active-class="active">Головна</router-link>
+
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Підтримка</a>
+                        <router-link class="nav-link" to="">Підтримка</router-link>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Профіль</a>
+                        <router-link class="nav-link" :to="{name: 'profile'}" active-class="active">Профіль</router-link>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link note" href="#">Сповіщення&nbsp;<span class="number">2</span></a>
+
+                        <router-link class="nav-link note" exist :to="{name: 'notification'}" active-class="active">Сповіщення&nbsp;<span class="number">2</span></router-link>
                     </li>
                 </ul>
             </div>

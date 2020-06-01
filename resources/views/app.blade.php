@@ -9,8 +9,8 @@
         <!-- Fonts -->
 {{--        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">--}}
 {{--        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">--}}
-        <link href="css/app.css" rel="stylesheet">
-        <link href="css/site.css" rel="stylesheet">
+        <link href="/css/app.css" rel="stylesheet">
+        <link href="/css/site.css" rel="stylesheet">
 
         <!-- Styles -->
 
@@ -22,5 +22,5 @@
 
     </div>
     </body>
-    <script src="js/app.js"></script>
+    <script src="/js/app.js"></script>
 </html>

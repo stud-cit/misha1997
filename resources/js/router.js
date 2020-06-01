@@ -3,7 +3,8 @@ import Router from "vue-router";
 import Home from "./components/Home";
 import Auth from "./components/Auth";
 import Profile from "./components/Profile";
-import Publications from "./components/Publications";
+import Publications from "./components/Publications/Index";
+import PublicationsAdd from "./components/Publications/Add";
 import Notifications from "./components/Notifications";
 import Users from "./components/Users";
 import Error404 from './components/Error404';
@@ -30,11 +31,21 @@ export default new Router({
         {
             path: '/publications',
             name: 'publications',
-            component: Publications
+            component: Publications,
+
+        },
+        {
+            path: '/publications/add',
+            name: 'publications-add',
+            component: PublicationsAdd
+        },
+        {
+            path: '/publications/:id',
+            component: PublicationsAdd
         },
         {
             path: '/notifications',
-            name: 'publications',
+            name: 'notifications',
             component: Notifications
         },
         {
