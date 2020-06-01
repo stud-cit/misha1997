@@ -26,9 +26,9 @@
                     <div class="w-40">
                         <h2 class="item-title">Роль *</h2>
                         <select class="item-value" v-model="data.roles_id">
-                            <option 
-                                v-for="(item, index) in roles" 
-                                :key="index" 
+                            <option
+                                v-for="(item, index) in roles"
+                                :key="index"
                                 :value="item.id"
                             >{{item.name}}</option>
                         </select>
@@ -36,9 +36,9 @@
                     <div class="w-40">
                         <h2 class="item-title">Країна *</h2>
                         <select class="item-value" v-model="data.country">
-                            <option 
-                                v-for="(item, index) in country" 
-                                :key="index" 
+                            <option
+                                v-for="(item, index) in country"
+                                :key="index"
                                 :value="item.name"
                             >{{item.name}}</option>
                         </select>
@@ -206,6 +206,8 @@
                     font-weight: normal;
                     font-size: 25px;
                     color: #0E0E0E;
+                    outline: none;
+                    border: none;
                 }
             }
         }
