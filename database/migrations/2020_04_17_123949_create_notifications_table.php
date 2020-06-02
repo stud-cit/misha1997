@@ -17,6 +17,7 @@ class CreateNotificationsTable extends Migration
             $table->id();
             $table->text('text');
             $table->foreignId('autors_id');
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
 

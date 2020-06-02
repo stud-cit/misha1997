@@ -10,6 +10,7 @@ class Notifications extends Model
 
     protected $fillable = [
         'text',
-        'autors_id'
+        'autors_id',
+        'status'
     ];
 }

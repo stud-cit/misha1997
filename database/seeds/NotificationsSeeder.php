@@ -13,7 +13,8 @@ class NotificationsSeeder extends Seeder
     {
         DB::table('notifications')->insert([
             'text' => 'Lorem ipsum',
-            'autors_id' => 1
+            'autors_id' => 1,
+            'status' => 0
         ]);
     }
 }

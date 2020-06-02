@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Authors;
 use App\Models\Roles;
+use App\Models\Notifications;
 
 class AuthorsController extends Controller
 {
+
+    // authors
     function getAll() {
         $data = Authors::with('role')->get();
         return response()->json($data);
@@ -24,6 +27,12 @@ class AuthorsController extends Controller
     }
     function getRoles() {
         $data = Roles::get();
+        return response()->json($data);
+    }
+
+    //notifications
+    function getNotifications($id) {
+        $data = Notifications::where('autors_id', $id)->get();
         return response()->json($data);
     }
 }
