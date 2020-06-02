@@ -1,7 +1,7 @@
 <template>
     <div>
         <p class="step-subtitle">
-            Крок 2 з 5. Назва та база для публікації
+            Крок 4 з 5. Назва та база для публікації
         </p>
 
         <div class="step-button-group">
@@ -13,7 +13,7 @@
 
 <script>
     export default {
-        name: "Step2",
+        name: "Step4",
         data() {
             return {
                 stepData:{
