@@ -4,45 +4,19 @@
     <div >
         <h1 class="page-title">Перегляд публікацій</h1>
         <ul class="container notifications-list">
-            <li class="notifications-item">
-                <p class="date">23.04.2020</p>
-                <p class="text">
-                    Автор Бабій Євгеній Андрійович редагував дані
-                    в публікації ”Modeling Business Process of Labor Intensity
-                    Calculating The Machine-Building Equipment’s Production”
-                </p>
+            <li class="notifications-item" v-for="item in notifications" :key="item.id">
+                <p class="date">{{ item.created_at }}</p>
+                <p class="text">{{ item.text }}</p>
             </li>
-            <li class="notifications-item">
-                <p class="date">23.04.2020</p>
-                <p class="text">
-                    Автор Бабій Євгеній Андрійович редагував дані
-                    в публікації ”Modeling Business Process of Labor Intensity
-                    Calculating The Machine-Building Equipment’s Production”
-                </p>
-            </li>
-
         </ul>
 
-        <h2 class="subtitle">Попередні сповіщення</h2>
+        <h2 class="subtitle" v-if="viewedNotifications.length > 0">Попередні сповіщення</h2>
 
         <ul class="container notifications-list before">
-            <li class="notifications-item">
-                <p class="date">23.04.2020</p>
-                <p class="text">
-                    Автор Бабій Євгеній Андрійович редагував дані
-                    в публікації ”Modeling Business Process of Labor Intensity
-                    Calculating The Machine-Building Equipment’s Production”
-                </p>
+            <li class="notifications-item" v-for="item in viewedNotifications" :key="item.id">
+                <p class="date">{{ item.created_at }}</p>
+                <p class="text">{{ item.text }}</p>
             </li>
-            <li class="notifications-item">
-                <p class="date">23.04.2020</p>
-                <p class="text">
-                    Автор Бабій Євгеній Андрійович редагував дані
-                    в публікації ”Modeling Business Process of Labor Intensity
-                    Calculating The Machine-Building Equipment’s Production”
-                </p>
-            </li>
-
         </ul>
     </div>
 
@@ -53,18 +27,30 @@
     export default {
         data() {
             return {
-
+                notifications: [],
+                viewedNotifications: []
             };
         },
 
         created () {
-
+            this.getData();
         },
         computed: {
 
         },
         methods: {
-
+            getData() {
+                var userid = 1;
+                axios.get('/api/notifications/'+userid).then(response => {
+                    response.data.map(item => {
+                        if (item.status) {
+                            this.viewedNotifications.push(item)
+                        } else {
+                            this.notifications.push(item)
+                        }
+                    });
+                });
+            }
         },
 
     }

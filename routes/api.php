@@ -13,8 +13,8 @@ Route::post('author', 'AuthorsController@post');
 Route::get('roles', 'AuthorsController@getRoles');
 
 //notifications
-Route::get('notifications/{id}', 'AuthorsController@getNotifications');
-Route::[]('notifications/{id}', 'AuthorsController@getNotifications');
+Route::get('notifications/{autors_id}', 'AuthorsController@getNotifications');
+Route::post('notifications/{autors_id}', 'AuthorsController@postNotifications');
 
 //publications
 Route::get('publications', 'PublicationsController@getAll');

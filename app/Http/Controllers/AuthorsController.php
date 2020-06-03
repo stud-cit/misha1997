@@ -31,8 +31,15 @@ class AuthorsController extends Controller
     }
 
     //notifications
-    function getNotifications($id) {
-        $data = Notifications::where('autors_id', $id)->get();
+    function getNotifications($autors_id) {
+        $data = Notifications::where('autors_id', $autors_id)->get();
         return response()->json($data);
+    }
+    function postNotifications(Request $request, $autors_id) {
+        $model = new Notifications();
+        $data = $request->all();
+        $data["autors_id"] = $autors_id;
+        $model->create($data);
+        return response('ok', 200);
     }
 }
