@@ -99,78 +99,80 @@
 
 <style lang="scss" scoped>
 
-    .step-content{
-        margin-top: 150px;
-        .step-item{
-            margin-top: 50px;
+
+    .step-item{
+        margin-top: 50px;
+        display: flex;
+        align-items: center;
+        &:first-of-type{
+            margin-top: 0;
+        }
+        .item-title{
+            width: auto;
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 25px;
+            color: #A6A6A6;
+            margin-right: 20px;
+        }
+        .item-input{
+            padding: 12px;
+            text-align: center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
+            border-radius: 44.5px;
+            border: none;
+            outline: none;
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            color: #0E0E0E;
+            min-width: 258px;
+
+        }
+        .categories-elem{
             display: flex;
-            align-items: center;
-            &:first-of-type{
-                margin-top: 0;
-            }
-            .item-title{
-                font-family: Montserrat;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 25px;
-                color: #A6A6A6;
-                margin-right: 20px;
-            }
-            .item-input{
-                padding: 10px;
-                text-align: center;
-                box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
-                border-radius: 44.5px;
-                border: none;
-                outline: none;
+
+            .small-box{
+                width: 31px;
+                padding: 4px 0;
+                margin: 0 10px;
+                border: 1px solid #18A0FB;
+                box-sizing: border-box;
+                border-radius: 10px;
                 font-family: Montserrat;
                 font-style: normal;
                 font-weight: normal;
                 font-size: 20px;
-                color: #0E0E0E;
-                min-width: 258px;
-                appearance: none;
+                color: #18A0FB;
+                text-align: center;
+                cursor: pointer;
             }
-            .categories-elem{
-                display: flex;
+            .big-box{
+                padding: 10px 40px;
+                margin: 0 10px;
+                border: 1px solid #18A0FB;
+                box-sizing: border-box;
+                border-radius: 44.5px;
+                font-family: Montserrat;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 20px;
+                color: #18A0FB;
+                cursor: pointer;
 
-                .small-box{
-                    width: 31px;
-                    padding: 4px 0;
-                    margin: 0 10px;
-                    border: 1px solid #18A0FB;
-                    box-sizing: border-box;
-                    border-radius: 10px;
-                    font-family: Montserrat;
-                    font-style: normal;
-                    font-weight: normal;
-                    font-size: 20px;
-                    color: #18A0FB;
-                    text-align: center;
-                }
-                .big-box{
-                    padding: 10px 40px;
-                    margin: 0 10px;
-                    border: 1px solid #18A0FB;
-                    box-sizing: border-box;
-                    border-radius: 44.5px;
-                    font-family: Montserrat;
-                    font-style: normal;
-                    font-weight: normal;
-                    font-size: 20px;
-                    color: #18A0FB;
-
-                }
-                input{
-                    display: none;
-                }
-                input:checked +label{
-                    background: #18A0FB;
-                    border: 1px solid #18A0FB;
-                    color: #fff;
-                }
+            }
+            input{
+                display: none;
+            }
+            input:checked +label{
+                background: #18A0FB;
+                border: 1px solid #18A0FB;
+                color: #fff;
             }
         }
     }
+
 
 </style>

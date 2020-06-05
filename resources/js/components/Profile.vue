@@ -166,10 +166,11 @@
             .item-title{
                 width: 100%;
                 margin-bottom: 15px;
+                padding-left: 24px;
                 font-family: Montserrat;
                 font-style: normal;
                 font-weight: normal;
-                font-size: 30px;
+                font-size: 25px;
                 color: #A6A6A6;
             }
             .value-block{
@@ -187,7 +188,7 @@
                     font-family: Montserrat;
                     font-style: normal;
                     font-weight: normal;
-                    font-size: 20px;
+                    font-size: 18px;
                     text-align: center;
                     color: #A6A6A6;
                 }
@@ -196,15 +197,15 @@
                 }
                 .item-value{
                     width: 90%;
-                    background: #FFFFFF;
+                    /*background: #FFFFFF;*/
                     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
                     border-radius: 44.5px;
-                    padding: 15px;
+                    padding: 12px 24px;
                     text-align: center;
                     font-family: Montserrat;
                     font-style: normal;
                     font-weight: normal;
-                    font-size: 25px;
+                    font-size: 20px;
                     color: #0E0E0E;
                     outline: none;
                     border: none;
@@ -217,7 +218,7 @@
             font-family: Montserrat;
             font-style: normal;
             font-weight: normal;
-            font-size: 25px;
+            font-size: 22px;
             text-align: center;
             color: #FFFFFF;
             background: #C4C4C4;
@@ -239,7 +240,7 @@
             font-family: Montserrat;
             font-style: normal;
             font-weight: 300;
-            font-size: 25px;
+            font-size: 22px;
             text-align: center;
             color: #A6A6A6;
 

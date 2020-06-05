@@ -62,6 +62,9 @@
 
 <style lang="scss" scoped>
 
+    .search-block{
+        margin: 0;
+    }
     .categories{
         display: flex;
         /*margin-bottom: 25px;*/

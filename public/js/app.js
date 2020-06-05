@@ -2660,6 +2660,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Step3",
   data: function data() {
@@ -2789,6 +2790,59 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -7537,7 +7591,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".profile-info[data-v-3bd692e4] {\n  margin-top: 90px;\n}\n.profile-info .info-item[data-v-3bd692e4] {\n  margin-bottom: 30px;\n}\n.profile-info .info-item .item-title[data-v-3bd692e4] {\n  width: 100%;\n  margin-bottom: 15px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 30px;\n  color: #A6A6A6;\n}\n.profile-info .info-item .value-block[data-v-3bd692e4] {\n  display: flex;\n  align-items: center;\n  /*flex-wrap: wrap;*/\n}\n.profile-info .info-item .value-block .w-40[data-v-3bd692e4] {\n  width: 40%;\n}\n.profile-info .info-item .value-block .alias-btn[data-v-3bd692e4] {\n  width: 10%;\n  background-color: transparent;\n  border: none;\n  outline: none;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  text-align: center;\n  color: #A6A6A6;\n}\n.profile-info .info-item .value-block .delete-alias[data-v-3bd692e4] {\n  color: #FF6A6A;\n}\n.profile-info .info-item .value-block .item-value[data-v-3bd692e4] {\n  width: 90%;\n  background: #FFFFFF;\n  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);\n  border-radius: 44.5px;\n  padding: 15px;\n  text-align: center;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  color: #0E0E0E;\n  outline: none;\n  border: none;\n}\n.profile-info .save-btn[data-v-3bd692e4] {\n  margin-top: 120px;\n  padding: 27px 85px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  text-align: center;\n  color: #FFFFFF;\n  background: #C4C4C4;\n  position: relative;\n  line-height: 1;\n}\n.profile-info .save-btn[data-v-3bd692e4]::before {\n  content: \"\";\n  position: absolute;\n  background: url(\"/img/angle.png\");\n  width: 20px;\n  height: 14px;\n  right: 50px;\n  top: 33px;\n}\n.profile-info .back-link[data-v-3bd692e4] {\n  display: block;\n  margin-top: 35px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: 300;\n  font-size: 25px;\n  text-align: center;\n  color: #A6A6A6;\n}", ""]);
+exports.push([module.i, ".profile-info[data-v-3bd692e4] {\n  margin-top: 90px;\n}\n.profile-info .info-item[data-v-3bd692e4] {\n  margin-bottom: 30px;\n}\n.profile-info .info-item .item-title[data-v-3bd692e4] {\n  width: 100%;\n  margin-bottom: 15px;\n  padding-left: 24px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  color: #A6A6A6;\n}\n.profile-info .info-item .value-block[data-v-3bd692e4] {\n  display: flex;\n  align-items: center;\n  /*flex-wrap: wrap;*/\n}\n.profile-info .info-item .value-block .w-40[data-v-3bd692e4] {\n  width: 40%;\n}\n.profile-info .info-item .value-block .alias-btn[data-v-3bd692e4] {\n  width: 10%;\n  background-color: transparent;\n  border: none;\n  outline: none;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 18px;\n  text-align: center;\n  color: #A6A6A6;\n}\n.profile-info .info-item .value-block .delete-alias[data-v-3bd692e4] {\n  color: #FF6A6A;\n}\n.profile-info .info-item .value-block .item-value[data-v-3bd692e4] {\n  width: 90%;\n  /*background: #FFFFFF;*/\n  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);\n  border-radius: 44.5px;\n  padding: 12px 24px;\n  text-align: center;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #0E0E0E;\n  outline: none;\n  border: none;\n}\n.profile-info .save-btn[data-v-3bd692e4] {\n  margin-top: 120px;\n  padding: 27px 85px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 22px;\n  text-align: center;\n  color: #FFFFFF;\n  background: #C4C4C4;\n  position: relative;\n  line-height: 1;\n}\n.profile-info .save-btn[data-v-3bd692e4]::before {\n  content: \"\";\n  position: absolute;\n  background: url(\"/img/angle.png\");\n  width: 20px;\n  height: 14px;\n  right: 50px;\n  top: 33px;\n}\n.profile-info .back-link[data-v-3bd692e4] {\n  display: block;\n  margin-top: 35px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: 300;\n  font-size: 22px;\n  text-align: center;\n  color: #A6A6A6;\n}", ""]);
 
 // exports
 
@@ -7556,7 +7610,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".categories[data-v-7aee7da8] {\n  display: flex;\n  /*margin-bottom: 25px;*/\n}\n.categories .categories-elem[data-v-7aee7da8] {\n  margin-right: 15px;\n  margin-bottom: 25px;\n}\n.categories .categories-elem label[data-v-7aee7da8] {\n  padding: 10px;\n  background: #FFFFFF;\n  border: 1px solid #18A0FB;\n  border-radius: 44.5px;\n  min-width: 260px;\n  cursor: pointer;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  text-align: center;\n  color: #18A0FB;\n  line-height: 1;\n}\n.categories .categories-elem input[type=checkbox][data-v-7aee7da8] {\n  display: none;\n}\n.categories .categories-elem input[type=checkbox]:checked + label[data-v-7aee7da8] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
+exports.push([module.i, ".search-block[data-v-7aee7da8] {\n  margin: 0;\n}\n.categories[data-v-7aee7da8] {\n  display: flex;\n  /*margin-bottom: 25px;*/\n}\n.categories .categories-elem[data-v-7aee7da8] {\n  margin-right: 15px;\n  margin-bottom: 25px;\n}\n.categories .categories-elem label[data-v-7aee7da8] {\n  padding: 10px;\n  background: #FFFFFF;\n  border: 1px solid #18A0FB;\n  border-radius: 44.5px;\n  min-width: 260px;\n  cursor: pointer;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  text-align: center;\n  color: #18A0FB;\n  line-height: 1;\n}\n.categories .categories-elem input[type=checkbox][data-v-7aee7da8] {\n  display: none;\n}\n.categories .categories-elem input[type=checkbox]:checked + label[data-v-7aee7da8] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
 
 // exports
 
@@ -7575,7 +7629,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".categories[data-v-7b0aacaa] {\n  display: flex;\n  margin-top: 150px;\n  flex-wrap: wrap;\n}\n.categories .categories-elem[data-v-7b0aacaa] {\n  margin-right: 15px;\n  margin-bottom: 20px;\n}\n.categories .categories-elem label[data-v-7b0aacaa] {\n  padding: 20px 40px;\n  background: #FFFFFF;\n  border: 1px solid #18A0FB;\n  border-radius: 44.5px;\n  /*min-width: 260px;*/\n  cursor: pointer;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  text-align: center;\n  color: #18A0FB;\n  line-height: 1;\n}\n.categories .categories-elem input[type=radio][data-v-7b0aacaa] {\n  display: none;\n}\n.categories .categories-elem input[type=radio]:checked + label[data-v-7b0aacaa] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
+exports.push([module.i, ".categories[data-v-7b0aacaa] {\n  display: flex;\n  flex-wrap: wrap;\n}\n.categories .categories-elem[data-v-7b0aacaa] {\n  margin-right: 15px;\n  margin-bottom: 20px;\n}\n.categories .categories-elem label[data-v-7b0aacaa] {\n  padding: 15px 35px;\n  background: #FFFFFF;\n  border: 1px solid #18A0FB;\n  border-radius: 44.5px;\n  /*min-width: 260px;*/\n  cursor: pointer;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 22px;\n  text-align: center;\n  color: #18A0FB;\n  line-height: 1;\n}\n.categories .categories-elem input[type=radio][data-v-7b0aacaa] {\n  display: none;\n}\n.categories .categories-elem input[type=radio]:checked + label[data-v-7b0aacaa] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
 
 // exports
 
@@ -7594,7 +7648,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".step-content[data-v-7b18c42b] {\n  margin-top: 150px;\n}\n.step-content .step-item[data-v-7b18c42b] {\n  margin-top: 50px;\n  display: flex;\n  align-items: center;\n}\n.step-content .step-item[data-v-7b18c42b]:first-of-type {\n  margin-top: 0;\n}\n.step-content .step-item .item-title[data-v-7b18c42b] {\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  color: #A6A6A6;\n  margin-right: 20px;\n}\n.step-content .step-item .item-input[data-v-7b18c42b] {\n  padding: 10px;\n  text-align: center;\n  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);\n  border-radius: 44.5px;\n  border: none;\n  outline: none;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #0E0E0E;\n  min-width: 258px;\n  -webkit-appearance: none;\n     -moz-appearance: none;\n          appearance: none;\n}\n.step-content .step-item .categories-elem[data-v-7b18c42b] {\n  display: flex;\n}\n.step-content .step-item .categories-elem .small-box[data-v-7b18c42b] {\n  width: 31px;\n  padding: 4px 0;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 10px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  text-align: center;\n}\n.step-content .step-item .categories-elem .big-box[data-v-7b18c42b] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n}\n.step-content .step-item .categories-elem input[data-v-7b18c42b] {\n  display: none;\n}\n.step-content .step-item .categories-elem input:checked + label[data-v-7b18c42b] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
+exports.push([module.i, ".step-item[data-v-7b18c42b] {\n  margin-top: 50px;\n  display: flex;\n  align-items: center;\n}\n.step-item[data-v-7b18c42b]:first-of-type {\n  margin-top: 0;\n}\n.step-item .item-title[data-v-7b18c42b] {\n  width: auto;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  color: #A6A6A6;\n  margin-right: 20px;\n}\n.step-item .item-input[data-v-7b18c42b] {\n  padding: 12px;\n  text-align: center;\n  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);\n  border-radius: 44.5px;\n  border: none;\n  outline: none;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #0E0E0E;\n  min-width: 258px;\n}\n.step-item .categories-elem[data-v-7b18c42b] {\n  display: flex;\n}\n.step-item .categories-elem .small-box[data-v-7b18c42b] {\n  width: 31px;\n  padding: 4px 0;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 10px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  text-align: center;\n  cursor: pointer;\n}\n.step-item .categories-elem .big-box[data-v-7b18c42b] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.step-item .categories-elem input[data-v-7b18c42b] {\n  display: none;\n}\n.step-item .categories-elem input:checked + label[data-v-7b18c42b] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
 
 // exports
 
@@ -40066,8 +40120,8 @@ var render = function() {
           {
             name: "show",
             rawName: "v-show",
-            value: _vm.currentStep == 4,
-            expression: "currentStep==4"
+            value: _vm.currentStep == 1,
+            expression: "currentStep==1"
           }
         ],
         on: {
@@ -40116,8 +40170,8 @@ var render = function() {
           {
             name: "show",
             rawName: "v-show",
-            value: _vm.currentStep == 1,
-            expression: "currentStep==1"
+            value: _vm.currentStep == 4,
+            expression: "currentStep==4"
           }
         ],
         on: {
@@ -40577,7 +40631,7 @@ var render = function() {
       _vm._v("\n        Крок 3 з 5. Вид публікації\n    ")
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "categories" }, [
+    _c("div", { staticClass: "step-content categories" }, [
       _c("div", { staticClass: "categories-elem" }, [
         _c("input", {
           directives: [
@@ -40613,6 +40667,104 @@ var render = function() {
         _c("label", { attrs: { for: "type2" } }, [
           _vm._v("Стаття-доповідь у матеріалах наукових конференціях")
         ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "categories-elem" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.publicationType,
+              expression: "stepData.publicationType"
+            }
+          ],
+          attrs: { id: "type4", type: "radio", value: "Розділ монографії" },
+          domProps: {
+            checked: _vm._q(_vm.stepData.publicationType, "Розділ монографії")
+          },
+          on: {
+            change: function($event) {
+              return _vm.$set(
+                _vm.stepData,
+                "publicationType",
+                "Розділ монографії"
+              )
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("label", { attrs: { for: "type4" } }, [_vm._v("Розділ монографії")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "categories-elem" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.publicationType,
+              expression: "stepData.publicationType"
+            }
+          ],
+          attrs: { id: "type3", type: "radio", value: "Монографії" },
+          domProps: {
+            checked: _vm._q(_vm.stepData.publicationType, "Монографії")
+          },
+          on: {
+            change: function($event) {
+              return _vm.$set(_vm.stepData, "publicationType", "Монографії")
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("label", { attrs: { for: "type3" } }, [_vm._v("Монографії")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "categories-elem" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.publicationType,
+              expression: "stepData.publicationType"
+            }
+          ],
+          attrs: { id: "type5", type: "radio", value: "Книга" },
+          domProps: { checked: _vm._q(_vm.stepData.publicationType, "Книга") },
+          on: {
+            change: function($event) {
+              return _vm.$set(_vm.stepData, "publicationType", "Книга")
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("label", { attrs: { for: "type5" } }, [_vm._v("Книга")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "categories-elem" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.publicationType,
+              expression: "stepData.publicationType"
+            }
+          ],
+          attrs: { id: "type6", type: "radio", value: "Розділ книги" },
+          domProps: {
+            checked: _vm._q(_vm.stepData.publicationType, "Розділ книги")
+          },
+          on: {
+            change: function($event) {
+              return _vm.$set(_vm.stepData, "publicationType", "Розділ книги")
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("label", { attrs: { for: "type6" } }, [_vm._v("Розділ книги")])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "categories-elem" }, [
@@ -40674,104 +40826,6 @@ var render = function() {
         _c("label", { attrs: { for: "type1" } }, [
           _vm._v("Стаття у фахових виданнях України")
         ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: { id: "type5", type: "radio", value: "Книга" },
-          domProps: { checked: _vm._q(_vm.stepData.publicationType, "Книга") },
-          on: {
-            change: function($event) {
-              return _vm.$set(_vm.stepData, "publicationType", "Книга")
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type5" } }, [_vm._v("Книга")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: { id: "type6", type: "radio", value: "Розділ книги" },
-          domProps: {
-            checked: _vm._q(_vm.stepData.publicationType, "Розділ книги")
-          },
-          on: {
-            change: function($event) {
-              return _vm.$set(_vm.stepData, "publicationType", "Розділ книги")
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type6" } }, [_vm._v("Розділ книги")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: { id: "type3", type: "radio", value: "Монографії" },
-          domProps: {
-            checked: _vm._q(_vm.stepData.publicationType, "Монографії")
-          },
-          on: {
-            change: function($event) {
-              return _vm.$set(_vm.stepData, "publicationType", "Монографії")
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type3" } }, [_vm._v("Монографії")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: { id: "type4", type: "radio", value: "Розділ монографії" },
-          domProps: {
-            checked: _vm._q(_vm.stepData.publicationType, "Розділ монографії")
-          },
-          on: {
-            change: function($event) {
-              return _vm.$set(
-                _vm.stepData,
-                "publicationType",
-                "Розділ монографії"
-              )
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type4" } }, [_vm._v("Розділ монографії")])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "categories-elem" }, [
@@ -41149,8 +41203,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("p", { staticClass: "step-subtitle" }, [
-      _vm._v("\n        Крок 5 з 5. Назва та база для публікації\n    ")
+      _vm._v("\n        Крок 5 з 5. Вихідні дані\n    ")
     ]),
+    _vm._v(" "),
+    _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "step-button-group" }, [
       _c(
@@ -41165,7 +41221,74 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "step-content" }, [
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Назва журналу")]),
+        _vm._v(" "),
+        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Рік видання")]),
+        _vm._v(" "),
+        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Кількість томів")]),
+        _vm._v(" "),
+        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Номер (том)")]),
+        _vm._v(" "),
+        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Сторінки")]),
+        _vm._v(" "),
+        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Країна видання")]),
+        _vm._v(" "),
+        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Місто видання")]),
+        _vm._v(" "),
+        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("DOI")]),
+        _vm._v(" "),
+        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("За редакцією")]),
+        _vm._v(" "),
+        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("За редакцією")]),
+        _vm._v(" "),
+        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 

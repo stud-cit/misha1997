@@ -3,19 +3,18 @@
         <p class="step-subtitle">
             Крок 3 з 5. Вид публікації
         </p>
-        <div class="categories">
+        <div class="step-content categories">
             <div class="categories-elem">
                 <input id="type2" type="radio" v-model="stepData.publicationType" value="Стаття-доповідь у матеріалах наукових конференціях">
                 <label for="type2">Стаття-доповідь у матеріалах наукових конференціях</label>
             </div>
-
             <div class="categories-elem">
-                <input id="type7" type="radio" v-model="stepData.publicationType" value="Тези доповіді">
-                <label for="type7">Тези доповіді</label>
+                <input id="type4" type="radio" v-model="stepData.publicationType" value="Розділ монографії">
+                <label for="type4">Розділ монографії</label>
             </div>
             <div class="categories-elem">
-                <input id="type1" type="radio" v-model="stepData.publicationType" value="Стаття у фахових виданнях України">
-                <label for="type1">Стаття у фахових виданнях України</label>
+                <input id="type3" type="radio" v-model="stepData.publicationType" value="Монографії">
+                <label for="type3">Монографії</label>
             </div>
             <div class="categories-elem">
                 <input id="type5" type="radio" v-model="stepData.publicationType" value="Книга">
@@ -26,13 +25,15 @@
                 <label for="type6">Розділ книги</label>
             </div>
             <div class="categories-elem">
-                <input id="type3" type="radio" v-model="stepData.publicationType" value="Монографії">
-                <label for="type3">Монографії</label>
+                <input id="type7" type="radio" v-model="stepData.publicationType" value="Тези доповіді">
+                <label for="type7">Тези доповіді</label>
             </div>
             <div class="categories-elem">
-                <input id="type4" type="radio" v-model="stepData.publicationType" value="Розділ монографії">
-                <label for="type4">Розділ монографії</label>
+                <input id="type1" type="radio" v-model="stepData.publicationType" value="Стаття у фахових виданнях України">
+                <label for="type1">Стаття у фахових виданнях України</label>
             </div>
+
+
 
 
             <div class="categories-elem">
@@ -76,14 +77,13 @@
 
     .categories{
         display: flex;
-        margin-top: 150px;
         flex-wrap: wrap;
 
         .categories-elem{
             margin-right: 15px;
             margin-bottom: 20px;
             label{
-                padding: 20px 40px;
+                padding: 15px 35px;
                 background: #FFFFFF;
                 border: 1px solid #18A0FB;
                 border-radius: 44.5px;
@@ -92,7 +92,7 @@
                 font-family: Montserrat;
                 font-style: normal;
                 font-weight: normal;
-                font-size: 25px;
+                font-size: 22px;
                 text-align: center;
                 color: #18A0FB;
                 line-height: 1;
