@@ -206,6 +206,7 @@
                     font-style: normal;
                     font-weight: normal;
                     font-size: 20px;
+                    line-height: 1.2;
                     color: #0E0E0E;
                     outline: none;
                     border: none;

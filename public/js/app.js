@@ -2380,6 +2380,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     getStepData: function getStepData(event) {
       this.stepData = Object.assign(this.stepData, event);
+      console.log(1, event);
 
       if (this.currentStep !== 5) {
         this.currentStep++;
@@ -2790,6 +2791,148 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Step5_fields_ArticleUkr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Step5_fields/ArticleUkr */ "./resources/js/components/Publications/Step5_fields/ArticleUkr.vue");
+/* harmony import */ var _Step5_fields_Monograph__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Step5_fields/Monograph */ "./resources/js/components/Publications/Step5_fields/Monograph.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "Step5",
+  data: function data() {
+    return {
+      stepData: {}
+    };
+  },
+  components: {
+    ArticleUkr: _Step5_fields_ArticleUkr__WEBPACK_IMPORTED_MODULE_0__["default"],
+    Monograph: _Step5_fields_Monograph__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  methods: {},
+  created: function created() {}
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      stepData: {
+        journal: {
+          name: '',
+          year: '',
+          tome: '',
+          pages: '',
+          country: '',
+          doi: ''
+        }
+      }
+    };
+  },
+  methods: {
+    nextStep: function nextStep() {
+      this.$parent.$emit('getData', this.stepData);
+    },
+    prevStep: function prevStep() {
+      this.$parent.$emit('prevStep');
+    }
+  },
+  created: function created() {}
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2857,18 +3000,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Step5",
   data: function data() {
     return {
-      stepData: {}
+      stepData: {
+        monograph: {
+          year: '',
+          count_tomes: '',
+          tome: '',
+          by_editing: '',
+          country: '',
+          city: '',
+          editing_name: '',
+          count_pages: '',
+          oesr_es: 0,
+          doi: ''
+        }
+      }
     };
   },
   methods: {
     nextStep: function nextStep() {
-      this.$emit('getData', this.stepData);
+      this.$parent.$emit('getData', this.stepData);
     },
     prevStep: function prevStep() {
-      this.$emit('prevStep');
+      this.$parent.$emit('prevStep');
     }
   },
   created: function created() {}
@@ -7591,7 +7746,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".profile-info[data-v-3bd692e4] {\n  margin-top: 90px;\n}\n.profile-info .info-item[data-v-3bd692e4] {\n  margin-bottom: 30px;\n}\n.profile-info .info-item .item-title[data-v-3bd692e4] {\n  width: 100%;\n  margin-bottom: 15px;\n  padding-left: 24px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  color: #A6A6A6;\n}\n.profile-info .info-item .value-block[data-v-3bd692e4] {\n  display: flex;\n  align-items: center;\n  /*flex-wrap: wrap;*/\n}\n.profile-info .info-item .value-block .w-40[data-v-3bd692e4] {\n  width: 40%;\n}\n.profile-info .info-item .value-block .alias-btn[data-v-3bd692e4] {\n  width: 10%;\n  background-color: transparent;\n  border: none;\n  outline: none;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 18px;\n  text-align: center;\n  color: #A6A6A6;\n}\n.profile-info .info-item .value-block .delete-alias[data-v-3bd692e4] {\n  color: #FF6A6A;\n}\n.profile-info .info-item .value-block .item-value[data-v-3bd692e4] {\n  width: 90%;\n  /*background: #FFFFFF;*/\n  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);\n  border-radius: 44.5px;\n  padding: 12px 24px;\n  text-align: center;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #0E0E0E;\n  outline: none;\n  border: none;\n}\n.profile-info .save-btn[data-v-3bd692e4] {\n  margin-top: 120px;\n  padding: 27px 85px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 22px;\n  text-align: center;\n  color: #FFFFFF;\n  background: #C4C4C4;\n  position: relative;\n  line-height: 1;\n}\n.profile-info .save-btn[data-v-3bd692e4]::before {\n  content: \"\";\n  position: absolute;\n  background: url(\"/img/angle.png\");\n  width: 20px;\n  height: 14px;\n  right: 50px;\n  top: 33px;\n}\n.profile-info .back-link[data-v-3bd692e4] {\n  display: block;\n  margin-top: 35px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: 300;\n  font-size: 22px;\n  text-align: center;\n  color: #A6A6A6;\n}", ""]);
+exports.push([module.i, ".profile-info[data-v-3bd692e4] {\n  margin-top: 90px;\n}\n.profile-info .info-item[data-v-3bd692e4] {\n  margin-bottom: 30px;\n}\n.profile-info .info-item .item-title[data-v-3bd692e4] {\n  width: 100%;\n  margin-bottom: 15px;\n  padding-left: 24px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  color: #A6A6A6;\n}\n.profile-info .info-item .value-block[data-v-3bd692e4] {\n  display: flex;\n  align-items: center;\n  /*flex-wrap: wrap;*/\n}\n.profile-info .info-item .value-block .w-40[data-v-3bd692e4] {\n  width: 40%;\n}\n.profile-info .info-item .value-block .alias-btn[data-v-3bd692e4] {\n  width: 10%;\n  background-color: transparent;\n  border: none;\n  outline: none;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 18px;\n  text-align: center;\n  color: #A6A6A6;\n}\n.profile-info .info-item .value-block .delete-alias[data-v-3bd692e4] {\n  color: #FF6A6A;\n}\n.profile-info .info-item .value-block .item-value[data-v-3bd692e4] {\n  width: 90%;\n  /*background: #FFFFFF;*/\n  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);\n  border-radius: 44.5px;\n  padding: 12px 24px;\n  text-align: center;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  line-height: 1.2;\n  color: #0E0E0E;\n  outline: none;\n  border: none;\n}\n.profile-info .save-btn[data-v-3bd692e4] {\n  margin-top: 120px;\n  padding: 27px 85px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 22px;\n  text-align: center;\n  color: #FFFFFF;\n  background: #C4C4C4;\n  position: relative;\n  line-height: 1;\n}\n.profile-info .save-btn[data-v-3bd692e4]::before {\n  content: \"\";\n  position: absolute;\n  background: url(\"/img/angle.png\");\n  width: 20px;\n  height: 14px;\n  right: 50px;\n  top: 33px;\n}\n.profile-info .back-link[data-v-3bd692e4] {\n  display: block;\n  margin-top: 35px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: 300;\n  font-size: 22px;\n  text-align: center;\n  color: #A6A6A6;\n}", ""]);
 
 // exports
 
@@ -7649,6 +7804,44 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 // module
 exports.push([module.i, ".step-item[data-v-7b18c42b] {\n  margin-top: 50px;\n  display: flex;\n  align-items: center;\n}\n.step-item[data-v-7b18c42b]:first-of-type {\n  margin-top: 0;\n}\n.step-item .item-title[data-v-7b18c42b] {\n  width: auto;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  color: #A6A6A6;\n  margin-right: 20px;\n}\n.step-item .item-input[data-v-7b18c42b] {\n  padding: 12px;\n  text-align: center;\n  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);\n  border-radius: 44.5px;\n  border: none;\n  outline: none;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #0E0E0E;\n  min-width: 258px;\n}\n.step-item .categories-elem[data-v-7b18c42b] {\n  display: flex;\n}\n.step-item .categories-elem .small-box[data-v-7b18c42b] {\n  width: 31px;\n  padding: 4px 0;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 10px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  text-align: center;\n  cursor: pointer;\n}\n.step-item .categories-elem .big-box[data-v-7b18c42b] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.step-item .categories-elem input[data-v-7b18c42b] {\n  display: none;\n}\n.step-item .categories-elem input:checked + label[data-v-7b18c42b] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--8-2!./node_modules/sass-loader/dist/cjs.js??ref--8-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "select[data-v-0f4132ae] {\n  background: url(\"/img/arrow-down.png\") no-repeat 98% 50%;\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--8-2!./node_modules/sass-loader/dist/cjs.js??ref--8-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".categories-elem[data-v-4caf28b8] {\n  display: flex;\n}\n.categories-elem .small-box[data-v-4caf28b8] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.categories-elem .small-box[data-v-4caf28b8]:first-of-type {\n  margin-left: 0;\n}\n.categories-elem input[data-v-4caf28b8] {\n  display: none;\n}\n.categories-elem input:checked + label[data-v-4caf28b8] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
 
 // exports
 
@@ -38761,6 +38954,66 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--8-2!./node_modules/sass-loader/dist/cjs.js??ref--8-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--8-2!../../../../../node_modules/sass-loader/dist/cjs.js??ref--8-3!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--8-2!./node_modules/sass-loader/dist/cjs.js??ref--8-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--8-2!../../../../../node_modules/sass-loader/dist/cjs.js??ref--8-3!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/lib/addStyles.js":
 /*!****************************************************!*\
   !*** ./node_modules/style-loader/lib/addStyles.js ***!
@@ -40120,8 +40373,8 @@ var render = function() {
           {
             name: "show",
             rawName: "v-show",
-            value: _vm.currentStep == 1,
-            expression: "currentStep==1"
+            value: _vm.currentStep == 5,
+            expression: "currentStep==5"
           }
         ],
         on: {
@@ -40187,8 +40440,8 @@ var render = function() {
           {
             name: "show",
             rawName: "v-show",
-            value: _vm.currentStep == 5,
-            expression: "currentStep==5"
+            value: _vm.currentStep == 1,
+            expression: "currentStep==1"
           }
         ],
         on: {
@@ -41201,12 +41454,234 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("p", { staticClass: "step-subtitle" }, [
+        _vm._v("\n        Крок 5 з 5. Вихідні дані\n    ")
+      ]),
+      _vm._v(" "),
+      _c("article-ukr", {
+        directives: [
+          { name: "show", rawName: "v-show", value: false, expression: "false" }
+        ]
+      }),
+      _vm._v(" "),
+      _c("monograph")
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=template&id=0f4132ae&scoped=true&":
+/*!***************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=template&id=0f4132ae&scoped=true& ***!
+  \***************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
   return _c("div", [
-    _c("p", { staticClass: "step-subtitle" }, [
-      _vm._v("\n        Крок 5 з 5. Вихідні дані\n    ")
+    _c("div", { staticClass: "step-content" }, [
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Назва журналу")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.journal.name,
+              expression: "stepData.journal.name"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.journal.name },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.journal, "name", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Рік видання")]),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.stepData.journal.year,
+                expression: "stepData.journal.year"
+              }
+            ],
+            staticClass: "item-value",
+            on: {
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.$set(
+                  _vm.stepData.journal,
+                  "year",
+                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                )
+              }
+            }
+          },
+          [
+            _c("option", { attrs: { value: "2020" } }, [_vm._v("2020")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "2019" } }, [_vm._v("2019")])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Номер (том)")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.journal.tome,
+              expression: "stepData.journal.tome"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.journal.tome },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.journal, "tome", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Сторінки")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.journal.pages,
+              expression: "stepData.journal.pages"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.journal.pages },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.journal, "pages", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Країна видання")]),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.stepData.journal.country,
+                expression: "stepData.journal.country"
+              }
+            ],
+            staticClass: "item-value",
+            on: {
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.$set(
+                  _vm.stepData.journal,
+                  "country",
+                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                )
+              }
+            }
+          },
+          [
+            _c("option", { attrs: { value: "Україна" } }, [_vm._v("Україна")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "Англія" } }, [_vm._v("Англія")])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("DOI")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.journal.doi,
+              expression: "stepData.journal.doi"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.journal.doi },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.journal, "doi", $event.target.value)
+            }
+          }
+        })
+      ])
     ]),
-    _vm._v(" "),
-    _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "step-button-group" }, [
       _c(
@@ -41221,74 +41696,368 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "step-content" }, [
-      _c("div", { staticClass: "step-item" }, [
-        _c("label", { staticClass: "item-title" }, [_vm._v("Назва журналу")]),
-        _vm._v(" "),
-        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
-      ]),
-      _vm._v(" "),
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=template&id=4caf28b8&scoped=true&":
+/*!**************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=template&id=4caf28b8&scoped=true& ***!
+  \**************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "step-content" }, [
       _c("div", { staticClass: "step-item" }, [
         _c("label", { staticClass: "item-title" }, [_vm._v("Рік видання")]),
         _vm._v(" "),
-        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.stepData.monograph.year,
+                expression: "stepData.monograph.year"
+              }
+            ],
+            staticClass: "item-value",
+            on: {
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.$set(
+                  _vm.stepData.monograph,
+                  "year",
+                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                )
+              }
+            }
+          },
+          [
+            _c("option", { attrs: { value: "2020" } }, [_vm._v("2020")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "2019" } }, [_vm._v("2019")])
+          ]
+        )
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "step-item" }, [
         _c("label", { staticClass: "item-title" }, [_vm._v("Кількість томів")]),
         _vm._v(" "),
-        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.monograph.count_tomes,
+              expression: "stepData.monograph.count_tomes"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "number" },
+          domProps: { value: _vm.stepData.monograph.count_tomes },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(
+                _vm.stepData.monograph,
+                "count_tomes",
+                $event.target.value
+              )
+            }
+          }
+        })
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "step-item" }, [
-        _c("label", { staticClass: "item-title" }, [_vm._v("Номер (том)")]),
+        _c("label", { staticClass: "item-title" }, [_vm._v("Том")]),
         _vm._v(" "),
-        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.monograph.tome,
+              expression: "stepData.monograph.tome"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.monograph.tome },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.monograph, "tome", $event.target.value)
+            }
+          }
+        })
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "step-item" }, [
-        _c("label", { staticClass: "item-title" }, [_vm._v("Сторінки")]),
+        _c("label", { staticClass: "item-title" }, [_vm._v("За редакцією")]),
         _vm._v(" "),
-        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.monograph.by_editing,
+              expression: "stepData.monograph.by_editing"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.monograph.by_editing },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(
+                _vm.stepData.monograph,
+                "by_editing",
+                $event.target.value
+              )
+            }
+          }
+        })
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "step-item" }, [
         _c("label", { staticClass: "item-title" }, [_vm._v("Країна видання")]),
         _vm._v(" "),
-        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.monograph.country,
+              expression: "stepData.monograph.country"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.monograph.country },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.monograph, "country", $event.target.value)
+            }
+          }
+        })
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "step-item" }, [
         _c("label", { staticClass: "item-title" }, [_vm._v("Місто видання")]),
         _vm._v(" "),
-        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.monograph.city,
+              expression: "stepData.monograph.city"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.monograph.city },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.monograph, "city", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Назва редакції")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.monograph.editing_name,
+              expression: "stepData.monograph.editing_name"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.monograph.editing_name },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(
+                _vm.stepData.monograph,
+                "editing_name",
+                $event.target.value
+              )
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [
+          _vm._v("Кількість сторінок")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.monograph.count_pages,
+              expression: "stepData.monograph.count_pages"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.monograph.count_pages },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(
+                _vm.stepData.monograph,
+                "count_pages",
+                $event.target.value
+              )
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("p", { staticClass: "item-title" }, [
+          _vm._v("Опубліковано мовами ОЕСР та ЄС")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "categories-elem" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.stepData.monograph.oesr_es,
+                expression: "stepData.monograph.oesr_es"
+              }
+            ],
+            attrs: { id: "oesr_es1", type: "radio", value: "1" },
+            domProps: { checked: _vm._q(_vm.stepData.monograph.oesr_es, "1") },
+            on: {
+              change: function($event) {
+                return _vm.$set(_vm.stepData.monograph, "oesr_es", "1")
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "label",
+            { staticClass: "small-box", attrs: { for: "oesr_es1" } },
+            [_vm._v("Так")]
+          ),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.stepData.monograph.oesr_es,
+                expression: "stepData.monograph.oesr_es"
+              }
+            ],
+            attrs: { id: "oesr_es0", type: "radio", value: "0" },
+            domProps: { checked: _vm._q(_vm.stepData.monograph.oesr_es, "0") },
+            on: {
+              change: function($event) {
+                return _vm.$set(_vm.stepData.monograph, "oesr_es", "0")
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "label",
+            { staticClass: "small-box", attrs: { for: "oesr_es0" } },
+            [_vm._v("Ні")]
+          )
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "step-item" }, [
         _c("label", { staticClass: "item-title" }, [_vm._v("DOI")]),
         _vm._v(" "),
-        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
-      ]),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.monograph.doi,
+              expression: "stepData.monograph.doi"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.monograph.doi },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.monograph, "doi", $event.target.value)
+            }
+          }
+        })
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "step-button-group" }, [
+      _c(
+        "button",
+        { staticClass: "next active", on: { click: _vm.nextStep } },
+        [_vm._v("Продовжити "), _c("span", [_vm._v(">")])]
+      ),
       _vm._v(" "),
-      _c("div", { staticClass: "step-item" }, [
-        _c("label", { staticClass: "item-title" }, [_vm._v("За редакцією")]),
-        _vm._v(" "),
-        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "step-item" }, [
-        _c("label", { staticClass: "item-title" }, [_vm._v("За редакцією")]),
-        _vm._v(" "),
-        _c("input", { staticClass: "item-value", attrs: { type: "text" } })
+      _c("button", { staticClass: "prev", on: { click: _vm.prevStep } }, [
+        _vm._v("На попередній крок")
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -57633,6 +58402,180 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Step5_vue_vue_type_template_id_7b26dbac_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Step5_vue_vue_type_template_id_7b26dbac_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/ArticleUkr.vue":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/ArticleUkr.vue ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ArticleUkr_vue_vue_type_template_id_0f4132ae_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ArticleUkr.vue?vue&type=template&id=0f4132ae&scoped=true& */ "./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=template&id=0f4132ae&scoped=true&");
+/* harmony import */ var _ArticleUkr_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ArticleUkr.vue?vue&type=script&lang=js& */ "./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _ArticleUkr_vue_vue_type_style_index_0_id_0f4132ae_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true& */ "./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _ArticleUkr_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ArticleUkr_vue_vue_type_template_id_0f4132ae_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ArticleUkr_vue_vue_type_template_id_0f4132ae_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "0f4132ae",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Publications/Step5_fields/ArticleUkr.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ArticleUkr_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ArticleUkr.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ArticleUkr_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true&":
+/*!************************************************************************************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true& ***!
+  \************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ArticleUkr_vue_vue_type_style_index_0_id_0f4132ae_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--8-2!../../../../../node_modules/sass-loader/dist/cjs.js??ref--8-3!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=style&index=0&id=0f4132ae&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ArticleUkr_vue_vue_type_style_index_0_id_0f4132ae_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ArticleUkr_vue_vue_type_style_index_0_id_0f4132ae_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ArticleUkr_vue_vue_type_style_index_0_id_0f4132ae_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ArticleUkr_vue_vue_type_style_index_0_id_0f4132ae_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ArticleUkr_vue_vue_type_style_index_0_id_0f4132ae_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=template&id=0f4132ae&scoped=true&":
+/*!*********************************************************************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=template&id=0f4132ae&scoped=true& ***!
+  \*********************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ArticleUkr_vue_vue_type_template_id_0f4132ae_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ArticleUkr.vue?vue&type=template&id=0f4132ae&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/ArticleUkr.vue?vue&type=template&id=0f4132ae&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ArticleUkr_vue_vue_type_template_id_0f4132ae_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ArticleUkr_vue_vue_type_template_id_0f4132ae_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/Monograph.vue":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/Monograph.vue ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Monograph_vue_vue_type_template_id_4caf28b8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Monograph.vue?vue&type=template&id=4caf28b8&scoped=true& */ "./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=template&id=4caf28b8&scoped=true&");
+/* harmony import */ var _Monograph_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Monograph.vue?vue&type=script&lang=js& */ "./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Monograph_vue_vue_type_style_index_0_id_4caf28b8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true& */ "./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _Monograph_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Monograph_vue_vue_type_template_id_4caf28b8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Monograph_vue_vue_type_template_id_4caf28b8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "4caf28b8",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Publications/Step5_fields/Monograph.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Monograph.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true&":
+/*!***********************************************************************************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true& ***!
+  \***********************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_style_index_0_id_4caf28b8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--8-2!../../../../../node_modules/sass-loader/dist/cjs.js??ref--8-3!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=style&index=0&id=4caf28b8&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_style_index_0_id_4caf28b8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_style_index_0_id_4caf28b8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_style_index_0_id_4caf28b8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_style_index_0_id_4caf28b8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_style_index_0_id_4caf28b8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=template&id=4caf28b8&scoped=true&":
+/*!********************************************************************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=template&id=4caf28b8&scoped=true& ***!
+  \********************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_template_id_4caf28b8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Monograph.vue?vue&type=template&id=4caf28b8&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Monograph.vue?vue&type=template&id=4caf28b8&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_template_id_4caf28b8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_template_id_4caf28b8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
