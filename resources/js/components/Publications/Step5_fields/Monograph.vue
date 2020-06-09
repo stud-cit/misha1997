@@ -25,9 +25,13 @@
 
             </div>
 
+
             <div class="step-item">
                 <label class="item-title">Країна видання</label>
-                <input class="item-value" type="text" v-model="stepData.monograph.country">
+                <select class="item-value" v-model="stepData.monograph.country">
+                    <option value="Україна">Україна</option>
+                    <option value="Англія">Англія</option>
+                </select>
 
             </div>
             <div class="step-item">
@@ -139,6 +143,10 @@
             border: 1px solid #18A0FB;
             color: #fff;
         }
+    }
+    select{
+        background: url("/img/arrow-down.png") no-repeat 98% 50%;
+        text-align-last: center;
     }
 
 </style>

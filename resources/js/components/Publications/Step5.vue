@@ -6,7 +6,11 @@
 
         <article-ukr v-show="false"></article-ukr>
 
-        <monograph></monograph>
+        <monograph v-show="false"></monograph>
+
+        <thesis></thesis>
+
+
 
 
 
@@ -15,8 +19,13 @@
 </template>
 
 <script>
+    // Стаття у фахових виданнях України, інші статті
     import ArticleUkr from './Step5_fields/ArticleUkr';
+
+    // монографії посібники підручники
     import Monograph from "./Step5_fields/Monograph";
+
+    import Thesis from "./Step5_fields/Thesis";
 
     export default {
         name: "Step5",
@@ -31,6 +40,8 @@
         components:{
             ArticleUkr,
             Monograph,
+            Thesis
+
         },
         methods:{
 

@@ -2793,6 +2793,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Step5_fields_ArticleUkr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Step5_fields/ArticleUkr */ "./resources/js/components/Publications/Step5_fields/ArticleUkr.vue");
 /* harmony import */ var _Step5_fields_Monograph__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Step5_fields/Monograph */ "./resources/js/components/Publications/Step5_fields/Monograph.vue");
+/* harmony import */ var _Step5_fields_Thesis__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Step5_fields/Thesis */ "./resources/js/components/Publications/Step5_fields/Thesis.vue");
 //
 //
 //
@@ -2809,6 +2810,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+// Стаття у фахових виданнях України, інші статті
+ // монографії посібники підручники
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2820,7 +2828,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   components: {
     ArticleUkr: _Step5_fields_ArticleUkr__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Monograph: _Step5_fields_Monograph__WEBPACK_IMPORTED_MODULE_1__["default"]
+    Monograph: _Step5_fields_Monograph__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Thesis: _Step5_fields_Thesis__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   methods: {},
   created: function created() {}
@@ -2999,6 +3008,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3013,6 +3026,102 @@ __webpack_require__.r(__webpack_exports__);
           editing_name: '',
           count_pages: '',
           oesr_es: 0,
+          doi: ''
+        }
+      }
+    };
+  },
+  methods: {
+    nextStep: function nextStep() {
+      this.$parent.$emit('getData', this.stepData);
+    },
+    prevStep: function prevStep() {
+      this.$parent.$emit('prevStep');
+    }
+  },
+  created: function created() {}
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      stepData: {
+        thesis: {
+          name: '',
+          year: '',
+          edition: '',
+          pages: '',
+          country: '',
+          city: '',
           doi: ''
         }
       }
@@ -7822,7 +7931,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "select[data-v-0f4132ae] {\n  background: url(\"/img/arrow-down.png\") no-repeat 98% 50%;\n}", ""]);
+exports.push([module.i, "select[data-v-0f4132ae] {\n  background: url(\"/img/arrow-down.png\") no-repeat 98% 50%;\n  -moz-text-align-last: center;\n       text-align-last: center;\n}", ""]);
 
 // exports
 
@@ -7841,7 +7950,26 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, ".categories-elem[data-v-4caf28b8] {\n  display: flex;\n}\n.categories-elem .small-box[data-v-4caf28b8] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.categories-elem .small-box[data-v-4caf28b8]:first-of-type {\n  margin-left: 0;\n}\n.categories-elem input[data-v-4caf28b8] {\n  display: none;\n}\n.categories-elem input:checked + label[data-v-4caf28b8] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
+exports.push([module.i, ".categories-elem[data-v-4caf28b8] {\n  display: flex;\n}\n.categories-elem .small-box[data-v-4caf28b8] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.categories-elem .small-box[data-v-4caf28b8]:first-of-type {\n  margin-left: 0;\n}\n.categories-elem input[data-v-4caf28b8] {\n  display: none;\n}\n.categories-elem input:checked + label[data-v-4caf28b8] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}\nselect[data-v-4caf28b8] {\n  background: url(\"/img/arrow-down.png\") no-repeat 98% 50%;\n  -moz-text-align-last: center;\n       text-align-last: center;\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--8-2!./node_modules/sass-loader/dist/cjs.js??ref--8-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "select[data-v-32ba582f] {\n  background: url(\"/img/arrow-down.png\") no-repeat 98% 50%;\n  -moz-text-align-last: center;\n       text-align-last: center;\n}", ""]);
 
 // exports
 
@@ -39014,6 +39142,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--8-2!./node_modules/sass-loader/dist/cjs.js??ref--8-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--8-2!../../../../../node_modules/sass-loader/dist/cjs.js??ref--8-3!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/lib/addStyles.js":
 /*!****************************************************!*\
   !*** ./node_modules/style-loader/lib/addStyles.js ***!
@@ -41467,7 +41625,13 @@ var render = function() {
         ]
       }),
       _vm._v(" "),
-      _c("monograph")
+      _c("monograph", {
+        directives: [
+          { name: "show", rawName: "v-show", value: false, expression: "false" }
+        ]
+      }),
+      _vm._v(" "),
+      _c("thesis")
     ],
     1
   )
@@ -41850,27 +42014,42 @@ var render = function() {
       _c("div", { staticClass: "step-item" }, [
         _c("label", { staticClass: "item-title" }, [_vm._v("Країна видання")]),
         _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.monograph.country,
-              expression: "stepData.monograph.country"
-            }
-          ],
-          staticClass: "item-value",
-          attrs: { type: "text" },
-          domProps: { value: _vm.stepData.monograph.country },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.stepData.monograph.country,
+                expression: "stepData.monograph.country"
               }
-              _vm.$set(_vm.stepData.monograph, "country", $event.target.value)
+            ],
+            staticClass: "item-value",
+            on: {
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.$set(
+                  _vm.stepData.monograph,
+                  "country",
+                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                )
+              }
             }
-          }
-        })
+          },
+          [
+            _c("option", { attrs: { value: "Україна" } }, [_vm._v("Україна")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "Англія" } }, [_vm._v("Англія")])
+          ]
+        )
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "step-item" }, [
@@ -42038,6 +42217,258 @@ var render = function() {
                 return
               }
               _vm.$set(_vm.stepData.monograph, "doi", $event.target.value)
+            }
+          }
+        })
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "step-button-group" }, [
+      _c(
+        "button",
+        { staticClass: "next active", on: { click: _vm.nextStep } },
+        [_vm._v("Продовжити "), _c("span", [_vm._v(">")])]
+      ),
+      _vm._v(" "),
+      _c("button", { staticClass: "prev", on: { click: _vm.prevStep } }, [
+        _vm._v("На попередній крок")
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=template&id=32ba582f&scoped=true&":
+/*!***********************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=template&id=32ba582f&scoped=true& ***!
+  \***********************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "step-content" }, [
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [
+          _vm._v("Назва конференції")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.thesis.name,
+              expression: "stepData.thesis.name"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.thesis.name },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.thesis, "name", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Рік видання")]),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.stepData.thesis.year,
+                expression: "stepData.thesis.year"
+              }
+            ],
+            staticClass: "item-value",
+            on: {
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.$set(
+                  _vm.stepData.thesis,
+                  "year",
+                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                )
+              }
+            }
+          },
+          [
+            _c("option", { attrs: { value: "2020" } }, [_vm._v("2020")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "2019" } }, [_vm._v("2019")])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Видавництво")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.thesis.edition,
+              expression: "stepData.thesis.edition"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.thesis.edition },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.thesis, "edition", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Сторінки")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.thesis.pages,
+              expression: "stepData.thesis.pages"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.thesis.pages },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.thesis, "pages", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Країна видання")]),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.stepData.thesis.country,
+                expression: "stepData.thesis.country"
+              }
+            ],
+            staticClass: "item-value",
+            on: {
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.$set(
+                  _vm.stepData.thesis,
+                  "country",
+                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                )
+              }
+            }
+          },
+          [
+            _c("option", { attrs: { value: "Україна" } }, [_vm._v("Україна")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "Англія" } }, [_vm._v("Англія")])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("Місто видання")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.thesis.city,
+              expression: "stepData.thesis.city"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.thesis.city },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.thesis, "city", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "step-item" }, [
+        _c("label", { staticClass: "item-title" }, [_vm._v("DOI")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.stepData.thesis.doi,
+              expression: "stepData.thesis.doi"
+            }
+          ],
+          staticClass: "item-value",
+          attrs: { type: "text" },
+          domProps: { value: _vm.stepData.thesis.doi },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.stepData.thesis, "doi", $event.target.value)
             }
           }
         })
@@ -58576,6 +59007,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_template_id_4caf28b8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Monograph_vue_vue_type_template_id_4caf28b8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/Thesis.vue":
+/*!**********************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/Thesis.vue ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Thesis_vue_vue_type_template_id_32ba582f_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Thesis.vue?vue&type=template&id=32ba582f&scoped=true& */ "./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=template&id=32ba582f&scoped=true&");
+/* harmony import */ var _Thesis_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Thesis.vue?vue&type=script&lang=js& */ "./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Thesis_vue_vue_type_style_index_0_id_32ba582f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true& */ "./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _Thesis_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Thesis_vue_vue_type_template_id_32ba582f_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Thesis_vue_vue_type_template_id_32ba582f_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "32ba582f",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Publications/Step5_fields/Thesis.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Thesis_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Thesis.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Thesis_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true&":
+/*!********************************************************************************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true& ***!
+  \********************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Thesis_vue_vue_type_style_index_0_id_32ba582f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--8-2!../../../../../node_modules/sass-loader/dist/cjs.js??ref--8-3!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=style&index=0&id=32ba582f&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Thesis_vue_vue_type_style_index_0_id_32ba582f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Thesis_vue_vue_type_style_index_0_id_32ba582f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Thesis_vue_vue_type_style_index_0_id_32ba582f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Thesis_vue_vue_type_style_index_0_id_32ba582f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Thesis_vue_vue_type_style_index_0_id_32ba582f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=template&id=32ba582f&scoped=true&":
+/*!*****************************************************************************************************************!*\
+  !*** ./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=template&id=32ba582f&scoped=true& ***!
+  \*****************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Thesis_vue_vue_type_template_id_32ba582f_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Thesis.vue?vue&type=template&id=32ba582f&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Publications/Step5_fields/Thesis.vue?vue&type=template&id=32ba582f&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Thesis_vue_vue_type_template_id_32ba582f_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Thesis_vue_vue_type_template_id_32ba582f_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

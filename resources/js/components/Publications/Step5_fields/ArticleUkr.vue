@@ -87,6 +87,7 @@
 
     select{
         background: url("/img/arrow-down.png") no-repeat 98% 50%;
+        text-align-last: center;
     }
 
 </style>
