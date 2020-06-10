@@ -27,6 +27,11 @@
 
     import Thesis from "./Step5_fields/Thesis";
 
+    import Patent from "./Step5_fields/Patent";
+    import Certificate from "./Step5_fields/Certificate";
+    import Methodical from "./Step5_fields/Methodical";
+    import Electronic from "./Step5_fields/Electronic";
+
     export default {
         name: "Step5",
         data() {
@@ -40,7 +45,11 @@
         components:{
             ArticleUkr,
             Monograph,
-            Thesis
+            Thesis,
+            Patent,
+            Certificate,
+            Methodical,
+            Electronic
 
         },
         methods:{
