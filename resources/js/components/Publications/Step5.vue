@@ -8,7 +8,8 @@
 
         <monograph v-show="false"></monograph>
 
-        <thesis></thesis>
+        <thesis v-show="false"></thesis>
+        <patent></patent>
 
 
 
