@@ -2655,25 +2655,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Step2",
   data: function data() {
     return {
       value: '',
-      options: ['Петренко', 'Іванов', 'Ivanenko', 'Петросян'],
+      authorsData: ['Петренко', 'Іванов', 'Ivanenko', 'Петросян'],
       stepData: {
-        leadership: '0',
+        useSupervisor: '0',
         supervisor: '',
-        svAlias: '',
-        svAliasOptions: ['Petrenko', 'Петров'],
         authors: [{
           name: '',
+          useAlias: false,
           alias: '',
           aliasOptions: ['Petrenko', 'Петренко']
         }, {
           name: '',
+          useAlias: false,
           alias: '',
           aliasOptions: ['Ivanov', 'Иванов']
         }]
@@ -2689,6 +2688,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     prevStep: function prevStep() {
       this.$emit('prevStep');
+    },
+    useAlias: function useAlias(i) {
+      this.stepData.authors[i].useAlias = !this.stepData.authors[i].useAlias;
     }
   }
 });
@@ -8428,7 +8430,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".step-item .item-title[data-v-7afc9529] {\n  padding-left: 0;\n}\n.small-box[data-v-7afc9529] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.small-box[data-v-7afc9529]:first-of-type {\n  margin-left: 0;\n}\ninput[data-v-7afc9529] {\n  display: none;\n}\ninput:checked + label[data-v-7afc9529] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
+exports.push([module.i, ".step-item .item-title[data-v-7afc9529] {\n  padding-left: 0;\n}\n.small-box[data-v-7afc9529] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.small-box[data-v-7afc9529]:first-of-type {\n  margin-left: 0;\n}\n.btn-blue[data-v-7afc9529] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n  outline: none;\n}\ninput[data-v-7afc9529] {\n  display: none;\n}\ninput:checked + label[data-v-7afc9529] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
 
 // exports
 
@@ -40741,7 +40743,7 @@ var render = function() {
                         staticClass: "nav-link note",
                         attrs: {
                           exist: "",
-                          to: { name: "notification" },
+                          to: { name: "notifications" },
                           "active-class": "active"
                         }
                       },
@@ -40824,14 +40826,17 @@ var render = function() {
         _vm._v(" "),
         _c(
           "router-link",
-          { staticClass: "page-link", attrs: { to: { name: "publications" } } },
+          {
+            staticClass: "page-link",
+            attrs: { to: { name: "publications-add" } }
+          },
           [_vm._v("Додати нову публікацію")]
         ),
         _vm._v(" "),
         _c(
           "router-link",
-          { staticClass: "page-link", attrs: { to: { name: "publications" } } },
-          [_vm._v("Список усіх працівників СумДУ")]
+          { staticClass: "page-link", attrs: { to: { name: "users" } } },
+          [_vm._v("Список усіх користувачів")]
         ),
         _vm._v(" "),
         _c(
@@ -41325,89 +41330,59 @@ var render = function() {
         _vm._v("Додати нову публікацію")
       ]),
       _vm._v(" "),
-      _c("step1", {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.currentStep == 2,
-            expression: "currentStep==2"
-          }
-        ],
-        on: {
-          getData: function($event) {
-            return _vm.getStepData($event)
-          }
-        }
-      }),
+      _vm.currentStep == 2
+        ? _c("step1", {
+            on: {
+              getData: function($event) {
+                return _vm.getStepData($event)
+              }
+            }
+          })
+        : _vm._e(),
       _vm._v(" "),
-      _c("step2", {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.currentStep == 1,
-            expression: "currentStep==1"
-          }
-        ],
-        on: {
-          getData: function($event) {
-            return _vm.getStepData($event)
-          },
-          prevStep: _vm.prevStep
-        }
-      }),
+      _vm.currentStep == 1
+        ? _c("step2", {
+            on: {
+              getData: function($event) {
+                return _vm.getStepData($event)
+              },
+              prevStep: _vm.prevStep
+            }
+          })
+        : _vm._e(),
       _vm._v(" "),
-      _c("step3", {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.currentStep == 3,
-            expression: "currentStep==3"
-          }
-        ],
-        on: {
-          getData: function($event) {
-            return _vm.getStepData($event)
-          },
-          prevStep: _vm.prevStep
-        }
-      }),
+      _vm.currentStep == 3
+        ? _c("step3", {
+            on: {
+              getData: function($event) {
+                return _vm.getStepData($event)
+              },
+              prevStep: _vm.prevStep
+            }
+          })
+        : _vm._e(),
       _vm._v(" "),
-      _c("step4", {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.currentStep == 4,
-            expression: "currentStep==4"
-          }
-        ],
-        on: {
-          getData: function($event) {
-            return _vm.getStepData($event)
-          },
-          prevStep: _vm.prevStep
-        }
-      }),
+      _vm.currentStep == 4
+        ? _c("step4", {
+            on: {
+              getData: function($event) {
+                return _vm.getStepData($event)
+              },
+              prevStep: _vm.prevStep
+            }
+          })
+        : _vm._e(),
       _vm._v(" "),
-      _c("step5", {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.currentStep == 5,
-            expression: "currentStep==5"
-          }
-        ],
-        on: {
-          getData: function($event) {
-            return _vm.getStepData($event)
-          },
-          prevStep: _vm.prevStep
-        }
-      })
+      _vm.currentStep == 5
+        ? _c("step5", {
+            on: {
+              getData: function($event) {
+                return _vm.getStepData($event)
+              },
+              prevStep: _vm.prevStep
+            }
+          })
+        : _vm._e()
     ],
     1
   )
@@ -41813,15 +41788,15 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.stepData.leadership,
-                expression: "stepData.leadership"
+                value: _vm.stepData.useSupervisor,
+                expression: "stepData.useSupervisor"
               }
             ],
             attrs: { id: "leadership1", type: "radio", value: "1" },
-            domProps: { checked: _vm._q(_vm.stepData.leadership, "1") },
+            domProps: { checked: _vm._q(_vm.stepData.useSupervisor, "1") },
             on: {
               change: function($event) {
-                return _vm.$set(_vm.stepData, "leadership", "1")
+                return _vm.$set(_vm.stepData, "useSupervisor", "1")
               }
             }
           }),
@@ -41837,15 +41812,15 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.stepData.leadership,
-                expression: "stepData.leadership"
+                value: _vm.stepData.useSupervisor,
+                expression: "stepData.useSupervisor"
               }
             ],
             attrs: { id: "leadership0", type: "radio", value: "0" },
-            domProps: { checked: _vm._q(_vm.stepData.leadership, "0") },
+            domProps: { checked: _vm._q(_vm.stepData.useSupervisor, "0") },
             on: {
               change: function($event) {
-                return _vm.$set(_vm.stepData, "leadership", "0")
+                return _vm.$set(_vm.stepData, "useSupervisor", "0")
               }
             }
           }),
@@ -41858,60 +41833,45 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.stepData.leadership == "1",
-              expression: "stepData.leadership == '1'"
-            }
-          ],
-          staticClass: "step-item"
-        },
-        [
-          _c("p", { staticClass: "item-title" }, [_vm._v("Керівник :")]),
-          _vm._v(" "),
-          _c("multiselect", {
-            attrs: {
-              options: _vm.options,
-              placeholder: "Пошук в базі данних сайту",
-              selectLabel: "Натисніть для вибору",
-              selectedLabel: "Вибрано",
-              deselectLabel: "Натисніть для видалення"
-            },
-            model: {
-              value: _vm.stepData.supervisor,
-              callback: function($$v) {
-                _vm.$set(_vm.stepData, "supervisor", $$v)
-              },
-              expression: "stepData.supervisor"
-            }
-          }),
-          _vm._v(" "),
-          _c("multiselect", {
-            attrs: {
-              options: _vm.stepData.svAliasOptions,
-              placeholder: "Виберіть псевдонім",
-              selectLabel: "Натисніть для вибору",
-              selectedLabel: "Вибрано",
-              deselectLabel: "Натисніть для видалення"
-            },
-            model: {
-              value: _vm.stepData.svAlias,
-              callback: function($$v) {
-                _vm.$set(_vm.stepData, "svAlias", $$v)
-              },
-              expression: "stepData.svAlias"
-            }
-          }),
-          _vm._v(" "),
-          _c("button", [_vm._v(" використати псевдонім")])
-        ],
-        1
-      ),
+      _vm.stepData.useSupervisor == "1"
+        ? _c("div", { staticClass: "step-item" }, [
+            _c("p", { staticClass: "item-title" }, [_vm._v("Керівник :")]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "authors supervisor" },
+              [
+                _c(
+                  "multiselect",
+                  {
+                    attrs: {
+                      options: _vm.authorsData,
+                      placeholder: "Пошук в базі данних сайту",
+                      selectLabel: "Натисніть для вибору",
+                      selectedLabel: "Вибрано",
+                      deselectLabel: "Натисніть для видалення"
+                    },
+                    model: {
+                      value: _vm.stepData.supervisor,
+                      callback: function($$v) {
+                        _vm.$set(_vm.stepData, "supervisor", $$v)
+                      },
+                      expression: "stepData.supervisor"
+                    }
+                  },
+                  [
+                    _c(
+                      "span",
+                      { attrs: { slot: "noResult" }, slot: "noResult" },
+                      [_vm._v("По даному запиту немає результатів")]
+                    )
+                  ]
+                )
+              ],
+              1
+            )
+          ])
+        : _vm._e(),
       _vm._v(" "),
       _c(
         "div",
@@ -41919,46 +41879,90 @@ var render = function() {
         [
           _c("p", { staticClass: "item-title" }, [_vm._v("Автори :")]),
           _vm._v(" "),
+          _c("button", { staticClass: "small-box btn-blue  mb-4" }, [
+            _vm._v("\n                Додати автора\n            ")
+          ]),
+          _vm._v(" "),
           _vm._l(_vm.stepData.authors, function(item, i) {
             return _c(
               "div",
-              { key: i, staticClass: "author" },
+              { key: i, staticClass: "authors" },
               [
-                _c("multiselect", {
-                  attrs: {
-                    options: _vm.options,
-                    placeholder: "Пошук в базі данних сайту",
-                    selectLabel: "Натисніть для вибору",
-                    selectedLabel: "Вибрано",
-                    deselectLabel: "Натисніть для видалення"
-                  },
-                  model: {
-                    value: item.name,
-                    callback: function($$v) {
-                      _vm.$set(item, "name", $$v)
-                    },
-                    expression: "item.name"
-                  }
-                }),
+                !item.useAlias
+                  ? _c(
+                      "multiselect",
+                      {
+                        attrs: {
+                          options: _vm.authorsData,
+                          placeholder: "Пошук в базі данних сайту",
+                          selectLabel: "Натисніть для вибору",
+                          selectedLabel: "Вибрано",
+                          deselectLabel: "Натисніть для видалення"
+                        },
+                        model: {
+                          value: item.name,
+                          callback: function($$v) {
+                            _vm.$set(item, "name", $$v)
+                          },
+                          expression: "item.name"
+                        }
+                      },
+                      [
+                        _c(
+                          "span",
+                          { attrs: { slot: "noResult" }, slot: "noResult" },
+                          [_vm._v("По даному запиту немає результатів")]
+                        )
+                      ]
+                    )
+                  : _c(
+                      "multiselect",
+                      {
+                        attrs: {
+                          options: item.aliasOptions,
+                          placeholder: "Виберіть псевдонім",
+                          selectLabel: "Натисніть для вибору",
+                          selectedLabel: "Вибрано",
+                          deselectLabel: "Натисніть для видалення"
+                        },
+                        model: {
+                          value: item.alias,
+                          callback: function($$v) {
+                            _vm.$set(item, "alias", $$v)
+                          },
+                          expression: "item.alias"
+                        }
+                      },
+                      [
+                        _c(
+                          "span",
+                          { attrs: { slot: "noResult" }, slot: "noResult" },
+                          [_vm._v("По даному запиту немає результатів")]
+                        )
+                      ]
+                    ),
                 _vm._v(" "),
-                _c("multiselect", {
-                  attrs: {
-                    options: item.aliasOptions,
-                    placeholder: "Виберіть псевдонім",
-                    selectLabel: "Натисніть для вибору",
-                    selectedLabel: "Вибрано",
-                    deselectLabel: "Натисніть для видалення"
+                _c(
+                  "button",
+                  {
+                    staticClass: "authors-btn",
+                    on: {
+                      click: function($event) {
+                        return _vm.useAlias(i)
+                      }
+                    }
                   },
-                  model: {
-                    value: item.alias,
-                    callback: function($$v) {
-                      _vm.$set(item, "alias", $$v)
-                    },
-                    expression: "item.alias"
-                  }
-                }),
-                _vm._v(" "),
-                _c("button", [_vm._v(" використати псевдонім")])
+                  [
+                    _vm._v(
+                      " " +
+                        _vm._s(
+                          item.useAlias
+                            ? "Використати ПІБ"
+                            : "Використати псевдонім"
+                        )
+                    )
+                  ]
+                )
               ],
               1
             )
@@ -41989,18 +41993,18 @@ var staticRenderFns = [
     return _c("div", { staticClass: "step-item" }, [
       _c("p", { staticClass: "item-title" }, [
         _vm._v(
-          "Додати автора в базу данних сайту(якщо ви не знайшли потрібного вам автора) :"
+          "Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) :"
         )
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "button-group" }, [
-        _c("button", { staticClass: "btn-add" }, [
+        _c("button", { staticClass: "small-box btn-blue" }, [
           _vm._v(
-            "\n                    Додати автора з Сумду\n                "
+            "\n                    Додати автора з СумДУ\n                "
           )
         ]),
         _vm._v(" "),
-        _c("button", { staticClass: "btn-add" }, [
+        _c("button", { staticClass: "small-box btn-blue" }, [
           _vm._v("\n                    Додати іншого автора\n                ")
         ])
       ])
@@ -42610,23 +42614,11 @@ var render = function() {
         _vm._v("\n        Крок 5 з 5. Вихідні дані\n    ")
       ]),
       _vm._v(" "),
-      _c("article-ukr", {
-        directives: [
-          { name: "show", rawName: "v-show", value: false, expression: "false" }
-        ]
-      }),
+      false ? undefined : _vm._e(),
       _vm._v(" "),
-      _c("monograph", {
-        directives: [
-          { name: "show", rawName: "v-show", value: false, expression: "false" }
-        ]
-      }),
+      false ? undefined : _vm._e(),
       _vm._v(" "),
-      _c("thesis", {
-        directives: [
-          { name: "show", rawName: "v-show", value: false, expression: "false" }
-        ]
-      }),
+      false ? undefined : _vm._e(),
       _vm._v(" "),
       _c("patent")
     ],

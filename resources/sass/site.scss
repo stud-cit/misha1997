@@ -332,3 +332,60 @@ select{
     }
 
 }
+//multiselect
+
+.authors {
+    display: flex;
+    margin-bottom: 30px;
+    .multiselect__tags {
+        padding: 10px 40px;
+        padding-left: 80px;
+        border-radius: 44.5px 0 0 44.5px;
+        height: 100%;
+        border: 1px solid #A6A6A6;
+        background: #fff url("/img/author.png") no-repeat 32px 49%;
+
+        span, .multiselect__input {
+            line-height: 40px;
+            margin: 0;
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            color: #0E0E0E;
+        }
+    }
+    .multiselect__select {
+        display: none;
+    }
+    .multiselect__content-wrapper{
+        border: 1px solid #A6A6A6;
+
+    }
+    .multiselect__option{
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 20px;
+        color: #0E0E0E;
+
+    }
+    .authors-btn{
+        padding: 10px 20px;
+        min-width: 270px;
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 20px;
+        color: #FFFFFF;
+        background: #A6A6A6;
+        border-radius: 0 44.5px 44.5px 0;
+        outline: none;
+        border: none;
+    }
+}
+.supervisor{
+    .multiselect__tags{
+        border-radius: 44.5px;
+    }
+}

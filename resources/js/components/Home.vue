@@ -4,8 +4,8 @@
     <div class="container">
         <div class="page-list">
             <router-link :to="{name: 'publications'}" class="page-link">Переглянути список публікацій</router-link>
-            <router-link :to="{name: 'publications'}" class="page-link">Додати нову публікацію</router-link>
-            <router-link :to="{name: 'publications'}" class="page-link">Список усіх працівників СумДУ</router-link>
+            <router-link :to="{name: 'publications-add'}" class="page-link">Додати нову публікацію</router-link>
+            <router-link :to="{name: 'users'}" class="page-link">Список усіх користувачів</router-link>
             <router-link :to="{name: 'publications'}" class="page-link">Експорт списку особистих публікацій у форматі .pdf</router-link>
             <router-link :to="{name: 'publications'}" class="page-link">Експорт списку усіх публікацій в форматі .pdf</router-link>
             <router-link :to="{name: 'publications'}" class="page-link">Експорт рейтингових показників в форматі .pdf</router-link>

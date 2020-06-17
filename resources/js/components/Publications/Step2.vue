@@ -5,12 +5,12 @@
         </p>
         <div class=" step-content">
             <div class="step-item">
-                <p class="item-title">Додати автора в базу данних сайту(якщо ви не знайшли потрібного вам автора) :</p>
+                <p class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) :</p>
                 <div class="button-group">
-                    <button class="btn-add">
-                        Додати автора з Сумду
+                    <button class="small-box btn-blue">
+                        Додати автора з СумДУ
                     </button>
-                    <button class="btn-add">
+                    <button class="small-box btn-blue">
                         Додати іншого автора
                     </button>
                 </div>
@@ -18,58 +18,57 @@
             <div class="step-item">
                 <p class="item-title">Під керівництвом :</p>
                 <div class="categories-elem">
-                    <input id="leadership1" type="radio" v-model="stepData.leadership" value="1">
+                    <input id="leadership1" type="radio" v-model="stepData.useSupervisor" value="1">
                     <label class="small-box" for="leadership1">Так</label>
-                    <input id="leadership0" type="radio" v-model="stepData.leadership" value="0">
+                    <input id="leadership0" type="radio" v-model="stepData.useSupervisor" value="0">
                     <label class="small-box" for="leadership0">Ні</label>
                 </div>
             </div>
-            <div class="step-item" v-show="stepData.leadership == '1'">
+            <div class="step-item" v-if="stepData.useSupervisor == '1'">
                 <p class="item-title">Керівник :</p>
-                <multiselect
-                    v-model="stepData.supervisor"
-                    :options="options"
-                    :placeholder="'Пошук в базі данних сайту'"
-                    :selectLabel="'Натисніть для вибору'"
-                    :selectedLabel="'Вибрано'"
-                    :deselectLabel="'Натисніть для видалення'"
-                ></multiselect>
-                <multiselect
-                    v-model="stepData.svAlias"
-                    :options="stepData.svAliasOptions"
-                    :placeholder="'Виберіть псевдонім'"
-                    :selectLabel="'Натисніть для вибору'"
-                    :selectedLabel="'Вибрано'"
-                    :deselectLabel="'Натисніть для видалення'"
-                ></multiselect>
-                <button> використати псевдонім</button>
-
-
-
-
-
-
-            </div>
-            <div class="step-item">
-                <p class="item-title" >Автори :</p>
-                <div class="author" v-for="(item, i) in stepData.authors" :key="i">
+                <div class="authors supervisor">
                     <multiselect
-                        v-model="item.name"
-                        :options="options"
+                        v-model="stepData.supervisor"
+                        :options="authorsData"
                         :placeholder="'Пошук в базі данних сайту'"
                         :selectLabel="'Натисніть для вибору'"
                         :selectedLabel="'Вибрано'"
                         :deselectLabel="'Натисніть для видалення'"
-                    ></multiselect>
-                    <multiselect
+                    >
+                        <span slot="noResult">По даному запиту немає результатів</span>
+                    </multiselect>
+                </div>
+
+            </div>
+            <div class="step-item">
+                <p class="item-title" >Автори :</p>
+
+                <button class="small-box btn-blue  mb-4">
+                    Додати автора
+                </button>
+
+                <div class="authors" v-for="(item, i) in stepData.authors" :key="i">
+                    <multiselect v-if="!item.useAlias"
+                        v-model="item.name"
+                        :options="authorsData"
+                        :placeholder="'Пошук в базі данних сайту'"
+                        :selectLabel="'Натисніть для вибору'"
+                        :selectedLabel="'Вибрано'"
+                        :deselectLabel="'Натисніть для видалення'"
+                    >
+                        <span slot="noResult">По даному запиту немає результатів</span>
+                    </multiselect>
+                    <multiselect v-else
                         v-model="item.alias"
                         :options="item.aliasOptions"
                         :placeholder="'Виберіть псевдонім'"
                         :selectLabel="'Натисніть для вибору'"
                         :selectedLabel="'Вибрано'"
                         :deselectLabel="'Натисніть для видалення'"
-                    ></multiselect>
-                    <button> використати псевдонім</button>
+                    >
+                        <span slot="noResult">По даному запиту немає результатів</span>
+                    </multiselect>
+                    <button class="authors-btn" @click="useAlias(i)"> {{ item.useAlias ? 'Використати ПІБ' : 'Використати псевдонім'}}</button>
                 </div>
 
             </div>
@@ -90,21 +89,21 @@
         data() {
             return {
                 value: '',
-                options: ['Петренко', 'Іванов', 'Ivanenko', 'Петросян'],
+                authorsData: ['Петренко', 'Іванов', 'Ivanenko', 'Петросян'],
 
                 stepData: {
-                    leadership: '0',
+                    useSupervisor: '0',
                     supervisor: '',
-                    svAlias: '',
-                    svAliasOptions: ['Petrenko', 'Петров'],
                     authors: [
                         {
                             name: '',
+                            useAlias: false,
                             alias: '',
                             aliasOptions: ['Petrenko', 'Петренко']
                         },
                         {
                             name: '',
+                            useAlias: false,
                             alias: '',
                             aliasOptions: ['Ivanov', 'Иванов']
                         },
@@ -118,11 +117,15 @@
             Multiselect,
         },
         methods:{
-            nextStep() {
+            nextStep () {
                 this.$emit('getData', this.stepData);
             },
-            prevStep(){
+            prevStep () {
                 this.$emit('prevStep');
+            },
+
+            useAlias (i) {
+               this.stepData.authors[i].useAlias = !this.stepData.authors[i].useAlias;
             }
         },
 
@@ -152,6 +155,13 @@
         }
 
     }
+    .btn-blue{
+        background: #18A0FB;
+        border: 1px solid #18A0FB;
+        color: #fff;
+        outline: none;
+    }
+
     input{
         display: none;
     }
@@ -160,6 +170,7 @@
         border: 1px solid #18A0FB;
         color: #fff;
     }
+
 
 
 </style>

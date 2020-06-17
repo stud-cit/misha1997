@@ -4,11 +4,11 @@
             Крок 5 з 5. Вихідні дані
         </p>
 
-        <article-ukr v-show="false"></article-ukr>
+        <article-ukr v-if="false"></article-ukr>
 
-        <monograph v-show="false"></monograph>
+        <monograph v-if="false"></monograph>
 
-        <thesis v-show="false"></thesis>
+        <thesis v-if="false"></thesis>
         <patent></patent>
 
 

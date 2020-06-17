@@ -21,7 +21,7 @@
                     </li>
                     <li class="nav-item">
 
-                        <router-link class="nav-link note" exist :to="{name: 'notification'}" active-class="active">Сповіщення&nbsp;<span class="number">2</span></router-link>
+                        <router-link class="nav-link note" exist :to="{name: 'notifications'}" active-class="active">Сповіщення&nbsp;<span class="number">2</span></router-link>
                     </li>
                 </ul>
             </div>
