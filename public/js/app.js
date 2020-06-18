@@ -2655,12 +2655,64 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Step2",
   data: function data() {
     return {
-      value: '',
+      otherAuthor: false,
+      newAuthor: {
+        name: '',
+        alias: '',
+        job: '',
+        country: '',
+        hIndex: '',
+        profId: ''
+      },
       authorsData: ['Петренко', 'Іванов', 'Ivanenko', 'Петросян'],
       stepData: {
         useSupervisor: '0',
@@ -2691,6 +2743,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     useAlias: function useAlias(i) {
       this.stepData.authors[i].useAlias = !this.stepData.authors[i].useAlias;
+    },
+    showNewAuthor: function showNewAuthor() {
+      this.otherAuthor = !this.otherAuthor;
     }
   }
 });
@@ -8430,7 +8485,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".step-item .item-title[data-v-7afc9529] {\n  padding-left: 0;\n}\n.small-box[data-v-7afc9529] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.small-box[data-v-7afc9529]:first-of-type {\n  margin-left: 0;\n}\n.btn-blue[data-v-7afc9529] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n  outline: none;\n}\ninput[data-v-7afc9529] {\n  display: none;\n}\ninput:checked + label[data-v-7afc9529] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
+exports.push([module.i, ".step-item .item-title[data-v-7afc9529] {\n  padding-left: 0;\n}\n.other-author[data-v-7afc9529] {\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: 100;\n  padding: 5%;\n  width: 100%;\n  height: 100%;\n  background: rgba(0, 0, 0, 0.8);\n}\n.other-author .wrapper[data-v-7afc9529] {\n  padding: 30px 40px;\n  background-color: #fff;\n  border-radius: 20px;\n}\n.other-author .wrapper .popup-title[data-v-7afc9529] {\n  margin-bottom: 30px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 30px;\n  text-align: center;\n  color: #18A0FB;\n}\n.small-box[data-v-7afc9529] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.small-box[data-v-7afc9529]:first-of-type {\n  margin-left: 0;\n}\n.btn-blue[data-v-7afc9529] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n  outline: none;\n}\ninput[type=radio][data-v-7afc9529] {\n  display: none;\n}\ninput:checked + label[data-v-7afc9529] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
 
 // exports
 
@@ -41773,11 +41828,240 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("p", { staticClass: "step-subtitle" }, [
-      _vm._v("\n        Крок 2 з 5. Додання авторів\n    ")
+      _vm._v("\n            Крок 2 з 5. Додання авторів\n        ")
     ]),
     _vm._v(" "),
     _c("div", { staticClass: " step-content" }, [
-      _vm._m(0),
+      _c("div", { staticClass: "step-item" }, [
+        _c("p", { staticClass: "item-title" }, [
+          _vm._v(
+            "Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) :"
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "button-group" }, [
+          _c("button", { staticClass: "small-box btn-blue" }, [
+            _vm._v(
+              "\n                        Додати автора з СумДУ\n                    "
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "small-box btn-blue",
+              on: { click: _vm.showNewAuthor }
+            },
+            [
+              _vm._v(
+                "\n                        Додати іншого автора\n                    "
+              )
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.otherAuthor
+        ? _c("div", { staticClass: "other-author" }, [
+            _c("div", { staticClass: "wrapper" }, [
+              _c("h2", { staticClass: "popup-title" }, [
+                _vm._v("Створення нового автора")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "step-item" }, [
+                _c("label", { staticClass: "item-title" }, [
+                  _vm._v("Прізвище, ім’я, по-батькові :")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.newAuthor.name,
+                      expression: "newAuthor.name"
+                    }
+                  ],
+                  staticClass: "item-value",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.newAuthor.name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.newAuthor, "name", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "step-item" }, [
+                _c("label", { staticClass: "item-title" }, [
+                  _vm._v("Псевдонім :")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.newAuthor.alias,
+                      expression: "newAuthor.alias"
+                    }
+                  ],
+                  staticClass: "item-value",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.newAuthor.alias },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.newAuthor, "alias", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "step-item" }, [
+                _c("label", { staticClass: "item-title" }, [
+                  _vm._v("Місце роботи :")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.newAuthor.job,
+                      expression: "newAuthor.job"
+                    }
+                  ],
+                  staticClass: "item-value",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.newAuthor.job },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.newAuthor, "job", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "step-item" }, [
+                _c("label", { staticClass: "item-title" }, [
+                  _vm._v("Країна :")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.newAuthor.country,
+                      expression: "newAuthor.country"
+                    }
+                  ],
+                  staticClass: "item-value",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.newAuthor.country },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.newAuthor, "country", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "step-item" }, [
+                _c("label", { staticClass: "item-title" }, [
+                  _vm._v("Індекс Хірша :")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.newAuthor.hIndex,
+                      expression: "newAuthor.hIndex"
+                    }
+                  ],
+                  staticClass: "item-value",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.newAuthor.hIndex },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.newAuthor, "hIndex", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "step-item" }, [
+                _c("label", { staticClass: "item-title" }, [
+                  _vm._v("Ідентифікатор профілю :")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.newAuthor.profId,
+                      expression: "newAuthor.profId"
+                    }
+                  ],
+                  staticClass: "item-value",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.newAuthor.profId },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.newAuthor, "profId", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "step-button-group" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "next active",
+                    on: { click: function($event) {} }
+                  },
+                  [_vm._v("Створити "), _c("span", [_vm._v(">")])]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "prev",
+                    on: {
+                      click: function($event) {
+                        _vm.otherAuthor = !_vm.otherAuthor
+                      }
+                    }
+                  },
+                  [_vm._v("Назад")]
+                )
+              ])
+            ])
+          ])
+        : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "step-item" }, [
         _c("p", { staticClass: "item-title" }, [_vm._v("Під керівництвом :")]),
@@ -41880,7 +42164,7 @@ var render = function() {
           _c("p", { staticClass: "item-title" }, [_vm._v("Автори :")]),
           _vm._v(" "),
           _c("button", { staticClass: "small-box btn-blue  mb-4" }, [
-            _vm._v("\n                Додати автора\n            ")
+            _vm._v("\n                    Додати автора\n                ")
           ]),
           _vm._v(" "),
           _vm._l(_vm.stepData.authors, function(item, i) {
@@ -41985,32 +42269,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "step-item" }, [
-      _c("p", { staticClass: "item-title" }, [
-        _vm._v(
-          "Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) :"
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "button-group" }, [
-        _c("button", { staticClass: "small-box btn-blue" }, [
-          _vm._v(
-            "\n                    Додати автора з СумДУ\n                "
-          )
-        ]),
-        _vm._v(" "),
-        _c("button", { staticClass: "small-box btn-blue" }, [
-          _vm._v("\n                    Додати іншого автора\n                ")
-        ])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

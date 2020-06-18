@@ -10,11 +10,55 @@
                     <button class="small-box btn-blue">
                         Додати автора з СумДУ
                     </button>
-                    <button class="small-box btn-blue">
+                    <button class="small-box btn-blue" @click="showNewAuthor">
                         Додати іншого автора
                     </button>
                 </div>
             </div>
+
+<!--            other author-->
+            <div class="other-author" v-if="otherAuthor" >
+                <div class="wrapper" >
+                    <h2 class="popup-title">Створення нового автора</h2>
+                    <div class="step-item">
+                        <label class="item-title">Прізвище, ім’я, по-батькові :</label>
+                        <input class="item-value" type="text" v-model="newAuthor.name">
+
+                    </div>
+                    <div class="step-item">
+                        <label class="item-title">Псевдонім :</label>
+                        <input class="item-value" type="text" v-model="newAuthor.alias">
+
+                    </div>
+                    <div class="step-item">
+                        <label class="item-title">Місце роботи :</label>
+                        <input class="item-value" type="text" v-model="newAuthor.job">
+
+                    </div>
+                    <div class="step-item">
+                        <label class="item-title">Країна :</label>
+                        <input class="item-value" type="text" v-model="newAuthor.country">
+
+                    </div>
+                    <div class="step-item">
+                        <label class="item-title">Індекс Хірша :</label>
+                        <input class="item-value" type="text" v-model="newAuthor.hIndex">
+
+                    </div>
+                    <div class="step-item">
+                        <label class="item-title">Ідентифікатор профілю :</label>
+                        <input class="item-value" type="text" v-model="newAuthor.profId">
+
+                    </div>
+                    <div class="step-button-group">
+                        <button class="next active" @click="">Створити <span>&gt;</span></button>
+                        <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
+                    </div>
+                </div>
+            </div>
+
+
+
             <div class="step-item">
                 <p class="item-title">Під керівництвом :</p>
                 <div class="categories-elem">
@@ -88,7 +132,17 @@
         name: "Step2",
         data() {
             return {
-                value: '',
+                otherAuthor: false,
+                newAuthor: {
+                    name: '',
+                    alias: '',
+                    job: '',
+                    country: '',
+                    hIndex: '',
+                    profId: ''
+
+
+                },
                 authorsData: ['Петренко', 'Іванов', 'Ivanenko', 'Петросян'],
 
                 stepData: {
@@ -126,6 +180,10 @@
 
             useAlias (i) {
                this.stepData.authors[i].useAlias = !this.stepData.authors[i].useAlias;
+            },
+            showNewAuthor(){
+              this.otherAuthor = !this.otherAuthor;
+
             }
         },
 
@@ -138,6 +196,34 @@
             padding-left: 0;
         }
     }
+
+    .other-author{
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        padding: 5%;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        .wrapper{
+            padding: 30px 40px;
+            background-color: #fff;
+            border-radius: 20px;
+            .popup-title{
+                margin-bottom: 30px;
+                font-family: Montserrat;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 30px;
+                text-align: center;
+                color: #18A0FB;
+            }
+
+        }
+
+    }
+
     .small-box{
         padding: 10px 40px;
         margin: 0 10px;
@@ -162,7 +248,7 @@
         outline: none;
     }
 
-    input{
+    input[type="radio"]{
         display: none;
     }
     input:checked +label{

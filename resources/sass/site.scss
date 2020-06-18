@@ -38,18 +38,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
     font-style: normal;
 }
 
-
-
-
-
-
-body {
-    line-height: 1;
-    //min-height: 100vh;
-    position: relative;
-    padding: 17px 30px 90px 30px;
-}
-
 //input select
 
 input::-webkit-outer-spin-button,
@@ -68,6 +56,18 @@ select{
     appearance:none;
     background: url("/img/arrow-down.png") no-repeat 95% 50%;
 }
+
+
+
+
+body {
+    line-height: 1;
+    //min-height: 100vh;
+    position: relative;
+    padding: 17px 30px 90px 30px;
+}
+
+
 
 
 .page-title{
