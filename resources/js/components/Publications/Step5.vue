@@ -4,12 +4,19 @@
             Крок 5 з 5. Вихідні дані
         </p>
 
-        <article-ukr v-if="false"></article-ukr>
+        <article-ukr v-if="articles.includes($parent.stepData.publicationType)"></article-ukr>
 
-        <monograph v-if="false"></monograph>
+        <monograph v-if="monographs.includes($parent.stepData.publicationType)"></monograph>
 
-        <thesis v-if="false"></thesis>
-        <patent></patent>
+        <thesis v-if="$parent.stepData.publicationType == 'Тези доповіді'"></thesis>
+
+        <patent v-if="$parent.stepData.publicationType == 'Патент'"></patent>
+
+        <certificate v-if="$parent.stepData.publicationType == 'Свідоцтво про реєстрації авторських прав на твір/рішення'"></certificate>
+
+        <methodical v-if="$parent.stepData.publicationType == 'Методичні вказівки'"></methodical>
+
+        <electronic v-if="$parent.stepData.publicationType == 'Електронні видання'"></electronic>
 
 
 
@@ -37,6 +44,8 @@
         name: "Step5",
         data() {
             return {
+                articles: ['Стаття-доповідь у матеріалах наукових конференціях', 'Стаття у фахових виданнях України', 'Інші статті'],
+                monographs: ['Монографія', 'Посібник', 'Книга'],
                 stepData:{
 
                 }

@@ -41,7 +41,7 @@
         methods: {
             getStepData(event){
                 this.stepData = Object.assign(this.stepData, event);
-                console.log(1, event);
+
                 if(this.currentStep !== 5) {
                     this.currentStep++;
                 }

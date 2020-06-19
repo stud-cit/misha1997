@@ -115,6 +115,7 @@
             font-size: 25px;
             color: #A6A6A6;
             margin-right: 20px;
+            margin-bottom: 0;
         }
         .item-input{
             padding: 12px;

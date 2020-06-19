@@ -2380,7 +2380,6 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     getStepData: function getStepData(event) {
       this.stepData = Object.assign(this.stepData, event);
-      console.log(1, event);
 
       if (this.currentStep !== 5) {
         this.currentStep++;
@@ -2799,26 +2798,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Step3",
   data: function data() {
     return {
+      publicationView: ['Стаття-доповідь у матеріалах наукових конференціях', 'Розділ монографії', 'Монографія', 'Книга', 'Розділ книги', 'Тези доповіді', 'Стаття у фахових виданнях України', 'Інші статті', 'Методичні вказівки', 'Свідоцтво про реєстрації авторських прав на твір/рішення', 'Електронні видання', 'Патент', 'Посібник'],
       stepData: {
         publicationType: ''
       }
     };
+  },
+  computed: {
+    scopusFilter: function scopusFilter() {
+      return this.publicationView.slice(0, 8);
+    }
   },
   methods: {
     nextStep: function nextStep() {
@@ -2968,6 +2961,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 // Стаття у фахових виданнях України, інші статті
  // монографії посібники підручники
 
@@ -2981,6 +2981,8 @@ __webpack_require__.r(__webpack_exports__);
   name: "Step5",
   data: function data() {
     return {
+      articles: ['Стаття-доповідь у матеріалах наукових конференціях', 'Стаття у фахових виданнях України', 'Інші статті'],
+      monographs: ['Монографія', 'Посібник', 'Книга'],
       stepData: {}
     };
   },
@@ -8485,7 +8487,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".step-item .item-title[data-v-7afc9529] {\n  padding-left: 0;\n}\n.other-author[data-v-7afc9529] {\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: 100;\n  padding: 5%;\n  width: 100%;\n  height: 100%;\n  background: rgba(0, 0, 0, 0.8);\n}\n.other-author .wrapper[data-v-7afc9529] {\n  padding: 30px 40px;\n  background-color: #fff;\n  border-radius: 20px;\n}\n.other-author .wrapper .popup-title[data-v-7afc9529] {\n  margin-bottom: 30px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 30px;\n  text-align: center;\n  color: #18A0FB;\n}\n.small-box[data-v-7afc9529] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.small-box[data-v-7afc9529]:first-of-type {\n  margin-left: 0;\n}\n.btn-blue[data-v-7afc9529] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n  outline: none;\n}\ninput[type=radio][data-v-7afc9529] {\n  display: none;\n}\ninput:checked + label[data-v-7afc9529] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
+exports.push([module.i, ".step-item .item-title[data-v-7afc9529] {\n  padding-left: 0;\n}\n.other-author[data-v-7afc9529] {\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: 100;\n  padding: 8%;\n  width: 100%;\n  min-height: 100%;\n  background: rgba(0, 0, 0, 0.8);\n}\n.other-author .wrapper[data-v-7afc9529] {\n  padding: 30px 40px;\n  background-color: #fff;\n  border-radius: 20px;\n}\n.other-author .wrapper .popup-title[data-v-7afc9529] {\n  margin-bottom: 30px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 30px;\n  text-align: center;\n  color: #18A0FB;\n}\n.small-box[data-v-7afc9529] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.small-box[data-v-7afc9529]:first-of-type {\n  margin-left: 0;\n}\n.btn-blue[data-v-7afc9529] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n  outline: none;\n}\ninput[type=radio][data-v-7afc9529] {\n  display: none;\n}\ninput:checked + label[data-v-7afc9529] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
 
 // exports
 
@@ -8523,7 +8525,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".step-item[data-v-7b18c42b] {\n  margin-top: 50px;\n  display: flex;\n  align-items: center;\n}\n.step-item[data-v-7b18c42b]:first-of-type {\n  margin-top: 0;\n}\n.step-item .item-title[data-v-7b18c42b] {\n  width: auto;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  color: #A6A6A6;\n  margin-right: 20px;\n}\n.step-item .item-input[data-v-7b18c42b] {\n  padding: 12px;\n  text-align: center;\n  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);\n  border-radius: 44.5px;\n  border: none;\n  outline: none;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #0E0E0E;\n  min-width: 258px;\n}\n.step-item .categories-elem[data-v-7b18c42b] {\n  display: flex;\n}\n.step-item .categories-elem .small-box[data-v-7b18c42b] {\n  width: 31px;\n  padding: 4px 0;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 10px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  text-align: center;\n  cursor: pointer;\n}\n.step-item .categories-elem .big-box[data-v-7b18c42b] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.step-item .categories-elem input[data-v-7b18c42b] {\n  display: none;\n}\n.step-item .categories-elem input:checked + label[data-v-7b18c42b] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
+exports.push([module.i, ".step-item[data-v-7b18c42b] {\n  margin-top: 50px;\n  display: flex;\n  align-items: center;\n}\n.step-item[data-v-7b18c42b]:first-of-type {\n  margin-top: 0;\n}\n.step-item .item-title[data-v-7b18c42b] {\n  width: auto;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 25px;\n  color: #A6A6A6;\n  margin-right: 20px;\n  margin-bottom: 0;\n}\n.step-item .item-input[data-v-7b18c42b] {\n  padding: 12px;\n  text-align: center;\n  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);\n  border-radius: 44.5px;\n  border: none;\n  outline: none;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #0E0E0E;\n  min-width: 258px;\n}\n.step-item .categories-elem[data-v-7b18c42b] {\n  display: flex;\n}\n.step-item .categories-elem .small-box[data-v-7b18c42b] {\n  width: 31px;\n  padding: 4px 0;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 10px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  text-align: center;\n  cursor: pointer;\n}\n.step-item .categories-elem .big-box[data-v-7b18c42b] {\n  padding: 10px 40px;\n  margin: 0 10px;\n  border: 1px solid #18A0FB;\n  box-sizing: border-box;\n  border-radius: 44.5px;\n  font-family: Montserrat;\n  font-style: normal;\n  font-weight: normal;\n  font-size: 20px;\n  color: #18A0FB;\n  cursor: pointer;\n}\n.step-item .categories-elem input[data-v-7b18c42b] {\n  display: none;\n}\n.step-item .categories-elem input:checked + label[data-v-7b18c42b] {\n  background: #18A0FB;\n  border: 1px solid #18A0FB;\n  color: #fff;\n}", ""]);
 
 // exports
 
@@ -41385,7 +41387,7 @@ var render = function() {
         _vm._v("Додати нову публікацію")
       ]),
       _vm._v(" "),
-      _vm.currentStep == 2
+      _vm.currentStep == 1
         ? _c("step1", {
             on: {
               getData: function($event) {
@@ -41395,7 +41397,7 @@ var render = function() {
           })
         : _vm._e(),
       _vm._v(" "),
-      _vm.currentStep == 1
+      _vm.currentStep == 2
         ? _c("step2", {
             on: {
               getData: function($event) {
@@ -42296,227 +42298,70 @@ var render = function() {
       _vm._v("\n        Крок 3 з 5. Вид публікації\n    ")
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "step-content categories" }, [
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: {
-            id: "type2",
-            type: "radio",
-            value: "Стаття-доповідь у матеріалах наукових конференціях"
-          },
-          domProps: {
-            checked: _vm._q(
-              _vm.stepData.publicationType,
-              "Стаття-доповідь у матеріалах наукових конференціях"
-            )
-          },
-          on: {
-            change: function($event) {
-              return _vm.$set(
-                _vm.stepData,
-                "publicationType",
-                "Стаття-доповідь у матеріалах наукових конференціях"
-              )
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type2" } }, [
-          _vm._v("Стаття-доповідь у матеріалах наукових конференціях")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: { id: "type4", type: "radio", value: "Розділ монографії" },
-          domProps: {
-            checked: _vm._q(_vm.stepData.publicationType, "Розділ монографії")
-          },
-          on: {
-            change: function($event) {
-              return _vm.$set(
-                _vm.stepData,
-                "publicationType",
-                "Розділ монографії"
-              )
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type4" } }, [_vm._v("Розділ монографії")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: { id: "type3", type: "radio", value: "Монографії" },
-          domProps: {
-            checked: _vm._q(_vm.stepData.publicationType, "Монографії")
-          },
-          on: {
-            change: function($event) {
-              return _vm.$set(_vm.stepData, "publicationType", "Монографії")
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type3" } }, [_vm._v("Монографії")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: { id: "type5", type: "radio", value: "Книга" },
-          domProps: { checked: _vm._q(_vm.stepData.publicationType, "Книга") },
-          on: {
-            change: function($event) {
-              return _vm.$set(_vm.stepData, "publicationType", "Книга")
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type5" } }, [_vm._v("Книга")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: { id: "type6", type: "radio", value: "Розділ книги" },
-          domProps: {
-            checked: _vm._q(_vm.stepData.publicationType, "Розділ книги")
-          },
-          on: {
-            change: function($event) {
-              return _vm.$set(_vm.stepData, "publicationType", "Розділ книги")
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type6" } }, [_vm._v("Розділ книги")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: { id: "type7", type: "radio", value: "Тези доповіді" },
-          domProps: {
-            checked: _vm._q(_vm.stepData.publicationType, "Тези доповіді")
-          },
-          on: {
-            change: function($event) {
-              return _vm.$set(_vm.stepData, "publicationType", "Тези доповіді")
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type7" } }, [_vm._v("Тези доповіді")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: {
-            id: "type1",
-            type: "radio",
-            value: "Стаття у фахових виданнях України"
-          },
-          domProps: {
-            checked: _vm._q(
-              _vm.stepData.publicationType,
-              "Стаття у фахових виданнях України"
-            )
-          },
-          on: {
-            change: function($event) {
-              return _vm.$set(
-                _vm.stepData,
-                "publicationType",
-                "Стаття у фахових виданнях України"
-              )
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type1" } }, [
-          _vm._v("Стаття у фахових виданнях України")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "categories-elem" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.stepData.publicationType,
-              expression: "stepData.publicationType"
-            }
-          ],
-          attrs: { id: "type8", type: "radio", value: "Інші статті" },
-          domProps: {
-            checked: _vm._q(_vm.stepData.publicationType, "Інші статті")
-          },
-          on: {
-            change: function($event) {
-              return _vm.$set(_vm.stepData, "publicationType", "Інші статті")
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "type8" } }, [_vm._v("Інші статті")])
-      ])
-    ]),
+    _c(
+      "div",
+      { staticClass: "step-content categories" },
+      [
+        !_vm.$parent.stepData.scopus && !_vm.$parent.stepData.wos
+          ? _vm._l(_vm.publicationView, function(item, i) {
+              return _c("div", { key: i, staticClass: "categories-elem" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.stepData.publicationType,
+                      expression: "stepData.publicationType"
+                    }
+                  ],
+                  attrs: { id: "type" + i, type: "radio" },
+                  domProps: {
+                    value: item,
+                    checked: _vm._q(_vm.stepData.publicationType, item)
+                  },
+                  on: {
+                    change: function($event) {
+                      return _vm.$set(_vm.stepData, "publicationType", item)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "type" + i } }, [
+                  _vm._v(_vm._s(item))
+                ])
+              ])
+            })
+          : _vm._l(_vm.scopusFilter, function(item, i) {
+              return _c("div", { key: i, staticClass: "categories-elem" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.stepData.publicationType,
+                      expression: "stepData.publicationType"
+                    }
+                  ],
+                  attrs: { id: "type" + i, type: "radio" },
+                  domProps: {
+                    value: item,
+                    checked: _vm._q(_vm.stepData.publicationType, item)
+                  },
+                  on: {
+                    change: function($event) {
+                      return _vm.$set(_vm.stepData, "publicationType", item)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "type" + i } }, [
+                  _vm._v(_vm._s(item))
+                ])
+              ])
+            })
+      ],
+      2
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "step-button-group" }, [
       _c(
@@ -42873,13 +42718,34 @@ var render = function() {
         _vm._v("\n        Крок 5 з 5. Вихідні дані\n    ")
       ]),
       _vm._v(" "),
-      false ? undefined : _vm._e(),
+      _vm.articles.includes(_vm.$parent.stepData.publicationType)
+        ? _c("article-ukr")
+        : _vm._e(),
       _vm._v(" "),
-      false ? undefined : _vm._e(),
+      _vm.monographs.includes(_vm.$parent.stepData.publicationType)
+        ? _c("monograph")
+        : _vm._e(),
       _vm._v(" "),
-      false ? undefined : _vm._e(),
+      _vm.$parent.stepData.publicationType == "Тези доповіді"
+        ? _c("thesis")
+        : _vm._e(),
       _vm._v(" "),
-      _c("patent")
+      _vm.$parent.stepData.publicationType == "Патент"
+        ? _c("patent")
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.$parent.stepData.publicationType ==
+      "Свідоцтво про реєстрації авторських прав на твір/рішення"
+        ? _c("certificate")
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.$parent.stepData.publicationType == "Методичні вказівки"
+        ? _c("methodical")
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.$parent.stepData.publicationType == "Електронні видання"
+        ? _c("electronic")
+        : _vm._e()
     ],
     1
   )
