@@ -2,7 +2,10 @@
 
 
     <div >
-        <h1 class="page-title">Перегляд публікацій</h1>
+        <h1 class="page-title">Перегляд сповіщень</h1>
+
+        <h2 class="subtitle new" >Нові сповіщення</h2>
+
         <ul class="container notifications-list">
             <li class="notifications-item" v-for="item in notifications" :key="item.id">
                 <p class="date">{{ item.created_at }}</p>
@@ -27,8 +30,23 @@
     export default {
         data() {
             return {
-                notifications: [],
-                viewedNotifications: []
+                notifications: [
+                    {
+                        created_at: '12.05.2020',
+                        text: 'Автор Бабій Євгеній Андрійович редагував дані в публікації ”Modeling Business Process of Labor Intensity Calculating The Machine-Building Equipment’s Production”'
+                    }
+                ],
+                viewedNotifications: [
+                    {
+                        created_at: '12.05.2020',
+                        text: 'Автор Бабій Євгеній Андрійович редагував дані в публікації ”Modeling Business Process of Labor Intensity Calculating The Machine-Building Equipment’s Production”'
+                    },
+                    {
+                        created_at: '12.05.2020',
+                        text: 'Автор Бабій Євгеній Андрійович редагував дані в публікації ”Modeling Business Process of Labor Intensity Calculating The Machine-Building Equipment’s Production”'
+                    }
+                    
+                ]
             };
         },
 
@@ -65,25 +83,30 @@
         text-align: center;
         padding-bottom: 10px;
         border-bottom: 1px solid #A6A6A6;
+        &.new{
+            margin-top: 75px;
+        }
     }
+
     .notifications-list{
         margin-top: 90px;
         .notifications-item{
-            margin-bottom: 90px;
+            margin-bottom: 45px;
             .date{
                 margin-bottom: 15px;
                 font-family: Montserrat;
                 font-style: normal;
                 font-weight: normal;
-                font-size: 20px;
+                font-size: 18px;
                 color: #A6A6A6;
             }
             .text{
                 font-family: Montserrat;
                 font-style: normal;
                 font-weight: 300;
-                font-size: 25px;
+                font-size: 22px;
                 color: #18A0FB;
+                line-height: 1.2;
 
             }
         }

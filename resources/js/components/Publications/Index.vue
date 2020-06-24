@@ -3,7 +3,7 @@
     <div class="container">
         <h1 class="page-title">Перегляд публікацій</h1>
         <div class="page-categories">
-            <a href="" class="categories-link active">Всі публікації</a>
+            <a href="" class="categories-link active">Всі публікації</a>>
             <a href="" class="categories-link">Мої публікації</a>
         </div>
         <div class="search-block">

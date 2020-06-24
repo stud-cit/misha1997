@@ -241,6 +241,7 @@ body {
             font-weight: bold;
             font-size: 20px;
             color: #A6A6A6;
+            padding: 50px 10px;
         }
         td{
             font-family: Montserrat;
@@ -248,13 +249,15 @@ body {
             font-weight: normal;
             font-size: 20px;
             color: #A6A6A6;
+            padding: 30px 10px;
+            vertical-align: middle;
         }
     }
 }
 
 //publications
 .step-content{
-    margin-top: 100px;
+    margin-top: 75px;
 }
 .step-subtitle{
     margin-top: 8px;
@@ -308,7 +311,7 @@ body {
     .item-title{
         width: 100%;
         margin-bottom: 15px;
-        padding-left: 24px;
+        // padding-left: 24px;
         font-family: Montserrat;
         font-style: normal;
         font-weight: normal;
@@ -333,10 +336,36 @@ body {
 
 }
 //multiselect
-
+.authors.alias{
+    .multiselect__tags {
+        border-radius: 44.5px;
+    }
+}
 .authors {
     display: flex;
     margin-bottom: 30px;
+    .num{
+        margin: auto;
+        padding: 10px 15px;
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 20px;
+        color: #0E0E0E; 
+    }
+    .remove-author{
+        padding: 10px 21px;
+        margin-left: 5px;
+        background-color:red;
+        color: #fff;
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 37px;
+        border-radius: 50%;
+        outline: none;
+        border: none;
+    }
     .multiselect__tags {
         padding: 10px 40px;
         padding-left: 80px;

@@ -1,34 +1,49 @@
 <template>
     <div>
         <p class="step-subtitle">
-            Крок 3 з 5. Вид публікації
+            Крок 3 з 4. Назва та база для публікації
         </p>
-        <div class="step-content categories">
-            <template v-if="!$parent.stepData.scopus && !$parent.stepData.wos">
 
-                <div class="categories-elem"  v-for="(item, i) in publicationView" :key="i" >
-                    <input :id="'type' + i" type="radio" v-model="stepData.publicationType" :value="item">
-                    <label :for="'type' + i">{{ item }}</label>
+        <div class=" step-content">
+            <div class=" step-item ">
+                <p class="item-title">Коефіцієнт впливовості SNIP журналу SCOPUS :</p>
+                <input type="number" class="item-input" v-model="stepData.snip">
+            </div>
+            <div class=" step-item">
+                <p class="item-title">Коефіцієнт впливовості імпакт-фактор журналу WoS :</p>
+                <input type="text" class="item-input" v-model="stepData.impactFactor">
+            </div>
+            <div class="step-item">
+                <p class="item-title">Квартиль журналу БД Scopus :</p>
+                <div class="categories-elem" v-for="n in 4" :key="n">
+                    <input :id="'scopus' + n" type="radio" v-model="stepData.quartileScopus" :value="n">
+                    <label class="small-box" :for="'scopus' + n">{{n}}</label>
                 </div>
-
-            </template>
-            <template v-else>
-
-                <div class="categories-elem"  v-for="(item, i) in scopusFilter" :key="i" >
-                    <input :id="'type' + i" type="radio" v-model="stepData.publicationType" :value="item">
-                    <label :for="'type' + i">{{ item }}</label>
+            </div>
+            <div class="step-item">
+                <p class="item-title">Квартиль журналу БД WoS :</p>
+                <div class="categories-elem" v-for="n in 4" :key="n">
+                    <input :id="'wos' + n" type="radio" v-model="stepData.quartileWos" :value="n">
+                    <label class="small-box" :for="'wos' + n">{{n}}</label>
                 </div>
-
-            </template>
-
-
-
-
-
+            </div>
+            <div class=" step-item">
+                <p class="item-title">Підбаза WoS :</p>
+                <input id="subDb0" type="radio" class="d-none" v-model="stepData.subWos" value="0" >
+                <div class="categories-elem" >
+                    <input id="subDb1" type="checkbox" v-model="subWos1"  >
+                    <label class="big-box" for="subDb1" @click="changeType(1)">Science Citation Index Expanded (SCIE) </label>
+                </div>
+                <div class="categories-elem" >
+                    <input id="subDb2" type="checkbox" v-model="subWos2"  >
+                    <label class="big-box" for="subDb2" @click="changeType(2)">Social Science Citation Index</label>
+                </div>
+            </div>
 
 
 
         </div>
+
         <div class="step-button-group">
             <button class="next active" @click="nextStep">Продовжити <span>&gt;</span></button>
             <button class="prev" @click="prevStep">На попередній крок</button>
@@ -38,43 +53,43 @@
 
 <script>
     export default {
-        name: "Step3",
+        name: "Step4",
         data() {
             return {
-                publicationView: [
-                    'Стаття-доповідь у матеріалах наукових конференціях',
-                    'Розділ монографії',
-                    'Монографія',
-                    'Книга',
-                    'Розділ книги',
-                    'Тези доповіді',
-                    'Стаття у фахових виданнях України',
-                    'Інші статті',
-                    'Методичні вказівки',
-                    'Свідоцтво про реєстрації авторських прав на твір/рішення',
-                    'Електронні видання',
-                    'Патент',
-                    'Посібник',
+                subWos1: false,
+                subWos2: false,
 
-                ],
                 stepData:{
-                    publicationType: ''
+                    snip: '',
+                    impactFactor: '',
+                    quartileScopus: '',
+                    quartileWos: '',
+                    subWos: 0
                 }
 
             }
         },
-        computed: {
-          scopusFilter(){
-              return this.publicationView.slice(0,8);
-          }
-        },
         methods:{
             nextStep() {
+                this.stepData.subWos = this.subWos1 ? 1 : this.subWos2 ? 2 : 0;
                 this.$emit('getData', this.stepData);
             },
             prevStep(){
                 this.$emit('prevStep');
-            }
+            },
+            changeType(type){
+                if(type == 1 && this.subWos1 == false && this.subWos2 == true){
+                    this.subWos2 = false;
+                }
+                else if(type == 2 && this.subWos1 == true && this.subWos2 == false){
+                    this.subWos1 = false;
+                }
+
+
+
+            },
+
+
         },
         created() {
 
@@ -84,38 +99,81 @@
 
 <style lang="scss" scoped>
 
-    .categories{
-        display: flex;
-        flex-wrap: wrap;
 
+    .step-item{
+        margin-top: 50px;
+        display: flex;
+        align-items: center;
+        &:first-of-type{
+            margin-top: 0;
+        }
+        .item-title{
+            width: auto;
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 25px;
+            color: #A6A6A6;
+            margin-right: 20px;
+            margin-bottom: 0;
+        }
+        .item-input{
+            padding: 12px;
+            text-align: center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
+            border-radius: 44.5px;
+            border: none;
+            outline: none;
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            color: #0E0E0E;
+            min-width: 258px;
+
+        }
         .categories-elem{
-            margin-right: 15px;
-            margin-bottom: 20px;
-            label{
-                padding: 15px 35px;
-                background: #FFFFFF;
+            display: flex;
+
+            .small-box{
+                width: 31px;
+                padding: 4px 0;
+                margin: 0 10px;
                 border: 1px solid #18A0FB;
-                border-radius: 44.5px;
-                /*min-width: 260px;*/
-                cursor: pointer;
+                box-sizing: border-box;
+                border-radius: 10px;
                 font-family: Montserrat;
                 font-style: normal;
                 font-weight: normal;
-                font-size: 22px;
-                text-align: center;
+                font-size: 20px;
                 color: #18A0FB;
-                line-height: 1;
+                text-align: center;
+                cursor: pointer;
             }
-            input[type="radio"]{
-                display: none;
-                &:checked + label{
-                    background: #18A0FB;
-                    border: 1px solid #18A0FB;
-                    color: #fff;
-                }
-            }
+            .big-box{
+                padding: 10px 40px;
+                margin: 0 10px;
+                border: 1px solid #18A0FB;
+                box-sizing: border-box;
+                border-radius: 44.5px;
+                font-family: Montserrat;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 20px;
+                color: #18A0FB;
+                cursor: pointer;
 
+            }
+            input{
+                display: none;
+            }
+            input:checked +label{
+                background: #18A0FB;
+                border: 1px solid #18A0FB;
+                color: #fff;
+            }
         }
     }
+
 
 </style>

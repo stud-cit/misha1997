@@ -6,7 +6,7 @@
         <step2  v-if="currentStep==2" @getData="getStepData($event)" @prevStep="prevStep"></step2>
         <step3  v-if="currentStep==3" @getData="getStepData($event)" @prevStep="prevStep"></step3>
         <step4  v-if="currentStep==4" @getData="getStepData($event)" @prevStep="prevStep"></step4>
-        <step5  v-if="currentStep==5" @getData="getStepData($event)" @prevStep="prevStep"></step5>
+  
 
     </div>
 </template>
@@ -16,7 +16,7 @@
     import Step2 from "./Step2";
     import Step3 from "./Step3";
     import Step4 from "./Step4";
-    import Step5 from "./Step5";
+ 
 
     export default {
         data() {
@@ -31,7 +31,7 @@
             Step2,
             Step3,
             Step4,
-            Step5,
+         
         },
 
         computed: {
@@ -42,7 +42,7 @@
             getStepData(event){
                 this.stepData = Object.assign(this.stepData, event);
 
-                if(this.currentStep !== 5) {
+                if(this.currentStep !== 4) {
                     this.currentStep++;
                 }
             },
