@@ -8,6 +8,7 @@ Route::post('register', 'PassportController@register');
 
 //authors
 Route::get('authors', 'AuthorsController@getAll');
+Route::get('persons/{name}', 'AuthorsController@getPersons');
 Route::get('author/{id}', 'AuthorsController@getId');
 Route::post('author', 'AuthorsController@post');
 Route::get('roles', 'AuthorsController@getRoles');

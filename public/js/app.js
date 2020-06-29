@@ -3802,13 +3802,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      data: []
+      data: [],
+      persons: [],
+      searchAuthor: ''
     };
   },
   components: {},
+  computed: {
+    filteredList: function filteredList() {
+      return this.persons || this.persons.name == this.searchAuthor;
+    }
+  },
   mounted: function mounted() {
     this.getData();
   },
@@ -3818,7 +3834,19 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get('/api/authors').then(function (response) {
         _this.data = response.data;
+        console.log(_this.data);
       });
+    },
+    getPerson: function getPerson() {
+      var _this2 = this;
+
+      axios.get("/api/persons/".concat(this.searchAuthor)).then(function (response) {
+        _this2.persons = response.data;
+        console.log(_this2.persons);
+      });
+    },
+    clean: function clean() {
+      this.searchAuthor = '';
     }
   }
 });
@@ -45126,7 +45154,37 @@ var render = function() {
       _vm._v("Список користувачів сервісу")
     ]),
     _vm._v(" "),
-    _vm._m(0),
+    _c("div", { staticClass: "search-block" }, [
+      _c("label", { staticClass: "main-search-container" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.searchAuthor,
+              expression: "searchAuthor"
+            }
+          ],
+          staticClass: "main-search",
+          attrs: { type: "text", placeholder: "Пошук користувача за ПІБ" },
+          domProps: { value: _vm.searchAuthor },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.searchAuthor = $event.target.value
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "search-btn", on: { click: _vm.getPerson } }, [
+          _c("img", { attrs: { src: "img/search.svg", alt: "" } })
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c(
       "div",
@@ -45135,27 +45193,49 @@ var render = function() {
         _c("table", { staticClass: "table table-bordered " }, [
           _vm._m(1),
           _vm._v(" "),
-          _c(
-            "tbody",
-            _vm._l(_vm.data, function(item, index) {
-              return _c("tr", { key: item.id }, [
-                _c("td", { attrs: { scope: "row" } }, [
-                  _vm._v(_vm._s(index + 1))
-                ]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(item.role.name))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(item.name))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(item.email))]),
-                _vm._v(" "),
-                _c("td", [_vm._v("Фаультет фызичного виховання")]),
-                _vm._v(" "),
-                _c("td", [_vm._v("Кафедра фізкультури")])
-              ])
-            }),
-            0
-          )
+          _vm.searchAuthor !== ""
+            ? _c(
+                "tbody",
+                _vm._l(_vm.filteredList, function(item, index) {
+                  return _c("tr", { key: index }, [
+                    _c("td", { attrs: { scope: "row" } }, [
+                      _vm._v(_vm._s(index + 1))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.role))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.email))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.faculty))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.department))])
+                  ])
+                }),
+                0
+              )
+            : _c(
+                "tbody",
+                _vm._l(_vm.data, function(item, index) {
+                  return _c("tr", { key: item.id }, [
+                    _c("td", { attrs: { scope: "row" } }, [
+                      _vm._v(_vm._s(index + 1))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.role.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.email))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.faculty))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.department))])
+                  ])
+                }),
+                0
+              )
         ])
       ]
     )
@@ -45166,23 +45246,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "search-block" }, [
-      _c("label", { staticClass: "main-search-container" }, [
-        _c("input", {
-          staticClass: "main-search",
-          attrs: { type: "text", placeholder: "Пошук користувача за ПІБ" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "search-load" }, [
-          _c("p", { staticClass: "load-big" }),
-          _vm._v(" "),
-          _c("p", { staticClass: "load-little" })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "search-btn" }, [
-          _c("img", { attrs: { src: "img/search.svg", alt: "" } })
-        ])
-      ])
+    return _c("div", { staticClass: "search-load" }, [
+      _c("p", { staticClass: "load-big" }),
+      _vm._v(" "),
+      _c("p", { staticClass: "load-little" })
     ])
   },
   function() {
@@ -62307,9 +62374,9 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OpenServer\domains\sciencePublications\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! C:\OpenServer\domains\sciencePublications\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! C:\OpenServer\domains\sciencePublications\resources\sass\site.scss */"./resources/sass/site.scss");
+__webpack_require__(/*! B:\новыйOpenServer\OSPanel\domains\sciencePublications\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! B:\новыйOpenServer\OSPanel\domains\sciencePublications\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! B:\новыйOpenServer\OSPanel\domains\sciencePublications\resources\sass\site.scss */"./resources/sass/site.scss");
 
 
 /***/ })

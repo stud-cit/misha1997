@@ -5,12 +5,12 @@
 
         <div class="search-block">
             <label class="main-search-container">
-                <input type="text" class="main-search" placeholder="Пошук користувача за ПІБ">
+                <input type="text" v-model="searchAuthor" class="main-search" placeholder="Пошук користувача за ПІБ">
                 <div class="search-load">
                     <p class="load-big"></p>
                     <p class="load-little"></p>
                 </div>
-                <div class="search-btn"><img src="img/search.svg" alt=""></div>
+                <div class="search-btn" @click="getPerson"><img src="img/search.svg" alt=""></div>
             </label>
 
         </div>
@@ -27,16 +27,25 @@
                     <th scope="col">Кафедра</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="searchAuthor !== ''">
+                <tr v-for="(item, index) in filteredList" :key="index">
+                    <td scope="row">{{ index+1 }}</td>
+                    <td>{{ item.role }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.email }}</td>
+                    <td>{{ item.faculty }}</td>
+                    <td>{{ item.department }}</td>
+                </tr>
+                </tbody>
+                <tbody v-else>
                 <tr v-for="(item, index) in data" :key="item.id">
                     <td scope="row">{{ index+1 }}</td>
                     <td>{{ item.role.name }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.email }}</td>
-                    <td>Фаультет фызичного виховання</td>
-                    <td>Кафедра фізкультури</td>
+                    <td>{{ item.faculty }}</td>
+                    <td>{{ item.department }}</td>
                 </tr>
-
                 </tbody>
             </table>
         </div>
@@ -47,11 +56,18 @@
     export default {
         data() {
             return {
-                data: []
+                data: [],
+                persons: [],
+                searchAuthor: ''
             };
         },
         components: {
 
+        },
+        computed: {
+            filteredList() {
+                return this.persons || (this.persons.name == this.searchAuthor)
+            }
         },
         mounted () {
             this.getData();
@@ -59,9 +75,19 @@
         methods: {
             getData() {
                 axios.get('/api/authors').then(response => {
-                    this.data = response.data
+                    this.data = response.data;
+                    console.log(this.data)
                 })
             },
+            getPerson() {
+                axios.get(`/api/persons/${this.searchAuthor}`).then(response => {
+                    this.persons = response.data;
+                    console.log(this.persons)
+                });
+            },
+            clean(){
+                this.searchAuthor = '';
+            }
         },
 
     }
