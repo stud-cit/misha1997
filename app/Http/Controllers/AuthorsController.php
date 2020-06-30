@@ -18,7 +18,7 @@ class AuthorsController extends Controller
 
     //cabinet users
     function getPersons($name) {
-        $key = 'Pinjbm5608mv3inz6J7qDiDKAJikEMrmmp5ZLA6eHiH0fTqh7f76';
+        $key = 'y4Q7hxb7Du5rfz9TG8OJKYK3e8YrqAH77Qb4aeGF0Y5xycfBYb5e';
         $getPersons = file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersons?key='.$key.'&search='.$name);
         $getPersons = json_decode($getPersons, true);
 
@@ -54,7 +54,7 @@ class AuthorsController extends Controller
         $result = [];
         $nameArray = arrayColumn1($getPersons, 'name');
         $countName = count($nameArray);
-        $userName = array_chunk($nameArray, $countName);
+        $userName = array_chunk($nameArray, $countName, true);
 
         $userFacult = arrayColumn2($getPersonInfo1, 'NAME_DIV');
         $userKafedra = arrayColumn2($getPersonInfo1, 'ABBR_DIV');
@@ -74,7 +74,7 @@ class AuthorsController extends Controller
                 }
             }
         }
-        for ($i = 0; $i <= count($userName); $i++) {
+        for ($i = 0; $i <= $countName - 1; $i++) {
             array_push($result, insert($i, $userName, [$userRole, $userEmail, $userFacult, $userKafedra]));
         }
         return $result;
