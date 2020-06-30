@@ -34,9 +34,44 @@
                 <div :class="[{active: fullSearch}, 'full-search-btn']" @click.prevent="fullSearch = !fullSearch">Розширений пошук </div>
             </div>
         </div>
+
+        <button @click="exportRating">export</button>
+        <table id="exportRating">
+            <tr>
+                <th rowspan="2">
+                    Кількість статей
+                    за авторством та
+                    співавторством студентів
+                </th>
+                <th colspan="2" width="500px">
+                    Кількість публікацій у співавторстві
+                    з іноземними партнерами
+                </th>
+<!--                <th>-->
+<!--                    Кількість статей за авторством та співавторством студентів-->
+<!--                </th>-->
+<!--                <th>-->
+<!--                    Кількість статей за авторством та співавторством студентів-->
+<!--                </th>-->
+<!--                <th>-->
+<!--                    Кількість статей за авторством та співавторством студентів-->
+<!--                </th>-->
+<!--                <th>-->
+<!--                    Кількість статей за авторством та співавторством студентів-->
+<!--                </th>-->
+            </tr>
+            <tr>
+                <td>
+                    Всього
+                </td>
+                <td>
+                    Мають індекс Гірша за БД Scopus або WoS не нижче 10
+                </td>
+            </tr>
+        </table>
         <div class="table-bordered table-responsive text-center table-list">
 
-            <table class="table table-bordered ">
+            <table class="table table-bordered " >
                 <thead>
                 <tr>
                     <th scope="col">№</th>
@@ -64,11 +99,13 @@
 </template>
 
 <script>
+    import XLSX from 'xlsx';
     export default {
         data() {
             return {
                 fullSearch: false,
-                data: []
+                data: [],
+
             };
         },
         components: {
@@ -83,6 +120,12 @@
                     this.data = response.data
                 })
             },
+            exportRating(){
+
+                var workbook = XLSX.utils.table_to_book(document.getElementById('exportRating'));
+
+                XLSX.writeFile(workbook, 'filename.xlsx');
+            }
         },
 
     }
