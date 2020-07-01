@@ -69,23 +69,23 @@
 <!--                </td>-->
 <!--            </tr>-->
 <!--        </table>-->
-        <table id="exportRating" v-show="false">
+        <table id="exportRating" v-show="false" ref="exportR">
             <tr>
-                <th >
+                <td colspan="2">
                     Кількість статей
                     за авторством та
                     співавторством студентів
-                </th>
+                </td>
 
                 <td>value</td>
 
             </tr>
 
             <tr>
-                <th rowspan="2" >
+                <td rowspan="2" >
                     Кількість публікацій у співавторстві
                     з іноземними партнерами
-                </th>
+                </td>
                 <td>
                     Всього
                 </td>
@@ -102,29 +102,62 @@
             </tr>
 
             <tr>
-                <th >
+                <td colspan="2">
                     Кількість публікацій всього
                     у тому числі:
 
-                </th>
+                </td>
 
 
             </tr>
 
             <tr>
-                <th >
+                <td colspan="2">
                     - підручників
 
-                </th>
+                </td>
 
                 <td>value</td>
             </tr>
 
             <tr>
-                <th >
+                <td colspan="2">
                     - посібників
 
-                </th>
+                </td>
+
+                <td>value</td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    - монографій
+
+
+
+                </td>
+
+                <td>value</td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    - опублікованих за кордоном мовами ОЕСР та ЕС
+                    проіндексовані БД Scopus або WoS
+                    статей у фахових за статусом виданнях
+
+
+                </td>
+
+                <td>value</td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    - статей у фахових за статусом виданнях
+
+
+                </td>
 
                 <td>value</td>
             </tr>
@@ -183,7 +216,7 @@
             },
             exportRating(){
 
-                var workbook = XLSX.utils.table_to_book(document.getElementById('exportRating'));
+                const workbook = XLSX.utils.table_to_book(document.getElementById('exportRating'));
 
                 XLSX.writeFile(workbook, 'filename.xlsx');
             }

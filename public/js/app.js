@@ -2576,6 +2576,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -43681,6 +43714,7 @@ var render = function() {
               expression: "false"
             }
           ],
+          ref: "exportR",
           attrs: { id: "exportRating" }
         },
         [
@@ -43694,7 +43728,13 @@ var render = function() {
           _vm._v(" "),
           _vm._m(9),
           _vm._v(" "),
-          _vm._m(10)
+          _vm._m(10),
+          _vm._v(" "),
+          _vm._m(11),
+          _vm._v(" "),
+          _vm._m(12),
+          _vm._v(" "),
+          _vm._m(13)
         ]
       ),
       _vm._v(" "),
@@ -43705,7 +43745,7 @@ var render = function() {
         },
         [
           _c("table", { staticClass: "table table-bordered " }, [
-            _vm._m(11),
+            _vm._m(14),
             _vm._v(" "),
             _c(
               "tbody",
@@ -43816,7 +43856,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", [
-      _c("th", [
+      _c("td", { attrs: { colspan: "2" } }, [
         _vm._v(
           "\n                    Кількість статей\n                    за авторством та\n                    співавторством студентів\n                "
         )
@@ -43830,7 +43870,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", [
-      _c("th", { attrs: { rowspan: "2" } }, [
+      _c("td", { attrs: { rowspan: "2" } }, [
         _vm._v(
           "\n                    Кількість публікацій у співавторстві\n                    з іноземними партнерами\n                "
         )
@@ -43860,7 +43900,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", [
-      _c("th", [
+      _c("td", { attrs: { colspan: "2" } }, [
         _vm._v(
           "\n                    Кількість публікацій всього\n                    у тому числі:\n\n                "
         )
@@ -43872,7 +43912,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", [
-      _c("th", [
+      _c("td", { attrs: { colspan: "2" } }, [
         _vm._v("\n                    - підручників\n\n                ")
       ]),
       _vm._v(" "),
@@ -43884,8 +43924,48 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", [
-      _c("th", [
+      _c("td", { attrs: { colspan: "2" } }, [
         _vm._v("\n                    - посібників\n\n                ")
+      ]),
+      _vm._v(" "),
+      _c("td", [_vm._v("value")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", { attrs: { colspan: "2" } }, [
+        _vm._v("\n                    - монографій\n\n\n\n                ")
+      ]),
+      _vm._v(" "),
+      _c("td", [_vm._v("value")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", { attrs: { colspan: "2" } }, [
+        _vm._v(
+          "\n                    - опублікованих за кордоном мовами ОЕСР та ЕС\n                    проіндексовані БД Scopus або WoS\n                    статей у фахових за статусом виданнях\n\n\n                "
+        )
+      ]),
+      _vm._v(" "),
+      _c("td", [_vm._v("value")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", { attrs: { colspan: "2" } }, [
+        _vm._v(
+          "\n                    - статей у фахових за статусом виданнях\n\n\n                "
+        )
       ]),
       _vm._v(" "),
       _c("td", [_vm._v("value")])
