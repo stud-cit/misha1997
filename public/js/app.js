@@ -2515,6 +2515,67 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2536,15 +2597,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     exportRating: function exportRating() {
-      var wscols = [{
-        wch: 6
-      }, {
-        wch: 20
-      }];
       var workbook = xlsx__WEBPACK_IMPORTED_MODULE_0___default.a.utils.table_to_book(document.getElementById('exportRating'));
-      console.log(workbook);
-      workbook['!cols'] = wscols;
-      console.log(workbook);
       xlsx__WEBPACK_IMPORTED_MODULE_0___default.a.writeFile(workbook, 'filename.xlsx');
     }
   }
@@ -43617,7 +43670,33 @@ var render = function() {
       _vm._v(" "),
       _c("button", { on: { click: _vm.exportRating } }, [_vm._v("export")]),
       _vm._v(" "),
-      _vm._m(5),
+      _c(
+        "table",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: false,
+              expression: "false"
+            }
+          ],
+          attrs: { id: "exportRating" }
+        },
+        [
+          _vm._m(5),
+          _vm._v(" "),
+          _vm._m(6),
+          _vm._v(" "),
+          _vm._m(7),
+          _vm._v(" "),
+          _vm._m(8),
+          _vm._v(" "),
+          _vm._m(9),
+          _vm._v(" "),
+          _vm._m(10)
+        ]
+      ),
       _vm._v(" "),
       _c(
         "div",
@@ -43626,7 +43705,7 @@ var render = function() {
         },
         [
           _c("table", { staticClass: "table table-bordered " }, [
-            _vm._m(6),
+            _vm._m(11),
             _vm._v(" "),
             _c(
               "tbody",
@@ -43736,30 +43815,80 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("table", { attrs: { id: "exportRating" } }, [
-      _c("tr", [
-        _c("th", { attrs: { rowspan: "2" } }, [
-          _vm._v(
-            "\n                    Кількість статей\n                    за авторством та\n                    співавторством студентів\n                "
-          )
-        ]),
-        _vm._v(" "),
-        _c("th", { attrs: { colspan: "2", width: "500px" } }, [
-          _vm._v(
-            "\n                    Кількість публікацій у співавторстві\n                    з іноземними партнерами\n                "
-          )
-        ])
+    return _c("tr", [
+      _c("th", [
+        _vm._v(
+          "\n                    Кількість статей\n                    за авторством та\n                    співавторством студентів\n                "
+        )
       ]),
       _vm._v(" "),
-      _c("tr", [
-        _c("td", [_vm._v("\n                    Всього\n                ")]),
-        _vm._v(" "),
-        _c("td", [
-          _vm._v(
-            "\n                    Мають індекс Гірша за БД Scopus або WoS не нижче 10\n                "
-          )
-        ])
+      _c("td", [_vm._v("value")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", { attrs: { rowspan: "2" } }, [
+        _vm._v(
+          "\n                    Кількість публікацій у співавторстві\n                    з іноземними партнерами\n                "
+        )
+      ]),
+      _vm._v(" "),
+      _c("td", [_vm._v("\n                    Всього\n                ")]),
+      _vm._v(" "),
+      _c("td", [_vm._v("value")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", [
+        _vm._v(
+          "\n                    Мають індекс Гірша за БД Scopus або WoS не нижче 10\n                "
+        )
+      ]),
+      _vm._v(" "),
+      _c("td", [_vm._v("value")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [
+        _vm._v(
+          "\n                    Кількість публікацій всього\n                    у тому числі:\n\n                "
+        )
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [
+        _vm._v("\n                    - підручників\n\n                ")
+      ]),
+      _vm._v(" "),
+      _c("td", [_vm._v("value")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [
+        _vm._v("\n                    - посібників\n\n                ")
+      ]),
+      _vm._v(" "),
+      _c("td", [_vm._v("value")])
     ])
   },
   function() {
