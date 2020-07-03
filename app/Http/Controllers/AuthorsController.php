@@ -18,7 +18,7 @@ class AuthorsController extends Controller
 
     //cabinet users
     function getPersons($name) {
-        $key = 'y4Q7hxb7Du5rfz9TG8OJKYK3e8YrqAH77Qb4aeGF0Y5xycfBYb5e';
+        $key = 'cVzdHvhDsBX7itCbMsAjYZYhNsZqH7xiiBF2bNM8mZXoR0Aqcp91';
         $getPersons = file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersons?key='.$key.'&search='.$name);
         $getPersons = json_decode($getPersons, true);
 
@@ -56,26 +56,24 @@ class AuthorsController extends Controller
         $countName = count($nameArray);
         $userName = array_chunk($nameArray, $countName, true);
 
+        /*
         $userFacult = arrayColumn2($getPersonInfo1, 'NAME_DIV');
         $userKafedra = arrayColumn2($getPersonInfo1, 'ABBR_DIV');
         $userRole = ' ';
         $userEmail = ' ';
+        */
 
-        function insert($i, $userName, $user = [])
+        function insert($i, $userName)
         {
             for ($j = 0; $j <= count($userName); $j++) {
                 foreach ($userName as $key_arr => $val_arr) {
-                    $users['role'] = $user[0];
                     $users['name'] = $val_arr[$i];
-                    $users['email'] = $user[1];
-                    $users['faculty'] = $user[2];
-                    $users['department'] = $user[3];
                     return $users;
                 }
             }
         }
         for ($i = 0; $i <= $countName - 1; $i++) {
-            array_push($result, insert($i, $userName, [$userRole, $userEmail, $userFacult, $userKafedra]));
+            array_push($result, insert($i, $userName));
         }
         return $result;
     }

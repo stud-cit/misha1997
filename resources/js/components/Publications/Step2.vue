@@ -16,11 +16,11 @@
                 </div>
             </div>
 
-<!--            add to db author-->
+            <!--            add to db author-->
             <div class="other-author" v-if="otherAuthor" >
                 <div class="wrapper" >
 
-<!--ssu-->
+                    <!--ssu-->
 
                     <div class="container" v-if="otherAuthor == 1">
                         <h2 class="popup-title">Додати автора з СумДУ</h2>
@@ -29,8 +29,8 @@
                             <div class="authors supervisor">
                                 <multiselect
                                     v-model="ssuAuthor"
-                                    :options="authorsData"
-                                    :placeholder="'Пошук в базі данних сайту'"
+                                    :options="persons"
+                                    :placeholder="'Пошук в базі данних СумДУ'"
                                     :selectLabel="'Натисніть для вибору'"
                                     :selectedLabel="'Вибрано'"
                                     :deselectLabel="'Натисніть для видалення'"
@@ -38,7 +38,6 @@
                                     <span slot="noResult">По даному запиту немає результатів</span>
                                 </multiselect>
                             </div>
-
                         </div>
                         <div class="step-button-group mt-2">
                             <button class="next active" @click="">Додати <span>&gt;</span></button>
@@ -46,7 +45,7 @@
                         </div>
                     </div>
 
-<!--     other author-->
+                    <!--     other author-->
 
                     <div class="container" v-if="otherAuthor == 2">
                         <h2 class="popup-title">Додавання нового автора</h2>
@@ -125,7 +124,7 @@
 
                     <div class="authors" >
                         <p class="num">{{'№&nbsp;' + (i+1)}}</p>
-                        <multiselect 
+                        <multiselect
                             v-model="item.name"
                             :options="authorsData"
                             :placeholder="'Пошук в базі данних сайту'"
@@ -136,15 +135,15 @@
                         >
                             <span slot="noResult">По даному запиту немає результатів</span>
                         </multiselect>
-                        
+
                         <button class="authors-btn" @click="useAlias(i)"> {{ item.useAlias ? 'Використати ПІБ' : 'Використати псевдонім'}}</button>
                         <button class="remove-author" @click="removeAuthor(i)">&times;</button>
-                        
-                        
-                        
+
+
+
                     </div>
                     <div class="authors alias" v-if="item.useAlias">
-                        <multiselect   
+                        <multiselect
                             v-model="item.alias"
                             :options="item.aliasOptions"
                             :placeholder="'Виберіть псевдонім'"
@@ -155,7 +154,7 @@
                             <span slot="noResult">По даному запиту немає результатів</span>
                         </multiselect>
                     </div>
-                    
+
                 </div>
 
             </div>
@@ -186,6 +185,7 @@
                 },
                 ssuAuthor: '',
                 authorsData: ['Петренко', 'Іванов', 'Іваненко', 'Петросян'],
+                persons: [],
 
                 stepData: {
                     useSupervisor: '0',
@@ -197,8 +197,8 @@
                             alias: '',
                             aliasOptions: ['Petrenko', 'Петренко']
                         },
-                        
-                       
+
+
                     ],
 
                 }
@@ -228,13 +228,17 @@
             },
 
             useAlias (i) {
-               this.stepData.authors[i].useAlias = !this.stepData.authors[i].useAlias;
+                this.stepData.authors[i].useAlias = !this.stepData.authors[i].useAlias;
             },
             showNewAuthor(n){
-              this.otherAuthor = n;
-
-
-            }
+                this.otherAuthor = n;
+            },
+            getPerson() {
+                axios.get(`/api/persons/${this.ssuAuthor}`).then(response => {
+                    this.persons = response.data;
+                    console.log(this.persons)
+                });
+            },
         },
 
     }
