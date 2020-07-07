@@ -35,134 +35,8 @@
             </div>
         </div>
 
-        <button @click="exportRating">export</button>
-<!--        <table id="exportRating" v-show="false">-->
-<!--            <tr>-->
-<!--                <th rowspan="2">-->
-<!--                    Кількість статей-->
-<!--                    за авторством та-->
-<!--                    співавторством студентів-->
-<!--                </th>-->
-<!--                <th colspan="2" width="500px">-->
-<!--                    Кількість публікацій у співавторстві-->
-<!--                    з іноземними партнерами-->
-<!--                </th>-->
-<!--&lt;!&ndash;                <th>&ndash;&gt;-->
-<!--&lt;!&ndash;                    Кількість статей за авторством та співавторством студентів&ndash;&gt;-->
-<!--&lt;!&ndash;                </th>&ndash;&gt;-->
-<!--&lt;!&ndash;                <th>&ndash;&gt;-->
-<!--&lt;!&ndash;                    Кількість статей за авторством та співавторством студентів&ndash;&gt;-->
-<!--&lt;!&ndash;                </th>&ndash;&gt;-->
-<!--&lt;!&ndash;                <th>&ndash;&gt;-->
-<!--&lt;!&ndash;                    Кількість статей за авторством та співавторством студентів&ndash;&gt;-->
-<!--&lt;!&ndash;                </th>&ndash;&gt;-->
-<!--&lt;!&ndash;                <th>&ndash;&gt;-->
-<!--&lt;!&ndash;                    Кількість статей за авторством та співавторством студентів&ndash;&gt;-->
-<!--&lt;!&ndash;                </th>&ndash;&gt;-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <td>-->
-<!--                    Всього-->
-<!--                </td>-->
-<!--                <td>-->
-<!--                    Мають індекс Гірша за БД Scopus або WoS не нижче 10-->
-<!--                </td>-->
-<!--            </tr>-->
-<!--        </table>-->
-        <table id="exportRating" v-show="false" ref="exportR">
-            <tr>
-                <td colspan="2">
-                    Кількість статей
-                    за авторством та
-                    співавторством студентів
-                </td>
+       <export-rating></export-rating>
 
-                <td>value</td>
-
-            </tr>
-
-            <tr>
-                <td rowspan="2" >
-                    Кількість публікацій у співавторстві
-                    з іноземними партнерами
-                </td>
-                <td>
-                    Всього
-                </td>
-
-                <td>value</td>
-
-            </tr>
-            <tr>
-                <td>
-                    Мають індекс Гірша за БД Scopus або WoS не нижче 10
-                </td>
-
-                <td>value</td>
-            </tr>
-
-            <tr>
-                <td colspan="2">
-                    Кількість публікацій всього
-                    у тому числі:
-
-                </td>
-
-
-            </tr>
-
-            <tr>
-                <td colspan="2">
-                    - підручників
-
-                </td>
-
-                <td>value</td>
-            </tr>
-
-            <tr>
-                <td colspan="2">
-                    - посібників
-
-                </td>
-
-                <td>value</td>
-            </tr>
-
-            <tr>
-                <td colspan="2">
-                    - монографій
-
-
-
-                </td>
-
-                <td>value</td>
-            </tr>
-
-            <tr>
-                <td colspan="2">
-                    - опублікованих за кордоном мовами ОЕСР та ЕС
-                    проіндексовані БД Scopus або WoS
-                    статей у фахових за статусом виданнях
-
-
-                </td>
-
-                <td>value</td>
-            </tr>
-
-            <tr>
-                <td colspan="2">
-                    - статей у фахових за статусом виданнях
-
-
-                </td>
-
-                <td>value</td>
-            </tr>
-
-        </table>
         <div class="table-bordered table-responsive text-center table-list">
 
             <table class="table table-bordered " >
@@ -193,6 +67,7 @@
 </template>
 
 <script>
+    import ExportRating from "./Exports/ExportRating";
     import XLSX from 'xlsx';
     export default {
         data() {
@@ -203,7 +78,7 @@
             };
         },
         components: {
-
+            ExportRating
         },
         mounted () {
             this.getData();
