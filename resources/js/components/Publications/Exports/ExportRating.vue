@@ -333,6 +333,14 @@
             exportRating(){
 
                 const workbook = XLSX.utils.table_to_book(document.getElementById('exportRating'));
+                console.log(workbook.Sheets.Sheet1);
+                var wscols = [
+                    {wch:65},
+                    {wch:65},
+                    {wch:40},
+                    {wch:10}
+                ];
+                workbook.Sheets.Sheet1['!cols'] = wscols;
 
                 XLSX.writeFile(workbook, 'filename.xlsx');
             }
