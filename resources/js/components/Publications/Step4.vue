@@ -6,7 +6,9 @@
 
         <article-ukr v-if="articles.includes($parent.stepData.publicationType)"></article-ukr>
 
-        <monograph v-if="monographs.includes($parent.stepData.publicationType)"></monograph>
+        <book v-if="book.includes($parent.stepData.publicationType)"></book>
+
+        <book-part v-if="bookPart.includes($parent.stepData.publicationType)"></book-part>
 
         <thesis v-if="$parent.stepData.publicationType == 'Тези доповіді'"></thesis>
 
@@ -27,14 +29,16 @@
 </template>
 
 <script>
-    // Стаття у фахових виданнях України, інші статті
+    // Стаття у фахових виданнях України, стаття-доповідь у матеріалах наукових конференціях, інші статті
     import ArticleUkr from './Step5_fields/ArticleUkr';
 
     // монографії посібники підручники
-    import Monograph from "./Step5_fields/Monograph";
+    import Book from "./Step5_fields/Book";
+
+    // частина монографії книги
+    import BookPart from "./Step5_fields/BookPart";
 
     import Thesis from "./Step5_fields/Thesis";
-
     import Patent from "./Step5_fields/Patent";
     import Certificate from "./Step5_fields/Certificate";
     import Methodical from "./Step5_fields/Methodical";
@@ -45,7 +49,8 @@
         data() {
             return {
                 articles: ['Стаття-доповідь у матеріалах наукових конференціях', 'Стаття у фахових виданнях України', 'Інші статті'],
-                monographs: ['Монографія', 'Посібник', 'Книга'],
+                book: ['Монографія', 'Посібник', 'Книга'],
+                bookPart: ['Розділ монографії', 'Розділ книги'],
                 stepData:{
 
                 }
@@ -54,7 +59,8 @@
         },
         components:{
             ArticleUkr,
-            Monograph,
+            Book,
+            BookPart,
             Thesis,
             Patent,
             Certificate,

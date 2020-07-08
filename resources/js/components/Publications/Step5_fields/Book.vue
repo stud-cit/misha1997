@@ -4,31 +4,31 @@
 
             <div class="step-item">
                 <label class="item-title">Рік видання</label>
-                <select class="item-value" v-model="stepData.monograph.year">
+                <select class="item-value" v-model="stepData.book.year">
                     <option value="2020">2020</option>
                     <option value="2019">2019</option>
                 </select>
             </div>
             <div class="step-item">
                 <label class="item-title">Кількість томів</label>
-                <input class="item-value" type="number" v-model="stepData.monograph.count_tomes">
+                <input class="item-value" type="number" v-model="stepData.book.count_tomes">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Том</label>
-                <input class="item-value" type="text" v-model="stepData.monograph.tome">
+                <input class="item-value" type="text" v-model="stepData.book.tome">
 
             </div>
             <div class="step-item">
                 <label class="item-title">За редакцією</label>
-                <input class="item-value" type="text" v-model="stepData.monograph.by_editing">
+                <input class="item-value" type="text" v-model="stepData.book.by_editing">
 
             </div>
 
 
             <div class="step-item">
                 <label class="item-title">Країна видання</label>
-                <select class="item-value" v-model="stepData.monograph.country">
+                <select class="item-value" v-model="stepData.book.country">
                     <option value="Україна">Україна</option>
                     <option value="Англія">Англія</option>
                 </select>
@@ -36,32 +36,32 @@
             </div>
             <div class="step-item">
                 <label class="item-title">Місто видання</label>
-                <input class="item-value" type="text" v-model="stepData.monograph.city">
+                <input class="item-value" type="text" v-model="stepData.book.city">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Назва редакції</label>
-                <input class="item-value" type="text" v-model="stepData.monograph.editing_name">
+                <input class="item-value" type="text" v-model="stepData.book.editing_name">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Кількість сторінок</label>
-                <input class="item-value" type="text" v-model="stepData.monograph.count_pages">
+                <input class="item-value" type="text" v-model="stepData.book.count_pages">
 
             </div>
             <div class="step-item">
                 <p class="item-title">Опубліковано мовами ОЕСР та ЄС</p>
                 <div class="categories-elem">
-                    <input id="oesr_es1" type="radio" v-model="stepData.monograph.oesr_es" value="1">
+                    <input id="oesr_es1" type="radio" v-model="stepData.book.oesr_es" value="1">
                     <label class="small-box" for="oesr_es1">Так</label>
-                    <input id="oesr_es0" type="radio" v-model="stepData.monograph.oesr_es" value="0">
+                    <input id="oesr_es0" type="radio" v-model="stepData.book.oesr_es" value="0">
                     <label class="small-box" for="oesr_es0">Ні</label>
                 </div>
             </div>
 
             <div class="step-item">
                 <label class="item-title">DOI</label>
-                <input class="item-value" type="text" v-model="stepData.monograph.doi">
+                <input class="item-value" type="text" v-model="stepData.book.doi">
 
             </div>
 
@@ -81,7 +81,7 @@
         data() {
             return {
                 stepData:{
-                    monograph:{
+                    book:{
                         year: '',
                         count_tomes: '',
                         tome: '',
