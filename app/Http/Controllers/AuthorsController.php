@@ -18,7 +18,7 @@ class AuthorsController extends Controller
 
     //cabinet users
     function getPersons($name) {
-        $key = 'cVzdHvhDsBX7itCbMsAjYZYhNsZqH7xiiBF2bNM8mZXoR0Aqcp91';
+        $key = 'vzZfo44ALP6hOWwLTjxO9V9NejV7fUBmmYsM1eT8uVrHmoiK1124';
         $getPersons = file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersons?key='.$key.'&search='.$name);
         $getPersons = json_decode($getPersons, true);
 
@@ -67,8 +67,7 @@ class AuthorsController extends Controller
         {
             for ($j = 0; $j <= count($userName); $j++) {
                 foreach ($userName as $key_arr => $val_arr) {
-                    $users['name'] = $val_arr[$i];
-                    return $users;
+                    return $val_arr[$i];
                 }
             }
         }
@@ -78,16 +77,18 @@ class AuthorsController extends Controller
         return $result;
     }
 
-    function getId($id) {
-        $data = Authors::with('publications', 'role', 'alias', 'notifications')->find($id);
-        return response()->json($data);
-    }
-    function post(Request $request) {
+    function postAnyAuthor(Request $request) {
         $model = new Authors();
         $data = $request->all();
         $response = $model->create($data);
         return response()->json($response);
     }
+
+    function getId($id) {
+        $data = Authors::with('publications', 'role', 'alias', 'notifications')->find($id);
+        return response()->json($data);
+    }
+
     function getRoles() {
         $data = Roles::get();
         return response()->json($data);

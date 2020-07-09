@@ -28,7 +28,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(item, index) in data" :key="item.id">
+                <tr v-for="(item, index) in filteredList" :key="item.id">
                     <td scope="row">{{ index+1 }}</td>
                     <td>{{ item.role.name }}</td>
                     <td>{{ item.name }}</td>
@@ -47,7 +47,6 @@
         data() {
             return {
                 data: [],
-                persons: [],
                 searchAuthor: ''
             };
         },
@@ -56,7 +55,9 @@
         },
         computed: {
             filteredList() {
-                return this.persons || (this.persons.name == this.searchAuthor)
+                return this.data.filter(users => {
+                    return users.name.toLowerCase().includes(this.searchAuthor.toLowerCase())
+                })
             }
         },
         mounted () {
@@ -66,7 +67,6 @@
             getData() {
                 axios.get('/api/authors').then(response => {
                     this.data = response.data;
-                    console.log(this.data)
                 })
             },
             clean(){

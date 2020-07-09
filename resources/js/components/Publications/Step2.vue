@@ -30,6 +30,7 @@
                                 <multiselect
                                     v-model="ssuAuthor"
                                     :options="persons"
+                                    :preserve-search="true"
                                     :placeholder="'Пошук в базі данних СумДУ'"
                                     :selectLabel="'Натисніть для вибору'"
                                     :selectedLabel="'Вибрано'"
@@ -39,7 +40,8 @@
                                 </multiselect>
                             </div>
                         </div>
-                        <div class="step-button-group mt-2">
+                        <div class="step-button-group sumdu-base mt-2">
+                            <button class="authors-btn" @click="getPerson">Шукати</button>
                             <button class="next active" @click="">Додати <span>&gt;</span></button>
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
                         </div>
@@ -80,7 +82,7 @@
 
                         </div>
                         <div class="step-button-group">
-                            <button class="next active" @click="">Додати <span>&gt;</span></button>
+                            <button class="next active" @click="addAnyAuthor">Додати <span>&gt;</span></button>
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
                         </div>
                     </div>
@@ -183,8 +185,9 @@
                     hIndex: '',
                     profId: ''
                 },
+                objAuthor: {},
                 ssuAuthor: '',
-                authorsData: ['Петренко', 'Іванов', 'Іваненко', 'Петросян'],
+                authorsData: [],
                 persons: [],
 
                 stepData: {
@@ -208,12 +211,22 @@
         components: {
             Multiselect,
         },
+        mounted () {
+            this.getAuthor();
+        },
         methods:{
             nextStep () {
                 this.$emit('getData', this.stepData);
             },
             prevStep () {
                 this.$emit('prevStep');
+            },
+            getAuthor(){
+                axios.get('/api/authors').then(response => {
+                    response.data.forEach((authors, index) => {
+                        this.authorsData.push(authors.name)
+                    })
+                })
             },
             addAuthor(){
                 this.stepData.authors.push({
@@ -232,6 +245,31 @@
             },
             showNewAuthor(n){
                 this.otherAuthor = n;
+            },
+            addAnyAuthor() {
+                let anyAuthorData = new FormData();
+                anyAuthorData.append('data', JSON.stringify(this.newAuthor));
+
+                axios.post('/api/post-any-author', anyAuthorData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then((response) => {
+                    if(response.status == 200) {
+                        swal("Автора успішно додано!", {
+                           icon: "success",
+                        });
+                    }
+                })
+                .catch((error) => {
+                    this.preloader = false;
+                    swal({
+                        icon: "error",
+                        title: 'Помилка',
+                        text: String(error.response.status)
+                    });
+                });
             },
             getPerson() {
                 axios.get(`/api/persons/${this.ssuAuthor}`).then(response => {
@@ -277,6 +315,20 @@
 
         }
 
+    }
+
+    .sumdu-base .authors-btn {
+        padding: 10px 40px;
+        margin: 0 10px 30px;
+        color: #FFFFFF;
+        background: #A6A6A6;
+        box-sizing: border-box;
+        border-radius: 44.5px;
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 25px;
+        cursor: pointer;
     }
 
     .small-box{
