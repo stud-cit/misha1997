@@ -105,7 +105,7 @@
                 <div class="authors supervisor">
                     <multiselect
                         v-model="stepData.supervisor"
-                        :options="authorsData"
+                        :options="authorsName"
                         :placeholder="'Пошук в базі данних сайту'"
                         :selectLabel="'Натисніть для вибору'"
                         :selectedLabel="'Вибрано'"
@@ -128,7 +128,7 @@
                         <p class="num">{{'№&nbsp;' + (i+1)}}</p>
                         <multiselect
                             v-model="item.name"
-                            :options="authorsData"
+                            :options="authorsName"
                             :placeholder="'Пошук в базі данних сайту'"
                             :selectLabel="'Натисніть для вибору'"
                             :selectedLabel="'Вибрано'"
@@ -178,16 +178,28 @@
             return {
                 otherAuthor: false,
                 newAuthor: {
-                    name: '',
-                    alias: '',
+                    guid: 1,
                     job: '',
+                    name: '',
                     country: '',
                     hIndex: '',
+                    scopusAutorId: 1,
+                    scopusResearcherId: 1,
+                    orcid: '',
+                    department: '',
+                    faculty: '',
+                    is_student: 1,
+                    academic_code: 666,
+                    otherAuthorEmail: '',
+                    roles_id: 1,
+                    department_id: 1,
+
+                    alias: '',
                     profId: ''
                 },
-                objAuthor: {},
                 ssuAuthor: '',
                 authorsData: [],
+                authorsName: [],
                 persons: [],
 
                 stepData: {
@@ -224,7 +236,13 @@
             getAuthor(){
                 axios.get('/api/authors').then(response => {
                     response.data.forEach((authors, index) => {
-                        this.authorsData.push(authors.name)
+                        this.authorsName.push(authors.name);
+                        this.authorsData.push({
+                            role: authors.role,
+                            email: authors.email,
+                            faculty: authors.faculty,
+                            department: authors.department
+                        })
                     })
                 })
             },
