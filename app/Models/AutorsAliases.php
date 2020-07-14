@@ -12,4 +12,8 @@ class AutorsAliases extends Model
         'surname_initials',
         'autors_id'
     ];
+
+    function authors() {
+        return $this->belongsTo('App\Models\Authors', 'autors_id');
+    }
 }

@@ -27,33 +27,25 @@
 
         },
         methods: {
-
-
-            conditional_reload(){
+            conditional_reload() {
                 let location = '';
                 try {
                     location = this.auth_window.location.toString()
-                } catch (err){
+                } catch (err) {
                     console.log(err);
                 }
-                console.log('auth_location:' + location);
-                if (location.indexOf("jv.") > 0){
-                    console.log("close stuff");
-                    // this.auth_window.close();
-                    window.location = '/cabinet';
+                if (location.indexOf("jv.") > 0) {
+                    this.auth_window.close();
+                    window.location = '/home';
                 }
             },
-            open_auth(){
+            open_auth() {
                 const strWindowFeatures = "menubar=no,location=no,resizable=no,scrollbars=yes,status=no,width=600,height=600";
-                this.auth_window = window.open("http://cabinet.sumdu.edu.ua/index/service/7tvvT6CG", "Вход/Реєстрація через Кабинет",strWindowFeatures);
-                console.log(this.auth_window);
+                this.auth_window = window.open("http://cabinet.sumdu.edu.ua/index/service/TNWcmzpZ", "Вход/Реєстрація через Кабинет", strWindowFeatures);
                 setInterval(this.conditional_reload, 250);
                 return false;
             }
-
-
-        },
-
+        }
     }
 </script>
 <style lang="scss" scoped>

@@ -75,8 +75,7 @@
                     'Свідоцтво про реєстрації авторських прав на твір/рішення',
                     'Електронні видання',
                     'Патент',
-                    'Посібник',
-
+                    'Посібник'
                 ],
                 stepData:{
                     scopus: false,
@@ -91,20 +90,15 @@
 
         //   первые 8 по скопус, воз
 
-          scopusFilter(){
-
+          scopusFilter() {
               return this.publicationView.slice(0,8);
           }
 
         },
-        methods:{
+        methods: {
             nextStep() {
                 this.$emit('getData', this.stepData);
-            },
-
-        },
-        created() {
-
+            }
         }
     }
 </script>

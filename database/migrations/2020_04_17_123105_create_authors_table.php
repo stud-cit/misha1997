@@ -15,21 +15,19 @@ class CreateAuthorsTable extends Migration
     {
         Schema::create('authors', function (Blueprint $table) {
             $table->id();
-            $table->integer('guid');
-            $table->string('job');
+            $table->string('guid')->nullable();
+            $table->string('job')->nullable();
             $table->string('name');
-            $table->string('country');
-            $table->string('h_index');
-            $table->integer('scopus_autor_id');
-            $table->integer('scopus_researcher_id');
-            $table->string('orcid');
-            $table->string('department');
-            $table->string('faculty');
-            $table->integer('is_student');
-            $table->string('academic_code');
-            $table->string('email');
-            $table->foreignId('roles_id');
-            $table->integer('department_id');
+            $table->string('country')->nullable();
+            $table->string('h_index')->nullable();
+            $table->integer('scopus_autor_id')->nullable();
+            $table->integer('scopus_researcher_id')->nullable();
+            $table->string('orcid')->nullable();
+            $table->string('department')->nullable();
+            $table->string('faculty')->nullable();
+            $table->string('academic_code')->nullable();
+            $table->string('email')->nullable();
+            $table->foreignId('roles_id')->default(1);
             $table->timestamps();
         });
 

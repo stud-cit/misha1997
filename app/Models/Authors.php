@@ -10,8 +10,8 @@ class Authors extends Model
 
     protected $fillable = [
         'guid',
-        'name',
         'job',
+        'name',
         'country',
         'h_index',
         'scopus_autor_id',
@@ -19,18 +19,17 @@ class Authors extends Model
         'orcid',
         'department',
         'faculty',
-        'is_student',
         'academic_code',
         'email',
         'roles_id'
     ];
 
     function role() {
-        return $this->hasOne('App\Models\Roles', 'id');
+        return $this->belongsTo('App\Models\Roles', 'roles_id');
     }
 
     function alias() {
-        return $this->hasOne('App\Models\AutorsAliases', 'autors_id');
+        return $this->hasMany('App\Models\AutorsAliases', 'autors_id');
     }
 
     function notifications() {

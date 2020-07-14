@@ -2,84 +2,119 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\Users;
+use App\Models\Authors;
 use Illuminate\Http\Request;
 
 class PassportController extends Controller
 {
-    /**
-     * Handles Registration Request
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function register($userData)
-    {
-//        $this->validate($request, [
-//            'name' => 'required|min:3',
-//            'email' => 'required|email|unique:users',
-//            'password' => 'required|min:6',
-//        ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-//            'password' => bcrypt($request->password)
-        ]);
+    function checkCabinet() {
 
-        $token = $user->createToken('token')->accessToken;
+        session_start();
+        $info = "Наукові публікації";  // Service description
+        $icon = public_path() . "/service.png";      // Service icon (48x48)
+        $mask = 13;         // Service modes 3,2,0 (1101 bits)
 
-        return response()->json(['token' => $token], 200);
-    }
-
-    /**
-     * Handles Login Request
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function login(Request $request)
-    {
         $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
         $cabinet_service = "https://cabinet.sumdu.edu.ua/index/service/";
-        $cabinet_service_token = "7tvvT6CG";
+        $cabinet_service_token = env('APP_TOKEN');
 
-        $key = !empty($request->key) ? $request->key : "";
+        // Получаем параметры GET запроса
 
-        $person = json_decode(file_get_contents($cabinet_api . 'getPerson?key=' . $key . '&token=' . $cabinet_service_token), true);
+        $key = !empty($_REQUEST['key']) ? $_REQUEST['key'] : "";
+        $mode = !empty($_REQUEST['mode']) ? $_REQUEST['mode'] : 0;
 
-        if ($person['status'] == 'OK') {
+        // В зависимости от режима (mode) возвращаем или иконку, или описание, или специальный заголовок
 
-            $personInfo1 = json_decode(file_get_contents($cabinet_api . 'getPersonInfo1?key=' . $key . '&token=' . $cabinet_service_token), true);
+        if (!empty($key)) {
+            switch($mode) {
+            case 0:
+                break;
+            case 2:
+                header('Content-Type: image/png');
+                readfile($icon);
+                exit;
+            case 3:
+                echo $info;
+                exit;
+            case 100;
+                header('X-Cabinet-Support: ' . $mask);
+            default:
+                exit;
+            }
         }
-        else{
-            return response()->json(['error' => 'UnAuthorised'], 401);
-        }
 
-        $credentials = [
-            'guid' => $person->guid,
-            'email' => $person->email,
-            'edu_level' => $personInfo1->NAME_LEVEL
-        ];
+        // Если ключ не передается, но он сохранен в сессии, берем из сессии. Ключ храним
+        // в сессии для запроса на подтверждение, что пользователь все еще авторизован в кабинете.
 
-        if (auth()->attempt($credentials) && $credentials['edu_level'] !='student') {
-            $token = auth()->user()->createToken('token')->accessToken;
-            return response()->json(['token' => $token], 200);
-        } else {
-//            return response()->json(['error' => 'UnAuthorised'], 401);
-            $this->register(['person' => $person, 'personInfo1' => $personInfo1]);
+        if (empty($key) && !empty($_SESSION['key'])) $key = $_SESSION['key'];
+        if (!empty($key)) {
+            $person = json_decode(file_get_contents($cabinet_api . 'getPerson?key=' . $key . '&token=' . $cabinet_service_token), true);
+            if ($person['status'] == 'OK') {
+                $_SESSION['key'] = $key;
+                $_SESSION['person'] = $person;
+            } else {
+                unset($_SESSION['key']);
+                unset($_SESSION['person']);
+            }
         }
     }
 
-    /**
-     * Returns Authenticated User Details
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function details()
-    {
+    function checkLogin() {
+        $this->checkCabinet();
+        if (isset($_SESSION['person'])) {
+            return response("ok", 200);
+        } else {
+            return response("error", 200);
+        }
+    }
+
+    function checkRegister() {
+        $this->checkCabinet();
+        if (isset($_SESSION['person'])) {
+            if (Authors::where("guid", $_SESSION['person']['result']['guid'])->exists()) {
+                return response()->json([
+                    "status" => "ok",
+                    "userId" => $_SESSION['person']['result']['guid']
+                ]);
+            } else {
+                return response("error", 200);
+            }
+        } else {
+            return response("error", 200);
+        }
+    }
+
+    function register(Request $request) {
+        session_start();
+        $getPersonInfo1 = json_decode(file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersonInfo1?key='.$_SESSION['key']), true);
+        $getPersonInfo2 = json_decode(file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersonInfo2?key='.$_SESSION['key']), true);
+
+        $user = new Authors;
+        $user->guid = $_SESSION['person']['result']['guid'];
+        $user->job = $getPersonInfo2['result'][0]['NAME_DIV'];
+        $user->name = $_SESSION['person']['result']['surname']." ".$_SESSION['person']['result']['name']." ".$_SESSION['person']['result']['patronymic'];
+        $user->country = $request->country;
+        $user->h_index = $request->h_index;
+        $user->scopus_autor_id = $request->scopus_autor_id;
+        $user->scopus_researcher_id = $request->scopus_researcher_id;
+        $user->orcid = $request->orcid;
+        $user->faculty = $getPersonInfo1['result'][0]['NAME_DIV'];
+        $user->academic_code = $getPersonInfo1['result'][0]['NAME_GROUP'];
+        $user->email = $_SESSION['person']['result']['email'];
+        $user->roles_id = 1;
+        $user->save();
+
+        return response('ok', 200);
+    }
+
+    function index() {
+        $this->checkCabinet();
+        return view('app');
+    }
+
+    function details() {
         return response()->json(['user' => auth()->user()], 200);
     }
-
-
 }

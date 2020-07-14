@@ -17,6 +17,7 @@ class CreateAutorsAliasesTable extends Migration
             $table->id();
             $table->string('surname_initials');
             $table->foreignId('autors_id');
+            $table->boolean('select')->default(0);
             $table->timestamps();
         });
 

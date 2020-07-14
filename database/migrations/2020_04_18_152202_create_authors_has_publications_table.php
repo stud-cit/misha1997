@@ -16,6 +16,7 @@ class CreateAuthorsHasPublicationsTable extends Migration
         Schema::create('authors_has_publications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('autors_id');
+            $table->foreignId('autors_aliases_id')->nullable();
             $table->foreignId('publications_id');
         });
 
@@ -27,6 +28,11 @@ class CreateAuthorsHasPublicationsTable extends Migration
         Schema::table('authors_has_publications', function (Blueprint $table) {
             $table->index('publications_id');
             $table->foreign('publications_id')->references('id')->on('publications')->onDelete('cascade');
+        });
+
+        Schema::table('authors_has_publications', function (Blueprint $table) {
+            $table->index('autors_aliases_id');
+            $table->foreign('autors_aliases_id')->references('id')->on('autors_aliases')->onDelete('cascade');
         });
     }
 
