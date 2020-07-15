@@ -15,9 +15,9 @@ class CreateAuthorsTable extends Migration
     {
         Schema::create('authors', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->string('guid')->nullable();
             $table->string('job')->nullable();
-            $table->string('name');
             $table->string('country')->nullable();
             $table->string('h_index')->nullable();
             $table->integer('scopus_autor_id')->nullable();

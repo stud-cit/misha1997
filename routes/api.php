@@ -12,7 +12,6 @@ Route::post('register', 'PassportController@register');
 //authors
 Route::get('login-author', 'AuthorsController@getLoginUser');
 Route::get('authors', 'AuthorsController@getAll');
-Route::get('author/{name}', 'AuthorsController@getAuthor');
 Route::get('persons/{categ}/{id}', 'AuthorsController@getPersons');
 Route::get('author/{id}', 'AuthorsController@getId');
 Route::post('author', 'AuthorsController@postAuthor');
@@ -26,7 +25,7 @@ Route::post('notifications/{autors_id}', 'AuthorsController@postNotifications');
 //publications
 Route::get('publications', 'PublicationsController@getAll');
 Route::get('publication/{id}', 'PublicationsController@getId');
-Route::post('publication/{type}/{autors_id}', 'PublicationsController@post');
+Route::post('publication/{type}', 'PublicationsController@post');
 
 Route::get('country', 'PublicationsController@getCountry');
 

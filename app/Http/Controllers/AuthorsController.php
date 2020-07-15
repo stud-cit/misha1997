@@ -13,7 +13,7 @@ class AuthorsController extends Controller
 {
     // authors
     function getAll() {
-        $data = Authors::with('role')->get();
+        $data = Authors::with('role', 'alias')->get();
         return response()->json($data);
     }
 
@@ -28,11 +28,6 @@ class AuthorsController extends Controller
 
     function getId($id) {
         $data = Authors::with('publications', 'role', 'alias', 'notifications')->where("guid", $id)->first();
-        return response()->json($data);
-    }
-
-    function getAuthor($name) {
-        $data = Authors::with("alias")->where("name", "like", '%'.$name.'%')->get();
         return response()->json($data);
     }
 
@@ -60,6 +55,7 @@ class AuthorsController extends Controller
             $alias->autors_id = $response->id;
             $alias->save();
         }
+        $response->alias = [];
         return response()->json($response);
     }
 

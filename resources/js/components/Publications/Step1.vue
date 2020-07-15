@@ -8,17 +8,20 @@
             <div class="search-block">
                 <div class="categories">
                     <div class="categories-elem">
-                        <input id="scopus" type="checkbox" v-model="stepData.scopus">
-                        <label for="scopus" class="scopus">scopus</label>
+                        <input id="scopus" type="radio" v-model="stepData.science_type_id" value="1">
+                        <label for="scopus">Scopus</label>
                     </div>
-
                     <div class="categories-elem">
-                        <input id="wos" type="checkbox" v-model="stepData.wos">
-                        <label for="wos" class="scopus">wos</label>
+                        <input id="wos" type="radio" v-model="stepData.science_type_id" value="2">
+                        <label for="wos">WoS</label>
+                    </div>
+                    <div class="categories-elem">
+                        <input id="scopus_wos" type="radio" v-model="stepData.science_type_id" value="3">
+                        <label for="scopus_wos">Scopus та WoS</label>
                     </div>
                 </div>
                 <label class="main-search-container">
-                    <input type="text" class="main-search" placeholder="Введіть назву публікації" v-model="stepData.publicationTitle">
+                    <input type="text" class="main-search" placeholder="Введіть назву публікації" v-model="stepData.title">
                     <div class="search-load">
                         <p class="load-big"></p>
                         <p class="load-little"></p>
@@ -28,31 +31,25 @@
             </div>
 
         </div>
-        <div class="categories" v-if="stepData.publicationTitle">
+        <div class="categories" v-if="stepData.title">
             <p class="step-subtitle">
                 Оберіть тип публікації
             </p>
-            <template v-if="!stepData.scopus && !stepData.wos">
-
-                <div class="categories-elem"  v-for="(item, i) in publicationView" :key="i" >
-                    <input :id="'type' + i" type="radio" v-model="stepData.publicationType" :value="item">
-                    <label :for="'type' + i">{{ item }}</label>
+            <template v-if="stepData.science_type_id">
+                <div class="categories-elem" v-for="(item, i) in publicationView" :key="i">
+                    <input v-if="item.scopus_wos" :id="'type' + i" type="radio" v-model="stepData.type" :value="item">
+                    <label v-if="item.scopus_wos" :for="'type' + i">{{ item.title }}</label>
                 </div>
-
             </template>
             <template v-else>
-
-                <div class="categories-elem"  v-for="(item, i) in scopusFilter" :key="i" >
-                    <input :id="'type' + i" type="radio" v-model="stepData.publicationType" :value="item">
-                    <label :for="'type' + i">{{ item }}</label>
+                <div class="categories-elem" v-for="(item, i) in publicationView" :key="i">
+                    <input :id="'type' + i" type="radio" v-model="stepData.type" :value="item">
+                    <label :for="'type' + i">{{ item.title }}</label>
                 </div>
-
             </template>
-
         </div>
         <div class="step-button-group">
             <button class="next active" @click="nextStep">Продовжити <span>&gt;</span></button>
-
         </div>
     </div>
 </template>
@@ -63,37 +60,78 @@
         data() {
             return {
                 publicationView: [
-                    'Стаття-доповідь у матеріалах наукових конференціях',
-                    'Розділ монографії',
-                    'Монографія',
-                    'Книга',
-                    'Розділ книги',
-                    'Тези доповіді',
-                    'Стаття у фахових виданнях України',
-                    'Інші статті',
-                    'Методичні вказівки',
-                    'Свідоцтво про реєстрації авторських прав на твір/рішення',
-                    'Електронні видання',
-                    'Патент',
-                    'Посібник'
+                    {
+                        scopus_wos: true,
+                        key: "articles",
+                        title: 'Стаття у фахових виданнях України'
+                    },
+                    {
+                        scopus_wos: true,
+                        key: "articles",
+                        title: 'Стаття-доповідь у матеріалах наукових конференціях'
+                    },
+                    {
+                        scopus_wos: true,
+                        key: "articles",
+                        title: 'Інші статті'
+                    },
+                    {
+                        scopus_wos: true,
+                        key: "monographs",
+                        title: 'Монографія'
+                    },
+                    {
+                        scopus_wos: true,
+                        key: "textbooks",
+                        title: 'Книга'
+                    },
+                    {
+                        scopus_wos: true,
+                        key: "monographs",
+                        title: 'Розділ монографії'
+                    },
+                    {
+                        scopus_wos: true,
+                        key: "textbooks",
+                        title: 'Розділ книги'
+                    },
+                    {
+                        scopus_wos: true,
+                        key: "abstracts",
+                        title: 'Тези доповіді'
+                    },
+                    {
+                        scopus_wos: false,
+                        key: "manuals",
+                        title: 'Посібник'
+                    },
+                    {
+                        scopus_wos: false,
+                        key: "electronic_publications",
+                        title: 'Електронні видання'
+                    },
+                    {
+                        scopus_wos: false,
+                        key: "methodical_instructions",
+                        title: 'Методичні вказівки'
+                    },
+                    {
+                        scopus_wos: false,
+                        key: "certificates",
+                        title: 'Свідоцтво про реєстрації авторських прав на твір/рішення'
+                    }, 
+                    {
+                        scopus_wos: false,
+                        key: "patents",
+                        title: 'Патент'
+                    }
                 ],
-                stepData:{
-                    scopus: false,
-                    wos: false,
-                    publicationTitle: '',
-                    publicationType: ''
+                stepData: {
+                    science_type_id: null,
+                    title: '',
+                    type: ''
                 }
-
             }
-        },
-        computed: {
-
-        //   первые 8 по скопус, воз
-
-          scopusFilter() {
-              return this.publicationView.slice(0,8);
-          }
-
         },
         methods: {
             nextStep() {

@@ -4,27 +4,21 @@
             Крок 4 з 4. Вихідні дані
         </p>
 
-        <article-ukr v-if="articles.includes($parent.stepData.publicationType)"></article-ukr>
+        <article-ukr v-if="$parent.stepData.type.key == 'articles'"></article-ukr>
 
-        <book v-if="book.includes($parent.stepData.publicationType)"></book>
+        <book v-if="$parent.stepData.type.key == 'monographs' || $parent.stepData.type.key == 'textbooks' || $parent.stepData.type.key == 'manuals'"></book>
 
-        <book-part v-if="bookPart.includes($parent.stepData.publicationType)"></book-part>
+        <book-part v-if="$parent.stepData.type.key == 'monographs' || $parent.stepData.type.key == 'textbooks'"></book-part>
 
-        <thesis v-if="$parent.stepData.publicationType == 'Тези доповіді'"></thesis>
+        <thesis v-if="$parent.stepData.type.key == 'abstracts'"></thesis>
 
-        <patent v-if="$parent.stepData.publicationType == 'Патент'"></patent>
+        <patent v-if="$parent.stepData.type.key == 'patents'"></patent>
 
-        <certificate v-if="$parent.stepData.publicationType == 'Свідоцтво про реєстрації авторських прав на твір/рішення'"></certificate>
+        <certificate v-if="$parent.stepData.type.key == 'certificates'"></certificate>
 
-        <methodical v-if="$parent.stepData.publicationType == 'Методичні вказівки'"></methodical>
+        <methodical v-if="$parent.stepData.type.key == 'methodical_instructions'"></methodical>
 
-        <electronic v-if="$parent.stepData.publicationType == 'Електронні видання'"></electronic>
-
-
-
-
-
-
+        <electronic v-if="$parent.stepData.type.key == 'electronic_publications'"></electronic>
     </div>
 </template>
 
@@ -48,10 +42,7 @@
         name: "Step5",
         data() {
             return {
-                articles: ['Стаття-доповідь у матеріалах наукових конференціях', 'Стаття у фахових виданнях України', 'Інші статті'],
-                book: ['Монографія', 'Посібник', 'Книга'],
-                bookPart: ['Розділ монографії', 'Розділ книги'],
-                stepData:{
+                stepData: {
 
                 }
 

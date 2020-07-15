@@ -26,7 +26,7 @@ class PublicationsController extends Controller
         $data = Publications::with('type', 'article')->find($id);
         return response()->json($data);
     }
-    function post(Request $request, $type, $autors_id) {
+    function post(Request $request, $type) {
         $types = [
             'articles' => new Articles(),
             'patents' => new Patents(),
@@ -41,16 +41,32 @@ class PublicationsController extends Controller
 
         $modelPublications = new Publications();
         $dataPublications = $request->all();
+        $dataPublications['type'] = $dataPublications['type']['title'];
         $response = $modelPublications->create($dataPublications);
 
         $dataType = $request->publication;
         $dataType['publications_id'] = $response->id;
         $types[$type]->create($dataType);
 
-        $authorsPublications = new AuthorsPublications;
-        $authorsPublications->autors_id = $autors_id;
-        $authorsPublications->publications_id = $response->id;
-        $authorsPublications->save();
+        foreach ($request->authors as $key => $value) {
+            $authorsPublications = new AuthorsPublications;
+            $authorsPublications->autors_id = $value['id'];
+            foreach ($value['alias'] as $k => $v) {
+                if($v['select']) {
+                    $authorsPublications->autors_aliases_id = $v['id'];
+                }
+            }
+            $authorsPublications->publications_id = $response->id;
+            $authorsPublications->save();
+        }
+
+        if($request->supervisor) {
+            $authorsPublications = new AuthorsPublications;
+            $authorsPublications->autors_id = $request->supervisor['id'];
+            $authorsPublications->publications_id = $response->id;
+            $authorsPublications->supervisor = 1;
+            $authorsPublications->save();
+        }
 
         return response('ok', 200);
     }

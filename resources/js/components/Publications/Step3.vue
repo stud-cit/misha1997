@@ -11,25 +11,25 @@
             </div>
             <div class=" step-item">
                 <p class="item-title">Коефіцієнт впливовості імпакт-фактор журналу WoS :</p>
-                <input type="text" class="item-input" v-model="stepData.impactFactor">
+                <input type="text" class="item-input" v-model="stepData.impact_factor">
             </div>
             <div class="step-item">
                 <p class="item-title">Квартиль журналу БД Scopus :</p>
                 <div class="categories-elem" v-for="n in 4" :key="n">
-                    <input :id="'scopus' + n" type="radio" v-model="stepData.quartileScopus" :value="n">
+                    <input :id="'scopus' + n" type="radio" v-model="stepData.quartil_scopus" :value="n">
                     <label class="small-box" :for="'scopus' + n">{{n}}</label>
                 </div>
             </div>
             <div class="step-item">
                 <p class="item-title">Квартиль журналу БД WoS :</p>
                 <div class="categories-elem" v-for="n in 4" :key="n">
-                    <input :id="'wos' + n" type="radio" v-model="stepData.quartileWos" :value="n">
+                    <input :id="'wos' + n" type="radio" v-model="stepData.quartil_wos" :value="n">
                     <label class="small-box" :for="'wos' + n">{{n}}</label>
                 </div>
             </div>
             <div class=" step-item">
                 <p class="item-title">Підбаза WoS :</p>
-                <input id="subDb0" type="radio" class="d-none" v-model="stepData.subWos" value="0" >
+                <input id="subDb0" type="radio" class="d-none" v-model="stepData.sub_db_index" value="0" >
                 <div class="categories-elem" >
                     <input id="subDb1" type="checkbox" v-model="subWos1"  >
                     <label class="big-box" for="subDb1" @click="changeType(1)">Science Citation Index Expanded (SCIE) </label>
@@ -61,17 +61,17 @@
 
                 stepData:{
                     snip: '',
-                    impactFactor: '',
-                    quartileScopus: '',
-                    quartileWos: '',
-                    subWos: 0
+                    impact_factor: '',
+                    quartil_scopus: '',
+                    quartil_wos: '',
+                    sub_db_index: 0
                 }
 
             }
         },
         methods:{
             nextStep() {
-                this.stepData.subWos = this.subWos1 ? 1 : this.subWos2 ? 2 : 0;
+                this.stepData.sub_db_index = this.subWos1 ? 1 : this.subWos2 ? 2 : 0;
                 this.$emit('getData', this.stepData);
             },
             prevStep(){

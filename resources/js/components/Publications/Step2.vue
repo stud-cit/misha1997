@@ -152,15 +152,13 @@
                 <div class="authors supervisor">
                     <multiselect
                         v-model="stepData.supervisor"
-                        :options="supervisors"
+                        :options="authors"
                         label="name"
                         :searchable="true"
-                        :internal-search="false"
-                        :placeholder="'Пошук в базі данних сайту'"
-                        :selectLabel="'Натисніть для вибору'"
-                        :selectedLabel="'Вибрано'"
-                        :deselectLabel="'Натисніть для видалення'"
-                        @search-change="searchSupervisor"
+                        placeholder="Пошук в базі данних сайту"
+                        selectLabel="Натисніть для вибору"
+                        selectedLabel="Вибрано"
+                        deselectLabel="Натисніть для видалення"
                         :custom-label="nameWithInfo"
                     >
                         <span slot="noResult">По даному запиту немає результатів</span>
@@ -180,21 +178,18 @@
                         <multiselect
                             v-model="stepData.authors[i]"
                             :searchable="true"
-                            :internal-search="false"
                             :options="authors"
-                            :selectLabel="'Натисніть для вибору'"
-                            selectedLabel="'Вибрано'"
+                            selectLabel="Натисніть для вибору"
+                            selectedLabel="Вибрано"
                             deselectLabel='Натисніть для видалення'
                             placeholder="Пошук в базі данних сайту"
-                            open-direction="bottom"
-                            @search-change="searchAuthor"
-                            :custom-label="nameWithInfo2"
+                            :custom-label="nameWithInfo"
                         >
                             <span slot="noResult">По даному запиту немає результатів</span>
                         </multiselect>
                         <button class="remove-author" @click="removeAuthor(i)">&times;</button>
                     </div>
-                    <span v-if="stepData.authors[i].alias.length > 0" v-for="(alias, index) in item.alias" :key="index" @click="setAlias(alias)">{{ alias.surname_initials }} - {{ alias.select }}</span>
+                    <span v-for="(alias, index) in item.alias" :key="index" @click="setAlias(alias)">{{ alias.surname_initials }} - {{ alias.select }}</span>
                     <input type="submit" value="Додати псевдонім" @click="openModalAlias(item, i)">
                 </div>
             </div>
@@ -287,6 +282,9 @@
         components: {
             Multiselect,
         },
+        created() {
+            this.getAuthors();
+        },
         methods: {
             setAlias(alias) {
                 alias.select ? alias.select = 0 : alias.select = 1;
@@ -295,14 +293,7 @@
                 if(name == "") {
                     return "Пошук в базі данних сайту"
                 } else {
-                    return `${name} — ${academic_code == "" ? faculty : academic_code}`
-                }
-            },
-            nameWithInfo2({name}) {
-                if(name == "") {
-                    return "Пошук в базі данних сайту"
-                } else {
-                    return `${name}`
+                    return `${name} — ${academic_code ? academic_code : faculty}`
                 }
             },
             nextStep () {
@@ -326,43 +317,6 @@
                 this.getCountry();
                 this.otherAuthor = n;
             },
-            searchAuthor(name) {
-                if(name.length >= 3) {
-                    console.log("Пошук")
-                    setTimeout(() => {
-                        axios.get(`/api/author/${name}`).then(response => {
-                            return response.data.map(item => {
-                                return {
-                                    id: item.id,
-                                    guid: item.guid,
-                                    name: item.name,
-                                    faculty: item.faculty,
-                                    alias: item.alias
-                                }
-                            });
-                        }).then(result => {
-                            this.authors = result;
-                            console.log("Готово")
-                        })
-                    }, 500)
-                }
-            },
-            searchSupervisor(name) {
-                if(name.length >= 3) {
-                    axios.get(`/api/author/${name}`).then(response => {
-                        return response.data.map(item => {
-                            return {
-                                id: item.id,
-                                guid: item.guid,
-                                name: item.name,
-                                faculty: item.faculty
-                            }
-                        });
-                    }).then(result => {
-                        this.supervisors = result;
-                    })
-                }
-            },
             getPersonAPI() {
                 if(this.selectCateg) {
                     this.loadingPersons = true;
@@ -384,10 +338,17 @@
                     })
                 }
             },
+            getAuthors() {
+                axios.get(`/api/authors`).then(response => {
+                    this.authors = response.data;
+                })
+            },
             addNewAuthor(newAuthor) {
                 axios.post('/api/author', newAuthor)
-                .then(() => {
+                .then((response) => {
+                    this.ssuAuthor = "";
                     this.otherAuthor = false;
+                    this.authors.push(response.data);
                     swal("Автора успішно додано!", {
                         icon: "success",
                     });
@@ -424,8 +385,7 @@
                     this.otherAuthor = false;
                     swal({
                         icon: "error",
-                        title: 'Помилка',
-                        text: String(error.response.status)
+                        title: 'Помилка'
                     });
                 });
             }

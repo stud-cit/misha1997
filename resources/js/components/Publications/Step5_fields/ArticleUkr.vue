@@ -3,14 +3,13 @@
         <div class="step-content">
             <div class="step-item">
                 <label class="item-title">Назва журналу</label>
-                <input class="item-value" type="text" v-model="stepData.journal.name">
+                <input class="item-value" type="text" v-model="stepData.publication.title">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Рік видання</label>
-                <select class="item-value" v-model="stepData.journal.year">
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
+                <select class="item-value" v-model="stepData.publication.year">
+                    <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                 </select>
 
 
@@ -18,26 +17,29 @@
 
             <div class="step-item">
                 <label class="item-title">Номер (том)</label>
-                <input class="item-value" type="text" v-model="stepData.journal.tome">
+                <input class="item-value" type="text" v-model="stepData.publication.number">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Сторінки</label>
-                <input class="item-value" type="text" v-model="stepData.journal.pages">
+                <input class="item-value" type="text" v-model="stepData.publication.pages">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Країна видання</label>
-                <select class="item-value" v-model="stepData.journal.country">
-                    <option value="Україна">Україна</option>
-                    <option value="Англія">Англія</option>
+                <select class="item-value" v-model="stepData.publication.country">
+                    <option
+                        v-for="(item, index) in country"
+                        :key="index"
+                        :value="item.name"
+                    >{{item.name}}</option>
                 </select>
 
             </div>
 
             <div class="step-item">
                 <label class="item-title">DOI</label>
-                <input class="item-value" type="text" v-model="stepData.journal.doi">
+                <input class="item-value" type="text" v-model="stepData.publication.doi">
 
             </div>
 
@@ -52,33 +54,43 @@
 
 <script>
     export default {
-
         data() {
             return {
-                stepData:{
-                    journal:{
-                        name: '',
-                        year: '',
-                        tome: '',
+                country: [],
+                stepData: {
+                    publication: {
+                        title: '',
+                        year: new Date().getFullYear(),
+                        number: '',
                         pages: '',
-                        country: '',
+                        country: 'Україна',
                         doi: '',
                     }
-
                 }
-
             }
         },
+        created() {
+            this.getCountry();
+        },
+        computed: {
+			years() {
+				const year = new Date().getFullYear();
+				return Array.from({length: year - 2000}, (value, index) => 2001 + index);
+            },
+        },
         methods:{
+            getCountry() {
+                axios.get('/api/country').then(response => {
+                    console.log(response.data)
+                    this.country = response.data;
+                })
+            },
             nextStep() {
                 this.$parent.$emit('getData', this.stepData);
             },
             prevStep(){
                 this.$parent.$emit('prevStep');
             }
-        },
-        created() {
-
         }
     }
 </script>

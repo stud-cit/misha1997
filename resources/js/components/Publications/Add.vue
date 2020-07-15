@@ -38,6 +38,19 @@
                 console.log(this.stepData)
                 if(this.currentStep !== 4) {
                     this.currentStep++;
+                } else {
+                    axios.post('/api/publication/'+this.stepData.type.key, this.stepData)
+                    .then((response) => {
+                        swal("Публікацію успішно додано!", {
+                            icon: "success",
+                        });
+                    })
+                    .catch(() => {
+                        swal({
+                            icon: "error",
+                            title: 'Помилка'
+                        });
+                    });
                 }
             },
             prevStep() {

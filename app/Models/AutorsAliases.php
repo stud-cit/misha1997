@@ -10,7 +10,8 @@ class AutorsAliases extends Model
 
     protected $fillable = [
         'surname_initials',
-        'autors_id'
+        'autors_id',
+        'autors_aliases_id'
     ];
 
     function authors() {

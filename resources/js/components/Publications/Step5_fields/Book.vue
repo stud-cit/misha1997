@@ -80,8 +80,8 @@
 
         data() {
             return {
-                stepData:{
-                    book:{
+                stepData: {
+                    publication: {
                         year: '',
                         count_tomes: '',
                         tome: '',
@@ -92,7 +92,6 @@
                         count_pages: '',
                         oesr_es: 0,
                         doi: ''
-
                     }
                 }
 

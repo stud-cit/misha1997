@@ -9,12 +9,13 @@ class Publications extends Model
     protected $table = 'publications';
 
     protected $fillable = [
+        'type',
         'title',
         'science_type_id',
         'impact_factor',
         'sub_db_index',
-        'quartil',
-        'department_id',
+        'quartil_scopus',
+        'quartil_wos',
         'scie',
         'ssci',
         'nature_index',
