@@ -7,16 +7,17 @@
 
             <div class="search-block">
                 <div class="categories">
+
                     <div class="categories-elem">
-                        <input id="scopus" type="radio" v-model="stepData.science_type_id" value="1">
-                        <label for="scopus">Scopus</label>
+                        <input id="scopus" type="radio" v-model="stepData.science_type_id" value="1" @click="checkScienceType('1')">
+                        <label for="scopus" >Scopus</label>
                     </div>
                     <div class="categories-elem">
-                        <input id="wos" type="radio" v-model="stepData.science_type_id" value="2">
+                        <input id="wos" type="radio" v-model="stepData.science_type_id" value="2" @click="checkScienceType('2')">
                         <label for="wos">WoS</label>
                     </div>
                     <div class="categories-elem">
-                        <input id="scopus_wos" type="radio" v-model="stepData.science_type_id" value="3">
+                        <input id="scopus_wos" type="radio" v-model="stepData.science_type_id" value="3" @click="checkScienceType('3')">
                         <label for="scopus_wos">Scopus та WoS</label>
                     </div>
                 </div>
@@ -35,7 +36,7 @@
             <p class="step-subtitle">
                 Оберіть тип публікації
             </p>
-            <template v-if="stepData.science_type_id">
+            <template v-if="stepData.science_type_id != 0">
                 <div class="categories-elem" v-for="(item, i) in publicationView" :key="i">
                     <input v-if="item.scopus_wos" :id="'type' + i" type="radio" v-model="stepData.type" :value="item">
                     <label v-if="item.scopus_wos" :for="'type' + i">{{ item.title }}</label>
@@ -119,15 +120,16 @@
                         scopus_wos: false,
                         key: "certificates",
                         title: 'Свідоцтво про реєстрації авторських прав на твір/рішення'
-                    }, 
+                    },
                     {
                         scopus_wos: false,
                         key: "patents",
                         title: 'Патент'
                     }
                 ],
+                prevVal: '',
                 stepData: {
-                    science_type_id: null,
+                    science_type_id: false,
                     title: '',
                     type: ''
                 }
@@ -136,6 +138,16 @@
         methods: {
             nextStep() {
                 this.$emit('getData', this.stepData);
+            },
+            checkScienceType (val) {
+                setTimeout(()=>{
+                    if (val === this.prevVal) {
+                    this.stepData.science_type_id = false;
+                }
+                this.prevVal = this.stepData.science_type_id;
+                }, 100);
+
+
             }
         }
     }
