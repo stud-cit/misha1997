@@ -4,16 +4,15 @@
 
             <div class="step-item">
                 <label class="item-title">Рік видання</label>
-                <select class="item-value" v-model="stepData.methodical.year">
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
+                <select class="item-value" v-model="stepData.publication.year">
+                    <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                 </select>
             </div>
 
 
             <div class="step-item">
                 <label class="item-title">Країна видання</label>
-                <select class="item-value" v-model="stepData.methodical.country">
+                <select class="item-value" v-model="stepData.publication.country">
                     <option value="Україна">Україна</option>
                     <option value="Англія">Англія</option>
                 </select>
@@ -21,17 +20,17 @@
             </div>
             <div class="step-item">
                 <label class="item-title">Місто видання</label>
-                <input class="item-value" type="text" v-model="stepData.methodical.city">
+                <input class="item-value" type="text" v-model="stepData.publication.city">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Назва редакції</label>
-                <input class="item-value" type="text" v-model="stepData.methodical.editing_name">
+                <input class="item-value" type="text" v-model="stepData.publication.editor_name">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Кількість сторінок</label>
-                <input class="item-value" type="text" v-model="stepData.methodical.count_pages">
+                <input class="item-value" type="text" v-model="stepData.publication.number_pages">
 
             </div>
 
@@ -53,22 +52,15 @@
 
         data() {
             return {
-                stepData:{
-                    methodical:{
-                        year: '',
-                        count_tomes: '',
-                        tome: '',
-                        by_editing: '',
+                stepData: {
+                    publication: {
+                        year: new Date().getFullYear(),
                         country: '',
                         city: '',
-                        editing_name: '',
-                        count_pages: '',
-                        oesr_es: 0,
-                        doi: ''
-
+                        editor_name: '',
+                        number_pages: ''
                     }
                 }
-
             }
         },
         methods:{
@@ -81,6 +73,12 @@
         },
         created() {
 
+        },
+        computed: {
+            years() {
+                const year = new Date().getFullYear();
+                return Array.from({length: year - 2000}, (value, index) => 2001 + index);
+            },
         }
     }
 </script>

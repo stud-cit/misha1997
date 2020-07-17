@@ -4,31 +4,30 @@
 
             <div class="step-item">
                 <label class="item-title">Рік видання</label>
-                <select class="item-value" v-model="stepData.book.year">
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
+                <select class="item-value" v-model="stepData.publication.year">
+                    <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                 </select>
             </div>
             <div class="step-item">
                 <label class="item-title">Кількість томів</label>
-                <input class="item-value" type="number" v-model="stepData.book.count_tomes">
+                <input class="item-value" type="number" v-model="stepData.publication.number_volumes">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Том</label>
-                <input class="item-value" type="text" v-model="stepData.book.tome">
+                <input class="item-value" type="text" v-model="stepData.publication.volume">
 
             </div>
             <div class="step-item">
                 <label class="item-title">За редакцією</label>
-                <input class="item-value" type="text" v-model="stepData.book.by_editing">
+                <input class="item-value" type="text" v-model="stepData.publication.by_editing">
 
             </div>
 
 
             <div class="step-item">
                 <label class="item-title">Країна видання</label>
-                <select class="item-value" v-model="stepData.book.country">
+                <select class="item-value" v-model="stepData.publication.country">
                     <option value="Україна">Україна</option>
                     <option value="Англія">Англія</option>
                 </select>
@@ -36,32 +35,31 @@
             </div>
             <div class="step-item">
                 <label class="item-title">Місто видання</label>
-                <input class="item-value" type="text" v-model="stepData.book.city">
+                <input class="item-value" type="text" v-model="stepData.publication.city">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Назва редакції</label>
-                <input class="item-value" type="text" v-model="stepData.book.editing_name">
+                <input class="item-value" type="text" v-model="stepData.publication.editor_name">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Кількість сторінок</label>
-                <input class="item-value" type="text" v-model="stepData.book.count_pages">
-
+                <input class="item-value" type="text" v-model="stepData.publication.number_pages">
             </div>
             <div class="step-item">
                 <p class="item-title">Опубліковано мовами ОЕСР та ЄС</p>
                 <div class="categories-elem">
-                    <input id="oesr_es1" type="radio" v-model="stepData.book.oesr_es" value="1">
+                    <input id="oesr_es1" type="radio" v-model="stepData.publication.languages" value="1">
                     <label class="small-box" for="oesr_es1">Так</label>
-                    <input id="oesr_es0" type="radio" v-model="stepData.book.oesr_es" value="0">
+                    <input id="oesr_es0" type="radio" v-model="stepData.publication.languages" value="0">
                     <label class="small-box" for="oesr_es0">Ні</label>
                 </div>
             </div>
 
             <div class="step-item">
                 <label class="item-title">DOI</label>
-                <input class="item-value" type="text" v-model="stepData.book.doi">
+                <input class="item-value" type="text" v-model="stepData.publication.doi">
 
             </div>
 
@@ -82,19 +80,18 @@
             return {
                 stepData: {
                     publication: {
-                        year: '',
-                        count_tomes: '',
-                        tome: '',
+                        year: new Date().getFullYear(),
+                        number_volumes: '',
+                        volume: '',
                         by_editing: '',
                         country: '',
                         city: '',
-                        editing_name: '',
-                        count_pages: '',
-                        oesr_es: 0,
+                        editor_name: '',
+                        number_pages: '',
+                        languages: 0,
                         doi: ''
                     }
                 }
-
             }
         },
         methods:{
@@ -107,6 +104,12 @@
         },
         created() {
 
+        },
+        computed: {
+            years() {
+                const year = new Date().getFullYear();
+                return Array.from({length: year - 2000}, (value, index) => 2001 + index);
+            },
         }
     }
 </script>

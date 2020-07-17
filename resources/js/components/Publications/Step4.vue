@@ -32,10 +32,19 @@
     // частина монографії книги
     import BookPart from "./Step5_fields/BookPart";
 
+    // тези доповіді (abstracts)
     import Thesis from "./Step5_fields/Thesis";
+
+    // патент
     import Patent from "./Step5_fields/Patent";
+
+    // Свідоцтво про реєстрації авторських прав на твір/рішення
     import Certificate from "./Step5_fields/Certificate";
+
+    // Методичні вказівки
     import Methodical from "./Step5_fields/Methodical";
+
+    // Електронні видання
     import Electronic from "./Step5_fields/Electronic";
 
     export default {

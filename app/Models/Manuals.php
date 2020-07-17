@@ -12,6 +12,7 @@ class Manuals extends Model
         'year',
         'number_volumes',
         'volume',
+        'by_editing',
         'country',
         'city',
         'editor_name',
