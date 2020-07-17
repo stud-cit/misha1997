@@ -36,7 +36,7 @@
             <p class="step-subtitle">
                 Оберіть тип публікації
             </p>
-            <template v-if="stepData.science_type_id != 0">
+            <template v-if="stepData.science_type_id">
                 <div class="categories-elem" v-for="(item, i) in publicationView" :key="i">
                     <input v-if="item.scopus_wos" :id="'type' + i" type="radio" v-model="stepData.type" :value="item">
                     <label v-if="item.scopus_wos" :for="'type' + i">{{ item.title }}</label>
@@ -129,7 +129,7 @@
                 ],
                 prevVal: '',
                 stepData: {
-                    science_type_id: false,
+                    science_type_id: null,
                     title: '',
                     type: ''
                 }
@@ -142,7 +142,7 @@
             checkScienceType (val) {
                 setTimeout(()=>{
                     if (val === this.prevVal) {
-                    this.stepData.science_type_id = false;
+                    this.stepData.science_type_id = null;
                 }
                 this.prevVal = this.stepData.science_type_id;
                 }, 100);

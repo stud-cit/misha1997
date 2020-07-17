@@ -16,7 +16,7 @@ class CreatePublicationsTable extends Migration
         Schema::create('publications', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->foreignId('science_type_id');
+            $table->foreignId('science_type_id')->nullable();
             $table->string('type');
             $table->string('impact_factor');
             $table->integer('sub_db_index');

@@ -62,8 +62,8 @@
                 stepData:{
                     snip: '',
                     impact_factor: '',
-                    quartil_scopus: '',
-                    quartil_wos: '',
+                    quartil_scopus: null,
+                    quartil_wos: null,
                     sub_db_index: 0
                 }
 
