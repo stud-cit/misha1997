@@ -19,7 +19,7 @@ class AuthorsController extends Controller
 
     //cabinet users
     function getPersons($categ, $id) {
-        $asu_key = env('ASU_KEY');
+        $asu_key = 'eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG';
         $mode = 1;
         $getPersons = file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key='.$asu_key.'&mode='.$mode.'&'.$categ.'='.$id);
         $getPersons = json_decode($getPersons, true);
