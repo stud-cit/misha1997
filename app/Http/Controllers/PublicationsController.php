@@ -76,4 +76,70 @@ class PublicationsController extends Controller
         return response()->json($data);
     }
 
+    function Export() {
+
+        $data = [
+            "countPublications" => 0,
+            "countForeignPublications" => 0,
+            "countIndexHirsha" => 0,
+            "countArticle" => 0,
+            "countTextbooks" => 0,
+            "countManuals" => 0,
+            "countMonographs" => 0,
+            "countScopusWosPublications" => 0,
+        ];
+
+        $data["countPublications"] = Publications::count();
+
+        $foreignPublications = Publications::with(
+            "author",
+            "article",
+            "certificates",
+            "abstracts",
+            "electronicPublications",
+            "manuals",
+            "methodicalInstructions",
+            "monographs",
+            "patents",
+            "textbooks"
+        )->get();
+
+        // return response()->json($foreignPublications);
+
+        foreach ($foreignPublications as $key => $value) {
+            $foreign = 0;
+            foreach ($value['author'] as $k => $v) {
+                if($v['country'] != "Україна") {
+                    $foreign = 1;
+                }
+                if($v['h_index'] >= 10) {
+                    $data["countIndexHirsha"] += 1;
+                }
+            }
+            $data["countForeignPublications"] += $foreign;
+
+            if($value->article) {
+                $data["countArticle"] += 1;
+            }
+            if(isset($value->textbooks)) {
+                $data["countTextbooks"] += 1;
+            }
+            if(isset($value->manuals)) {
+                $data["countManuals"] += 1;
+            }
+            if(isset($value->monographs)) {
+                $data["countMonographs"] += 1;
+            }
+            if(isset($value->article)) {
+                $data["countArticle"] += 1;
+            }
+
+            if($value->science_type_id) {
+                $data["countScopusWosPublications"] += 1;
+            }
+        }
+
+        return response()->json($data);
+    }
+
 }
