@@ -60,7 +60,7 @@
                     <td>{{ item.publications.type }}</td>
                     <td>{{ item.autors.name }}</td>
                     <td>{{ item.publications.title }}</td>
-                    <td>{{ item.publications.date.slice(0,4) }}</td>
+                    <td>{{ (item.publications.date + '').slice(0,4) }}</td>
                     <td>{{ item.publications.sub_db_index }}</td>
                 </tr>
                 </tbody>
