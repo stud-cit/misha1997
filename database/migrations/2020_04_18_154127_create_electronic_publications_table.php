@@ -18,11 +18,12 @@ class CreateElectronicPublicationsTable extends Migration
             $table->integer('year');
             $table->integer('number_volumes');
             $table->string('volume');
+            $table->string('by_editing');
             $table->string('country');
             $table->string('city');
             $table->string('editor_name');
             $table->integer('number_pages');
-            $table->string('languages');
+            $table->integer('languages');
             $table->string('access_mode');
             $table->foreignId('publications_id');
             $table->timestamps();

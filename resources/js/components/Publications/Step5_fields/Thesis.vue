@@ -3,14 +3,13 @@
         <div class="step-content">
             <div class="step-item">
                 <label class="item-title">Назва конференції</label>
-                <input class="item-value" type="text" v-model="stepData.thesis.name">
+                <input class="item-value" type="text" v-model="stepData.publication.name_conference">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Рік видання</label>
-                <select class="item-value" v-model="stepData.thesis.year">
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
+                <select class="item-value" v-model="stepData.publication.year">
+                    <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                 </select>
 
 
@@ -18,17 +17,17 @@
 
             <div class="step-item">
                 <label class="item-title">Видавництво</label>
-                <input class="item-value" type="text" v-model="stepData.thesis.edition">
+                <input class="item-value" type="text" v-model="stepData.publication.publisher">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Сторінки</label>
-                <input class="item-value" type="text" v-model="stepData.thesis.pages">
+                <input class="item-value" type="text" v-model="stepData.publication.pages">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Країна видання</label>
-                <select class="item-value" v-model="stepData.thesis.country">
+                <select class="item-value" v-model="stepData.publication.country">
                     <option value="Україна">Україна</option>
                     <option value="Англія">Англія</option>
                 </select>
@@ -36,13 +35,13 @@
             </div>
             <div class="step-item">
                 <label class="item-title">Місто видання</label>
-                <input class="item-value" type="text" v-model="stepData.thesis.city">
+                <input class="item-value" type="text" v-model="stepData.publication.city">
 
             </div>
 
             <div class="step-item">
                 <label class="item-title">DOI</label>
-                <input class="item-value" type="text" v-model="stepData.thesis.doi">
+                <input class="item-value" type="text" v-model="stepData.publication.doi">
 
             </div>
 
@@ -62,10 +61,10 @@
         data() {
             return {
                 stepData:{
-                    thesis:{
-                        name: '',
-                        year: '',
-                        edition: '',
+                    publication: {
+                        year: new Date().getFullYear(),
+                        name_conference: '',
+                        publisher: '',
                         pages: '',
                         country: '',
                         city: '',
@@ -86,7 +85,13 @@
         },
         created() {
 
-        }
+        },
+        computed: {
+            years() {
+                const year = new Date().getFullYear();
+                return Array.from({length: year - 2000}, (value, index) => 2001 + index);
+            },
+        },
     }
 </script>
 

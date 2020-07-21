@@ -5,12 +5,12 @@
 
             <div class="step-item">
                 <label class="item-title">№ свідоцтва/рішення</label>
-                <input class="item-value" type="text" v-model="stepData.certificate.number">
+                <input class="item-value" type="text" v-model="stepData.publication.number">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Країна, де отриманий патент</label>
-                <select class="item-value" v-model="stepData.certificate.country">
+                <select class="item-value" v-model="stepData.publication.country">
                     <option value="Україна">Україна</option>
                     <option value="Англія">Англія</option>
                 </select>
@@ -19,7 +19,7 @@
 
             <div class="step-item">
                 <label class="item-title">Заявник</label>
-                <input class="item-value" type="text" v-model="stepData.certificate.applicant">
+                <input class="item-value" type="text" v-model="stepData.publication.applicant">
 
             </div>
 
@@ -28,30 +28,30 @@
 
             <div class="step-item">
                 <label class="item-title">Дата подачі заявки</label>
-                <input class="item-value" type="text" v-model="stepData.certificate.dateSend">
+                <input class="item-value" type="text" v-model="stepData.publication.date_application">
 
             </div>
             <div class="step-item">
                 <label class="item-title">Дата публікації про видачу свідоцтва/рішення</label>
-                <input class="item-value" type="text" v-model="stepData.certificate.datePublication">
+                <input class="item-value" type="text" v-model="stepData.publication.date_publication">
 
             </div>
 
             <div class="step-item">
                 <p class="item-title">Комерціалізовано університетом</p>
                 <div class="categories-elem">
-                    <input id="univer1" type="radio" v-model="stepData.certificate.univer" value="1">
+                    <input id="univer1" type="radio" v-model="stepData.publication.commerc_university" value="1">
                     <label class="small-box" for="univer1">Так</label>
-                    <input id="univer0" type="radio" v-model="stepData.certificate.univer" value="0">
+                    <input id="univer0" type="radio" v-model="stepData.publication.commerc_university" value="0">
                     <label class="small-box" for="univer0">Ні</label>
                 </div>
             </div>
             <div class="step-item">
                 <p class="item-title">Комерціалізовано штатними співробітниками університету</p>
                 <div class="categories-elem">
-                    <input id="colleagues1" type="radio" v-model="stepData.certificate.colleagues" value="1">
+                    <input id="colleagues1" type="radio" v-model="stepData.publication.commerc_employees" value="1">
                     <label class="small-box" for="colleagues1">Так</label>
-                    <input id="colleagues0" type="radio" v-model="stepData.certificate.colleagues" value="0">
+                    <input id="colleagues0" type="radio" v-model="stepData.publication.commerc_employees" value="0">
                     <label class="small-box" for="colleagues0">Ні</label>
                 </div>
             </div>
@@ -70,20 +70,17 @@
 
         data() {
             return {
-                stepData:{
-                    certificate:{
+                stepData: {
+                    publication: {
                         number: '',
                         country: '',
                         applicant: '',
-                        dateSend: '',
-                        datePublication: '',
-                        univer: 0,
-                        colleagues: 0,
-
-
+                        date_application: '',
+                        date_publication: '',
+                        commerc_university: 0,
+                        commerc_employees: 0,
                     }
                 }
-
             }
         },
         methods:{

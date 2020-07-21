@@ -29,7 +29,7 @@ Route::post('publication/{type}', 'PublicationsController@post');
 
 Route::get('country', 'PublicationsController@getCountry');
 
-
+Route::get('export', 'PublicationsController@Export');
 
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'PassportController@details');
