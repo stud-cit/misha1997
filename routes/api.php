@@ -25,8 +25,9 @@ Route::post('notifications/{autors_id}', 'AuthorsController@postNotifications');
 //publications
 Route::get('publications', 'PublicationsController@getAll');
 Route::get('publication/{id}', 'PublicationsController@getId');
-Route::post('publication/{type}', 'PublicationsController@post');
+Route::post('publication', 'PublicationsController@post');
 
+Route::get('type-publications', 'PublicationsController@typePublications');
 Route::get('country', 'PublicationsController@getCountry');
 
 Route::get('export', 'PublicationsController@Export');

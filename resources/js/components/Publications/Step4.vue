@@ -4,21 +4,21 @@
             Крок 4 з 4. Вихідні дані
         </p>
 
-        <article-ukr v-if="$parent.stepData.type.key == 'articles'"></article-ukr>
+        <article-ukr v-if="$parent.stepData.publication_type.type == 'article'"></article-ukr>
 
-        <book v-if="$parent.stepData.type.key == 'monographs' || $parent.stepData.type.key == 'textbooks' || $parent.stepData.type.key == 'manuals'"></book>
+        <book v-if="$parent.stepData.publication_type.type == 'book'"></book>
 
-        <book-part v-if="$parent.stepData.type.key == 'monographs' || $parent.stepData.type.key == 'textbooks'"></book-part>
+        <book-part v-if="$parent.stepData.publication_type.type == 'book-part'"></book-part>
 
-        <thesis v-if="$parent.stepData.type.key == 'abstracts'"></thesis>
+        <thesis v-if="$parent.stepData.publication_type.type == 'thesis'"></thesis>
 
-        <patent v-if="$parent.stepData.type.key == 'patents'"></patent>
+        <patent v-if="$parent.stepData.publication_type.type == 'patent'"></patent>
 
-        <certificate v-if="$parent.stepData.type.key == 'certificates'"></certificate>
+        <certificate v-if="$parent.stepData.publication_type.type == 'certificate'"></certificate>
 
-        <methodical v-if="$parent.stepData.type.key == 'methodical_instructions'"></methodical>
+        <methodical v-if="$parent.stepData.publication_type.type == 'methodical'"></methodical>
 
-        <electronic v-if="$parent.stepData.type.key == 'electronic_publications'"></electronic>
+        <electronic v-if="$parent.stepData.publication_type.type == 'electronic'"></electronic>
     </div>
 </template>
 
@@ -50,14 +50,9 @@
     export default {
         name: "Step5",
         data() {
-            return {
-                stepData: {
-
-                }
-
-            }
+            return {}
         },
-        components:{
+        components: {
             ArticleUkr,
             Book,
             BookPart,
@@ -66,19 +61,6 @@
             Certificate,
             Methodical,
             Electronic
-
-        },
-        methods:{
-
-        },
-        created() {
-
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-
-
-</style>

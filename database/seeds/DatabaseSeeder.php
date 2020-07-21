@@ -17,11 +17,10 @@ class DatabaseSeeder extends Seeder
             AutorsAliasesSeeder::class,
             NotificationsSeeder::class,
             ScienceTypeSeeder::class,
+            PublicationTypeSeeder::class,
             PublicationsSeeder::class,
             AuthorsPublicationsSeeder::class,
-            ArticlesSeeder::class,
             RatingIndicatorsSeeder::class,
-            PatentsSeeder::class,
             CountriesSeeder::class
         ]);
     }

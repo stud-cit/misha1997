@@ -1,44 +1,34 @@
 <template>
     <div>
         <div class="step-content">
-
             <div class="step-item">
                 <label class="item-title">Рік видання</label>
-                <select class="item-value" v-model="stepData.publication.year">
+                <select class="item-value" v-model="stepData.year">
                     <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                 </select>
             </div>
-
-
             <div class="step-item">
                 <label class="item-title">Країна видання</label>
-                <select class="item-value" v-model="stepData.publication.country">
-                    <option value="Україна">Україна</option>
-                    <option value="Англія">Англія</option>
+                <select class="item-value" v-model="stepData.country">
+                    <option
+                        v-for="(item, index) in country"
+                        :key="index"
+                        :value="item.name"
+                    >{{item.name}}</option>
                 </select>
-
             </div>
             <div class="step-item">
                 <label class="item-title">Місто видання</label>
-                <input class="item-value" type="text" v-model="stepData.publication.city">
-
+                <input class="item-value" type="text" v-model="stepData.city">
             </div>
             <div class="step-item">
                 <label class="item-title">Назва редакції</label>
-                <input class="item-value" type="text" v-model="stepData.publication.editor_name">
-
+                <input class="item-value" type="text" v-model="stepData.editor_name">
             </div>
             <div class="step-item">
                 <label class="item-title">Кількість сторінок</label>
-                <input class="item-value" type="text" v-model="stepData.publication.number_pages">
-
+                <input class="item-value" type="text" v-model="stepData.pages">
             </div>
-
-
-
-
-
-
         </div>
         <div class="step-button-group">
             <button class="next active" @click="nextStep">Продовжити <span>&gt;</span></button>
@@ -52,27 +42,31 @@
 
         data() {
             return {
+                country: [],
                 stepData: {
-                    publication: {
-                        year: new Date().getFullYear(),
-                        country: '',
-                        city: '',
-                        editor_name: '',
-                        number_pages: ''
-                    }
+                    year: new Date().getFullYear(),
+                    country: 'Україна',
+                    city: '',
+                    editor_name: '',
+                    pages: ''
                 }
             }
         },
-        methods:{
+        created() {
+            this.getCountry();
+        },
+        methods: {
+            getCountry() {
+                axios.get('/api/country').then(response => {
+                    this.country = response.data;
+                })
+            },
             nextStep() {
                 this.$parent.$emit('getData', this.stepData);
             },
             prevStep(){
                 this.$parent.$emit('prevStep');
             }
-        },
-        created() {
-
         },
         computed: {
             years() {

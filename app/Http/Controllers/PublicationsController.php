@@ -4,49 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Publications;
-use App\Models\Articles;
-use App\Models\Patents;
-use App\Models\Certificates;
-use App\Models\MethodicalInstructions;
-use App\Models\Textbooks;
-use App\Models\ElectronicPublications;
-use App\Models\Abstracts;
-use App\Models\Manuals;
-use App\Models\Monographs;
 use App\Models\AuthorsPublications;
 use App\Models\Countries;
+use App\Models\PublicationType;
 
 class PublicationsController extends Controller
 {
     function getAll() {
-        $data = AuthorsPublications::with("autors", "publications")->get();
+        $data = Publications::with('author', 'publicationType', 'scienceType')->get();
         return response()->json($data);
     }
     function getId($id) {
-        $data = Publications::with('type', 'article')->find($id);
+        $data = Publications::with('author', 'publicationType', 'scienceType')->find($id);
         return response()->json($data);
     }
-    function post(Request $request, $type) {
-        $types = [
-            'articles' => new Articles(),
-            'patents' => new Patents(),
-            'certificates' => new Certificates(),
-            'methodical_instructions' => new MethodicalInstructions(),
-            'textbooks' => new Textbooks(),
-            'electronic_publications' => new ElectronicPublications(),
-            'abstracts' => new Abstracts(),
-            'manuals' => new Manuals(),
-            'monographs' => new Monographs()
-        ];
 
+    function post(Request $request) {
         $modelPublications = new Publications();
         $dataPublications = $request->all();
-        $dataPublications['type'] = $dataPublications['type']['title'];
+        $dataPublications['publication_type_id'] = $dataPublications['publication_type']['id'];
         $response = $modelPublications->create($dataPublications);
-
-        $dataType = $request->publication;
-        $dataType['publications_id'] = $response->id;
-        $types[$type]->create($dataType);
 
         foreach ($request->authors as $key => $value) {
             $authorsPublications = new AuthorsPublications;
@@ -76,6 +53,11 @@ class PublicationsController extends Controller
         return response()->json($data);
     }
 
+    function typePublications() {
+        $data = PublicationType::get();
+        return response()->json($data);
+    }
+
     function Export() {
 
         $data = [
@@ -91,18 +73,7 @@ class PublicationsController extends Controller
 
         $data["countPublications"] = Publications::count();
 
-        $foreignPublications = Publications::with(
-            "author",
-            "article",
-            "certificates",
-            "abstracts",
-            "electronicPublications",
-            "manuals",
-            "methodicalInstructions",
-            "monographs",
-            "patents",
-            "textbooks"
-        )->get();
+        $foreignPublications = Publications::with('author', 'publicationType', 'scienceType')->get();
 
         // return response()->json($foreignPublications);
 
@@ -118,20 +89,11 @@ class PublicationsController extends Controller
             }
             $data["countForeignPublications"] += $foreign;
 
-            if($value->article) {
+            if($value->publicationType['type'] == 'article') {
                 $data["countArticle"] += 1;
             }
-            if(isset($value->textbooks)) {
+            if($value->publicationType['type'] == 'book') {
                 $data["countTextbooks"] += 1;
-            }
-            if(isset($value->manuals)) {
-                $data["countManuals"] += 1;
-            }
-            if(isset($value->monographs)) {
-                $data["countMonographs"] += 1;
-            }
-            if(isset($value->article)) {
-                $data["countArticle"] += 1;
             }
 
             if($value->science_type_id) {
