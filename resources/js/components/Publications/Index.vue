@@ -35,7 +35,11 @@
             </div>
         </div>
 
-       <export-rating></export-rating>
+<!--        exports-->
+        <export-rating></export-rating>
+
+        <export-publications></export-publications>
+<!---->
 
         <div class="table-bordered table-responsive text-center table-list">
 
@@ -68,6 +72,7 @@
 
 <script>
     import ExportRating from "./Exports/ExportRating";
+    import ExportPublications from "./Exports/ExportPublications";
     import XLSX from 'xlsx';
     export default {
         data() {
@@ -78,7 +83,8 @@
             };
         },
         components: {
-            ExportRating
+            ExportRating,
+            ExportPublications
         },
         mounted () {
             this.getData();
