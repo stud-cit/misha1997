@@ -17,13 +17,6 @@ class Publications extends Model
         'quartil_scopus',
         'quartil_wos',
         'sub_db_index',
-        'scie',
-        'ssci',
-        'nature_index',
-        'nature_scince',
-        'other_organizations',
-        'forbes_fortune',
-        'international_patents',
         'year',
         'number',
         'pages',
@@ -47,7 +40,7 @@ class Publications extends Model
         'publisher',
         'name_magazine',
         'doi',
-        'date'
+        'supervisor_id'
     ];
 
     function author() {

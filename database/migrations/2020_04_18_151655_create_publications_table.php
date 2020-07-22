@@ -18,20 +18,11 @@ class CreatePublicationsTable extends Migration
             $table->string('quartil_scopus')->nullable(); // Квартиль журналу БД Scopus
             $table->string('quartil_wos')->nullable(); // Квартиль журналу БД WoS
             $table->integer('sub_db_index')->nullable(); // Підбаза WoS
-            $table->string('scie')->nullable(); // входить до SCIE
-            $table->string('ssci')->nullable(); // входять до SSCI
-            $table->string('nature_index')->nullable(); // обліковуються рейтингом Nature Index
-            $table->string('nature_scince')->nullable(); // у журналах Nature Scince
-            $table->string('other_organizations')->nullable(); // за співавторством з представниками інших організацій
-            $table->string('forbes_fortune')->nullable(); // входять до списків Forbes та Fortune
-            $table->string('international_patents')->nullable(); // процитовані у міжнародних патентах
-
             $table->integer('year')->nullable(); // Рік
             $table->integer('number')->nullable(); // Номер (том)
-            $table->integer('pages')->nullable(); // Кількість сторінок
+            $table->string('pages')->nullable(); // Кількість сторінок
             $table->string('country')->nullable(); // Країна
             $table->string('name_magazine')->nullable(); // Назва журналу
-
             $table->integer('number_volumes')->nullable(); // Кількість томів
             $table->string('by_editing')->nullable(); // За редакцією
             $table->string('city')->nullable(); // Місто видання
@@ -50,7 +41,7 @@ class CreatePublicationsTable extends Migration
             $table->string('name_conference')->nullable(); // Назва конференції
             $table->string('publisher')->nullable(); // Видавництво
             $table->string('doi')->nullable();
-            $table->date('date')->nullable();
+            $table->foreignId('supervisor_id')->nullable(); // керівник
             $table->timestamps();
         });
 
@@ -62,6 +53,11 @@ class CreatePublicationsTable extends Migration
         Schema::table('publications', function (Blueprint $table) {
             $table->index('publication_type_id');
             $table->foreign('publication_type_id')->references('id')->on('publication_type')->onDelete('cascade');
+        });
+
+        Schema::table('publications', function (Blueprint $table) {
+            $table->index('supervisor_id');
+            $table->foreign('supervisor_id')->references('id')->on('authors');
         });
     }
 

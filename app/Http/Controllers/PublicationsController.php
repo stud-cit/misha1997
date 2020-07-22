@@ -27,6 +27,9 @@ class PublicationsController extends Controller
         $modelPublications = new Publications();
         $dataPublications = $request->all();
         $dataPublications['publication_type_id'] = $dataPublications['publication_type']['id'];
+        if($dataPublications['supervisor']) {
+            $dataPublications['supervisor_id'] = $dataPublications['supervisor']['id'];
+        }
         $response = $modelPublications->create($dataPublications);
 
         foreach ($request->authors as $key => $value) {
@@ -38,14 +41,6 @@ class PublicationsController extends Controller
                 }
             }
             $authorsPublications->publications_id = $response->id;
-            $authorsPublications->save();
-        }
-
-        if($request->supervisor) {
-            $authorsPublications = new AuthorsPublications;
-            $authorsPublications->autors_id = $request->supervisor['id'];
-            $authorsPublications->publications_id = $response->id;
-            $authorsPublications->supervisor = 1;
             $authorsPublications->save();
         }
 
