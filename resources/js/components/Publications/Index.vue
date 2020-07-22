@@ -3,7 +3,7 @@
     <div class="container">
         <h1 class="page-title">Перегляд публікацій</h1>
         <div class="page-categories">
-            <a href="" class="categories-link active">Всі публікації</a>>
+            <a href="" class="categories-link active">Всі публікації</a>
             <a href="" class="categories-link">Мої публікації</a>
         </div>
         <div class="search-block">
@@ -60,7 +60,7 @@
                     <td>{{ item.publication_type.title }}</td>
                     <td>{{ authorsNameParser(item.authors) }}</td>
                     <td>{{ item.title }}</td>
-                    <td>{{ (item.date + '').slice(0,4) }}</td>
+                    <td>{{ item.year}}</td>
                     <td>{{ item.sub_db_index }}</td>
                 </tr>
                 </tbody>
@@ -103,7 +103,7 @@
             },
             authorsNameParser(arr){
 
-                return arr.map(a => a.name).join(', ');
+                return arr.map(a => a.author.name).join(', ');
             }
         },
         computed: {
