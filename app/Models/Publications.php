@@ -54,7 +54,7 @@ class Publications extends Model
         return $this->hasManyThrough(
             'App\Models\Authors',
             'App\Models\AuthorsPublications',
-            'publications_id',
+            'autors_id',
             'id'
         );
     }

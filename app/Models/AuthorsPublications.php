@@ -14,7 +14,7 @@ class AuthorsPublications extends Model
         'publications_id'
     ];
 
-    function autors() {
+    function author() {
         return $this->belongsTo('App\Models\Authors', 'autors_id');
     }
     function publications() {

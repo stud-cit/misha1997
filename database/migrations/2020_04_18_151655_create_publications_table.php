@@ -13,11 +13,11 @@ class CreatePublicationsTable extends Migration
             $table->string('title');
             $table->foreignId('science_type_id')->nullable(); // Scopus WoS
             $table->foreignId('publication_type_id'); // тип публікації
-            $table->string('snip'); // Коефіцієнт впливовості SNIP журналу SCOPUS
-            $table->string('impact_factor'); // Коефіцієнт впливовості імпакт-фактор журналу WoS
+            $table->string('snip')->nullable(); // Коефіцієнт впливовості SNIP журналу SCOPUS
+            $table->string('impact_factor')->nullable(); // Коефіцієнт впливовості імпакт-фактор журналу WoS
             $table->string('quartil_scopus')->nullable(); // Квартиль журналу БД Scopus
             $table->string('quartil_wos')->nullable(); // Квартиль журналу БД WoS
-            $table->integer('sub_db_index'); // Підбаза WoS
+            $table->integer('sub_db_index')->nullable(); // Підбаза WoS
             $table->string('scie')->nullable(); // входить до SCIE
             $table->string('ssci')->nullable(); // входять до SSCI
             $table->string('nature_index')->nullable(); // обліковуються рейтингом Nature Index

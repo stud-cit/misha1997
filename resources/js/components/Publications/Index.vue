@@ -58,7 +58,7 @@
                 <tr v-for="(item, index) in data" :key="index">
                     <td scope="row">{{ index+1 }}</td>
                     <td>{{ item.publication_type.title }}</td>
-                    <td>{{ authorsNameParser(item.author) }}</td>
+                    <td>{{ authorsNameParser(item.authors) }}</td>
                     <td>{{ item.title }}</td>
                     <td>{{ (item.date + '').slice(0,4) }}</td>
                     <td>{{ item.sub_db_index }}</td>

@@ -11,11 +11,15 @@ use App\Models\PublicationType;
 class PublicationsController extends Controller
 {
     function getAll() {
-        $data = Publications::with('author', 'publicationType', 'scienceType')->get();
+        $data = Publications::with('publicationType', 'scienceType')->get();
+        foreach ($data as $key => $value) {
+            $value->authors = AuthorsPublications::with('author')->where('publications_id', $value->id)->get();
+        }
         return response()->json($data);
     }
     function getId($id) {
-        $data = Publications::with('author', 'publicationType', 'scienceType')->find($id);
+        $data = Publications::with('publicationType', 'scienceType')->find($id);
+        $data->authors = AuthorsPublications::with('author')->where('publications_id', $id)->get();
         return response()->json($data);
     }
 
