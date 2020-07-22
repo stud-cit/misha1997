@@ -57,11 +57,11 @@
                 <tbody>
                 <tr v-for="(item, index) in data" :key="index">
                     <td scope="row">{{ index+1 }}</td>
-                    <td>{{ item.publications.type }}</td>
-                    <td>{{ item.autors.name }}</td>
-                    <td>{{ item.publications.title }}</td>
-                    <td>{{ (item.publications.date + '').slice(0,4) }}</td>
-                    <td>{{ item.publications.sub_db_index }}</td>
+                    <td>{{ item.publication_type.title }}</td>
+                    <td>{{ authorsNameParser(item.author) }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ (item.date + '').slice(0,4) }}</td>
+                    <td>{{ item.sub_db_index }}</td>
                 </tr>
                 </tbody>
             </table>
@@ -100,8 +100,16 @@
                 const workbook = XLSX.utils.table_to_book(document.getElementById('exportRating'));
 
                 XLSX.writeFile(workbook, 'filename.xlsx');
+            },
+            authorsNameParser(arr){
+
+                return arr.map(a => a.name).join(', ');
             }
         },
+        computed: {
+
+
+        }
 
     }
 </script>
