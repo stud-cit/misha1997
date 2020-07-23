@@ -79,15 +79,15 @@
                         </div>
                         <div class="step-item">
                             <label class="item-title">Місце роботи:</label>
-                            <select class="item-value" v-model="newAuthor.job">
-                                <option
-                                    v-for="item in job"
-                                    :key="item"
-                                    :value="item"
-                                >
-                                    {{item}}
-                                </option>
+                            <select class="item-value" v-model="jobType">
+                                <option value="1">Учбовий заклад</option>
+                                <option value="1">Підприємство</option>
+                                <option value="0">Не працює</option>
                             </select>
+                        </div>
+                        <div class="step-item" v-if="jobType == 1">
+                            <label class="item-title">Назва місця роботи:</label>
+                            <input class="item-value" type="text" v-model="newAuthor.job">
                         </div>
                         <div class="step-item">
                             <label class="item-title">Країна:</label>
@@ -208,6 +208,7 @@
         name: "Step2",
         data() {
             return {
+                jobType: null,
                 modalAlias: false,
                 newAlias: {
                     surname_initials: "",
@@ -251,7 +252,7 @@
                 persons: [],
                 supervisors: [],
                 authors: [],
-                job: ["Учбовий заклад", "Підприємство", "Не працює"],
+                job: "",
                 country: [],
                 otherAuthor: false,
                 newAuthor: {
@@ -289,11 +290,11 @@
             setAlias(alias) {
                 alias.select ? alias.select = 0 : alias.select = 1;
             },
-            nameWithInfo({name, faculty, academic_code}) {
+            nameWithInfo({name, faculty, academic_code, job}) {
                 if(name == "") {
                     return "Пошук в базі данних сайту"
                 } else {
-                    return `${name} — ${academic_code ? academic_code : faculty}`
+                    return `${name} — ${academic_code ? academic_code : (faculty ? faculty : job)}`
                 }
             },
             nextStep () {
@@ -344,6 +345,7 @@
                 })
             },
             addNewAuthor(newAuthor) {
+                newAuthor.job = this.jobType == 1 ? newAuthor.job : "Не працює";
                 axios.post('/api/author', newAuthor)
                 .then((response) => {
                     this.ssuAuthor = "";

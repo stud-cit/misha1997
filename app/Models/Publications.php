@@ -52,6 +52,10 @@ class Publications extends Model
         );
     }
 
+    function supervisor() {
+        return $this->belongsTo('App\Models\Authors', 'supervisor_id');
+    }
+
     function scienceType() {
         return $this->hasOne('App\Models\ScienceType', 'id');
     }
