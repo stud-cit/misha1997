@@ -38,7 +38,7 @@
 <!--        exports-->
         <export-rating></export-rating>
 
-        <export-publications :data="data"></export-publications>
+        <export-publications :exportData="exportData"></export-publications>
 <!---->
 
         <div class="table-bordered table-responsive text-center table-list">
@@ -79,6 +79,11 @@
             return {
                 fullSearch: false,
                 data: [],
+                exportData: {
+                    articles: [],
+                    books: [],
+                    booksParts: [],
+                }
 
             };
         },
@@ -92,7 +97,9 @@
         methods: {
             getData() {
                 axios.get('/api/publications').then(response => {
-                    this.data = response.data
+                    this.data = response.data;
+                    this.dataParser();
+
                 })
             },
             exportRating(){
@@ -104,6 +111,28 @@
             authorsNameParser(arr){
 
                 return arr.map(a => a.author.name).join(', ');
+            },
+            dataParser(){
+                const publications = this.data;
+
+                for (let i = 0; i <publications.length; i++){
+                    if(publications[i].publication_type.type == "article"){
+                    //     let key = publications[i].publication_type.title;
+                    //     if(!this.exportData.hasOwnProperty(key)) {
+                    //         this.exportData[key] = [];
+                    //     }
+                    //     this.exportData[key].push(publications[i]);
+                        this.exportData.articles.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "book"){
+                        this.exportData.books.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "book-part"){
+                        this.exportData.booksParts.push(publications[i]);
+                    }
+                }
+
+                // publications.map((a) => a.author.name);
             }
         },
         computed: {
