@@ -30,6 +30,11 @@
 
             };
         },
+        props: {
+            data: Object,
+        },
+
+
         components: {
 
         },

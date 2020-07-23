@@ -38,7 +38,7 @@
 <!--        exports-->
         <export-rating></export-rating>
 
-        <export-publications></export-publications>
+        <export-publications :data="data"></export-publications>
 <!---->
 
         <div class="table-bordered table-responsive text-center table-list">
