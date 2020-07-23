@@ -87,7 +87,7 @@
                     this.stepData.science_type_id = null;
                 }
                 this.prevVal = this.stepData.science_type_id;
-                }, 100);
+                }, 200);
             }
         }
     }

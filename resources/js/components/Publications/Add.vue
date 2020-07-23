@@ -1,10 +1,12 @@
 <template>
     <div class="container">
         <h1 class="page-title">Додати нову публікацію</h1>
+        <keep-alive>
         <step1 v-if="currentStep==1" @getData="getStepData($event)"></step1>
         <step2 v-if="currentStep==2" @getData="getStepData($event)" @prevStep="prevStep"></step2>
         <step3 v-if="currentStep==3" @getData="getStepData($event)" @prevStep="prevStep"></step3>
         <step4 v-if="currentStep==4" @getData="getStepData($event)" @prevStep="prevStep"></step4>
+        </keep-alive>
     </div>
 </template>
 
@@ -41,9 +43,11 @@
                 } else {
                     axios.post('/api/publication', this.stepData)
                     .then((response) => {
+
                         swal("Публікацію успішно додано!", {
                             icon: "success",
                         });
+                        this.$router.push({path: '/publications'});
                     })
                     .catch(() => {
                         swal({
