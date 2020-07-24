@@ -13,6 +13,7 @@ class PublicationsSeeder extends Seeder
     {
         DB::table('publications')->insert([
             'title' => 'Test',
+            'initials' => 'Test t. t.',
             'science_type_id' => 1,
             'publication_type_id' => 1,
             'impact_factor' => 'test',

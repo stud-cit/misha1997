@@ -24,28 +24,28 @@
 
 <script>
     // Стаття у фахових виданнях України, стаття-доповідь у матеріалах наукових конференціях, інші статті
-    import ArticleUkr from './Step5_fields/ArticleUkr';
+    import ArticleUkr from './Step4_fields/ArticleUkr';
 
     // монографії посібники підручники
-    import Book from "./Step5_fields/Book";
+    import Book from "./Step4_fields/Book";
 
     // частина монографії книги
-    import BookPart from "./Step5_fields/BookPart";
+    import BookPart from "./Step4_fields/BookPart";
 
     // тези доповіді (abstracts)
-    import Thesis from "./Step5_fields/Thesis";
+    import Thesis from "./Step4_fields/Thesis";
 
     // патент
-    import Patent from "./Step5_fields/Patent";
+    import Patent from "./Step4_fields/Patent";
 
     // Свідоцтво про реєстрації авторських прав на твір/рішення
-    import Certificate from "./Step5_fields/Certificate";
+    import Certificate from "./Step4_fields/Certificate";
 
     // Методичні вказівки
-    import Methodical from "./Step5_fields/Methodical";
+    import Methodical from "./Step4_fields/Methodical";
 
     // Електронні видання
-    import Electronic from "./Step5_fields/Electronic";
+    import Electronic from "./Step4_fields/Electronic";
 
     export default {
         name: "Step5",

@@ -47,7 +47,7 @@
                         swal("Публікацію успішно додано!", {
                             icon: "success",
                         });
-                        // this.$router.push({path: '/publications'});
+                        this.$router.push({path: '/publications'});
                     })
                     .catch(() => {
                         swal({

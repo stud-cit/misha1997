@@ -58,7 +58,7 @@
                 <tr v-for="(item, index) in data" :key="index">
                     <td scope="row">{{ index+1 }}</td>
                     <td>{{ item.publication_type.title }}</td>
-                    <td>{{ authorsNameParser(item.authors) }}</td>
+                    <td>{{ item.initials }}</td>
                     <td>{{ item.title }}</td>
                     <td>{{ item.year}}</td>
                     <td>{{ item.sub_db_index }}</td>
@@ -83,6 +83,11 @@
                     articles: [],
                     books: [],
                     booksParts: [],
+                    thesis: [],
+                    patents: [],
+                    certificates: [],
+                    methodicals: [],
+                    electronics: [],
                 }
 
             };
@@ -98,7 +103,7 @@
             getData() {
                 axios.get('/api/publications').then(response => {
                     this.data = response.data;
-                    this.dataParser();
+                    this.exportParser();
 
                 })
             },
@@ -108,11 +113,11 @@
 
                 XLSX.writeFile(workbook, 'filename.xlsx');
             },
-            authorsNameParser(arr){
-
-                return arr.map(a => a.author.name).join(', ');
-            },
-            dataParser(){
+            // authorsNameParser(arr){
+            //
+            //     return arr.map(a => a.author.name).join(', ');
+            // },
+            exportParser(){
                 const publications = this.data;
 
                 for (let i = 0; i <publications.length; i++){
@@ -129,6 +134,21 @@
                     }
                     else if(publications[i].publication_type.type  == "book-part"){
                         this.exportData.booksParts.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "thesis"){
+                        this.exportData.thesis.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "patent"){
+                        this.exportData.patents.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "certificate"){
+                        this.exportData.certificates.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "methodical"){
+                        this.exportData.methodicals.push(publications[i]);
+                    }
+                    else {
+                        this.exportData.electronics.push(publications[i]);
                     }
                 }
 

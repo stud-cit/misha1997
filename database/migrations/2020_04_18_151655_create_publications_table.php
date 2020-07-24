@@ -21,6 +21,7 @@ class CreatePublicationsTable extends Migration
             $table->integer('year')->nullable(); // Рік
             $table->integer('number')->nullable(); // Номер (том)
             $table->string('pages')->nullable(); // Кількість сторінок
+            $table->string('initials')->nullable(); // Прізвище та ініціали
             $table->string('country')->nullable(); // Країна
             $table->string('name_magazine')->nullable(); // Назва журналу
             $table->integer('number_volumes')->nullable(); // Кількість томів

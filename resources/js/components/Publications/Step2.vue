@@ -277,6 +277,7 @@
                             academic_code: ""
                         },
                     ],
+                    initials: '',
                 }
             }
         },
@@ -298,6 +299,17 @@
                 }
             },
             nextStep () {
+
+                // create initials
+
+                this.stepData.initials = this.stepData.authors.map(
+                    (a) => {
+                        const arr = a.name.split(' ');
+                        return arr[0] + ' ' + arr[1][0] + '. ' + arr[2][0] + '.'
+                    }
+                ).join(', ');
+                //
+
                 this.$emit('getData', this.stepData);
             },
             prevStep () {

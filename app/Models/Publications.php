@@ -20,6 +20,7 @@ class Publications extends Model
         'year',
         'number',
         'pages',
+        'initials',
         'country',
         'number_volumes',
         'by_editing',
