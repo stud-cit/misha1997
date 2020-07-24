@@ -57,10 +57,10 @@ class Publications extends Model
     }
 
     function scienceType() {
-        return $this->hasOne('App\Models\ScienceType', 'id');
+        return $this->belongsTo('App\Models\ScienceType', 'science_type_id');
     }
 
     function publicationType() {
-        return $this->hasOne('App\Models\PublicationType', 'id');
+        return $this->belongsTo('App\Models\PublicationType', 'publication_type_id');
     }
 }

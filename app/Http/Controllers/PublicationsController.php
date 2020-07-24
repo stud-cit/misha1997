@@ -12,6 +12,7 @@ class PublicationsController extends Controller
 {
     function getAll() {
         $data = Publications::with('publicationType', 'scienceType', 'supervisor')->get();
+
         foreach ($data as $key => $value) {
             $value->authors = AuthorsPublications::with('author')->where('publications_id', $value->id)->get();
         }
@@ -27,6 +28,7 @@ class PublicationsController extends Controller
         $modelPublications = new Publications();
         $dataPublications = $request->all();
         $dataPublications['publication_type_id'] = $dataPublications['publication_type']['id'];
+
         if($dataPublications['supervisor']) {
             $dataPublications['supervisor_id'] = $dataPublications['supervisor']['id'];
         }
@@ -100,7 +102,7 @@ class PublicationsController extends Controller
             }
         }
 
-        return response()->json($data);
+        return error;
     }
 
 }
