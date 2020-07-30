@@ -49,7 +49,7 @@ class PublicationsController extends Controller
         return response('ok', 200);
     }
 
-    function editPublication(Request $request, $id)
+    function updatePublication(Request $request, $id)
     {
         $edit_publication = Publications::find($id);
         $edit_publication->title = $request->title;
@@ -88,7 +88,7 @@ class PublicationsController extends Controller
         $edit_publication->save();
     }
 
-    function deletePublication(Request $request, $id) {
+    function deletePublication($id) {
         $model = Publications::with('publicationType', 'scienceType', 'supervisor')->find($id);
         $model->delete();
         return response('ok', 200);

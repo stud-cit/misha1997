@@ -59,7 +59,7 @@ class AuthorsController extends Controller
         return response()->json($response);
     }
 
-    function editAuthor(Request $request, $id) {
+    function updateAuthor(Request $request, $id) {
         $edit_author = Authors::find($id);
         $edit_alias = AutorsAliases::where("autors_id", $id)->first();
         $edit_notifications = Notifications::where("autors_id", $id)->first();
@@ -93,7 +93,7 @@ class AuthorsController extends Controller
         $edit_author->save();
     }
 
-    function deleteAuthor(Request $request, $id) {
+    function deleteAuthor($id) {
         $model = Authors::with('alias', 'notifications')->find($id);
         $model->delete();
         return response('ok', 200);

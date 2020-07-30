@@ -18,6 +18,9 @@ Route::post('author', 'AuthorsController@postAuthor');
 Route::post('alias', 'AuthorsController@postAlias');
 Route::get('roles', 'AuthorsController@getRoles');
 
+Route::post('update-author/{id}','AuthorsController@updateAuthor');
+Route::post('delete-author/{id}','AuthorsController@deleteAuthor');
+
 //notifications
 Route::get('notifications/{autors_id}', 'AuthorsController@getNotifications');
 Route::post('notifications/{autors_id}', 'AuthorsController@postNotifications');
@@ -26,6 +29,9 @@ Route::post('notifications/{autors_id}', 'AuthorsController@postNotifications');
 Route::get('publications', 'PublicationsController@getAll');
 Route::get('publication/{id}', 'PublicationsController@getId');
 Route::post('publication', 'PublicationsController@post');
+
+Route::post('update-publication/{id}','PublicationsController@updatePublication');
+Route::post('delete-publication/{id}','PublicationsController@deletePublication');
 
 Route::get('type-publications', 'PublicationsController@typePublications');
 Route::get('country', 'PublicationsController@getCountry');
