@@ -59,6 +59,46 @@ class AuthorsController extends Controller
         return response()->json($response);
     }
 
+    function editAuthor(Request $request, $id) {
+        $edit_author = Authors::find($id);
+        $edit_alias = AutorsAliases::where("autors_id", $id)->first();
+        $edit_notifications = Notifications::where("autors_id", $id)->first();
+
+        $edit_author->id = $request->id;
+        $edit_author->name = $request->name;
+        $edit_author->guid = $request->guid;
+        $edit_author->job = $request->job;
+        $edit_author->country = $request->country;
+        $edit_author->h_index = $request->hIndex;
+        $edit_author->scopus_autor_id = $request->scopusAutorId;
+        $edit_author->scopus_researcher_id = $request->scopusResearcherId;
+        $edit_author->orcid = $request->orcid;
+        $edit_author->department = $request->department;
+        $edit_author->faculty = $request->faculty;
+        $edit_author->academic_code = $request->academicCode;
+        $edit_author->email = $request->email;
+        $edit_author->roles_id = $request->rolesId;
+
+        if($request->id == $edit_alias->autors_id) {
+            $alias = AutorsAliases::find($id);
+            $alias->surname_initials = $request->alias;
+            $alias->save();
+        }
+
+        if($request->id == $edit_notifications->autors_id) {
+            $notifications = Notifications::find($id);
+            $notifications->text = $request->text;
+            $notifications->save();
+        }
+        $edit_author->save();
+    }
+
+    function deleteAuthor(Request $request, $id) {
+        $model = Authors::with('alias', 'notifications')->find($id);
+        $model->delete();
+        return response('ok', 200);
+    }
+
     function getRoles() {
         $data = Roles::get();
         return response()->json($data);

@@ -49,6 +49,51 @@ class PublicationsController extends Controller
         return response('ok', 200);
     }
 
+    function editPublication(Request $request, $id)
+    {
+        $edit_publication = Publications::find($id);
+        $edit_publication->title = $request->title;
+        $edit_publication->science_type_id = $request->scienceTypeId;
+        $edit_publication->publication_type_id = $request->publicationTypeId;
+        $edit_publication->snip = $request->snip;
+        $edit_publication->impact_factor = $request->impactFactor;
+        $edit_publication->quartil_scopus = $request->quartilScopus;
+        $edit_publication->quartil_wos = $request->quartilWos;
+        $edit_publication->sub_db_index = $request->subDbIndex;
+        $edit_publication->year = $request->year;
+        $edit_publication->number = $request->number;
+        $edit_publication->pages = $request->pages;
+        $edit_publication->initials = $request->initials;
+        $edit_publication->country = $request->country;
+        $edit_publication->name_magazine = $request->nameMagazine;
+        $edit_publication->number_volumes = $request->numberVolumes;
+        $edit_publication->by_editing = $request->byEditing;
+        $edit_publication->city = $request->city;
+        $edit_publication->editor_name = $request->editorName;
+        $edit_publication->languages = $request->Languages;
+        $edit_publication->number_certificate = $request->numberCertificate;
+        $edit_publication->applicant = $request->applicant;
+        $edit_publication->date_application = $request->dateApplication;
+        $edit_publication->date_publication = $request->datePublication;
+        $edit_publication->commerc_university = $request->commercUniversity;
+        $edit_publication->commerc_employees = $request->commercEmployees;
+        $edit_publication->access_mode = $request->accessMode;
+        $edit_publication->mpk = $request->mpk;
+        $edit_publication->application_number = $request->applicationNumber;
+        $edit_publication->newsletter_number = $request->newsletterNumber;
+        $edit_publication->name_conference = $request->nameConference;
+        $edit_publication->publisher = $request->publisher;
+        $edit_publication->doi = $request->doi;
+        $edit_publication->supervisor_id = $request->supervisorId;
+        $edit_publication->save();
+    }
+
+    function deletePublication(Request $request, $id) {
+        $model = Publications::with('publicationType', 'scienceType', 'supervisor')->find($id);
+        $model->delete();
+        return response('ok', 200);
+    }
+
     function getCountry() {
         $data = Countries::get();
         return response()->json($data);
