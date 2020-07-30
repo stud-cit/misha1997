@@ -80,15 +80,15 @@ class AuthorsController extends Controller
         $edit_author->roles_id = $request->rolesId;
 
         if($request->id == $edit_alias->autors_id) {
-            $alias = AutorsAliases::find($id);
-            $alias->surname_initials = $request->alias;
-            $alias->save();
+            //$alias = AutorsAliases::find($id);
+            $edit_alias->surname_initials = $request->alias;
+            $edit_alias->save();
         }
 
         if($request->id == $edit_notifications->autors_id) {
-            $notifications = Notifications::find($id);
-            $notifications->text = $request->text;
-            $notifications->save();
+            //$notifications = Notifications::find($id);
+            $edit_notifications->text = $request->text;
+            $edit_notifications->save();
         }
         $edit_author->save();
     }
