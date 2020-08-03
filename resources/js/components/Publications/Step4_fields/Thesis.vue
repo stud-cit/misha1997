@@ -13,7 +13,7 @@
             </div>
             <div class="step-item">
                 <label class="item-title">Видавництво</label>
-                <input class="item-value" type="text" v-model="stepData.publisher">
+                <input class="item-value" type="text" v-model="stepData.editor_name">
             </div>
             <div class="step-item">
                 <label class="item-title">Сторінки</label>
@@ -54,7 +54,7 @@
                 stepData: {
                     year: new Date().getFullYear(),
                     name_conference: '',
-                    publisher: '',
+                    editor_name: '',
                     pages: '',
                     country: 'Україна',
                     city: '',

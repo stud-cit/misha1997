@@ -7,10 +7,10 @@
                     <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                 </select>
             </div>
-            <div class="step-item">
-                <label class="item-title">Том</label>
-                <input class="item-value" type="text" v-model="stepData.volume">
-            </div>
+<!--            <div class="step-item">-->
+<!--                <label class="item-title">Том</label>-->
+<!--                <input class="item-value" type="text" v-model="stepData.number">-->
+<!--            </div>-->
             <div class="step-item">
                 <label class="item-title">За редакцією</label>
                 <input class="item-value" type="text" v-model="stepData.by_editing">
@@ -61,7 +61,7 @@
                 country: [],
                 stepData: {
                     year: new Date().getFullYear(),
-                    number: '',
+                    // number: '',
                     by_editing: '',
                     country: 'Україна',
                     city: '',

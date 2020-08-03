@@ -113,10 +113,7 @@
 
                 XLSX.writeFile(workbook, 'filename.xlsx');
             },
-            // authorsNameParser(arr){
-            //
-            //     return arr.map(a => a.author.name).join(', ');
-            // },
+
             exportParser(){
                 const publications = this.data;
 

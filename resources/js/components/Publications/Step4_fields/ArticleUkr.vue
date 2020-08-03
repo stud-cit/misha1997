@@ -74,6 +74,7 @@
                 })
             },
             nextStep() {
+
                 this.$parent.$emit('getData', this.stepData);
             },
             prevStep(){

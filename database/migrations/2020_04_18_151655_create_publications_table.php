@@ -40,7 +40,7 @@ class CreatePublicationsTable extends Migration
             $table->integer('application_number')->nullable(); // № заявки
             $table->integer('newsletter_number')->nullable(); // № бюлетеня
             $table->string('name_conference')->nullable(); // Назва конференції
-            $table->string('publisher')->nullable(); // Видавництво
+//            $table->string('publisher')->nullable(); // Видавництво
             $table->string('doi')->nullable();
             $table->foreignId('supervisor_id')->nullable(); // керівник
             $table->timestamps();
