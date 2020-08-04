@@ -37,9 +37,14 @@
                 <label class="item-title">Назва редакції</label>
                 <input class="item-value" type="text" v-model="stepData.editor_name">
             </div>
+
             <div class="step-item">
                 <label class="item-title">Кількість сторінок</label>
                 <input class="item-value" type="text" v-model="stepData.pages">
+            </div>
+            <div class="step-item">
+                <label class="item-title">Електронна адреса (url)</label>
+                <input class="item-value" type="text" v-model="stepData.url">
             </div>
             <div class="step-item">
                 <p class="item-title">Опубліковано мовами ОЕСР та ЄС</p>
@@ -59,6 +64,7 @@
                     <label class="small-box" for="access0">закритий</label>
                 </div>
             </div>
+
         </div>
         <div class="step-button-group">
             <button class="next active" @click="nextStep">Продовжити <span>&gt;</span></button>
@@ -83,7 +89,8 @@
                     editor_name: '',
                     pages: '',
                     languages: 0,
-                    access_mode: 0
+                    access_mode: 0,
+                    url: ''
                 }
             }
         },

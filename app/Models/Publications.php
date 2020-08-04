@@ -38,7 +38,8 @@ class Publications extends Model
         'application_number',
         'newsletter_number',
         'name_conference',
-        'publisher',
+        'url',
+//        'publisher',
         'name_magazine',
         'doi',
         'supervisor_id'

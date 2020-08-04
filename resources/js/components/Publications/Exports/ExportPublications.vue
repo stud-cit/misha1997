@@ -60,36 +60,36 @@
 
             </ol>
             </template>
-<!--            <template v-if="exportData.certificates[0]">-->
-<!--            <h2>	Свідоцтва про реєстрації авторських прав на твір/рішення</h2>-->
-<!--            <ol>-->
-<!--                <li v-for="(item, index) in exportData.certificates" :key="index">-->
-<!--                    Свідоцтво про реєстрацію авторського права на твір №. Вид твору «Назва твору» / Прізвище Ініціали. (Країна, де отримане свідоцтво). - №; заяв. дата подачі заявки; опубл. дата публікації про видачу свідоцтва/рішення.-->
+            <template v-if="exportData.certificates[0]">
+            <h2>	Свідоцтва про реєстрації авторських прав на твір/рішення</h2>
+            <ol>
+                <li v-for="(item, index) in exportData.certificates" :key="index">
+                    {{exportParser(item)}}
 
-<!--                </li>-->
+                </li>
 
-<!--            </ol>-->
-<!--            </template>-->
-<!--            <template v-if="exportData.methodicals[0]">-->
-<!--            <h2>	Методичні вказівки</h2>-->
-<!--            <ol>-->
-<!--                <li v-for="(item, index) in exportData.methodicals" :key="index">-->
-<!--                    Прізвище, ініціали. Назва. – місто видання : назва видавництва, рік видання. – кількість с.-->
+            </ol>
+            </template>
+            <template v-if="exportData.methodicals[0]">
+            <h2>	Методичні вказівки</h2>
+            <ol>
+                <li v-for="(item, index) in exportData.methodicals" :key="index">
+                    {{exportParser(item)}}
 
-<!--                </li>-->
+                </li>
 
-<!--            </ol>-->
-<!--            </template>-->
-<!--            <template v-if="exportData.electronics[0]">-->
-<!--            <h2>	Електронні видання</h2>-->
-<!--            <ol>-->
-<!--                <li v-for="(item, index) in exportData.electronics" :key="index">-->
-<!--                    Прізвище, ініціали назва : вид публікації [електронний ресурс] / ініціали, прізвище. – місто видання : назва редакції, рік видання. – кількість с. – режим доступу:-->
+            </ol>
+            </template>
+            <template v-if="exportData.electronics[0]">
+            <h2>	Електронні видання</h2>
+            <ol>
+                <li v-for="(item, index) in exportData.electronics" :key="index">
+                    {{exportParser(item)}}
 
-<!--                </li>-->
+                </li>
 
-<!--            </ol>-->
-<!--            </template>-->
+            </ol>
+            </template>
         </div>
 
     </div>
@@ -137,13 +137,19 @@
                   case "patent":
                       result =  item.title + ': пат. ' + item.number_certificate + ' ' + item.country + ': МПК ' + item.mpk + '. № ' + item.application_number + '; заявл. ' + item.date_application + '; опубл. ' + item.date_publication + ', Бюл. № ' + item.newsletter_number + '.';
                       break;
-                  //     Назва патенту. Пат. номер патенту країна де отриманий патент: МПК. № номер заявки;
-                  //     заявл. дата подачі заявки; опубл. дата публікації про видачу, Бюл. №  .
-                  //     Люмінісцентний матеріал: пат. 25742 Україна: МПК6 С09К11/00,
-                  // G21НЗ/00. № 200701472; заявл. 12.02.07; опубл. 27.08.07, Бюл. № 13. 4 с.
+                  case "certificate":
+                      result =  'Свідоцтво про реєстрацію авторського права на твір № ' +  item.number_certificate + '. ' + item.title + ' / ' + item.initials + ' ' + item.country + '; заявл. ' + item.date_application + '; опубл. ' + item.date_publication + '.';
+                      break;
+                  case "methodical":
+                      result =  item.initials + ' ' + item.title + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. ' + item.pages + 'с.';
+                      break;
+                  case "electronic":
+                      result =  item.initials + ' ' + item.title + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. ' + item.pages + 'с. URL: ' + item.url;
+                      break;
 
 
-                }
+
+                      }
 
                 return result;
             },
