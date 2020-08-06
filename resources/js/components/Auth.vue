@@ -54,36 +54,36 @@
         margin-top: 15vh;
     }
     .title{
-        font-family: Montserrat;
+        font-family: Arial;
         font-style: normal;
         font-weight: normal;
-        font-size: 48px;
-        line-height: 72px;
+        font-size: 40px;
+        line-height: 60px;
+        color: #212529;
         text-align: center;
-        color: #000000;
-        opacity: 0.5;
+
     }
     .description{
-        font-family: Montserrat;
+        font-family: Arial;
         font-style: normal;
         font-weight: normal;
-        font-size: 36px;
-        line-height: 50px;
+        font-size: 28px;
+        line-height: 40px;
         text-align: center;
-        color: rgba(0, 0, 0, 0.8);
-        opacity: 0.5;
+        color: rgba(33, 37, 41, 0.75);
         margin-top: 30px;
     }
     .open_auth{
-        padding: 25px;
+        padding: 20px 45px;
         display: inline-block;
-        background: #18A0FB;
-        font-family: Montserrat;
+        background: #007BFF;
+        border-radius: 6px;
+        font-family: Arial;
         font-style: normal;
-        font-weight: 500;
-        font-size: 25px;
-        line-height: 30px;
-        color: #fff;
+        font-weight: normal;
+        font-size: 20px;
+        line-height: 24px;
+        color: #FFFFFF;
         margin-top: 60px;
         &:hover{
             text-decoration: none;

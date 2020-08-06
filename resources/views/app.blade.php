@@ -7,8 +7,7 @@
         <title>Laravel</title>
 
         <!-- Fonts -->
-{{--        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">--}}
-{{--        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">--}}
+
         <link href="/css/app.css" rel="stylesheet">
         <link href="/css/site.css" rel="stylesheet">
 
@@ -23,10 +22,7 @@
     </div>
     </body>
     <script src="/js/app.js"></script>
-{{--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>--}}
-{{--    <script src="/js/xl.js"></script>--}}
-{{--    <script src="/js/fileSaver.js"></script>--}}
-{{--    <script src="/js/tableExport.js"></script>--}}
+
 
 
 
