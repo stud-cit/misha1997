@@ -17,7 +17,9 @@
     <body>
     <div id="app">
         <header-component></header-component>
-        <router-view></router-view>
+        <div class="wrapper">
+            <router-view></router-view>
+        </div>
 
     </div>
     </body>

@@ -50,8 +50,24 @@
 </script>
 <style lang="scss" scoped>
     .auth-block{
-
-        margin-top: 15vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: calc(100vh - 100px);
+        background: #fff;
+        padding-bottom: 100px;
+        display: flex;
+        align-items: center;
+        .container{
+            display: grid;
+            align-content: center;
+            min-height: 0;
+            background: #FFFFFF;
+            box-shadow: none;
+            border-radius: 0;
+            padding: 0;
+        }
     }
     .title{
         font-family: Arial;

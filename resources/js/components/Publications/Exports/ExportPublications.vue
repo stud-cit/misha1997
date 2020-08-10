@@ -3,8 +3,8 @@
 
 
 
-        <button @click="exportPublications('export')">export publications</button>
-        <div id="export">
+        <button class="export-button" @click="exportPublications('export')"><img src="/img/download.svg" alt=""> Експорт усіх публікацій</button>
+        <div id="export" v-show="false">
             <template v-if="exportData.articles[0]">
             <h2>	Статті</h2>
             <ol>

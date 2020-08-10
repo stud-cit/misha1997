@@ -62,8 +62,6 @@
 <style scoped lang="scss">
     .header{
         position: relative;
-        /*display: flex;*/
-        /*align-items: center;*/
         padding-top: 25px;
         min-height: 100px;
         left: 0px;
@@ -153,6 +151,9 @@
                     text-align: center;
                     color: #465E82;
                     margin: 0 30px;
+                    a{
+                        color: #465E82;
+                    }
 
                 }
             }
