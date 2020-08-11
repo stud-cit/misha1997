@@ -5,21 +5,21 @@
 
         <button class="export-button" @click="exportPublications('export')"><img src="/img/download.svg" alt=""> Експорт усіх публікацій</button>
         <div id="export" v-show="false">
-            <template v-if="exportData.articles[0]">
+            <template v-if="filteredData.articles[0]">
             <h2>	Статті</h2>
             <ol>
-                <li v-for="(item, index) in exportData.articles" :key="index">
+                <li v-for="(item, index) in filteredData.articles" :key="index">
                         {{exportParser(item)}}
-<!--                    {{item.initials + ' ' + item.title + '. ' + item.name_magazine + '. ' + item.year + '. № ' + item.number + '. С. ' + item.pages}}-->
+
 
                 </li>
 
             </ol>
             </template>
-            <template v-if="exportData.books[0]">
+            <template v-if="filteredData.books[0]">
             <h2>	Монографії, посібники, підручники</h2>
             <ol>
-                <li v-for="(item, index) in exportData.books" :key="index">
+                <li v-for="(item, index) in filteredData.books" :key="index">
                     {{exportParser(item)}}
 <!--                    {{item.initials + ' ' + item.title + ': ' + item.publication_type.title.toLowerCase() + ' / за ред. ' + item.by_editing + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. С. ' + item.pages}}-->
 
@@ -30,60 +30,60 @@
 
             </ol>
             </template>
-            <template v-if="exportData.booksParts[0]">
+            <template v-if="filteredData.booksParts[0]">
             <h2>	Частини монографій, книг</h2>
             <ol>
-                <li v-for="(item, index) in exportData.booksParts" :key="index">
+                <li v-for="(item, index) in filteredData.booksParts" :key="index">
                     {{exportParser(item)}}
 
                 </li>
 
             </ol>
             </template>
-            <template v-if="exportData.thesis[0]">
+            <template v-if="filteredData.thesis[0]">
             <h2>	Тези доповіді</h2>
             <ol>
-                <li v-for="(item, index) in exportData.thesis" :key="index">
+                <li v-for="(item, index) in filteredData.thesis" :key="index">
                     {{exportParser(item)}}
 
                 </li>
 
             </ol>
             </template>
-            <template v-if="exportData.patents[0]">
+            <template v-if="filteredData.patents[0]">
             <h2>	Патенти</h2>
             <ol>
-                <li v-for="(item, index) in exportData.patents" :key="index">
+                <li v-for="(item, index) in filteredData.patents" :key="index">
                     {{exportParser(item)}}
 
                 </li>
 
             </ol>
             </template>
-            <template v-if="exportData.certificates[0]">
+            <template v-if="filteredData.certificates[0]">
             <h2>	Свідоцтва про реєстрації авторських прав на твір/рішення</h2>
             <ol>
-                <li v-for="(item, index) in exportData.certificates" :key="index">
+                <li v-for="(item, index) in filteredData.certificates" :key="index">
                     {{exportParser(item)}}
 
                 </li>
 
             </ol>
             </template>
-            <template v-if="exportData.methodicals[0]">
+            <template v-if="filteredData.methodicals[0]">
             <h2>	Методичні вказівки</h2>
             <ol>
-                <li v-for="(item, index) in exportData.methodicals" :key="index">
+                <li v-for="(item, index) in filteredData.methodicals" :key="index">
                     {{exportParser(item)}}
 
                 </li>
 
             </ol>
             </template>
-            <template v-if="exportData.electronics[0]">
+            <template v-if="filteredData.electronics[0]">
             <h2>	Електронні видання</h2>
             <ol>
-                <li v-for="(item, index) in exportData.electronics" :key="index">
+                <li v-for="(item, index) in filteredData.electronics" :key="index">
                     {{exportParser(item)}}
 
                 </li>
@@ -100,14 +100,12 @@
     export default {
         data() {
             return {
-                // articles: [],
-                // books: [],
-                // booksParts: [],
+
 
             };
         },
         props: {
-            exportData: Object,
+            exportList: Array,
         },
 
 
@@ -173,6 +171,53 @@
 
 
         },
+        computed: {
+            filteredData (){
+                const publications = this.exportList;
+                const exportEmpty = {
+                    articles: [],
+                    books: [],
+                    booksParts: [],
+                    thesis: [],
+                    patents: [],
+                    certificates: [],
+                    methodicals: [],
+                    electronics: [],
+                };
+                for (let i = 0; i <publications.length; i++){
+                    if(publications[i].publication_type.type == "article"){
+
+                        exportEmpty.articles.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "book"){
+                        exportEmpty.books.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "book-part"){
+                        exportEmpty.booksParts.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "thesis"){
+                        exportEmpty.thesis.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "patent"){
+                        exportEmpty.patents.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "certificate"){
+                        exportEmpty.certificates.push(publications[i]);
+                    }
+                    else if(publications[i].publication_type.type  == "methodical"){
+                        exportEmpty.methodicals.push(publications[i]);
+                    }
+                    else {
+                        exportEmpty.electronics.push(publications[i]);
+                    }
+                }
+
+                return exportEmpty;
+
+
+            }
+        },
+
 
     }
 </script>

@@ -1,13 +1,14 @@
 <template>
 
+        <div class="error-block">
 
-        <div class="container">
+            <div class="container">
 
-            <h2 class="error-title ">
-                <p>404</p>
-                Сторінку не знайдено</h2>
+                <h2 class="error-title ">
+                    <p>404</p>
+                    Сторінку не знайдено</h2>
+            </div>
         </div>
-
 
 </template>
 
@@ -32,8 +33,28 @@
     }
 </script>
 <style scoped lang="scss">
+    .error-block{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: calc(100vh - 100px);
+        background: #fff;
+        padding-bottom: 100px;
+        display: flex;
+        align-items: center;
+        .container{
+            display: grid;
+            align-content: center;
+            min-height: 0;
+            background: #FFFFFF;
+            box-shadow: none;
+            border-radius: 0;
+            padding: 0;
+        }
+    }
    .error-title{
-       margin-top: 15vh;
+       /*margin-top: 15vh;*/
        text-align: center;
        font-family: Montserrat;
        font-style: normal;

@@ -2,12 +2,13 @@
 
     <div class="container">
         <h1 class="page-title">Перегляд публікацій</h1>
+<!--        <h2 class="subtitle">Мої публікації</h2>-->
         <!--        exports-->
         <div class="exports">
 
             <export-rating class="export-block"></export-rating>
 
-            <export-publications class="export-block" :exportData="exportData"></export-publications>
+            <export-publications class="export-block" :exportList="filteredList"></export-publications>
         </div>
         <!---->
         <div class="main-content">
@@ -99,11 +100,19 @@
                     <thead>
                     <tr>
                         <th scope="col">№</th>
-                        <th scope="col">Вид</th>
-                        <th scope="col">ПІБ автора</th>
+                        <th scope="col">Вид
+                            пуб-ції</th>
+                        <th scope="col">ПІБ автора\
+                            співавторів</th>
                         <th scope="col">Назва публікації</th>
-                        <th scope="col">Рік</th>
-                        <th scope="col">Індексування</th>
+                        <th scope="col">Рік
+                            впров.</th>
+                        <th scope="col">БД
+                            Scopus\
+                            WoS</th>
+                        <th scope="col">Науковий
+                            керівник</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -113,10 +122,18 @@
                         <td>{{ item.initials }}</td>
                         <td>{{ item.title }}</td>
                         <td>{{ item.year}}</td>
-                        <td>{{ item.sub_db_index }}</td>
+                        <td>{{ item.science_type ? item.science_type.type : '' }}</td>
+                        <td>{{ item.supervisor ? item.supervisor.name : '' }}</td>
+                        <td class="icons">
+                            <input type="checkbox">
+                            <i class="fas fa-pen-square"></i>
+                            <i class="fas fa-trash-alt"></i>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
+
+                <button class="delete-all">Видалити вибрані публікації</button>
             </div>
             <router-view></router-view>
         </div>
@@ -134,16 +151,9 @@
                 data: [],
                 countries: [],
                 publicationTypes: [],
-                exportData: {
-                    articles: [],
-                    books: [],
-                    booksParts: [],
-                    thesis: [],
-                    patents: [],
-                    certificates: [],
-                    methodicals: [],
-                    electronics: [],
-                },
+                exportData: {},
+
+
                 filters: {
                     title: '',
                     initials: '',
@@ -171,7 +181,7 @@
             getData() {
                 axios.get('/api/publications').then(response => {
                     this.data = response.data;
-                    this.exportParser();
+
 
                 })
             },
@@ -186,50 +196,19 @@
                 })
             },
 
-            exportRating(){
-
-                const workbook = XLSX.utils.table_to_book(document.getElementById('exportRating'));
-
-                XLSX.writeFile(workbook, 'filename.xlsx');
-            },
-
-            exportParser(){
-                const publications = this.data;
-
-                for (let i = 0; i <publications.length; i++){
-                    if(publications[i].publication_type.type == "article"){
-
-                        this.exportData.articles.push(publications[i]);
-                    }
-                    else if(publications[i].publication_type.type  == "book"){
-                        this.exportData.books.push(publications[i]);
-                    }
-                    else if(publications[i].publication_type.type  == "book-part"){
-                        this.exportData.booksParts.push(publications[i]);
-                    }
-                    else if(publications[i].publication_type.type  == "thesis"){
-                        this.exportData.thesis.push(publications[i]);
-                    }
-                    else if(publications[i].publication_type.type  == "patent"){
-                        this.exportData.patents.push(publications[i]);
-                    }
-                    else if(publications[i].publication_type.type  == "certificate"){
-                        this.exportData.certificates.push(publications[i]);
-                    }
-                    else if(publications[i].publication_type.type  == "methodical"){
-                        this.exportData.methodicals.push(publications[i]);
-                    }
-                    else {
-                        this.exportData.electronics.push(publications[i]);
-                    }
-                }
+            // exportRating(){
+            //
+            //     const workbook = XLSX.utils.table_to_book(document.getElementById('exportRating'));
+            //
+            //     XLSX.writeFile(workbook, 'filename.xlsx');
+            // },
 
 
-            }
         },
         computed: {
             filteredList() {
-                return this.data.filter(item => {
+
+                let arr = this.data.filter(item => {
                     let result = 1;
                     let keys = Object.keys(this.filters);
                     let values = Object.values(this.filters);
@@ -251,7 +230,10 @@
 
                     return result
 
-                })
+                });
+
+
+                return arr;
             },
             years() {
                 const year = new Date().getFullYear();
@@ -279,6 +261,17 @@
             margin-bottom: 20px;
 
         }
+    }
+    .delete-all{
+        font-family: Arial;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 20px;
+        line-height: 23px;
+        color: #fff;
+        background-color: #FF6A6A;
+        padding: 15px 60px;
+        outline: none;
     }
 
 </style>
