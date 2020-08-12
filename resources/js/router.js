@@ -5,6 +5,7 @@ import Auth from "./components/Auth";
 import Profile from "./components/Profile";
 import Publications from "./components/Publications/Index";
 import PublicationsAdd from "./components/Publications/Add";
+import PublicationsView from "./components/Publications/View";
 import Notifications from "./components/Notifications";
 import Users from "./components/Users";
 import Register from "./components/Register";
@@ -26,7 +27,7 @@ let router = new Router({
             path: '/home',
             name: 'home',
             component: Home,
-            meta: { 
+            meta: {
                 requiresRegister: false
             }
         },
@@ -34,34 +35,34 @@ let router = new Router({
             path: '/register',
             name: 'register',
             component: Register,
-            meta: { 
+            meta: {
                 requiresAuth: false
-            } 
+            }
         },
         {
             path: '/profile',
             name: 'profile',
             component: Profile,
-            meta: { 
+            meta: {
                 requiresRegister: false
-            } 
+            }
         },
         {
             path: '/publications',
             name: 'publications',
             component: Publications,
-            meta: { 
+            meta: {
                 requiresRegister: false
-            } 
+            }
         },
         {
             path: '/publications/add',
             name: 'publications-add',
-            component: PublicationsAdd  
+            component: PublicationsAdd
         },
         {
             path: '/publications/:id',
-            component: PublicationsAdd
+            component: PublicationsView
         },
         {
             path: '/notifications',
@@ -85,7 +86,7 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
     if(to.matched.some(record => record.meta.requiresAuth)) {
         axios.get('/api/check-login')
-        .then((response) => { 
+        .then((response) => {
             if(response.data == 'ok') {
                 next();
             } else {
@@ -94,7 +95,7 @@ router.beforeEach((to, from, next) => {
                     params: { nextUrl: to.fullPath }
                 });
             }
-        })  
+        })
     } else if (to.matched.some(record => record.meta.requiresRegister)) {
         axios.get('/api/check-register')
         .then((response) => {
@@ -108,7 +109,7 @@ router.beforeEach((to, from, next) => {
                     params: { nextUrl: to.fullPath }
                 });
             }
-        })  
+        })
     } else {
         next();
     }

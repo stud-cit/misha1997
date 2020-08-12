@@ -1,6 +1,6 @@
 <template>
 
-    <div class="container">
+    <div class="container page-content">
         <h1 class="page-title">Список працівників</h1>
         <div class="main-content">
             <form class="search-block">

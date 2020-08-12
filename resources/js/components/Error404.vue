@@ -2,7 +2,7 @@
 
         <div class="error-block">
 
-            <div class="container">
+            <div class="container page-content">
 
                 <h2 class="error-title ">
                     <p>404</p>

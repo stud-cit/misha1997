@@ -1,7 +1,8 @@
 <template>
 
 
-    <div class="container">
+    <div class="container page-content">
+
         <div class="page-list">
             <router-link :to="{name: 'publications'}" class="page-link">Переглянути список публікацій</router-link>
             <router-link :to="{name: 'publications-add'}" class="page-link">Додати нову публікацію</router-link>
@@ -42,7 +43,8 @@
 </script>
 <style lang="scss" scoped>
     .container{
-
+        display: grid;
+        align-content: center;
     }
     .page-list{
         display: grid;

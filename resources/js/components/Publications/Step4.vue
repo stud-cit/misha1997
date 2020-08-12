@@ -4,7 +4,7 @@
             Крок 4 з 4. Вихідні дані
         </p>
 
-        <article-ukr v-if="$parent.stepData.publication_type.type == 'article'"></article-ukr>
+        <articles v-if="$parent.stepData.publication_type.type == 'article'"></articles>
 
         <book v-if="$parent.stepData.publication_type.type == 'book'"></book>
 
@@ -24,7 +24,7 @@
 
 <script>
     // Стаття у фахових виданнях України, стаття-доповідь у матеріалах наукових конференціях, інші статті
-    import ArticleUkr from './Step4_fields/ArticleUkr';
+    import Articles from './Step4_fields/Articles';
 
     // монографії посібники підручники
     import Book from "./Step4_fields/Book";
@@ -53,7 +53,7 @@
             return {}
         },
         components: {
-            ArticleUkr,
+            Articles,
             Book,
             BookPart,
             Thesis,

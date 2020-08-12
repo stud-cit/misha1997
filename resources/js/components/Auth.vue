@@ -1,7 +1,7 @@
 <template>
 
     <div class=" auth-block">
-        <div class="container">
+        <div class="container page-content">
             <h1 class="title">Виконайте авторизацію</h1>
             <p class="description">Щоб почати працювати на веб-сервісі SCIPUB, авторизуйтесь через особистий кабінет СумДУ.</p>
             <div class="text-center"><a href="#" class="open_auth" @click="open_auth">Авторизуватись через кабінет СумДУ</a></div>

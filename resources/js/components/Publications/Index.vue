@@ -1,6 +1,6 @@
 <template>
 
-    <div class="container">
+    <div class="container page-content">
         <h1 class="page-title">Перегляд публікацій</h1>
 <!--        <h2 class="subtitle">Мої публікації</h2>-->
         <!--        exports-->
@@ -126,14 +126,16 @@
                         <td>{{ item.supervisor ? item.supervisor.name : '' }}</td>
                         <td class="icons">
                             <input type="checkbox">
-                            <i class="fas fa-pen-square"></i>
-                            <i class="fas fa-trash-alt"></i>
+<!--                            <i class="fas fa-pen-square"></i>-->
+<!--                            <i class="fas fa-trash-alt"></i>-->
                         </td>
                     </tr>
                     </tbody>
                 </table>
-
-                <button class="delete-all">Видалити вибрані публікації</button>
+                <div class="edit-block">
+                    <button class="mr-2 edit">Редагувати</button>
+                    <button class="delete">Видалити</button>
+                </div>
             </div>
             <router-view></router-view>
         </div>
@@ -262,16 +264,16 @@
 
         }
     }
-    .delete-all{
-        font-family: Arial;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 20px;
-        line-height: 23px;
-        color: #fff;
-        background-color: #FF6A6A;
-        padding: 15px 60px;
-        outline: none;
-    }
+    /*.delete-all{*/
+    /*    font-family: Arial;*/
+    /*    font-style: normal;*/
+    /*    font-weight: normal;*/
+    /*    font-size: 20px;*/
+    /*    line-height: 23px;*/
+    /*    color: #fff;*/
+    /*    background-color: #FF6A6A;*/
+    /*    padding: 15px 60px;*/
+    /*    outline: none;*/
+    /*}*/
 
 </style>
