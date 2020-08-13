@@ -50,15 +50,15 @@
         display: grid;
         align-content: center;
         justify-content: center;
-        grid-gap: 40px;
+        grid-gap: 35px;
         .page-link{
-            padding: 22px 80px;
+            padding: 20px 80px;
             max-width: 565px;
             font-family: Arial;
             font-style: normal;
             font-weight: normal;
-            font-size: 28px;
-            line-height: 32px;
+            font-size: 25px;
+            line-height: 29px;
             color: #FFFFFF;
             background: #007BFF;
             border-radius: 25px;

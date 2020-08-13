@@ -8,7 +8,7 @@
                     <label >Прізвище, ім’я та по батькові користувача</label>
                     <div class="input-container">
                         <input type="text" v-model="filters.name" >
-                        <span class="hint"  data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></span>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
                 </div>
                 <div class="form-row">
@@ -21,7 +21,7 @@
                                 <option value="1">факультет 2</option>
                                 <option value="Медичний інститут">Медичний інститут</option>
                             </select>
-                            <span class="hint"  data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></span>
+                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
                     <div class="form-group col-lg-4">
@@ -33,18 +33,18 @@
                                 <option value="1">факультет 1</option>
                                 <option value="1">факультет 2</option>
                             </select>
-                            <span class="hint"  data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></span>
+                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
                     <div class="form-group col-lg-4">
                         <label >Рік народження</label>
                         <div class="input-container">
-                            <select >
+                            <select v-model="filters.birthday">
                                 <option value=""></option>
-                                <option value="1">факультет 1</option>
-                                <option value="1">факультет 2</option>
+                                <option value="1">2019</option>
+                                <option value="1">2020</option>
                             </select>
-                            <span class="hint"  data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></span>
+                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                     name: '',
                     faculty: '',
                     department: '',
-                    // birthday: ''
+                    birthday: ''
                 },
 
             };

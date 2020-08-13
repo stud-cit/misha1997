@@ -17,14 +17,14 @@
                     <label >Назва публікації</label>
                     <div class="input-container">
                         <input type="text" v-model="filters.title" >
-                        <span class="hint"  data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></span>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label >Прізвище та ініціали автора</label>
                     <div class="input-container">
                         <input type="text" v-model="filters.initials" >
-                        <span class="hint"  data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></span>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
                 </div>
                 <div class="form-row">
@@ -37,7 +37,7 @@
                                 <option value="2">Wos</option>
                                 <option value="3">Scopus та Wos</option>
                             </select>
-                            <span class="hint"  data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></span>
+                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
                     <div class="form-group col-lg-4">
@@ -49,7 +49,7 @@
 
 
                             </select>
-                            <span class="hint"  data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></span>
+                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
 
@@ -64,14 +64,14 @@
                                 <option v-for="(item, index) in countries" :value="item.name" :key="index">{{item.name}}</option>
 
                             </select>
-                            <span class="hint"  data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></span>
+                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
                     <div class="form-group col-lg-4">
                         <label >Місто видання</label>
                         <div class="input-container">
                             <input type="text"  v-model="filters.city">
-                            <span class="hint"  data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></span>
+                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
 
@@ -84,7 +84,7 @@
                             <option v-for="(item, index) in publicationTypes" :value="item.id" :key="index">{{item.title}}</option>
 
                         </select>
-                        <span class="hint"  data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></span>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
                 </div>
 

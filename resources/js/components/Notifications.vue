@@ -1,27 +1,31 @@
 <template>
 
+    <div class="container">
+        <h1 class="blue-page-title">Перегляд повідомлень</h1>
+        <div class="page-content">
+            <template v-if="notifications.length > 0">
+                <h2 class="subtitle new" >Нові повідомлення</h2>
+                <hr>
+                <ul class=" notifications-list mb-75">
+                    <li class="notifications-item" v-for="item in notifications" :key="item.id">
+                        <p class="date">{{ item.created_at }}</p>
+                        <p class="text">{{ item.text }}</p>
+                    </li>
+                </ul>
+            </template>
 
-    <div >
-        <h1 class="page-title">Перегляд сповіщень</h1>
+            <h2 class="subtitle" >Попередні повідомлення</h2>
+            <hr>
+            <ul class=" notifications-list before" v-if="viewedNotifications.length > 0">
+                <li class="notifications-item" v-for="item in viewedNotifications" :key="item.id">
+                    <p class="date">{{ item.created_at }}</p>
+                    <p class="text">{{ item.text }}</p>
+                </li>
+            </ul>
+        </div>
 
-        <h2 class="subtitle new" >Нові сповіщення</h2>
-
-        <ul class="container notifications-list">
-            <li class="notifications-item" v-for="item in notifications" :key="item.id">
-                <p class="date">{{ item.created_at }}</p>
-                <p class="text">{{ item.text }}</p>
-            </li>
-        </ul>
-
-        <h2 class="subtitle" v-if="viewedNotifications.length > 0">Попередні сповіщення</h2>
-
-        <ul class="container notifications-list before">
-            <li class="notifications-item" v-for="item in viewedNotifications" :key="item.id">
-                <p class="date">{{ item.created_at }}</p>
-                <p class="text">{{ item.text }}</p>
-            </li>
-        </ul>
     </div>
+
 
 
 </template>
@@ -45,7 +49,7 @@
                         created_at: '12.05.2020',
                         text: 'Автор Бабій Євгеній Андрійович редагував дані в публікації ”Modeling Business Process of Labor Intensity Calculating The Machine-Building Equipment’s Production”'
                     }
-                    
+
                 ]
             };
         },
@@ -75,48 +79,53 @@
 </script>
 <style scoped lang="scss">
     .subtitle{
-        font-family: Montserrat;
+        font-family: Arial;
         font-style: normal;
-        font-weight: normal;
-        font-size: 20px;
-        color: #A6A6A6;
-        text-align: center;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #A6A6A6;
+        font-weight: bold;
+        font-size: 25px;
+        line-height: 29px;
+        color: #212529;
+        border-bottom: none;
+        margin-top: 0;
+
         &.new{
-            margin-top: 75px;
+            color: #007BFF;
+
         }
+    }
+    hr{
+        border-top: 1px solid #212529;
     }
 
     .notifications-list{
-        margin-top: 90px;
+        margin-top: 35px;
         .notifications-item{
-            margin-bottom: 45px;
+            margin-bottom: 35px;
             .date{
-                margin-bottom: 15px;
-                font-family: Montserrat;
+                margin-bottom: 5px;
+                font-family: Arial;
                 font-style: normal;
                 font-weight: normal;
-                font-size: 18px;
-                color: #A6A6A6;
+                font-size: 20px;
+                line-height: 23px;
+                color: rgba(33, 37, 41, 0.5);
+
             }
             .text{
-                font-family: Montserrat;
+                font-family: Arial;
                 font-style: normal;
-                font-weight: 300;
+                font-weight: normal;
                 font-size: 22px;
-                color: #18A0FB;
-                line-height: 1.2;
+                line-height: 25px;
+                color: #212529;
+
 
             }
         }
-        &.before{
-            .notifications-item{
-                .text{
-                    color: #A6A6A6;
-                }
-            }
+        &.mb-75{
+            margin-bottom: 75px;
         }
+
     }
 
 
