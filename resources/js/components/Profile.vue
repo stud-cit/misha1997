@@ -75,7 +75,7 @@
                         <div class="col-lg-6 two-col pr-2">
                             <label for="">БД Scopus</label>
                             <div class=" input-container">
-                                <input class="item-value" type="text" v-model="data.h_index">
+                                <input class="item-value" type="text" v-model="data.scopus_autor_id">
                                 <div class="hint" ><span>title</span></div>
                             </div>
                         </div>

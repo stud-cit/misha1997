@@ -1,56 +1,63 @@
 <template>
     <div>
+
         <p class="step-subtitle">
-            Крок 1 з 4. Назва та база для публікації
+            Крок 1 з 4.
         </p>
         <div class="step-content">
 
-            <div class="search-block">
-                <div class="categories">
+            <form class="form-block">
+                <div class="form-group">
+                    <label >Назва публікації</label>
+                    <div class="input-container">
+                        <input type="text"  v-model="stepData.title">
 
-                    <div class="categories-elem">
-                        <input id="scopus" type="radio" v-model="stepData.science_type_id" value="1" @click="checkScienceType('1')">
-                        <label for="scopus" >Scopus</label>
-                    </div>
-                    <div class="categories-elem">
-                        <input id="wos" type="radio" v-model="stepData.science_type_id" value="2" @click="checkScienceType('2')">
-                        <label for="wos">WoS</label>
-                    </div>
-                    <div class="categories-elem">
-                        <input id="scopus_wos" type="radio" v-model="stepData.science_type_id" value="3" @click="checkScienceType('3')">
-                        <label for="scopus_wos">Scopus та WoS</label>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
                 </div>
-                <label class="main-search-container">
-                    <input type="text" class="main-search" placeholder="Введіть назву публікації" v-model="stepData.title">
-                    <div class="search-load">
-                        <p class="load-big"></p>
-                        <p class="load-little"></p>
+                <div class="form-row">
+                    <div class="form-group col-lg-4">
+                        <label >БД Scopus\WoS</label>
+                        <div class="input-container">
+                            <select  v-model="stepData.science_type_id">
+                                <option value=""></option>
+                                <option value="1">Scopus</option>
+                                <option value="2">Wos</option>
+                                <option value="3">Scopus та Wos</option>
+                            </select>
+                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                        </div>
                     </div>
-<!--                    <div class="search-btn"><img src="/img/search.svg" alt=""></div>-->
-                </label>
-            </div>
+                    <div class="form-group col-lg-8">
+                        <label >Вид публікації</label>
+                        <div class="input-container">
+                            <select  v-model="stepData.publication_type" v-if="stepData.science_type_id">
+                                <option value=""></option>
+                                <option v-for="(item, i) in publicationTypes" :key="i" v-if="item.scopus_wos" :value="item">{{item.title }}</option>
+
+
+                            </select>
+                            <select  v-model="stepData.publication_type" v-else>
+                                <option value=""></option>
+                                <option v-for="(item, i) in publicationTypes" :key="i" :value="item">{{item.title  }}</option>
+
+
+                            </select>
+                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+            </form>
 
         </div>
-        <div class="categories" v-if="stepData.title">
-            <p class="step-subtitle">
-                Оберіть тип публікації
-            </p>
-            <template v-if="stepData.science_type_id">
-                <div class="categories-elem" v-for="(item, i) in publicationTypes" :key="i">
-                    <input v-if="item.scopus_wos" :id="'type' + i" type="radio" v-model="stepData.publication_type" :value="item">
-                    <label v-if="item.scopus_wos" :for="'type' + i">{{ item.title }}</label>
-                </div>
-            </template>
-            <template v-else>
-                <div class="categories-elem" v-for="(item, i) in publicationTypes" :key="i">
-                    <input :id="'type' + i" type="radio" v-model="stepData.publication_type" :value="item">
-                    <label :for="'type' + i">{{ item.title }}</label>
-                </div>
-            </template>
-        </div>
+
         <div class="step-button-group">
-            <button class="next active" @click="nextStep">Продовжити <span>&gt;</span></button>
+            <button class="next" @click="nextStep">Продовжити </button>
         </div>
     </div>
 </template>
@@ -81,70 +88,12 @@
             nextStep() {
                 this.$emit('getData', this.stepData);
             },
-            checkScienceType (val) {
-                setTimeout(()=>{
-                    if (val === this.prevVal) {
-                    this.stepData.science_type_id = null;
-                }
-                this.prevVal = this.stepData.science_type_id;
-                }, 200);
-            }
+
         }
     }
 </script>
 
 <style lang="scss" scoped>
 
-    .search-block{
-        margin: 0;
-    }
-    .categories{
-        display: flex;
-        flex-wrap: wrap;
-        .step-subtitle{
-            width: 100%;
-            margin-bottom: 25px;
-            margin-top: 75px;
-        }
 
-        .categories-elem{
-            margin-right: 15px;
-            margin-bottom: 20px;
-            label{
-                padding: 15px 35px;
-                background: #FFFFFF;
-                border: 1px solid #18A0FB;
-                border-radius: 44.5px;
-                /*min-width: 260px;*/
-                cursor: pointer;
-                font-family: Montserrat;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 22px;
-                text-align: center;
-                color: #18A0FB;
-                line-height: 1;
-            }
-            .scopus{
-                min-width: 260px;
-            }
-            input[type="radio"]{
-                display: none;
-                &:checked + label{
-                    background: #18A0FB;
-                    border: 1px solid #18A0FB;
-                    color: #fff;
-                }
-            }
-            input[type="checkbox"]{
-                display: none;
-                &:checked + label{
-                    background: #18A0FB;
-                    border: 1px solid #18A0FB;
-                    color: #fff;
-                }
-            }
-
-        }
-    }
 </style>

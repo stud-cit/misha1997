@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container page-content">
         <h1 class="page-title">Додати нову публікацію</h1>
         <keep-alive>
         <step1 v-if="currentStep==1" @getData="getStepData($event)"></step1>
@@ -37,7 +37,7 @@
         methods: {
             getStepData(event){
                 this.stepData = Object.assign(this.stepData, event);
-                console.log(this.stepData)
+
                 if(this.currentStep !== 4) {
                     this.currentStep++;
                 } else {

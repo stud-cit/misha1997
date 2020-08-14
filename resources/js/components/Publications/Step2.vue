@@ -196,8 +196,9 @@
 
         </div>
         <div class="step-button-group">
-            <button class="next active" @click="nextStep">Продовжити <span>&gt;</span></button>
             <button class="prev" @click="prevStep">На попередній крок</button>
+            <button class="next active" @click="nextStep">Продовжити </button>
+
         </div>
     </div>
 </template>
