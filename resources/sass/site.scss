@@ -270,6 +270,10 @@ body {
     }
 }
 //// buttons
+button{
+    outline: none;
+    border: none;
+}
 .export-button{
     display: flex;
     justify-content: center;
