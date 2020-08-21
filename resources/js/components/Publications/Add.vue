@@ -4,7 +4,7 @@
         <keep-alive>
         <step1 v-if="currentStep==1" @getData="getStepData($event)"></step1>
         <step2 v-if="currentStep==2" @getData="getStepData($event)" @prevStep="prevStep"></step2>
-        <step3 v-if="currentStep==3" @getData="getStepData($event)" @prevStep="prevStep"></step3>
+        <step3 v-if="currentStep==3" @getData="getStepData($event)" @prevStep="prevStep" ></step3>
         <step4 v-if="currentStep==4" @getData="getStepData($event)" @prevStep="prevStep"></step4>
         </keep-alive>
     </div>
@@ -18,6 +18,7 @@
     export default {
         data() {
             return {
+                isScopus: false,
                 currentStep: 1,
                 stepData: {},
             };
@@ -39,6 +40,15 @@
                 this.stepData = Object.assign(this.stepData, event);
 
                 if(this.currentStep !== 4) {
+                    // не удалять этот код скрывает 3 шаг
+
+                    // if(!this.isScopus && this.currentStep == 2){
+                    //     this.currentStep+=2;
+                    // }
+                    // else {
+                    //     this.currentStep++;
+                    // }
+
                     this.currentStep++;
                 } else {
                     axios.post('/api/publication', this.stepData)
@@ -59,6 +69,14 @@
             },
             prevStep() {
                 if(this.currentStep !== 1){
+                    // не удалять этот код скрывает 3 шаг
+
+                    // if(!this.isScopus && this.currentStep == 4){
+                    //     this.currentStep-=2;
+                    // }
+                    // else {
+                    //     this.currentStep--;
+                    // }
                     this.currentStep--;
                 }
 

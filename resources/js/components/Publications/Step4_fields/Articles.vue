@@ -1,44 +1,64 @@
 <template>
     <div>
         <div class="step-content">
-            <div class="step-item">
+            <div class="form-group">
                 <label class="item-title">Назва журналу</label>
-                <input class="item-value" type="text" v-model="stepData.name_magazine">
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="stepData.name_magazine">
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
             </div>
-            <div class="step-item">
+            <div class="form-group">
                 <label class="item-title">Рік видання</label>
-                <select class="item-value" v-model="stepData.year">
-                    <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
-                </select>
+                <div class="input-container">
+                    <select class="item-value" v-model="stepData.year">
+                        <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
+                    </select>
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
             </div>
 
-            <div class="step-item">
+            <div class="form-group">
                 <label class="item-title">Номер (том)</label>
-                <input class="item-value" type="text" v-model="stepData.number">
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="stepData.number">
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
             </div>
-            <div class="step-item">
+            <div class="form-group">
                 <label class="item-title">Сторінки</label>
-                <input class="item-value" type="text" v-model="stepData.pages">
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="stepData.pages">
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
             </div>
-            <div class="step-item">
+            <div class="form-group">
                 <label class="item-title">Країна видання</label>
-                <select class="item-value" v-model="stepData.country">
-                    <option
-                        v-for="(item, index) in country"
-                        :key="index"
-                        :value="item.name"
-                    >{{item.name}}</option>
-                </select>
+                <div class="input-container">
+                    <select class="item-value" v-model="stepData.country">
+                        <option
+                            v-for="(item, index) in country"
+                            :key="index"
+                            :value="item.name"
+                        >{{item.name}}</option>
+                    </select>
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
             </div>
 
-            <div class="step-item">
+            <div class="form-group">
                 <label class="item-title">DOI</label>
-                <input class="item-value" type="text" v-model="stepData.doi">
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="stepData.doi">
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
             </div>
+
         </div>
         <div class="step-button-group">
-            <button class="next active" @click="nextStep">Продовжити <span>&gt;</span></button>
             <button class="prev" @click="prevStep">На попередній крок</button>
+            <button class="next active" @click="nextStep">Продовжити <span>&gt;</span></button>
+
         </div>
     </div>
 </template>
@@ -86,9 +106,6 @@
 
 <style lang="scss" scoped>
 
-    select{
-        background: url("/img/arrow-down.png") no-repeat 98% 50%;
-        text-align-last: center;
-    }
+
 
 </style>

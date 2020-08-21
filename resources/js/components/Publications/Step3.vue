@@ -82,8 +82,9 @@
         </div>
 
         <div class="step-button-group">
-            <button class="next active" @click="nextStep">Продовжити </button>
             <button class="prev" @click="prevStep">На попередній крок</button>
+            <button class="next active" @click="nextStep">Продовжити </button>
+
         </div>
     </div>
 </template>
@@ -91,6 +92,9 @@
 <script>
     export default {
         name: "Step4",
+        props: {
+          scopus: Boolean
+        },
         data() {
             return {
 
@@ -113,17 +117,6 @@
             prevStep(){
                 this.$emit('prevStep');
             },
-            // changeType(type){
-            //     if(type == 1 && this.subWos1 == false && this.subWos2 == true){
-            //         this.subWos2 = false;
-            //     }
-            //     else if(type == 2 && this.subWos1 == true && this.subWos2 == false){
-            //         this.subWos1 = false;
-            //     }
-            //
-            //
-            //
-            // },
 
 
         },
