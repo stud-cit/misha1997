@@ -53,7 +53,7 @@
         grid-gap: 35px;
         .page-link{
             padding: 20px 80px;
-            max-width: 565px;
+            max-width: 705px;
             font-family: Arial;
             font-style: normal;
             font-weight: normal;
@@ -65,7 +65,7 @@
             text-align: center;
         }
         .danger{
-            padding: 10px 80px;
+            padding: 12px 120px;
             background-color: #FF6A6A;
             color: #FFFFFF;
 

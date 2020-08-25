@@ -120,7 +120,7 @@
                         <td scope="row">{{ index+1 }}</td>
                         <td>{{ item.publication_type.title }}</td>
                         <td>{{ item.initials }}</td>
-                        <td>{{ item.title }}</td>
+                        <td><router-link :to="{path: `/publications/${item.id}`}"> {{ item.title }} </router-link> </td>
                         <td>{{ item.year}}</td>
                         <td>{{ item.science_type ? item.science_type.type : '' }}</td>
                         <td>{{ item.supervisor ? item.supervisor.name : '' }}</td>
@@ -198,12 +198,7 @@
                 })
             },
 
-            // exportRating(){
-            //
-            //     const workbook = XLSX.utils.table_to_book(document.getElementById('exportRating'));
-            //
-            //     XLSX.writeFile(workbook, 'filename.xlsx');
-            // },
+
 
 
         },
