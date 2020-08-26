@@ -40,16 +40,17 @@
                 this.stepData = Object.assign(this.stepData, event);
 
                 if(this.currentStep !== 4) {
-                    // не удалять этот код скрывает 3 шаг
+                    // этот код скрывает 3 шаг
 
-                    // if(!this.isScopus && this.currentStep == 2){
-                    //     this.currentStep+=2;
-                    // }
-                    // else {
-                    //     this.currentStep++;
-                    // }
+                    if(!this.isScopus && this.currentStep == 2){
+                        this.currentStep+=2;
+                    }
+                    else {
+                        this.currentStep++;
+                    }
+                    //
 
-                    this.currentStep++;
+                    // this.currentStep++;
                 } else {
                     axios.post('/api/publication', this.stepData)
                     .then((response) => {
@@ -69,15 +70,15 @@
             },
             prevStep() {
                 if(this.currentStep !== 1){
-                    // не удалять этот код скрывает 3 шаг
+                    // этот код скрывает 3 шаг
 
-                    // if(!this.isScopus && this.currentStep == 4){
-                    //     this.currentStep-=2;
-                    // }
-                    // else {
-                    //     this.currentStep--;
-                    // }
-                    this.currentStep--;
+                    if(!this.isScopus && this.currentStep == 4){
+                        this.currentStep-=2;
+                    }
+                    else {
+                        this.currentStep--;
+                    }
+                    // this.currentStep--;
                 }
 
             }
