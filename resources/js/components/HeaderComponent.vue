@@ -68,6 +68,7 @@
         top: 0px;
         background: #FFFFFF;
         box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+        z-index: 10;
     }
     .navbar-toggler-icon{
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(21, 73, 150, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");

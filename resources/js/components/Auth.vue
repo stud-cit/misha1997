@@ -51,12 +51,11 @@
 <style lang="scss" scoped>
     .auth-block{
         position: absolute;
-        top: 0;
+        bottom: 0;
         left: 0;
         width: 100%;
-        min-height: calc(100vh - 100px);
+        min-height: 100vh;
         background: #fff;
-        padding-bottom: 100px;
         display: flex;
         align-items: center;
         .container{

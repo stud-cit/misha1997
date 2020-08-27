@@ -24,15 +24,15 @@
 
             <!--add to db author-->
             <div class="other-author" v-if="otherAuthor">
-                <div class="wrapper">
+                <div class="popup-layout">
 
                     <!--ssu-->
 
-                    <div class="container" v-if="otherAuthor == 1">
+                    <template v-if="otherAuthor == 1">
                         <h2 class="popup-title">Додати автора з СумДУ</h2>
-                        <div class="step-item">
-                            <p class="item-title">Оберіть категорію:</p>
-                            <div class="authors supervisor">
+                        <div class="form-group">
+                            <label class="item-title">Оберіть категорію:</label>
+                            <div class="input-container">
                                 <select class="item-value" v-model="selectCateg" @change="getPersonAPI">
                                     <option
                                         v-for="item in categ"
@@ -42,14 +42,15 @@
                                         {{item.name}}
                                     </option>
                                 </select>
+                                <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                             </div>
                         </div>
+                        <div v-if="loadingPersons" class="loading" >Завантаження</div>
 
-                        <div v-if="loadingPersons" style="text-align: center">Завантаження</div>
 
-                        <div class="step-item" v-if="persons.length > 0">
-                            <p class="item-title">Прізвище, ім’я, по-батькові:</p>
-                            <div class="authors supervisor">
+                        <div class="form-group" v-if="persons.length > 0">
+                            <label class="item-title">Прізвище, ім’я, по-батькові:</label>
+                            <div class="input-container authors">
                                 <multiselect
                                     v-model="ssuAuthor"
                                     label="name"
@@ -63,69 +64,123 @@
                                 >
                                     <span slot="noResult">По даному запиту немає результатів</span>
                                 </multiselect>
+                                <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                             </div>
+
                         </div>
                         <div class="step-button-group sumdu-base mt-2">
-                            <button class="next active" @click="addNewAuthor(ssuAuthor)">Додати <span>&gt;</span></button>
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
+                            <button class="next active" @click="addNewAuthor(ssuAuthor)">Додати </button>
+
                         </div>
-                    </div>
+                    </template>
 
                     <!--other author-->
+                    <template v-if="otherAuthor == 2">
+                        <h2 class="popup-title">Створення нового автора</h2>
+                        <ul class=" list-view">
 
-                    <div class="container" v-if="otherAuthor == 2">
-                        <h2 class="popup-title">Додавання нового автора</h2>
-                        <div class="step-item">
-                            <label class="item-title">Прізвище, ім’я, по-батькові:</label>
-                            <input class="item-value" type="text" v-model="newAuthor.name">
-                        </div>
-                        <div class="step-item">
-                            <label class="item-title">Псевдонім:</label>
-                            <input class="item-value" type="text" v-model="newAuthor.alias">
-                        </div>
-                        <div class="step-item">
-                            <label class="item-title">Місце роботи:</label>
-                            <select class="item-value" v-model="jobType">
-                                <option value="1">Учбовий заклад</option>
-                                <option value="1">Підприємство</option>
-                                <option value="0">Не працює</option>
-                            </select>
-                        </div>
-                        <div class="step-item" v-if="jobType == 1">
-                            <label class="item-title">Назва місця роботи:</label>
-                            <input class="item-value" type="text" v-model="newAuthor.job">
-                        </div>
-                        <div class="step-item">
-                            <label class="item-title">Країна:</label>
-                            <select class="item-value" v-model="newAuthor.country">
-                                <option
-                                    v-for="(item, index) in country"
-                                    :key="index"
-                                    :value="item.name"
-                                >{{item.name}}</option>
-                            </select>
-                        </div>
-                        <div class="step-item">
-                            <label class="item-title">Індекс Хірша:</label>
-                            <input class="item-value" type="text" v-model="newAuthor.h_index">
-                        </div>
-                        <div class="step-item">
-                            <label class="item-title">Author ID:</label>
-                            <input class="item-value" type="text" v-model="newAuthor.scopus_autor_id">
-                        </div>
-                        <div class="step-item">
-                            <label class="item-title">Research ID:</label>
-                            <input class="item-value" type="text" v-model="newAuthor.scopus_researcher_id">
-                        </div>
-                        <div class="step-item">
-                            <label class="item-title">ORCID:</label>
-                            <input class="item-value" type="text" v-model="newAuthor.orcid">
-                        </div>
+
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Прізвище, ім’я, по-батькові:</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <input class="item-value" type="text" v-model="newAuthor.name">
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                    </div>
+                                </div>
+
+                            </li>
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Місце роботи:</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <select class="item-value" v-model="jobType">
+                                            <option value="1">Учбовий заклад</option>
+                                            <option value="1">Підприємство</option>
+                                            <option value="0">Не працює</option>
+                                        </select>
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                    </div>
+                                </div>
+
+                            </li>
+                            <li class="row" v-if="jobType == 1">
+                                <div class="col-lg-3 list-item list-title">Назва учбового закладу/підприємства:</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <input class="item-value" type="text" v-model="newAuthor.job">
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                    </div>
+                                </div>
+
+                            </li>
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Країна автора:</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <select class="item-value" v-model="newAuthor.country">
+                                            <option
+                                                v-for="(item, index) in country"
+                                                :key="index"
+                                                :value="item.name"
+                                            >{{item.name}}</option>
+                                        </select>
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                    </div>
+                                </div>
+
+                            </li>
+
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Індекс Гірша:</div>
+                                <div class="col-lg-9  list-item list-text d-flex">
+                                    <div class="col-lg-6 two-col pr-2">
+                                        <label for="">БД Scopus</label>
+                                        <div class=" input-container">
+                                            <input class="item-value" type="text" v-model="newAuthor.scopus_autor_id">
+                                            <div class="hint" ><span>title</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 two-col">
+                                        <label for="">БД WoS</label>
+                                        <div class=" input-container">
+                                            <input class="item-value" type="text" v-model="newAuthor.h_index">
+                                            <div class="hint" ><span>title</span></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </li>
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Research ID:</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <input class="item-value" type="text" v-model="newAuthor.scopus_researcher_id">
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                    </div>
+                                </div>
+
+                            </li>
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">ORCID:</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <input class="item-value" type="text" v-model="newAuthor.orcid">
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                    </div>
+                                </div>
+
+                            </li>
+                        </ul>
                         <div class="step-button-group">
-                            <button class="next active" @click="addNewAuthor(newAuthor)">Додати <span>&gt;</span></button>
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
+                            <button class="next active" @click="addNewAuthor(newAuthor)">Додати </button>
+
                         </div>
-                    </div>
+                    </template>
+
 
 <!--                    <div class="container" v-if="otherAuthor == 3">-->
 <!--                        <h2 class="popup-title">Додати псевдонім</h2>-->
@@ -439,22 +494,25 @@
         top: 0;
         left: 0;
         z-index: 100;
-        padding: 5% 15%;
+        padding: 5% 10%;
         width: 100%;
         min-height: 100%;
         background: rgba(0,0,0,0.8);
-        .wrapper{
-            padding: 60px 0;
+        .popup-layout{
+            padding: 60px 60px;
             background-color: #fff;
-            border-radius: 20px;
+            border-radius: 10px;
             .popup-title{
                 margin-bottom: 30px;
-                font-family: Montserrat;
+                font-family: Arial;
                 font-style: normal;
                 font-weight: normal;
                 font-size: 30px;
                 text-align: center;
-                color: #18A0FB;
+                /*color: #18A0FB;*/
+            }
+            .row{
+                margin: 0;
             }
         }
     }
@@ -505,12 +563,11 @@
             background: url("/img/hint_white.svg");
         }
     }
-    /*input[type="radio"]{*/
-    /*    display: none;*/
-    /*}*/
-    /*input:checked +label{*/
-    /*    background: #18A0FB;*/
-    /*    border: 1px solid #18A0FB;*/
-    /*    color: #fff;*/
-    /*}*/
+    .loading{
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        margin: 30px 0;
+    }
+
 </style>
