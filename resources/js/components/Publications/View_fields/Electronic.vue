@@ -2,25 +2,33 @@
     <ul class=" list-view">
         <li class="row">
             <div class="col-lg-3 list-item list-title">Назва публікації:</div>
-            <div class="col-lg-9 list-item list-text">Modeling Business Process of Labor Intensity Calculating The Machine-Building Equipment’s Production</div>
+            <div class="col-lg-9 list-item list-text">{{data.title}}</div>
         </li>
         <li class="row">
             <div class="col-lg-3 list-item list-title">Автори публікації:</div>
-            <div class="col-lg-9 list-item list-text">Бабій Євгеній Андрійович, Петов Віктор Сергійович</div>
+            <div class="col-lg-9 list-item list-text">{{data.initials}}</div>
         </li>
         <li class="row">
             <div class="col-lg-3 list-item list-title">Рік видання:</div>
             <div class="col-lg-9 list-item list-text">{{data.year}}</div>
         </li>
         <li class="row">
-            <div class="col-lg-3 list-item list-title">За ред.:</div>
+            <div class="col-lg-3 list-item list-title">Кількість томів:</div>
+            <div class="col-lg-9 list-item list-text">{{data.number_volumes}}</div>
+        </li>
+        <li class="row">
+            <div class="col-lg-3 list-item list-title">Том:</div>
+            <div class="col-lg-9 list-item list-text">{{data.number}}</div>
+        </li>
+        <li class="row">
+            <div class="col-lg-3 list-item list-title">За редакцією:</div>
             <div class="col-lg-9 list-item list-text">{{data.by_editing}}</div>
         </li>
         <li class="row">
             <div class="col-lg-3 list-item list-title">Країна видання:</div>
             <div class="col-lg-9 list-item list-text">{{data.country}}</div>
         </li>
-        <li class="row">
+         <li class="row">
             <div class="col-lg-3 list-item list-title">Місто видання:</div>
             <div class="col-lg-9 list-item list-text">{{data.city}}</div>
         </li>
@@ -33,15 +41,19 @@
             <div class="col-lg-9 list-item list-text">{{data.pages}}</div>
         </li>
         <li class="row">
+            <div class="col-lg-3 list-item list-title">Електронна адреса (url):</div>
+            <div class="col-lg-9 list-item list-text">{{data.url}}</div>
+        </li>
+        <li class="row">
             <div class="col-lg-3 list-item list-title">Опубліковано мовами ОЕСР та ЄС:</div>
             <div class="col-lg-9 list-item list-text" v-if="data.languages==0">Ні</div>
             <div class="col-lg-9 list-item list-text" v-if="data.languages==1">Так</div>
         </li>
         <li class="row">
-            <div class="col-lg-3 list-item list-title">DOI:</div>
-            <div class="col-lg-9 list-item list-text">{{data.doi}}</div>
+            <div class="col-lg-3 list-item list-title">Режим доступу:</div>
+            <div class="col-lg-9 list-item list-text" v-if="data.access_mode==0">Закритий</div>
+            <div class="col-lg-9 list-item list-text" v-if="data.access_mode==1">Відкритий</div>
         </li>
-
 
     </ul>
 </template>
