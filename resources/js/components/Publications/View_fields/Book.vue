@@ -25,7 +25,7 @@
             <div class="col-lg-9 list-item list-text">Бабій Євгеній Андрійович, Петов Віктор Сергійович</div>
         </li>
         <li class="row">
-            <div class="col-lg-3 list-item list-title">Назва редакції:</div>
+            <div class="col-lg-3 list-item list-title">Видавництво:</div>
             <div class="col-lg-9 list-item list-text">Бабій Євгеній Андрійович, Петов Віктор Сергійович</div>
         </li>
         <li class="row">
@@ -48,7 +48,14 @@
 
 <script>
     export default {
+        data() {
+            return {
 
+            }
+        },
+        props: {
+            data: Object
+        }
     }
 </script>
 
