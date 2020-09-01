@@ -27,7 +27,7 @@
             </li>
         </template>
 
-        <template v-if="data.science_type_id!=null">
+        <!-- <template v-if="data.science_type_id!=null">
             <li class="row">
                 <div class="col-lg-3 list-item list-title">БД Scopus\WoS:</div>
                 <div class="col-lg-9 list-item list-text">{{data.science_type.type}}</div>
@@ -65,8 +65,35 @@
                 </li>
             </template>
 
+        </template> -->
+        <template v-if="data.science_type_id!=null">
+            <li class="row">
+                <div class="col-lg-3 list-item list-title">БД Scopus\WoS:</div>
+                <div class="col-lg-9 list-item list-text">{{data.science_type.type}}</div>
+            </li>
+            <li class="row">
+                <div class="col-lg-3 list-item list-title">SNIP журналу (БД Scopus):</div>
+                <div class="col-lg-9 list-item list-text">{{data.snip}}</div>
+            </li>
+            <li class="row">
+                <div class="col-lg-3 list-item list-title">Квартиль журналу (БД Scopus):</div>
+                <div class="col-lg-9 list-item list-text">{{data.quartil_scopus}}</div>
+            </li>
+        
+            <li class="row">
+                <div class="col-lg-3 list-item list-title">Імпакт-фактор (БД WoS):</div>
+                <div class="col-lg-9 list-item list-text">{{data.impact_factor}}</div>
+            </li>
+            <li class="row">
+                <div class="col-lg-3 list-item list-title">Квартиль журналу (БД WoS):</div>
+                <div class="col-lg-9 list-item list-text">{{data.quartil_wos}}</div>
+            </li>
+            <li class="row">
+                <div class="col-lg-3 list-item list-title">Підбаза WoS:</div>
+                <div class="col-lg-9 list-item list-text" v-if="data.sub_db_index==1">Science Citation Index Expanded (SCIE)</div>
+                <div class="col-lg-9 list-item list-text" v-if="data.sub_db_index==2">Social Science Citation Index</div>
+            </li>
         </template>
-
         <li class="row">
             <div class="col-lg-3 list-item list-title">№ патенту:</div>
             <div class="col-lg-9 list-item list-text">{{data.number_certificate}}</div>
