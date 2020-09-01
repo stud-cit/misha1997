@@ -2,11 +2,11 @@
     <ul class=" list-view">
         <li class="row">
             <div class="col-lg-3 list-item list-title">Назва публікації:</div>
-            <div class="col-lg-9 list-item list-text">Modeling Business Process of Labor Intensity Calculating The Machine-Building Equipment’s Production</div>
+            <div class="col-lg-9 list-item list-text">{{data.title}}</div>
         </li>
         <li class="row">
             <div class="col-lg-3 list-item list-title">Автори публікації:</div>
-            <div class="col-lg-9 list-item list-text">Бабій Євгеній Андрійович, Петов Віктор Сергійович</div>
+            <div class="col-lg-9 list-item list-text">{{data.initials}}</div>
         </li>
         <li class="row">
             <div class="col-lg-3 list-item list-title">Рік видання:</div>
