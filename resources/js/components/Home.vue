@@ -72,6 +72,27 @@
             /*text-transform: uppercase;*/
         }
     }
+    @media (max-width: 575px )  {
 
+        .page-list{
+
+            grid-gap: 20px;
+            .page-link{
+                padding: 12px 20px;
+                max-width: 100%;
+                font-size: 16px;
+                line-height: 20px;
+                border-radius: 15px;
+
+            }
+            .danger{
+                padding: 12px 20px;
+
+
+                /*text-transform: uppercase;*/
+            }
+        }
+
+    }
 </style>
 

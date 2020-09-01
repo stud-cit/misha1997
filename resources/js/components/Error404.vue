@@ -57,7 +57,7 @@
    .error-title{
        /*margin-top: 15vh;*/
        text-align: center;
-       font-family: Montserrat;
+       font-family: Arial;
        font-style: normal;
        font-weight: 500;
        font-size: 50px;
@@ -65,7 +65,7 @@
        opacity: 0.75;
        p{
            margin-bottom: 30px;
-           font-family: Montserrat;
+           font-family: Arial;
            font-style: normal;
            font-weight: normal;
            font-size: 250px;
@@ -74,14 +74,20 @@
 
        }
    }
-    @media (max-width: 991px) {
+    @media (max-width: 575px )  {
+        .error-block{
+            .container{
+                padding: 0 15px;
+            }
+        }
+        .error-title{
+            font-weight: 500;
+            font-size: 28px;
+            p{
+                font-size: 130px;
+            }
+        }
 
     }
-
-
-    @media (max-width: 414px) {
-
-    }
-
 
 </style>

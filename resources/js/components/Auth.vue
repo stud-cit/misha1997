@@ -106,5 +106,30 @@
         }
     }
 
+    @media (max-width: 575px )  {
+        .auth-block{
+            .container{
+                padding: 0 15px;
+            }
+        }
+        .title{
+            font-size: 24px;
+            line-height: 32px;
+
+        }
+        .description{
+
+            font-size: 18px;
+            line-height: 22px;
+            margin-top: 20px;
+        }
+        .open_auth{
+            padding: 12px 20px;
+            font-size: 16px;
+            line-height: 20px;
+            margin-top: 40px;
+
+        }
+    }
 </style>
 
