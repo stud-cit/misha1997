@@ -7,8 +7,9 @@
             <router-link :to="{name: 'publications'}" class="page-link">Переглянути список публікацій</router-link>
             <router-link :to="{name: 'publications-add'}" class="page-link">Додати нову публікацію</router-link>
             <router-link :to="{name: 'users'}" class="page-link">Список усіх користувачів</router-link>
-
+            <router-link :to="{name: 'publications'}" class="page-link success" @click="">Перевести сервіс в звичайний режим</router-link>
             <router-link :to="{name: 'publications'}" class="page-link danger" @click="">Перевести сервіс в режим  з обмеженим доступом</router-link>
+
 
         </div>
     </div>
@@ -64,6 +65,11 @@
             border-radius: 25px;
             text-align: center;
         }
+        .success{
+            padding: 12px 120px;
+            background-color: #7EF583;
+            color: #FFFFFF;
+        }
         .danger{
             padding: 12px 120px;
             background-color: #FF6A6A;
@@ -85,7 +91,7 @@
                 border-radius: 15px;
 
             }
-            .danger{
+            .danger, .success{
                 padding: 12px 20px;
 
 

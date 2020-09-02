@@ -208,7 +208,19 @@
 
 
     }
+    @media (max-width: 575px) {
 
+
+        .save-btn{
+            margin-top: 25px;
+            padding: 15px 40px;
+            font-size: 20px;
+            line-height: 24px;
+            border-radius: 6px;
+
+        }
+
+    }
 
 
 </style>

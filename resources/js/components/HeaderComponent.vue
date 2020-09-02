@@ -156,7 +156,7 @@
         }
 
         .navbar-brand {
-
+            padding-top: 10px;
             position: static;
             left: 0;
             top: 0;
@@ -188,7 +188,7 @@
         .navbar-expand-lg {
 
             .navbar-nav {
-
+                padding-top: 10px;
 
                 li {
                     font-family: Arial;

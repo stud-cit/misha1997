@@ -259,16 +259,18 @@
 
         }
     }
-    /*.delete-all{*/
-    /*    font-family: Arial;*/
-    /*    font-style: normal;*/
-    /*    font-weight: normal;*/
-    /*    font-size: 20px;*/
-    /*    line-height: 23px;*/
-    /*    color: #fff;*/
-    /*    background-color: #FF6A6A;*/
-    /*    padding: 15px 60px;*/
-    /*    outline: none;*/
-    /*}*/
+    @media (max-width: 575px){
+        .search-block{
+            margin-top: 15px;
+        }
+        .table-list{
+            margin-top: 35px;
+        }
+        .exports{
+
+            margin-top: 25px;
+
+        }
+    }
 
 </style>

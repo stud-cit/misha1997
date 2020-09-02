@@ -143,5 +143,9 @@
     .search-block{
         margin-top: 60px;
     }
-
+    @media(max-width: 575px){
+        .search-block{
+            margin-top: 30px;
+        }
+    }
 </style>

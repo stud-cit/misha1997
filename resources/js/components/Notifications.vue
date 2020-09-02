@@ -128,5 +128,40 @@
 
     }
 
+    @media (max-width: 575px) {
+        .subtitle{
+
+            font-size: 20px;
+            line-height: 24px;
+
+
+
+        }
+
+
+        .notifications-list{
+            margin-top: 35px;
+            .notifications-item{
+                margin-bottom: 15px;
+                .date{
+
+                    font-size: 16px;
+                    line-height: 18px;
+
+                }
+                .text{
+                    font-size: 18px;
+                    line-height: 22px;
+
+
+
+                }
+            }
+            &.mb-75{
+                margin-bottom: 35px;
+            }
+
+        }
+    }
 
 </style>
