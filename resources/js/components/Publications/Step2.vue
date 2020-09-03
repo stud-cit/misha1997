@@ -68,7 +68,7 @@
                             </div>
 
                         </div>
-                        <div class="step-button-group sumdu-base mt-2">
+                        <div class="step-button-group sumdu-base ">
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
                             <button class="next active" @click="addNewAuthor(ssuAuthor)">Додати </button>
 
@@ -182,19 +182,7 @@
                     </template>
 
 
-<!--                    <div class="container" v-if="otherAuthor == 3">-->
-<!--                        <h2 class="popup-title">Додати псевдонім</h2>-->
-<!--                        <div class="step-item">-->
-<!--                            <p class="item-title">Оберіть категорію:</p>-->
-<!--                            <div class="authors supervisor">-->
-<!--                                <input class="item-value" type="text" v-model="newAlias.surname_initials">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="step-button-group sumdu-base mt-2">-->
-<!--                            <button class="next active" @click="addAlias()">Додати <span>&gt;</span></button>-->
-<!--                            <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
+
 
                 </div>
             </div>
@@ -262,8 +250,7 @@
                     <button class="remove-author" @click="removeAuthor(i)">&times;</button>
                 </div>
 
-<!--                    <span v-for="(alias, index) in item.alias" :key="index" @click="setAlias(alias)">{{ alias.surname_initials }} - {{ alias.select }}</span>-->
-<!--                    <input type="submit" value="Додати псевдонім" @click="openModalAlias(item, i)">-->
+
             </div>
             <div class="form-group">
                 <label class="item-title">Прізвища та ініціали авторів мовою оригіналу </label>
@@ -290,11 +277,7 @@
             return {
                 jobType: null,
                 modalAlias: false,
-                // newAlias: {
-                //     surname_initials: "",
-                //     autors_id: null,
-                //     id: null
-                // },
+
 
                 categ: [
                     {
@@ -344,7 +327,7 @@
                     scopus_autor_id: '',
                     scopus_researcher_id: '',
                     orcid: '',
-                    // alias: ''
+
                 },
                 stepData: {
                     useSupervisor: '0',
@@ -368,9 +351,7 @@
             this.getAuthors();
         },
         methods: {
-            // setAlias(alias) {
-            //     alias.select ? alias.select = 0 : alias.select = 1;
-            // },
+
             nameWithInfo({name, faculty, academic_code, job}) {
                 if(name == "") {
                     return "Пошук в базі данних сайту"
@@ -380,15 +361,7 @@
             },
             nextStep () {
 
-                // create initials
 
-                // this.stepData.initials = this.stepData.authors.map(
-                //     (a) => {
-                //         const arr = a.name.split(' ');
-                //         return arr[0] + ' ' + arr[1][0] + '. ' + arr[2][0] + '.'
-                //     }
-                // ).join(', ');
-                //
 
                 this.$emit('getData', this.stepData);
             },
@@ -404,7 +377,14 @@
                 })
             },
             removeAuthor(i) {
-                this.stepData.authors.splice(i, 1);
+                if(this.stepData.authors.length>1) {
+                    this.stepData.authors.splice(i, 1);
+                }
+                else{
+                    swal("Повинен бути хоча б один автор!", {
+                        icon: "error",
+                    });
+                }
             },
             showNewAuthor(n) {
                 this.getCountry();
@@ -461,28 +441,7 @@
                     this.country = response.data;
                 })
             },
-            // openModalAlias(item, i) {
-            //     this.otherAuthor = 3
-            //     this.newAlias.autors_id = item.id
-            //     this.newAlias.id = i
-            // },
-            // addAlias() {
-            //     axios.post('/api/alias', this.newAlias)
-            //     .then((response) => {
-            //         this.otherAuthor = false;
-            //         this.stepData.authors[this.newAlias.id].alias.push(response.data);
-            //         swal("Автора успішно додано!", {
-            //             icon: "success",
-            //         });
-            //     })
-            //     .catch(() => {
-            //         this.otherAuthor = false;
-            //         swal({
-            //             icon: "error",
-            //             title: 'Помилка'
-            //         });
-            //     });
-            // }
+
         }
     }
 </script>
@@ -516,19 +475,7 @@
             }
         }
     }
-    .sumdu-base .authors-btn {
-        padding: 10px 40px;
-        margin: 0 10px 30px;
-        color: #FFFFFF;
-        background: #A6A6A6;
-        box-sizing: border-box;
-        border-radius: 44.5px;
-        font-family: Montserrat;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 25px;
-        cursor: pointer;
-    }
+
     .add-group {
         display: flex;
         justify-content: space-between;
@@ -570,4 +517,37 @@
         margin: 30px 0;
     }
 
+    @media  (max-width: 575px) {
+        .other-author{
+            padding: 10% 10px;
+
+            .popup-layout{
+                padding: 15px;
+
+                .popup-title{
+                    margin-bottom: 20px;
+
+                    font-size: 25px;
+
+                }
+
+            }
+        }
+
+        .add-group {
+
+            flex-wrap: wrap;
+
+
+
+            .add-button {
+                margin-top: 10px;
+            }
+            .hint{
+                top: 20px;
+            }
+
+        }
+
+    }
 </style>

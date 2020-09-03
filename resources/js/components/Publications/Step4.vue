@@ -4,21 +4,21 @@
             Крок 4 з 4. Вихідні дані
         </p>
 
-        <articles v-if="$parent.stepData.publication_type.type == 'article'"></articles>
+        <articles v-if="publicationType == 'article'"></articles>
 
-        <book v-if="$parent.stepData.publication_type.type == 'book'"></book>
+        <book v-if="publicationType == 'book'"></book>
 
-        <book-part v-if="$parent.stepData.publication_type.type == 'book-part'"></book-part>
+        <book-part v-if="publicationType == 'book-part'"></book-part>
 
-        <thesis v-if="$parent.stepData.publication_type.type == 'thesis'"></thesis>
+        <thesis v-if="publicationType == 'thesis'"></thesis>
 
-        <patent v-if="$parent.stepData.publication_type.type == 'patent'"></patent>
+        <patent v-if="publicationType == 'patent'"></patent>
 
-        <certificate v-if="$parent.stepData.publication_type.type == 'certificate'"></certificate>
+        <certificate v-if="publicationType == 'certificate'"></certificate>
 
-        <methodical v-if="$parent.stepData.publication_type.type == 'methodical'"></methodical>
+        <methodical v-if="publicationType == 'methodical'"></methodical>
 
-        <electronic v-if="$parent.stepData.publication_type.type == 'electronic'"></electronic>
+        <electronic v-if="publicationType == 'electronic'"></electronic>
     </div>
 </template>
 
@@ -52,6 +52,10 @@
         data() {
             return {}
         },
+        props:{
+            publicationType: String
+        },
+
         components: {
             Articles,
             Book,

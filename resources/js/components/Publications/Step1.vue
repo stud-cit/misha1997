@@ -91,6 +91,10 @@
                 // check scopus
                 if(this.stepData.science_type_id){
                     this.$parent.isScopus = true;
+
+                }
+                else{
+                    this.$parent.isScopus = false;
                 }
                 //
                 this.$emit('getData', this.stepData);

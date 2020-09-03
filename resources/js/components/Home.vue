@@ -51,10 +51,10 @@
         display: grid;
         align-content: center;
         justify-content: center;
-        grid-gap: 35px;
+        grid-gap: 25px;
         .page-link{
-            padding: 20px 80px;
-            max-width: 705px;
+            padding: 15px 25px;
+            max-width: 750px;
             font-family: Arial;
             font-style: normal;
             font-weight: normal;
@@ -66,12 +66,12 @@
             text-align: center;
         }
         .success{
-            padding: 12px 120px;
+
             background-color: #7EF583;
             color: #FFFFFF;
         }
         .danger{
-            padding: 12px 120px;
+
             background-color: #FF6A6A;
             color: #FFFFFF;
 
