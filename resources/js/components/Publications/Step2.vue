@@ -5,7 +5,7 @@
         </p>
         <div class=" step-content">
             <div class="form-group">
-                <label class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) :</label>
+                <label class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) </label>
                 <div class="add-group">
                     <div class="input-container">
                         <button class="add-button btn-blue" @click="showNewAuthor(1)">
@@ -31,7 +31,7 @@
                     <template v-if="otherAuthor == 1">
                         <h2 class="popup-title">Додати автора з СумДУ</h2>
                         <div class="form-group">
-                            <label class="item-title">Оберіть категорію:</label>
+                            <label class="item-title">Оберіть категорію</label>
                             <div class="input-container">
                                 <select class="item-value" v-model="selectCateg" @change="getPersonAPI">
                                     <option
@@ -42,14 +42,14 @@
                                         {{item.name}}
                                     </option>
                                 </select>
-                                <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
                             </div>
                         </div>
                         <div v-if="loadingPersons" class="loading" >Завантаження</div>
 
 
                         <div class="form-group" v-if="persons.length > 0">
-                            <label class="item-title">Прізвище, ім’я, по-батькові:</label>
+                            <label class="item-title">Прізвище, ім’я, по-батькові</label>
                             <div class="input-container authors">
                                 <multiselect
                                     v-model="ssuAuthor"
@@ -82,17 +82,21 @@
 
 
                             <li class="row">
-                                <div class="col-lg-3 list-item list-title">Прізвище, ім’я, по-батькові:</div>
+                                <div class="col-lg-3 list-item list-title">Прізвище, ім’я, по-батькові *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
                                         <input class="item-value" type="text" v-model="newAuthor.name">
                                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                                     </div>
+                                    <div class="error" v-if="$v.newAuthor.name.$error">
+                                        Поле обов'язкове для заповнення
+                                    </div>
                                 </div>
+
 
                             </li>
                             <li class="row">
-                                <div class="col-lg-3 list-item list-title">Місце роботи:</div>
+                                <div class="col-lg-3 list-item list-title">Місце роботи</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
                                         <select class="item-value" v-model="jobType">
@@ -102,21 +106,26 @@
                                         </select>
                                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                                     </div>
+
+
                                 </div>
 
                             </li>
                             <li class="row" v-if="jobType == 1">
-                                <div class="col-lg-3 list-item list-title">Назва учбового закладу/підприємства:</div>
+                                <div class="col-lg-3 list-item list-title">Назва учбового закладу/підприємства</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
                                         <input class="item-value" type="text" v-model="newAuthor.job">
                                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                                     </div>
+                                    <div class="error" v-if="$v.newAuthor.job.$error">
+                                        Поле обов'язкове для заповнення
+                                    </div>
                                 </div>
 
                             </li>
                             <li class="row">
-                                <div class="col-lg-3 list-item list-title">Країна автора:</div>
+                                <div class="col-lg-3 list-item list-title">Країна автора</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
                                         <select class="item-value" v-model="newAuthor.country">
@@ -126,14 +135,14 @@
                                                 :value="item.name"
                                             >{{item.name}}</option>
                                         </select>
-                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
                                     </div>
                                 </div>
 
                             </li>
 
                             <li class="row">
-                                <div class="col-lg-3 list-item list-title">Індекс Гірша:</div>
+                                <div class="col-lg-3 list-item list-title">Індекс Гірша</div>
                                 <div class="col-lg-9  list-item list-text d-flex">
                                     <div class="col-lg-6 two-col pr-2">
                                         <label for="">БД Scopus</label>
@@ -154,7 +163,7 @@
 
                             </li>
                             <li class="row">
-                                <div class="col-lg-3 list-item list-title">Research ID:</div>
+                                <div class="col-lg-3 list-item list-title">Research ID</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
                                         <input class="item-value" type="text" v-model="newAuthor.scopus_researcher_id">
@@ -164,7 +173,7 @@
 
                             </li>
                             <li class="row">
-                                <div class="col-lg-3 list-item list-title">ORCID:</div>
+                                <div class="col-lg-3 list-item list-title">ORCID</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
                                         <input class="item-value" type="text" v-model="newAuthor.orcid">
@@ -187,7 +196,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Під керівництвом:</label>
+                <label class="item-title">Під керівництвом</label>
                 <div class="input-container">
                     <select class="item-value" v-model="stepData.useSupervisor">
                         <option value="1">Так </option>
@@ -199,7 +208,7 @@
             </div>
 
             <div class="form-group" v-if="stepData.useSupervisor == '1'">
-                <label class="item-title">Керівник:</label>
+                <label class="item-title">Керівник *</label>
                 <div class="input-container authors">
                     <multiselect
                         v-model="stepData.supervisor"
@@ -217,6 +226,10 @@
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
 
+                <div class="error" v-if="$v.stepData.supervisor.$error">
+                    Поле обов'язкове для заповнення
+                </div>
+
             </div>
 
 
@@ -227,12 +240,13 @@
                         <button class="add-button btn-blue" @click="addAuthor">
                             Додати автора
                         </button>
-                        <div class="hint white-hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                        <div class="hint white-hint" ><span>Прізвище, ім’я, по-батькові</span></div>
                     </div>
                 </div>
             </div>
 
-            <div v-for="(item, i) in stepData.authors" :key="i" class="form-group">
+            <div v-for="(item, i) in $v.stepData.authors.$each.$iter" :key="i" class="form-group">
+                <label for="">Прізвище, ім’я, по-батькові автора *</label>
                 <div class="input-container authors">
                     <multiselect
                         v-model="stepData.authors[i]"
@@ -249,14 +263,20 @@
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     <button class="remove-author" @click="removeAuthor(i)">&times;</button>
                 </div>
+                <div class="error" v-if="$v.stepData.authors.$each.$iter[i].$error">
+                    Поле обов'язкове для заповнення
+                </div>
 
 
             </div>
             <div class="form-group">
-                <label class="item-title">Прізвища та ініціали авторів мовою оригіналу </label>
+                <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.initials">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
+                </div>
+                <div class="error" v-if="$v.stepData.initials.$error">
+                    Поле обов'язкове для заповнення
                 </div>
             </div>
 
@@ -270,7 +290,9 @@
 </template>
 
 <script>
+
     import Multiselect from 'vue-multiselect';
+    import {required, requiredIf} from "vuelidate/lib/validators";
     export default {
         name: "Step2",
         data() {
@@ -335,7 +357,6 @@
                     authors: [
                         {
                             name: '',
-                            // alias: [],
                             faculty: "",
                             academic_code: ""
                         },
@@ -350,6 +371,46 @@
         created() {
             this.getAuthors();
         },
+
+        validations: {
+
+            stepData: {
+                supervisor: {
+                    required: requiredIf ( function() {
+                        return this.stepData.useSupervisor == '1';
+                    })
+                },
+                authors: {
+                    required,
+                    $each: {
+                        name: {
+                            required,
+                        }
+                    }
+                },
+                initials: {
+                    required
+                }
+
+            },
+            newAuthor: {
+                required: requiredIf ( function() {
+                    return this.otherAuthor == '2';
+                }),
+
+                job: {
+                    required: requiredIf ( function() {
+                        return this.jobType > 0;
+                    }),
+                },
+                name: {
+                    required
+                }
+
+            }
+
+
+        },
         methods: {
 
             nameWithInfo({name, faculty, academic_code, job}) {
@@ -360,7 +421,13 @@
                 }
             },
             nextStep () {
-
+                this.$v.stepData.$touch();
+                if (this.$v.stepData.$invalid) {
+                    swal("Не всі поля заповнено!", {
+                        icon: "error",
+                    });
+                    return
+                }
 
 
                 this.$emit('getData', this.stepData);
@@ -416,7 +483,17 @@
                     this.authors = response.data;
                 })
             },
+
             addNewAuthor(newAuthor) {
+
+                this.$v.newAuthor.$touch()
+                if (this.$v.newAuthor.$invalid) {
+                    swal("Не всі поля заповнено!", {
+                        icon: "error",
+                    });
+                    return
+                }
+
                 newAuthor.job = this.jobType == 1 ? newAuthor.job : "Не працює";
                 axios.post('/api/author', newAuthor)
                 .then((response) => {

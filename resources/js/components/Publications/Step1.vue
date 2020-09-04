@@ -4,16 +4,21 @@
         <p class="step-subtitle">
             Крок 1 з 4.
         </p>
-        <div class="step-content">
+        <div  class="step-content">
 
 
             <div class="form-group">
-                <label >Назва публікації</label>
+                <label >Назва публікації *</label>
                 <div class="input-container">
-                    <input type="text"  v-model="stepData.title">
+                    <input type="text"  v-model.trim="stepData.title" @blur="$v.stepData.title.$touch()">
 
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
+
+                <div class="error" v-if="$v.stepData.title.$error">
+                    Поле обов'язкове для заповнення
+                </div>
+
             </div>
             <div class="form-row">
                 <div class="form-group col-lg-4">
@@ -29,22 +34,27 @@
                     </div>
                 </div>
                 <div class="form-group col-lg-8">
-                    <label >Вид публікації</label>
+                    <label >Вид публікації *</label>
                     <div class="input-container">
-                        <select  v-model="stepData.publication_type" v-if="stepData.science_type_id">
-                            <option value=""></option>
+                        <select  v-model.trim="stepData.publication_type" v-if="stepData.science_type_id">
+
                             <option v-for="(item, i) in publicationTypes" :key="i" v-if="item.scopus_wos" :value="item">{{item.title }}</option>
 
 
                         </select>
-                        <select  v-model="stepData.publication_type" v-else>
-                            <option value=""></option>
+                        <select  v-model.trim="stepData.publication_type" v-else>
+
                             <option v-for="(item, i) in publicationTypes" :key="i" :value="item">{{item.title  }}</option>
 
 
                         </select>
-                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
                     </div>
+
+                    <div class="error" v-if="$v.stepData.publication_type.$error">
+                        Поле обов'язкове для заповнення
+                    </div>
+
                 </div>
 
             </div>
@@ -54,12 +64,13 @@
         </div>
 
         <div class="step-button-group">
-            <button class="next" @click="nextStep">Продовжити </button>
+            <button class="next" @click="nextStep" >Продовжити </button>
         </div>
     </div>
 </template>
 
 <script>
+    import { required, maxLength } from 'vuelidate/lib/validators';
     export default {
         name: "Step1",
         data() {
@@ -76,6 +87,19 @@
         created() {
             this.getTypePublications();
         },
+        validations: {
+
+
+            stepData: {
+                title: {
+                    required,
+                },
+                publication_type: {
+                    required,
+                },
+            },
+
+        },
         methods: {
             getTypePublications() {
                 axios.get(`/api/type-publications`).then(response => {
@@ -87,7 +111,13 @@
 
             },
             nextStep() {
-
+                this.$v.$touch()
+                if (this.$v.$invalid) {
+                    swal("Не всі поля заповнено!", {
+                        icon: "error",
+                    });
+                    return
+                }
                 // check scopus
                 if(this.stepData.science_type_id){
                     this.$parent.isScopus = true;

@@ -166,8 +166,8 @@
         },
         methods: {
             getData() {
-                axios.get('/api/author/22e6106c-c580-e711-8194-001a4be6d04a').then(response => {
-                // axios.get('/api/author/'+localStorage.getItem('userId')).then(response => {
+                axios.get(`/api/author/${this.$route.params.id}`).then(response => {
+                
                     this.data = response.data;
                 })
             },

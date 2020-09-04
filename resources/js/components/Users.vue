@@ -71,7 +71,7 @@
                     <tr v-for="(item, index) in filteredList" :key="item.id">
                         <td scope="row">{{ index+1 }}</td>
 <!--                        <td>{{ item.role.name }}</td>-->
-                        <td>{{ item.name }}</td>
+                        <td><router-link :to="{path: `/profile/${item.id}`}">{{ item.name }}</router-link></td>
                         <td></td>
                         <td>{{ item.department }}</td>
                         <td>{{ item.faculty }}</td>
@@ -86,6 +86,7 @@
 </template>
 
 <script>
+    import {required, requiredIf} from "vuelidate/lib/validators";
     export default {
         data() {
             return {

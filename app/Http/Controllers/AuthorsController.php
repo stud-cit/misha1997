@@ -27,7 +27,7 @@ class AuthorsController extends Controller
     }
 
     function getId($id) {
-        $data = Authors::with('publications', 'role', 'alias', 'notifications')->where("guid", $id)->first();
+        $data = Authors::with('publications', 'role', 'alias', 'notifications')->where("id", $id)->first();
         return response()->json($data);
     }
 

@@ -19,7 +19,7 @@
                             <a class="nav-link" >Підтримка</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/profile" >Профіль</a>
+                            <a class="nav-link" href="/profile/1" >Профіль</a>
                         </li>
                         <li class="nav-item">
 

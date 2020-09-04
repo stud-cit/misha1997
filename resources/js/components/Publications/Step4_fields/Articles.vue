@@ -2,14 +2,17 @@
     <div>
         <div class="step-content">
             <div class="form-group">
-                <label class="item-title">Назва журналу</label>
+                <label class="item-title">Назва журналу *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.name_magazine">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
+                <div class="error" v-if="$v.stepData.name_magazine.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Рік видання</label>
+                <label class="item-title">Рік видання *</label>
                 <div class="input-container">
                     <select class="item-value" v-model="stepData.year">
                         <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
@@ -19,21 +22,27 @@
             </div>
 
             <div class="form-group">
-                <label class="item-title">Номер (том)</label>
+                <label class="item-title">Номер (том) *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.number">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
+                <div class="error" v-if="$v.stepData.number.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Сторінки</label>
+                <label class="item-title">Сторінки *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.pages">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
+                <div class="error" v-if="$v.stepData.pages.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Країна видання</label>
+                <label class="item-title">Країна видання *</label>
                 <div class="input-container">
                     <select class="item-value" v-model="stepData.country">
                         <option
@@ -44,26 +53,32 @@
                     </select>
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
+
             </div>
 
             <div class="form-group">
-                <label class="item-title">DOI</label>
+                <label class="item-title">DOI *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.doi">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
+                <div class="error" v-if="$v.stepData.doi.$error">
+                    Поле обов'язкове для заповнення
                 </div>
             </div>
 
         </div>
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
-            <button class="next active" @click="nextStep">Продовжити <span>&gt;</span></button>
+            <button class="next active" @click="nextStep">Продовжити </button>
 
         </div>
     </div>
 </template>
 
 <script>
+    import {required, requiredIf} from "vuelidate/lib/validators";
+
     export default {
         data() {
             return {
@@ -81,6 +96,29 @@
         created() {
             this.getCountry();
         },
+        validations: {
+
+            stepData: {
+
+                name_magazine: {
+                    required
+                },
+                number: {
+                    required
+                },
+                pages: {
+                    required
+                },
+                doi: {
+                    required
+                },
+
+
+            },
+
+
+
+        },
         computed: {
 			years() {
 				const year = new Date().getFullYear();
@@ -94,7 +132,13 @@
                 })
             },
             nextStep() {
-
+                this.$v.$touch()
+                if (this.$v.$invalid) {
+                    swal("Не всі поля заповнено!", {
+                        icon: "error",
+                    });
+                    return
+                }
                 this.$parent.$emit('getData', this.stepData);
             },
             prevStep(){
