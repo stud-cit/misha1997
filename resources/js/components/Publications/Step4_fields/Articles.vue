@@ -132,13 +132,7 @@
                 })
             },
             nextStep() {
-                this.$v.$touch()
-                if (this.$v.$invalid) {
-                    swal("Не всі поля заповнено!", {
-                        icon: "error",
-                    });
-                    return
-                }
+
                 this.$parent.$emit('getData', this.stepData);
             },
             prevStep(){

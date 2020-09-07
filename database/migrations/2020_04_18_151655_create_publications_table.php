@@ -29,7 +29,7 @@ class CreatePublicationsTable extends Migration
             $table->string('city')->nullable(); // Місто видання
             $table->string('editor_name')->nullable(); // Назва редакції
             $table->boolean('languages')->nullable(); // Опубліковано мовами ОЕСР та ЄС
-            $table->integer('number_certificate')->nullable(); // № свідоцтва/рішення/патенту
+            $table->string('number_certificate')->nullable(); // № свідоцтва/рішення/патенту
             $table->string('applicant')->nullable(); // Заявник
             $table->string('date_application')->nullable(); // Дата подачі
             $table->string('date_publication')->nullable(); // Дата публікації

@@ -2,7 +2,7 @@
     <div>
         <div class="step-content">
             <div class="form-group">
-                <label class="item-title">Рік видання</label>
+                <label class="item-title">Рік видання *</label>
                 <div class="input-container">
                     <select class="item-value" v-model="stepData.year">
                         <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
@@ -13,15 +13,18 @@
             </div>
 
             <div class="form-group">
-                <label class="item-title">За редакцією</label>
+                <label class="item-title">За редакцією *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.by_editing">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
+                <div class="error" v-if="$v.stepData.by_editing.$error">
+                    Поле обов'язкове для заповнення
+                </div>
 
             </div>
             <div class="form-group">
-                <label class="item-title">Країна видання</label>
+                <label class="item-title">Країна видання *</label>
                 <div class="input-container">
                     <select class="item-value" v-model="stepData.country">
                         <option
@@ -35,28 +38,37 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Місто видання</label>
+                <label class="item-title">Місто видання *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.city">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
+                <div class="error" v-if="$v.stepData.city.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Видавництво</label>
+                <label class="item-title">Видавництво *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.editor_name">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
+                <div class="error" v-if="$v.stepData.editor_name.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Кількість сторінок</label>
+                <label class="item-title">Кількість сторінок *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.pages">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
+                <div class="error" v-if="$v.stepData.pages.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Опубліковано мовами ОЕСР та ЄС</label>
+                <label class="item-title">Опубліковано мовами ОЕСР та ЄС *</label>
                 <div class="input-container">
                     <select class="item-value" v-model="stepData.languages">
                         <option value="1">Так </option>
@@ -67,10 +79,13 @@
 
             </div>
             <div class="form-group">
-                <label class="item-title">DOI</label>
+                <label class="item-title">DOI *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.doi">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
+                <div class="error" v-if="$v.stepData.doi.$error">
+                    Поле обов'язкове для заповнення
                 </div>
             </div>
         </div>
@@ -83,6 +98,8 @@
 </template>
 
 <script>
+    import {required} from "vuelidate/lib/validators";
+
     export default {
 
         data() {
@@ -105,6 +122,32 @@
         created() {
             this.getCountry();
         },
+        validations: {
+
+            stepData: {
+
+                by_editing: {
+                    required
+                },
+                city: {
+                    required
+                },
+                editor_name: {
+                    required
+                },
+                pages: {
+                    required
+                },
+                doi: {
+                    required
+                },
+
+
+            },
+
+
+
+        },
         methods:{
             getCountry() {
                 axios.get('/api/country').then(response => {
@@ -112,6 +155,14 @@
                 })
             },
             nextStep() {
+                this.$v.$touch();
+                if (this.$v.$invalid) {
+                    swal("Не всі поля заповнено!", {
+                        icon: "error",
+                    });
+                    return
+                }
+
                 this.$parent.$emit('getData', this.stepData);
             },
             prevStep(){
