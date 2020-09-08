@@ -58,10 +58,11 @@
                     <tr>
                         <th scope="col">№</th>
 <!--                        <th scope="col">Роль</th>-->
-                        <th scope="col">Прізвище, Ім’я, По-батькові</th>
+                        <th scope="col">ПІБ користувача</th>
                         <th scope="col">Посада</th>
                         <th scope="col">Кафедра</th>
-                        <th scope="col">Факультет</th>
+                        <th scope="col">Інститут/
+                            факультет</th>
                         <th scope="col">E-mail</th>
                         <th scope="col">Рік народження</th>
 

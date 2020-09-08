@@ -404,7 +404,9 @@
                     }),
                 },
                 name: {
-                    required
+                    required: requiredIf ( function() {
+                        return this.otherAuthor == '2';
+                    })
                 }
 
             }
