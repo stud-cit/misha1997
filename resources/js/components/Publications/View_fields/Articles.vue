@@ -12,7 +12,7 @@
             <div class="col-lg-3 list-item list-title">Вид публікації:</div>
             <div class="col-lg-9 list-item list-text">{{data.publication_type.title}}</div>
         </li>
-        <template v-if="data.supervisor_id!=null">
+        <template v-if="data.supervisor_id != null">
             <li class="row">
                 <div class="col-lg-3 list-item list-title">Під керівництвом:</div>
                 <div class="col-lg-9 list-item list-text">Так</div>
@@ -22,7 +22,7 @@
                 <div class="col-lg-9 list-item list-text">{{data.supervisor.name}}</div>
             </li>
         </template>
-        
+
         <template v-else>
             <li class="row">
                 <div class="col-lg-3 list-item list-title">Під керівництвом:</div>
@@ -30,7 +30,7 @@
             </li>
         </template>
 
-        
+
 
         <template v-if="data.science_type_id!=null">
             <li class="row">
@@ -45,7 +45,7 @@
                 <div class="col-lg-3 list-item list-title">Квартиль журналу (БД Scopus):</div>
                 <div class="col-lg-9 list-item list-text">{{data.quartil_scopus}}</div>
             </li>
-        
+
             <li class="row">
                 <div class="col-lg-3 list-item list-title">Імпакт-фактор (БД WoS):</div>
                 <div class="col-lg-9 list-item list-text">{{data.impact_factor}}</div>

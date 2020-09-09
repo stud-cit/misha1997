@@ -4,27 +4,35 @@
 
         <div class="container">
 
-            <nav class="navbar navbar-expand-lg navbar-light ">
-                <a class="navbar-brand" href=""><img src="/img/logo.svg" alt=""></a>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <router-link class="navbar-brand" :to="{path: '/home'}"><img src="/img/logo.svg" alt=""></router-link>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="navbar">
                     <span class="navbar-toggler-icon" ></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav" v-if="navbar">
                     <ul class="navbar-nav">
-                        <li class="nav-item ">
-                            <a class="nav-link"  href="/home" >Головна</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle"  href="#" data-toggle="dropdown" >Мої публікації
+                                <img class="ml-1 pb2" src="/img/arrow-down.svg" alt=""></a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <router-link :to="{name: 'publications'}" class="dropdown-item">Переглянути список публікацій</router-link>
+                                <router-link :to="{name: 'publications-add'}" class="dropdown-item">Додати нову публікацію</router-link>
+                                <router-link :to="{name: 'users'}" class="dropdown-item">Список усіх користувачів</router-link>
+                                <router-link :to="{name: 'publications'}" class="dropdown-item success" @click="">Перевести сервіс в звичайний режим</router-link>
+                                <router-link :to="{name: 'publications'}" class="dropdown-item danger" @click="">Перевести сервіс в режим  з обмеженим доступом</router-link>
+                            </div>
 
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" >Підтримка</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/profile/1" >Профіль</a>
+                            <router-link class="nav-link" :to="{path: '/profile/1'}" >Профіль</router-link>
                         </li>
                         <li class="nav-item">
 
 <!--                            <a class="nav-link note" exist :to="{name: 'notifications'}" active-class="active">Повідомлення&nbsp;<span class="number">2</span></a>-->
-                            <a class="nav-link" href="/notifications" >Повідомлення</a>
+                            <router-link class="nav-link" :to="{path: '/notifications'}" >Повідомлення</router-link>
                         </li>
                     </ul>
                 </div>
@@ -56,10 +64,21 @@
             }
 
         },
+        watch: {
+            '$route' () {
+                $('.navbar-collapse').collapse('hide');
+            }
+        }
 
     }
 </script>
 <style scoped lang="scss">
+    .bg-light{
+        background-color: #fff !important;
+    }
+    .pb2{
+        padding-bottom: 2px;
+    }
     .header{
         position: relative;
         padding-top: 25px;
@@ -109,6 +128,22 @@
                 a{
                     color: #465E82;
                 }
+                .success{
+
+                    background-color: #7EF583;
+                    color: #FFFFFF;
+                    &:hover{
+                        opacity: 0.85;
+                    }
+                }
+                .danger{
+
+                    background-color: #FF6A6A;
+                    color: #FFFFFF;
+                    &:hover{
+                        opacity: 0.85;
+                    }
+                }
             /*    .number{*/
 
             /*        border-radius: 50%;*/
@@ -127,6 +162,28 @@
             /*}*/
         }
     }
+    .dropdown-menu{
+        padding: 0
+    }
+    .dropdown-item {
+        max-width: 220px;
+        white-space: normal;
+        font-family: Arial;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 20px;
+        line-height: 1.2;
+        text-align: center;
+        color: #465E82;
+        padding: 10px 15px;
+        &:active{
+            color: #fff !important;
+        }
+    }
+    .dropdown-toggle::after{
+        display: none;
+    }
+
     @media (max-width: 1365px ) and (min-width: 992px) {
 
 
@@ -135,7 +192,7 @@
             left: 20px;
         }
         .navbar-expand-lg {
-            padding-left: 60px;
+            padding-left: 125px;
 
 
             .navbar-nav {
@@ -148,6 +205,7 @@
                 }
             }
         }
+
     }
     @media (max-width: 991px )  {
         .header {
@@ -177,6 +235,13 @@
                 }
             }
         }
+        /*.dropdown-menu{*/
+        /*    border: none;*/
+        /*}*/
+        .dropdown-item {
+            max-width: 100%;
+
+        }
     }
     @media (max-width: 575px )  {
         .header {
@@ -201,6 +266,12 @@
 
                 }
             }
+        }
+        .dropdown-item {
+
+
+            font-size: 16px;
+
         }
     }
 </style>

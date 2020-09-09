@@ -1,7 +1,7 @@
 <template>
 
     <div class="container">
-        <h1 class="blue-page-title">Профіль - Бабій Євгеній Андрійович</h1>
+        <h1 class="blue-page-title">Профіль - {{data.name}}</h1>
         <div class="page-content">
             <ul class=" list-view">
 
@@ -19,7 +19,7 @@
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Роль:</div>
                     <div class="col-lg-9 list-item list-text">
-                        <div class="input-container">
+                        <div class="input-container" v-if="superAdmin">
                             <select  v-model="data.roles_id">
                                 <option
                                     v-for="(item, index) in roles"
@@ -30,6 +30,10 @@
                             </select>
                             <div class="hint" ><span>title</span></div>
                         </div>
+                        <template v-else>
+                            {{data.role.name}}
+                        </template>
+
 
                     </div>
                 </li>
@@ -136,7 +140,8 @@
     export default {
         data() {
             return {
-                access: true,
+                // access: true,
+                superAdmin: false,
                 data: {
                     name: "",
                     roles_id: "",
@@ -167,7 +172,7 @@
         methods: {
             getData() {
                 axios.get(`/api/author/${this.$route.params.id}`).then(response => {
-                
+
                     this.data = response.data;
                 })
             },

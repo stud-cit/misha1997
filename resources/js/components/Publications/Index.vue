@@ -41,7 +41,8 @@
                         </div>
                     </div>
                     <div class="form-group col-lg-4">
-                        <label >Рік впровадження</label>
+                        <label >Рік
+                            видання</label>
                         <div class="input-container">
                             <select  v-model="filters.year">
                                 <option value=""></option>
@@ -102,11 +103,11 @@
                         <th scope="col">№</th>
                         <th scope="col">Вид
                             пуб-ції</th>
-                        <th scope="col">ПІБ автора\
+                        <th scope="col">Прізвище та ініціали автора\
                             співавторів</th>
                         <th scope="col">Назва публікації</th>
                         <th scope="col">Рік
-                            впров.</th>
+                            видання</th>
                         <th scope="col">БД
                             Scopus\
                             WoS</th>
