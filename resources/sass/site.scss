@@ -18,6 +18,13 @@ body {
     font-size: 16px;
     margin: 10px 0;
 }
+.pagination{
+    justify-content: center;
+    margin: 20px;
+    .page-link:focus{
+        box-shadow: none;
+    }
+}
 .wrapper{
 
     padding: 45px 0;

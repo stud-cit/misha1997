@@ -81,6 +81,19 @@
                     </tr>
                     </tbody>
                 </table>
+                <paginate
+                    v-model="currentPage"
+                    :page-count="numPage"
+                    :page-range="2"
+                    :prev-text="'<'"
+                    :next-text="'>'"
+
+                    :container-class="'pagination'"
+                    page-class="page-item"
+                    page-link-class="page-link"
+                    prev-class="page-link"
+                    next-class="page-link">
+                </paginate>
             </div>
         </div>
     </div>
@@ -88,6 +101,7 @@
 
 <script>
     import {required, requiredIf} from "vuelidate/lib/validators";
+    import Pagination from "./Pagination";
     export default {
         data() {
             return {
@@ -98,15 +112,18 @@
                     department: '',
                     birthday: ''
                 },
+                currentPage: 1,
+                perPage: 15,
+                numPage: 1,
 
             };
         },
         components: {
-
+            Pagination
         },
         computed: {
             filteredList() {
-                return this.data.filter(users => {
+                let list = this.data.filter(users => {
                     let result = 1;
                     let keys = Object.keys(this.filters);
                     let values = Object.values(this.filters);
@@ -121,9 +138,13 @@
                     }
                     return result
 
-                })
+                });
+                this.numPage = Math.ceil(list.length/this.perPage);
+
+                return list.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
             }
         },
+
         mounted () {
             this.getData();
         },

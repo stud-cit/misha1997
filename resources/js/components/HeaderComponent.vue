@@ -5,7 +5,7 @@
         <div class="container">
 
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <router-link class="navbar-brand" :to="{path: '/home'}"><img src="/img/logo.svg" alt=""></router-link>
+                <a class="navbar-brand" href="/home"><img src="/img/logo.svg" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="navbar">
                     <span class="navbar-toggler-icon" ></span>
                 </button>
