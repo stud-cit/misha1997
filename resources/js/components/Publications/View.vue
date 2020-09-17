@@ -3,7 +3,7 @@
 
     <div class="container">
         <h1 class="blue-page-title">{{data.title}}</h1>
-        <div class="page-content">
+        <div class="page-content" v-if="data.publication_type">
             <articles :data="data" v-if="data.publication_type.type == 'article'"></articles>
             <book :data="data" v-if="data.publication_type.type == 'book'"></book>
             <book-part :data="data" v-if="data.publication_type.type == 'book-part'"></book-part>
@@ -14,7 +14,7 @@
             <electronic :data="data" v-if="data.publication_type.type == 'electronic'"></electronic>
             <div class="edit-block">
                 <button class="mr-2 edit">Редагувати</button>
-                <button class="delete">Видалити</button>
+                <button class="delete" @click="deletePublication">Видалити</button>
             </div>
         </div>
 
@@ -41,7 +41,7 @@
             }
         },
 
-        mounted () {
+        created () {
             this.getPublicationData();
         },
         computed: {
@@ -49,12 +49,31 @@
         },
         methods: {
             getPublicationData(){
-                console.log(this.$route.params.id);
+
                 axios.get(`/api/publication/${this.$route.params.id}`).then(response => {
                     this.data = response.data;
                 }).catch(error => {
                     console.log(error);
                 });
+            },
+            deletePublication(){
+                let question = confirm("Ви підтверджуєте видалення публікації");
+                if(question) {
+                    axios.post(`/api/delete-publication/${this.$route.params.id}`).then(response =>{
+
+                        this.$router.push('/publications');
+
+                    }).then(()=>{
+                        swal("Публікацію успішно видалено!", {
+                            icon: "success",
+                        });
+                    });
+
+                }
+                else{
+                    return false;
+                }
+
             }
         },
         components: {

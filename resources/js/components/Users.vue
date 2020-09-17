@@ -70,7 +70,7 @@
                     </thead>
                     <tbody>
                     <tr v-for="(item, index) in filteredList" :key="item.id">
-                        <td scope="row">{{ index+1 }}</td>
+                        <td scope="row">{{ index+1+(currentPage-1)*perPage}}</td>
 <!--                        <td>{{ item.role.name }}</td>-->
                         <td><router-link :to="{path: `/profile/${item.id}`}">{{ item.name }}</router-link></td>
                         <td></td>
@@ -84,7 +84,7 @@
                 <paginate
                     v-model="currentPage"
                     :page-count="numPage"
-                    :page-range="2"
+
                     :prev-text="'<'"
                     :next-text="'>'"
 
@@ -101,7 +101,7 @@
 
 <script>
     import {required, requiredIf} from "vuelidate/lib/validators";
-    import Pagination from "./Pagination";
+
     export default {
         data() {
             return {
@@ -113,13 +113,13 @@
                     birthday: ''
                 },
                 currentPage: 1,
-                perPage: 15,
+                perPage: 10,
                 numPage: 1,
 
             };
         },
         components: {
-            Pagination
+
         },
         computed: {
             filteredList() {

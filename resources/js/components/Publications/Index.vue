@@ -3,12 +3,13 @@
     <div class="container page-content">
         <h1 class="page-title">Перегляд публікацій</h1>
 <!--        <h2 class="subtitle">Мої публікації</h2>-->
+
         <!--        exports-->
         <div class="exports">
 
             <export-rating class="export-block"></export-rating>
 
-            <export-publications class="export-block" :exportList="filteredList"></export-publications>
+            <export-publications class="export-block" :exportList="exportOwnPublication"></export-publications>
         </div>
         <!---->
         <div class="main-content">
@@ -118,7 +119,7 @@
                     </thead>
                     <tbody>
                     <tr v-for="(item, index) in filteredList" :key="index">
-                        <td scope="row">{{ index+1 }}</td>
+                        <td scope="row">{{ index+1+(currentPage-1)*perPage }}</td>
                         <td>{{ item.publication_type.title }}</td>
                         <td>{{ item.initials }}</td>
                         <td><router-link :to="{path: `/publications/${item.id}`}"> {{ item.title }} </router-link> </td>
@@ -133,12 +134,25 @@
                     </tr>
                     </tbody>
                 </table>
+                <paginate
+                    v-model="currentPage"
+                    :page-count="numPage"
+
+                    :prev-text="'<'"
+                    :next-text="'>'"
+
+                    :container-class="'pagination'"
+                    page-class="page-item"
+                    page-link-class="page-link"
+                    prev-class="page-link"
+                    next-class="page-link">
+                </paginate>
                 <div class="edit-block">
                     <button class="mr-2 edit">Редагувати</button>
                     <button class="delete">Видалити</button>
                 </div>
             </div>
-            <router-view></router-view>
+<!--            <router-view></router-view>-->
         </div>
     </div>
 </template>
@@ -150,12 +164,15 @@
     export default {
         data() {
             return {
+                currentPage: 1,
+                perPage: 10,
+                numPage: 1,
                 fullSearch: false,
                 data: [],
                 countries: [],
                 publicationTypes: [],
                 exportData: {},
-
+                exportOwnPublication: [],
 
                 filters: {
                     title: '',
@@ -229,9 +246,11 @@
                     return result
 
                 });
+                this.exportOwnPublication = arr;
+                this.numPage = Math.ceil(arr.length/this.perPage);
 
 
-                return arr;
+                return arr.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
             },
             years() {
                 const year = new Date().getFullYear();
