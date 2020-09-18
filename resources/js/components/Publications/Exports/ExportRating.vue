@@ -3,7 +3,7 @@
 
 
 
-        <button class="export-button" @click="exportRating"><img src="/img/download.svg" alt=""> Експорт рейтингових показників</button>
+        <button class="export-button" @click="exportRating"><img src="/img/download.png" alt=""> Експорт рейтингових показників</button>
 
         <table id="exportRating" v-show="false" ref="exportR">
             <tr>

@@ -144,7 +144,7 @@ body {
         position: absolute;
         left: 15px;
         top: 7px;
-        background: url("/img/hint.svg");
+        background: url("/img/hint.png");
     }
     .hint:hover {
         cursor: help;
@@ -455,6 +455,14 @@ button{
         margin-right: 10px;
 
     }
+}
+//animation
+.component-fade-enter-active, .component-fade-leave-active {
+    transition: opacity .5s ease;
+}
+.component-fade-enter, .component-fade-leave-to
+    /* .component-fade-leave-active до версии 2.1.8 */ {
+    opacity: 0;
 }
 
 @media (max-width: 575px) {

@@ -1,12 +1,14 @@
 <template>
     <div class="container page-content">
         <h1 class="page-title">Додати нову публікацію</h1>
-        <keep-alive>
-        <step1 v-if="currentStep==1" @getData="getStepData($event)"></step1>
-        <step2 v-if="currentStep==2" @getData="getStepData($event)" @prevStep="prevStep"></step2>
-        <step3 v-if="currentStep==3" @getData="getStepData($event)" @prevStep="prevStep" ></step3>
-        <step4 v-if="currentStep==4" @getData="getStepData($event)" @prevStep="prevStep" :publicationType="stepData.publication_type.type"></step4>
-        </keep-alive>
+        <transition name="component-fade" mode="out-in">
+            <keep-alive>
+                <step1 v-if="currentStep==1" @getData="getStepData($event)"></step1>
+                <step2 v-if="currentStep==2" @getData="getStepData($event)" @prevStep="prevStep"></step2>
+                <step3 v-if="currentStep==3" @getData="getStepData($event)" @prevStep="prevStep" ></step3>
+                <step4 v-if="currentStep==4" @getData="getStepData($event)" @prevStep="prevStep" :publicationType="stepData.publication_type.type"></step4>
+            </keep-alive>
+        </transition>
     </div>
 </template>
 

@@ -2,21 +2,27 @@
 
 
     <div class="container">
+
         <h1 class="blue-page-title">{{data.title}}</h1>
+        <transition name="component-fade" mode="out-in">
         <div class="page-content" v-if="data.publication_type">
-            <articles :data="data" v-if="data.publication_type.type == 'article'"></articles>
-            <book :data="data" v-if="data.publication_type.type == 'book'"></book>
-            <book-part :data="data" v-if="data.publication_type.type == 'book-part'"></book-part>
-            <thesis :data="data" v-if="data.publication_type.type == 'thesis'"></thesis>
-            <patent :data="data" v-if="data.publication_type.type == 'patent'"></patent>
-            <certificate :data="data" v-if="data.publication_type.type == 'certificate'"></certificate>
-            <methodical :data="data" v-if="data.publication_type.type == 'methodical'"></methodical>
-            <electronic :data="data" v-if="data.publication_type.type == 'electronic'"></electronic>
+
+                <articles :data="data" v-if="data.publication_type.type == 'article'"></articles>
+                <book :data="data" v-if="data.publication_type.type == 'book'"></book>
+                <book-part :data="data" v-if="data.publication_type.type == 'book-part'"></book-part>
+                <thesis :data="data" v-if="data.publication_type.type == 'thesis'"></thesis>
+                <patent :data="data" v-if="data.publication_type.type == 'patent'"></patent>
+                <certificate :data="data" v-if="data.publication_type.type == 'certificate'"></certificate>
+                <methodical :data="data" v-if="data.publication_type.type == 'methodical'"></methodical>
+                <electronic :data="data" v-if="data.publication_type.type == 'electronic'"></electronic>
+
             <div class="edit-block">
                 <button class="mr-2 edit">Редагувати</button>
                 <button class="delete" @click="deletePublication">Видалити</button>
             </div>
+
         </div>
+        </transition>
 
     </div>
 

@@ -19,7 +19,9 @@
     <div id="app">
         <header-component></header-component>
         <div class="wrapper">
-            <router-view></router-view>
+            <transition name="component-fade" mode="out-in">
+                <router-view></router-view>
+            </transition>
         </div>
 
     </div>
