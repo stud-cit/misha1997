@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', 'PassportController@index');
+Route::get('/?mode={any}', 'PassportController@mode')->where('any', '0-9');
 
-Route::get('/{any}', function () {
+Route::get('/{any?}', function () {
     return view('app');
 })->where('any', '.*');

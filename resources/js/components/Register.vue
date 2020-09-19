@@ -90,8 +90,9 @@
             },
             save() {
                 axios.post('/api/register', this.data)
-                    .then(() => {
-                        window.location = '/home';
+                    .then((response) => {
+                        this.$store.dispatch('setUser', response.data)
+                        this.$router.push('/home');
                     })
             }
         },

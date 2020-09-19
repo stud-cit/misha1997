@@ -31,12 +31,13 @@
                 let location = '';
                 try {
                     location = this.auth_window.location.toString()
+                    this.$store.dispatch('setKey', location.split('=')[1])
                 } catch (err) {
                     console.log(err);
                 }
                 if (location.indexOf("jv.") > 0) {
                     this.auth_window.close();
-                    window.location = '/home';
+                    window.location.href = '/home';
                 }
             },
             open_auth() {
