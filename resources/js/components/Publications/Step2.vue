@@ -4,310 +4,636 @@
             Крок 2 з 4. Додання авторів
         </p>
         <div class=" step-content">
-            <div class="step-item">
-                <p class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) :</p>
-                <div class="button-group">
-                    <button class="small-box btn-blue" @click="showNewAuthor(1)">
-                        Додати автора з СумДУ
-                    </button>
-                    <button class="small-box btn-blue" @click="showNewAuthor(2)">
-                        Додати іншого автора
-                    </button>
+            <div class="form-group">
+                <label class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) </label>
+                <div class="add-group">
+                    <div class="input-container">
+                        <button class="add-button btn-blue" @click="showNewAuthor(1)">
+                            Додати автора з СумДУ
+                        </button>
+                        <div class="hint white-hint" ><span>Додати автора з СумДУ</span></div>
+                    </div>
+                    <div class="input-container">
+                        <button class="add-button" @click="showNewAuthor(2)">
+                            Створити нового автора
+                        </button>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    </div>
                 </div>
             </div>
 
-<!--            add to db author-->
-            <div class="other-author" v-if="otherAuthor" >
-                <div class="wrapper" >
+            <!--add to db author-->
+            <div class="other-author" v-if="otherAuthor">
+                <div class="popup-layout">
 
-<!--ssu-->
+                    <!--ssu-->
 
-                    <div class="container" v-if="otherAuthor == 1">
+                    <template v-if="otherAuthor == 1">
                         <h2 class="popup-title">Додати автора з СумДУ</h2>
-                        <div class="step-item" >
-                            <p class="item-title">Прізвище, ім’я, по-батькові :</p>
-                            <div class="authors supervisor">
+                        <div class="form-group">
+                            <label class="item-title">Оберіть категорію</label>
+                            <div class="input-container">
+                                <select class="item-value" v-model="selectCateg" @change="getPersonAPI">
+                                    <option
+                                        v-for="item in categ"
+                                        :key="item.value"
+                                        :value="item.value"
+                                    >
+                                        {{item.name}}
+                                    </option>
+                                </select>
+                                <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
+                            </div>
+                        </div>
+                        <div v-if="loadingPersons" class="loading" >Завантаження</div>
+
+
+                        <div class="form-group" v-if="persons.length > 0">
+                            <label class="item-title">Прізвище, ім’я, по-батькові</label>
+                            <div class="input-container authors">
                                 <multiselect
                                     v-model="ssuAuthor"
-                                    :options="authorsData"
-                                    :placeholder="'Пошук в базі данних сайту'"
+                                    label="name"
+                                    :options="persons"
+                                    :preserve-search="true"
+                                    :placeholder="'Пошук в базі данних СумДУ'"
                                     :selectLabel="'Натисніть для вибору'"
                                     :selectedLabel="'Вибрано'"
                                     :deselectLabel="'Натисніть для видалення'"
+                                    :custom-label="nameWithInfo"
                                 >
                                     <span slot="noResult">По даному запиту немає результатів</span>
                                 </multiselect>
+                                <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                             </div>
 
                         </div>
-                        <div class="step-button-group mt-2">
-                            <button class="next active" @click="">Додати <span>&gt;</span></button>
+                        <div class="step-button-group sumdu-base ">
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
-                        </div>
-                    </div>
-
-<!--     other author-->
-
-                    <div class="container" v-if="otherAuthor == 2">
-                        <h2 class="popup-title">Додавання нового автора</h2>
-                        <div class="step-item">
-                            <label class="item-title">Прізвище, ім’я, по-батькові :</label>
-                            <input class="item-value" type="text" v-model="newAuthor.name">
+                            <button class="next active" @click="addNewAuthor(ssuAuthor)">Додати </button>
 
                         </div>
-                        <div class="step-item">
-                            <label class="item-title">Псевдонім :</label>
-                            <input class="item-value" type="text" v-model="newAuthor.alias">
+                    </template>
 
-                        </div>
-                        <div class="step-item">
-                            <label class="item-title">Місце роботи :</label>
-                            <input class="item-value" type="text" v-model="newAuthor.job">
+                    <!--other author-->
+                    <template v-if="otherAuthor == 2">
+                        <h2 class="popup-title">Створення нового автора</h2>
+                        <ul class=" list-view">
 
-                        </div>
-                        <div class="step-item">
-                            <label class="item-title">Країна :</label>
-                            <input class="item-value" type="text" v-model="newAuthor.country">
 
-                        </div>
-                        <div class="step-item">
-                            <label class="item-title">Індекс Хірша :</label>
-                            <input class="item-value" type="text" v-model="newAuthor.hIndex">
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Прізвище, ім’я, по-батькові *</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <input class="item-value" type="text" v-model="newAuthor.name">
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                    </div>
+                                    <div class="error" v-if="$v.newAuthor.name.$error">
+                                        Поле обов'язкове для заповнення
+                                    </div>
+                                </div>
 
-                        </div>
-                        <div class="step-item">
-                            <label class="item-title">Ідентифікатор профілю :</label>
-                            <input class="item-value" type="text" v-model="newAuthor.profId">
 
-                        </div>
+                            </li>
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Місце роботи</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <select class="item-value" v-model="jobType">
+                                            <option value="1">Учбовий заклад</option>
+                                            <option value="1">Підприємство</option>
+                                            <option value="0">Не працює</option>
+                                        </select>
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                    </div>
+
+
+                                </div>
+
+                            </li>
+                            <li class="row" v-if="jobType == 1">
+                                <div class="col-lg-3 list-item list-title">Назва учбового закладу/підприємства</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <input class="item-value" type="text" v-model="newAuthor.job">
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                    </div>
+                                    <div class="error" v-if="$v.newAuthor.job.$error">
+                                        Поле обов'язкове для заповнення
+                                    </div>
+                                </div>
+
+                            </li>
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Країна автора</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <select class="item-value" v-model="newAuthor.country">
+                                            <option
+                                                v-for="(item, index) in country"
+                                                :key="index"
+                                                :value="item.name"
+                                            >{{item.name}}</option>
+                                        </select>
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
+                                    </div>
+                                </div>
+
+                            </li>
+
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Індекс Гірша</div>
+                                <div class="col-lg-9  list-item list-text d-flex">
+                                    <div class="col-lg-6 two-col pr-2">
+                                        <label for="">БД Scopus</label>
+                                        <div class=" input-container">
+                                            <input class="item-value" type="text" v-model="newAuthor.scopus_autor_id">
+                                            <div class="hint" ><span>title</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 two-col">
+                                        <label for="">БД WoS</label>
+                                        <div class=" input-container">
+                                            <input class="item-value" type="text" v-model="newAuthor.h_index">
+                                            <div class="hint" ><span>title</span></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </li>
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Research ID</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <input class="item-value" type="text" v-model="newAuthor.scopus_researcher_id">
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                    </div>
+                                </div>
+
+                            </li>
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">ORCID</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <input class="item-value" type="text" v-model="newAuthor.orcid">
+                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                    </div>
+                                </div>
+
+                            </li>
+                        </ul>
                         <div class="step-button-group">
-                            <button class="next active" @click="">Додати <span>&gt;</span></button>
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
+                            <button class="next active" @click="addNewAuthor(newAuthor)">Додати </button>
+
                         </div>
-                    </div>
+                    </template>
+
+
+
+
                 </div>
             </div>
-
-
-
-            <div class="step-item">
-                <p class="item-title">Під керівництвом :</p>
-                <div class="categories-elem">
-                    <input id="leadership1" type="radio" v-model="stepData.useSupervisor" value="1">
-                    <label class="small-box" for="leadership1">Так</label>
-                    <input id="leadership0" type="radio" v-model="stepData.useSupervisor" value="0">
-                    <label class="small-box" for="leadership0">Ні</label>
+            <div class="form-group">
+                <label class="item-title">Під керівництвом</label>
+                <div class="input-container">
+                    <select class="item-value" v-model="stepData.useSupervisor">
+                        <option value="1">Так </option>
+                        <option value="0">Ні </option>
+                    </select>
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
+
             </div>
-            <div class="step-item" v-if="stepData.useSupervisor == '1'">
-                <p class="item-title">Керівник :</p>
-                <div class="authors supervisor">
+
+            <div class="form-group" v-if="stepData.useSupervisor == '1'">
+                <label class="item-title">Керівник *</label>
+                <div class="input-container authors">
                     <multiselect
                         v-model="stepData.supervisor"
-                        :options="authorsData"
-                        :placeholder="'Пошук в базі данних сайту'"
-                        :selectLabel="'Натисніть для вибору'"
-                        :selectedLabel="'Вибрано'"
-                        :deselectLabel="'Натисніть для видалення'"
+                        :options="authors"
+                        label="name"
+                        :searchable="true"
+                        placeholder="Пошук в базі данних сайту"
+                        selectLabel="Натисніть для вибору"
+                        selectedLabel="Вибрано"
+                        deselectLabel="Натисніть для видалення"
+                        :custom-label="nameWithInfo"
                     >
                         <span slot="noResult">По даному запиту немає результатів</span>
                     </multiselect>
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
+
+                <div class="error" v-if="$v.stepData.supervisor.$error">
+                    Поле обов'язкове для заповнення
                 </div>
 
             </div>
-            <div class="step-item">
-                <p class="item-title" >Автори :</p>
 
-                <button class="small-box btn-blue  mb-4" @click="addAuthor">
-                    Додати автора
-                </button>
-                <div v-for="(item, i) in stepData.authors" :key="i" class="mb-2">
 
-                    <div class="authors" >
-                        <p class="num">{{'№&nbsp;' + (i+1)}}</p>
-                        <multiselect 
-                            v-model="item.name"
-                            :options="authorsData"
-                            :placeholder="'Пошук в базі данних сайту'"
-                            :selectLabel="'Натисніть для вибору'"
-                            :selectedLabel="'Вибрано'"
-                            :deselectLabel="'Натисніть для видалення'"
-                            :disabled="item.useAlias"
-                        >
-                            <span slot="noResult">По даному запиту немає результатів</span>
-                        </multiselect>
-                        
-                        <button class="authors-btn" @click="useAlias(i)"> {{ item.useAlias ? 'Використати ПІБ' : 'Використати псевдонім'}}</button>
-                        <button class="remove-author" @click="removeAuthor(i)">&times;</button>
-                        
-                        
-                        
+            <div class="form-group">
+                <label class="item-title" >Автори:</label>
+                <div class="add-group">
+                    <div class="input-container">
+                        <button class="add-button btn-blue" @click="addAuthor">
+                            Додати автора
+                        </button>
+                        <div class="hint white-hint" ><span>Прізвище, ім’я, по-батькові</span></div>
                     </div>
-                    <div class="authors alias" v-if="item.useAlias">
-                        <multiselect   
-                            v-model="item.alias"
-                            :options="item.aliasOptions"
-                            :placeholder="'Виберіть псевдонім'"
-                            :selectLabel="'Натисніть для вибору'"
-                            :selectedLabel="'Вибрано'"
-                            :deselectLabel="'Натисніть для видалення'"
-                        >
-                            <span slot="noResult">По даному запиту немає результатів</span>
-                        </multiselect>
-                    </div>
-                    
+                </div>
+            </div>
+
+            <div v-for="(item, i) in $v.stepData.authors.$each.$iter" :key="i" class="form-group">
+                <label for="">Прізвище, ім’я, по-батькові автора *</label>
+                <div class="input-container authors">
+                    <multiselect
+                        v-model="stepData.authors[i]"
+                        :searchable="true"
+                        :options="authors"
+                        selectLabel="Натисніть для вибору"
+                        selectedLabel="Вибрано"
+                        deselectLabel='Натисніть для видалення'
+                        placeholder="Пошук в базі данних сайту"
+                        :custom-label="nameWithInfo"
+                    >
+                        <span slot="noResult">По даному запиту немає результатів</span>
+                    </multiselect>
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <button class="remove-author" @click="removeAuthor(i)">&times;</button>
+                </div>
+                <div class="error" v-if="$v.stepData.authors.$each.$iter[i].$error">
+                    Поле обов'язкове для заповнення
                 </div>
 
+
+            </div>
+            <div class="form-group">
+                <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="stepData.initials">
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
+                </div>
+                <div class="error" v-if="$v.stepData.initials.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
 
         </div>
         <div class="step-button-group">
-            <button class="next active" @click="nextStep">Продовжити <span>&gt;</span></button>
             <button class="prev" @click="prevStep">На попередній крок</button>
+            <button class="next active" @click="nextStep">Продовжити </button>
+
         </div>
     </div>
 </template>
 
 <script>
-    import Multiselect from 'vue-multiselect';
 
+    import Multiselect from 'vue-multiselect';
+    import {required, requiredIf} from "vuelidate/lib/validators";
     export default {
         name: "Step2",
         data() {
             return {
+                jobType: null,
+                modalAlias: false,
+
+
+                categ: [
+                    {
+                        name: "Категорії",
+                        value: null
+                    },
+                    {
+                        name: "Студент",
+                        value: "categ1/2"
+                    },
+                    {
+                        name: "Аспірант",
+                        value: "categ1/4"
+                    },
+                    {
+                        name: "Випускник",
+                        value: "categ1/8"
+                    },
+                    {
+                        name: "Співробітник",
+                        value: "categ2/2"
+                    },
+                    {
+                        name: "Викладач",
+                        value: "categ2/4"
+                    },
+                    {
+                        name: "Менеджер",
+                        value: "categ2/8"
+                    }
+                ],
+                selectCateg: null,
+                loadingPersons: false,
+                ssuAuthor: "",
+                persons: [],
+                supervisors: [],
+                authors: [],
+                job: "",
+                country: [],
                 otherAuthor: false,
                 newAuthor: {
+                    guid: null,
+                    job: null,
                     name: '',
-                    alias: '',
-                    job: '',
-                    country: '',
-                    hIndex: '',
-                    profId: ''
-                },
-                ssuAuthor: '',
-                authorsData: ['Петренко', 'Іванов', 'Іваненко', 'Петросян'],
+                    country: "Україна",
+                    h_index: '',
+                    scopus_autor_id: '',
+                    scopus_researcher_id: '',
+                    orcid: '',
 
+                },
                 stepData: {
                     useSupervisor: '0',
                     supervisor: '',
                     authors: [
                         {
                             name: '',
-                            useAlias: false,
-                            alias: '',
-                            aliasOptions: ['Petrenko', 'Петренко']
+                            faculty: "",
+                            academic_code: ""
                         },
-                        
-                       
                     ],
-
+                    initials: '',
                 }
-
             }
         },
         components: {
             Multiselect,
         },
-        methods:{
+        created() {
+            this.getAuthors();
+        },
+
+        validations: {
+
+            stepData: {
+                supervisor: {
+                    required: requiredIf ( function() {
+                        return this.stepData.useSupervisor == '1';
+                    })
+                },
+                authors: {
+                    required,
+                    $each: {
+                        name: {
+                            required,
+                        }
+                    }
+                },
+                initials: {
+                    required
+                }
+
+            },
+            newAuthor: {
+                required: requiredIf ( function() {
+                    return this.otherAuthor == '2';
+                }),
+
+                job: {
+                    required: requiredIf ( function() {
+                        return this.jobType > 0;
+                    }),
+                },
+                name: {
+                    required: requiredIf ( function() {
+                        return this.otherAuthor == '2';
+                    })
+                }
+
+            }
+
+
+        },
+        methods: {
+
+            nameWithInfo({name, faculty, academic_code, job}) {
+                if(name == "") {
+                    return "Пошук в базі данних сайту"
+                } else {
+                    return `${name} — ${academic_code ? academic_code : (faculty ? faculty : job)}`
+                }
+            },
             nextStep () {
+                this.$v.stepData.$touch();
+                if (this.$v.stepData.$invalid) {
+                    swal("Не всі поля заповнено!", {
+                        icon: "error",
+                    });
+                    return
+                }
+
+
                 this.$emit('getData', this.stepData);
             },
             prevStep () {
                 this.$emit('prevStep');
             },
-            addAuthor(){
+            addAuthor() {
                 this.stepData.authors.push({
                     name: '',
-                    useAlias: false,
-                    alias: '',
-                    aliasOptions: []
+                    faculty: "",
+                    academic_code: ""
                 })
             },
-            removeAuthor(i){
-                this.stepData.authors.splice(i, 1);
+            removeAuthor(i) {
+                if(this.stepData.authors.length>1) {
+                    this.stepData.authors.splice(i, 1);
+                }
+                else{
+                    swal("Повинен бути хоча б один автор!", {
+                        icon: "error",
+                    });
+                }
+            },
+            showNewAuthor(n) {
+                this.getCountry();
+                this.otherAuthor = n;
+            },
+            getPersonAPI() {
+                if(this.selectCateg) {
+                    this.loadingPersons = true;
+                    this.persons = [];
+                    axios.get(`/api/persons/${this.selectCateg}`).then(response => {
+                        return response.data.result.map(item => {
+                            return {
+                                guid: item.ID_FIO,
+                                name: item.F_FIO + " " + item.I_FIO + " " + item.O_FIO,
+                                academic_code: item.NAME_GROUP,
+                                faculty: item.NAME_DIV
+                            }
+                        });
+                    }).then(result => {
+                        this.persons = result;
+                        this.loadingPersons = false;
+                    }).catch(() => {
+                        this.loadingPersons = false;
+                    })
+                }
+            },
+            getAuthors() {
+                axios.get(`/api/authors`).then(response => {
+                    console.log(response.data)
+                    this.authors = response.data;
+                })
             },
 
-            useAlias (i) {
-               this.stepData.authors[i].useAlias = !this.stepData.authors[i].useAlias;
+            addNewAuthor(newAuthor) {
+
+                this.$v.newAuthor.$touch()
+                if (this.$v.newAuthor.$invalid) {
+                    swal("Не всі поля заповнено!", {
+                        icon: "error",
+                    });
+                    return
+                }
+
+                newAuthor.job = this.jobType == 1 ? newAuthor.job : "Не працює";
+                axios.post('/api/author', newAuthor)
+                .then((response) => {
+                    if(response.data.status == 'ok') {
+                        this.ssuAuthor = "";
+                        this.otherAuthor = false;
+                        this.authors.push(response.data.user);
+                        swal("Автора успішно додано!", {
+                            icon: "success",
+                        });
+                    } else {
+                        swal({
+                            icon: "error",
+                            title: response.data.message
+                        });
+                    }
+                })
+                .catch(() => {
+                    this.otherAuthor = false;
+                    swal({
+                        icon: "error",
+                        title: 'Помилка',
+                        text: String(error.response.status)
+                    });
+                });
             },
-            showNewAuthor(n){
-              this.otherAuthor = n;
+            getCountry() {
+                axios.get('/api/country').then(response => {
+                    this.country = response.data;
+                })
+            },
 
-
-            }
-        },
-
+        }
     }
 </script>
 
 <style lang="scss" scoped>
-    // .step-item{
-    //     .item-title{
-    //         padding-left: 0;
-    //         margin-bottom: 20px;
-    //     }
-    // }
 
     .other-author{
         position: absolute;
         top: 0;
         left: 0;
         z-index: 100;
-        padding: 5% 15%;
+        padding: 5% 10%;
         width: 100%;
         min-height: 100%;
         background: rgba(0,0,0,0.8);
-        .wrapper{
-            padding: 60px 0;
+        .popup-layout{
+            padding: 60px 60px;
             background-color: #fff;
-            border-radius: 20px;
+            border-radius: 10px;
             .popup-title{
                 margin-bottom: 30px;
-                font-family: Montserrat;
+                font-family: Arial;
                 font-style: normal;
                 font-weight: normal;
                 font-size: 30px;
                 text-align: center;
-                color: #18A0FB;
+                /*color: #18A0FB;*/
+            }
+            .row{
+                margin: 0;
+            }
+        }
+    }
+
+    .add-group {
+        display: flex;
+        justify-content: space-between;
+
+        .hint {
+            top: 10px;
+            left: 10px
+        }
+
+        .add-button {
+            padding: 13px 48px;
+            padding-right: 0;
+            font-family: Arial;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            line-height: 23px;
+            text-align: center;
+            color: #007BFF;
+            outline: none;
+            background: transparent;
+        }
+
+        .btn-blue {
+            background: #007BFF;
+            color: #fff;
+            outline: none;
+            padding-right: 15px;
+        }
+
+        .white-hint {
+            background: url("/img/hint_white.svg");
+        }
+    }
+    .loading{
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        margin: 30px 0;
+    }
+
+    @media  (max-width: 575px) {
+        .other-author{
+            padding: 10% 10px;
+
+            .popup-layout{
+                padding: 15px;
+
+                .popup-title{
+                    margin-bottom: 20px;
+
+                    font-size: 25px;
+
+                }
+
+            }
+        }
+
+        .add-group {
+
+            flex-wrap: wrap;
+
+
+
+            .add-button {
+                margin-top: 10px;
+            }
+            .hint{
+                top: 20px;
             }
 
         }
 
     }
-
-    .small-box{
-        padding: 10px 40px;
-        margin: 0 10px;
-        border: 1px solid #18A0FB;
-        box-sizing: border-box;
-        border-radius: 44.5px;
-        font-family: Montserrat;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 20px;
-        color: #18A0FB;
-        cursor: pointer;
-        &:first-of-type{
-            margin-left: 0;
-        }
-
-    }
-    .btn-blue{
-        background: #18A0FB;
-        border: 1px solid #18A0FB;
-        color: #fff;
-        outline: none;
-    }
-
-    input[type="radio"]{
-        display: none;
-    }
-    input:checked +label{
-        background: #18A0FB;
-        border: 1px solid #18A0FB;
-        color: #fff;
-    }
-
-
-
 </style>

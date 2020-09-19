@@ -12,7 +12,16 @@ class RolesSeeder extends Seeder
     public function run()
     {
         DB::table('roles')->insert([
-            'name' => 'Адміністартор'
+            'name' => 'Автор'
+        ]);
+        DB::table('roles')->insert([
+            'name' => 'Модератор кафедрального рівня'
+        ]);
+        DB::table('roles')->insert([
+            'name' => 'Модератор інститутського або факультетського рівня'
+        ]);
+        DB::table('roles')->insert([
+            'name' => 'Адміністратор'
         ]);
     }
 }

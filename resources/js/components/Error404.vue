@@ -1,13 +1,14 @@
 <template>
 
+        <div class="error-block">
 
-        <div class="container">
+            <div class="container page-content">
 
-            <h2 class="error-title ">
-                <p>404</p>
-                Сторінку не знайдено</h2>
+                <h2 class="error-title ">
+                    <p>404</p>
+                    Сторінку не знайдено</h2>
+            </div>
         </div>
-
 
 </template>
 
@@ -32,10 +33,31 @@
     }
 </script>
 <style scoped lang="scss">
+    .error-block{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        min-height: 100vh;
+        background: #fff;
+
+        display: flex;
+        align-items: center;
+        .container{
+            display: grid;
+            align-content: center;
+            min-height: 0;
+            background: #FFFFFF;
+            box-shadow: none;
+            border-radius: 0;
+            padding: 0;
+
+        }
+    }
    .error-title{
-       margin-top: 15vh;
+       /*margin-top: 15vh;*/
        text-align: center;
-       font-family: Montserrat;
+       font-family: Arial;
        font-style: normal;
        font-weight: 500;
        font-size: 50px;
@@ -43,7 +65,7 @@
        opacity: 0.75;
        p{
            margin-bottom: 30px;
-           font-family: Montserrat;
+           font-family: Arial;
            font-style: normal;
            font-weight: normal;
            font-size: 250px;
@@ -52,14 +74,20 @@
 
        }
    }
-    @media (max-width: 991px) {
+    @media (max-width: 575px )  {
+        .error-block{
+            .container{
+                padding: 0 15px;
+            }
+        }
+        .error-title{
+            font-weight: 500;
+            font-size: 28px;
+            p{
+                font-size: 130px;
+            }
+        }
 
     }
-
-
-    @media (max-width: 414px) {
-
-    }
-
 
 </style>

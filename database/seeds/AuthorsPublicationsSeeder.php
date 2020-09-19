@@ -15,9 +15,5 @@ class AuthorsPublicationsSeeder extends Seeder
             'autors_id' => 1,
             'publications_id' => 1
         ]);
-        DB::table('authors_has_publications')->insert([
-            'autors_id' => 1,
-            'publications_id' => 2
-        ]);
     }
 }

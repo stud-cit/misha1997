@@ -1,109 +1,134 @@
 <template>
     <div>
+
         <p class="step-subtitle">
-            Крок 1 з 4. Назва та база для публікації
+            Крок 1 з 4.
         </p>
-        <div class="step-content">
+        <div  class="step-content">
 
-            <div class="search-block">
-                <div class="categories">
-                    <div class="categories-elem">
-                        <input id="scopus" type="checkbox" v-model="stepData.scopus">
-                        <label for="scopus" class="scopus">scopus</label>
-                    </div>
 
-                    <div class="categories-elem">
-                        <input id="wos" type="checkbox" v-model="stepData.wos">
-                        <label for="wos" class="scopus">wos</label>
+            <div class="form-group">
+                <label >Назва публікації *</label>
+                <div class="input-container">
+                    <input type="text"  v-model.trim="stepData.title" @blur="$v.stepData.title.$touch()">
+
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
+
+                <div class="error" v-if="$v.stepData.title.$error">
+                    Поле обов'язкове для заповнення
+                </div>
+
+            </div>
+            <div class="form-row">
+                <div class="form-group col-lg-4">
+                    <label >БД Scopus\WoS</label>
+                    <div class="input-container">
+                        <select  v-model="stepData.science_type_id" @change="changeScienceType">
+                            <option value=""></option>
+                            <option value="1">Scopus</option>
+                            <option value="2">Wos</option>
+                            <option value="3">Scopus та Wos</option>
+                        </select>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
                 </div>
-                <label class="main-search-container">
-                    <input type="text" class="main-search" placeholder="Введіть назву публікації" v-model="stepData.publicationTitle">
-                    <div class="search-load">
-                        <p class="load-big"></p>
-                        <p class="load-little"></p>
+                <div class="form-group col-lg-8">
+                    <label >Вид публікації *</label>
+                    <div class="input-container">
+                        <select  v-model.trim="stepData.publication_type" v-if="stepData.science_type_id">
+
+                            <option v-for="(item, i) in publicationTypes" :key="i" v-if="item.scopus_wos" :value="item">{{item.title }}</option>
+
+
+                        </select>
+                        <select  v-model.trim="stepData.publication_type" v-else>
+
+                            <option v-for="(item, i) in publicationTypes" :key="i" :value="item">{{item.title  }}</option>
+
+
+                        </select>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
                     </div>
-<!--                    <div class="search-btn"><img src="/img/search.svg" alt=""></div>-->
-                </label>
+
+                    <div class="error" v-if="$v.stepData.publication_type.$error">
+                        Поле обов'язкове для заповнення
+                    </div>
+
+                </div>
+
             </div>
 
-        </div>
-        <div class="categories" v-if="stepData.publicationTitle">
-            <p class="step-subtitle">
-                Оберіть тип публікації
-            </p>
-            <template v-if="!stepData.scopus && !stepData.wos">
 
-                <div class="categories-elem"  v-for="(item, i) in publicationView" :key="i" >
-                    <input :id="'type' + i" type="radio" v-model="stepData.publicationType" :value="item">
-                    <label :for="'type' + i">{{ item }}</label>
-                </div>
-
-            </template>
-            <template v-else>
-
-                <div class="categories-elem"  v-for="(item, i) in scopusFilter" :key="i" >
-                    <input :id="'type' + i" type="radio" v-model="stepData.publicationType" :value="item">
-                    <label :for="'type' + i">{{ item }}</label>
-                </div>
-
-            </template>
 
         </div>
+
         <div class="step-button-group">
-            <button class="next active" @click="nextStep">Продовжити <span>&gt;</span></button>
-
+            <button class="next" @click="nextStep" >Продовжити </button>
         </div>
     </div>
 </template>
 
 <script>
+    import { required, maxLength } from 'vuelidate/lib/validators';
     export default {
         name: "Step1",
         data() {
             return {
-                publicationView: [
-                    'Стаття-доповідь у матеріалах наукових конференціях',
-                    'Розділ монографії',
-                    'Монографія',
-                    'Книга',
-                    'Розділ книги',
-                    'Тези доповіді',
-                    'Стаття у фахових виданнях України',
-                    'Інші статті',
-                    'Методичні вказівки',
-                    'Свідоцтво про реєстрації авторських прав на твір/рішення',
-                    'Електронні видання',
-                    'Патент',
-                    'Посібник',
-
-                ],
-                stepData:{
-                    scopus: false,
-                    wos: false,
-                    publicationTitle: '',
-                    publicationType: ''
+                publicationTypes: [],
+                prevVal: '',
+                stepData: {
+                    title: '',
+                    science_type_id: '',
+                    publication_type: null
                 }
-
             }
         },
-        computed: {
-
-        //   первые 8 по скопус, воз
-
-          scopusFilter(){
-
-              return this.publicationView.slice(0,8);
-          }
-
+        created() {
+            this.getTypePublications();
         },
-        methods:{
-            nextStep() {
-                this.$emit('getData', this.stepData);
+        validations: {
+
+
+            stepData: {
+                title: {
+                    required,
+                },
+                publication_type: {
+                    required,
+                },
             },
 
         },
-        created() {
+        methods: {
+            getTypePublications() {
+                axios.get(`/api/type-publications`).then(response => {
+                    this.publicationTypes = response.data;
+                })
+            },
+            changeScienceType(){
+              this.stepData.publication_type = "";
+
+            },
+            nextStep() {
+                this.$v.$touch()
+                if (this.$v.$invalid) {
+                    swal("Не всі поля заповнено!", {
+                        icon: "error",
+                    });
+                    return
+                }
+                // check scopus
+                if(this.stepData.science_type_id){
+                    this.$parent.isScopus = true;
+
+                }
+                else{
+                    this.$parent.isScopus = false;
+                }
+                //
+                this.$emit('getData', this.stepData);
+            },
 
         }
     }
@@ -111,56 +136,5 @@
 
 <style lang="scss" scoped>
 
-    .search-block{
-        margin: 0;
-    }
-    .categories{
-        display: flex;
-        flex-wrap: wrap;
-        .step-subtitle{
-            width: 100%;
-            margin-bottom: 25px;
-            margin-top: 75px;
-        }
 
-        .categories-elem{
-            margin-right: 15px;
-            margin-bottom: 20px;
-            label{
-                padding: 15px 35px;
-                background: #FFFFFF;
-                border: 1px solid #18A0FB;
-                border-radius: 44.5px;
-                /*min-width: 260px;*/
-                cursor: pointer;
-                font-family: Montserrat;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 22px;
-                text-align: center;
-                color: #18A0FB;
-                line-height: 1;
-            }
-            .scopus{
-                min-width: 260px;
-            }
-            input[type="radio"]{
-                display: none;
-                &:checked + label{
-                    background: #18A0FB;
-                    border: 1px solid #18A0FB;
-                    color: #fff;
-                }
-            }
-            input[type="checkbox"]{
-                display: none;
-                &:checked + label{
-                    background: #18A0FB;
-                    border: 1px solid #18A0FB;
-                    color: #fff;
-                }
-            }
-
-        }
-    }
 </style>

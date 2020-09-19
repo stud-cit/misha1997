@@ -11,19 +11,38 @@ class Publications extends Model
     protected $fillable = [
         'title',
         'science_type_id',
+        'publication_type_id',
+        'snip',
         'impact_factor',
+        'quartil_scopus',
+        'quartil_wos',
         'sub_db_index',
-        'quartil',
-        'department_id',
-        'scie',
-        'ssci',
-        'nature_index',
-        'nature_scince',
-        'other_organizations',
-        'forbes_fortune',
-        'date',
-        'international_patents',
-        'snip'
+        'year',
+        'number',
+        'pages',
+        'initials',
+        'country',
+        'number_volumes',
+        'by_editing',
+        'city',
+        'editor_name',
+        'languages',
+        'number_certificate',
+        'applicant',
+        'date_application',
+        'date_publication',
+        'commerc_university',
+        'commerc_employees',
+        'access_mode',
+        'mpk',
+        'application_number',
+        'newsletter_number',
+        'name_conference',
+        'url',
+//        'publisher',
+        'name_magazine',
+        'doi',
+        'supervisor_id'
     ];
 
     function author() {
@@ -35,35 +54,15 @@ class Publications extends Model
         );
     }
 
-    function type() {
-        return $this->hasOne('App\Models\ScienceType', 'id');
+    function supervisor() {
+        return $this->belongsTo('App\Models\Authors', 'supervisor_id');
     }
 
-    function article() {
-        return $this->hasOne('App\Models\Articles', 'publications_id');
+    function scienceType() {
+        return $this->belongsTo('App\Models\ScienceType', 'science_type_id');
     }
-    function certificates() {
-        return $this->hasOne('App\Models\Certificates', 'publications_id');
-    }
-    function abstracts() {
-        return $this->hasOne('App\Models\Abstracts', 'publications_id');
-    }
-    function electronicPublications() {
-        return $this->hasOne('App\Models\ElectronicPublications', 'publications_id');
-    }
-    function manuals() {
-        return $this->hasOne('App\Models\Manuals', 'publications_id');
-    }
-    function methodicalInstructions() {
-        return $this->hasOne('App\Models\MethodicalInstructions', 'publications_id');
-    }
-    function monographs() {
-        return $this->hasOne('App\Models\Monographs', 'publications_id');
-    }
-    function patents() {
-        return $this->hasOne('App\Models\Patents', 'publications_id');
-    }
-    function textbooks() {
-        return $this->hasOne('App\Models\Textbooks', 'publications_id');
+
+    function publicationType() {
+        return $this->belongsTo('App\Models\PublicationType', 'publication_type_id');
     }
 }

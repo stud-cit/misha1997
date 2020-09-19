@@ -23,4 +23,5 @@
 * Run `php artisan serve`
 
 # Links:
-<a href="https://www.dropbox.com/s/vfh6bd6xxa0c48k/api.pdf?dl=0">Link cabinet API documentation</a>
+<a href="https://www.dropbox.com/s/vfh6bd6xxa0c48k/api.pdf?dl=0">Link cabinet API documentation</a><br>
+<a href="https://asu.sumdu.edu.ua/api/?key=eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG">Link ASU API documentation</a>

@@ -4,75 +4,67 @@
             Крок 4 з 4. Вихідні дані
         </p>
 
-        <article-ukr v-if="articles.includes($parent.stepData.publicationType)"></article-ukr>
+        <articles v-if="publicationType == 'article'"></articles>
 
-        <monograph v-if="monographs.includes($parent.stepData.publicationType)"></monograph>
+        <book v-if="publicationType == 'book'"></book>
 
-        <thesis v-if="$parent.stepData.publicationType == 'Тези доповіді'"></thesis>
+        <book-part v-if="publicationType == 'book-part'"></book-part>
 
-        <patent v-if="$parent.stepData.publicationType == 'Патент'"></patent>
+        <thesis v-if="publicationType == 'thesis'"></thesis>
 
-        <certificate v-if="$parent.stepData.publicationType == 'Свідоцтво про реєстрації авторських прав на твір/рішення'"></certificate>
+        <patent v-if="publicationType == 'patent'"></patent>
 
-        <methodical v-if="$parent.stepData.publicationType == 'Методичні вказівки'"></methodical>
+        <certificate v-if="publicationType == 'certificate'"></certificate>
 
-        <electronic v-if="$parent.stepData.publicationType == 'Електронні видання'"></electronic>
+        <methodical v-if="publicationType == 'methodical'"></methodical>
 
-
-
-
-
-
+        <electronic v-if="publicationType == 'electronic'"></electronic>
     </div>
 </template>
 
 <script>
-    // Стаття у фахових виданнях України, інші статті
-    import ArticleUkr from './Step5_fields/ArticleUkr';
+    // Стаття у фахових виданнях України, стаття-доповідь у матеріалах наукових конференціях, інші статті
+    import Articles from './Step4_fields/Articles';
 
     // монографії посібники підручники
-    import Monograph from "./Step5_fields/Monograph";
+    import Book from "./Step4_fields/Book";
 
-    import Thesis from "./Step5_fields/Thesis";
+    // частина монографії книги
+    import BookPart from "./Step4_fields/BookPart";
 
-    import Patent from "./Step5_fields/Patent";
-    import Certificate from "./Step5_fields/Certificate";
-    import Methodical from "./Step5_fields/Methodical";
-    import Electronic from "./Step5_fields/Electronic";
+    // тези доповіді (abstracts)
+    import Thesis from "./Step4_fields/Thesis";
+
+    // патент
+    import Patent from "./Step4_fields/Patent";
+
+    // Свідоцтво про реєстрації авторських прав на твір/рішення
+    import Certificate from "./Step4_fields/Certificate";
+
+    // Методичні вказівки
+    import Methodical from "./Step4_fields/Methodical";
+
+    // Електронні видання
+    import Electronic from "./Step4_fields/Electronic";
 
     export default {
         name: "Step5",
         data() {
-            return {
-                articles: ['Стаття-доповідь у матеріалах наукових конференціях', 'Стаття у фахових виданнях України', 'Інші статті'],
-                monographs: ['Монографія', 'Посібник', 'Книга'],
-                stepData:{
-
-                }
-
-            }
+            return {}
         },
-        components:{
-            ArticleUkr,
-            Monograph,
+        props:{
+            publicationType: String
+        },
+
+        components: {
+            Articles,
+            Book,
+            BookPart,
             Thesis,
             Patent,
             Certificate,
             Methodical,
             Electronic
-
-        },
-        methods:{
-
-        },
-        created() {
-
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-
-
-</style>

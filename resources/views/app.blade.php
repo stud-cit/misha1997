@@ -4,23 +4,35 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Наукові публікації Сумського державного університету</title>
 
         <!-- Fonts -->
-{{--        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">--}}
-{{--        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">--}}
-        <link href="/css/app.css" rel="stylesheet">
-        <link href="/css/site.css" rel="stylesheet">
+
+
 
         <!-- Styles -->
-
+        <link href="/css/app.css" rel="stylesheet">
+        <link href="/css/all.min.css" rel="stylesheet">
+        <link href="/css/site.css" rel="stylesheet">
     </head>
     <body>
     <div id="app">
         <header-component></header-component>
-        <router-view></router-view>
+        <div class="wrapper">
+            <transition name="component-fade" mode="out-in">
+                <router-view></router-view>
+            </transition>
+        </div>
 
     </div>
     </body>
     <script src="/js/app.js"></script>
+
+
+
+
+
+
+
+
 </html>

@@ -12,7 +12,7 @@ class AuthorsSeeder extends Seeder
     public function run()
     {
         DB::table('authors')->insert([
-            'guid' => 1,
+            'guid' => '22e6106c-c580-e711-8194-001a4be6d04a',
             'job' => 'СумДУ',
             'name' => 'Test Test Test',
             'country' => 'Україна',
@@ -22,11 +22,9 @@ class AuthorsSeeder extends Seeder
             'orcid' => 'test',
             'department' => 'Кафедра X',
             'faculty' => 'Факультет Х',
-            'is_student' => 0,
             'academic_code' => '000',
             'email' => 'test@gmail.com',
-            'roles_id' => 1,
-            'department_id' => 1
+            'roles_id' => 1
         ]);
     }
 }
