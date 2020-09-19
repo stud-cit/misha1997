@@ -8,11 +8,13 @@ use App\Models\Users;
 use App\Models\Roles;
 use App\Models\Notifications;
 use Carbon\Carbon;
+use Session;
 
 class AuthorsController extends Controller
 {
     // authors
     function getAll(Request $request) {
+        // $request->session()->get('user')
         $data = Authors::with('role')->get();
         return response()->json($data);
     }

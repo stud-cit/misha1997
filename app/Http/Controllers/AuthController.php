@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Authors;
 use Illuminate\Http\Request;
+use Session;
 
 class AuthController extends Controller
 {
 
     protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
     protected $cabinet_service = "https://cabinet.sumdu.edu.ua/index/service/";
-    protected $cabinet_service_token = "iP6fXene";
+    protected $cabinet_service_token = "TNWcmzpZ";
 
     // служебная информация
     function mode() {
@@ -42,9 +43,11 @@ class AuthController extends Controller
         $person = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->header('Authorization') . '&token=' . $this->cabinet_service_token), true);
         if ($person['status'] == 'OK') {
             if (Authors::where("guid", $person['result']['guid'])->exists()) {
+                $user = Authors::where("guid", $person['result']['guid'])->first();
+                $request->session()->put('user', $user);
                 return response()->json([
                     "status" => "register",
-                    "user" => Authors::where("guid", $person['result']['guid'])->first();
+                    "user" => $user
                 ]);
             } else {
                 return response()->json([

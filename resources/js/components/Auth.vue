@@ -42,7 +42,7 @@
             },
             open_auth() {
                 const strWindowFeatures = "menubar=no,location=no,resizable=no,scrollbars=yes,status=no,width=600,height=600";
-                this.auth_window = window.open("http://cabinet.sumdu.edu.ua/index/service/iP6fXene", "Вход/Реєстрація через Кабинет", strWindowFeatures);
+                this.auth_window = window.open("http://cabinet.sumdu.edu.ua/index/service/TNWcmzpZ", "Вход/Реєстрація через Кабинет", strWindowFeatures);
                 setInterval(this.conditional_reload, 250);
                 return false;
             }
