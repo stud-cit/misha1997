@@ -58,6 +58,10 @@ class Publications extends Model
         return $this->belongsTo('App\Models\Authors', 'supervisor_id');
     }
 
+    function authors() {
+        return $this->HasMany('App\Models\AuthorsPublications', 'publications_id');
+    }
+
     function scienceType() {
         return $this->belongsTo('App\Models\ScienceType', 'science_type_id');
     }

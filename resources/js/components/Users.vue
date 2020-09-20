@@ -145,7 +145,7 @@
             }
         },
 
-        mounted () {
+        created() {
             this.getData();
         },
         methods: {

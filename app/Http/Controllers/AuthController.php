@@ -13,41 +13,15 @@ class AuthController extends Controller
     protected $cabinet_service = "https://cabinet.sumdu.edu.ua/index/service/";
     protected $cabinet_service_token = "TNWcmzpZ";
 
-    // служебная информация
-    function mode() {
-        $info = "Наукові публікації"; // Service description
-        $icon = public_path() . "/service.png"; // Service icon (48x48)
-        $mask = 13; // Service modes 3,2,0 (1101 bits)
-
-        $mode = !empty($_REQUEST['mode']) ? $_REQUEST['mode'] : 0;
-
-        // В зависимости от режима (mode) возвращаем или иконку, или описание, или специальный заголовок
-        switch($mode) {
-            case 0:
-                break;
-            case 2:
-                header('Content-Type: image/png');
-                readfile($icon);
-                exit;
-            case 3:
-                echo $info;
-                exit;
-            case 100;
-                header('X-Cabinet-Support: ' . $mask);
-            default:
-                exit;
-        }
-    }
-
     function checkUser(Request $request) {
         $person = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->header('Authorization') . '&token=' . $this->cabinet_service_token), true);
         if ($person['status'] == 'OK') {
             if (Authors::where("guid", $person['result']['guid'])->exists()) {
-                $user = Authors::where("guid", $person['result']['guid'])->first();
-                $request->session()->put('user', $user);
+                $person = Authors::where("guid", $person['result']['guid'])->first();
+                $request->session()->put('person', $person);
                 return response()->json([
                     "status" => "register",
-                    "user" => $user
+                    "user" => $person
                 ]);
             } else {
                 return response()->json([
@@ -89,8 +63,29 @@ class AuthController extends Controller
         }
     }
 
-    function index() {
-        $this->mode();
+    function index(Request $request) {
+        $info = "Наукові публікації"; // Service description
+        $icon = public_path() . "/service.png"; // Service icon (48x48)
+        $mask = 13; // Service modes 3,2,0 (1101 bits)
+
+        $mode = !empty($request->mode) ? $request->mode : 0;
+
+        // В зависимости от режима (mode) возвращаем или иконку, или описание, или специальный заголовок
+        switch($mode) {
+            case 0:
+                break;
+            case 2:
+                header('Content-Type: image/png');
+                readfile($icon);
+                exit;
+            case 3:
+                echo $info;
+                exit;
+            case 100;
+                header('X-Cabinet-Support: ' . $mask);
+            default:
+                exit;
+        }
         return view('app');
     }
 }

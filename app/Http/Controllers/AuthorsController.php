@@ -14,8 +14,18 @@ class AuthorsController extends Controller
 {
     // authors
     function getAll(Request $request) {
-        // $request->session()->get('user')
-        $data = Authors::with('role')->get();
+        $data = [];
+        switch ($request->session()->get('person')['roles_id']) {
+            case 2:
+                $data = Authors::with('role')->where('faculty', $request->session()->get('person')['faculty'])->get();
+            break;
+            case 3:
+                $data = Authors::with('role')->where('department', $request->session()->get('person')['department'])->get();
+            break;
+            case 4:
+                $data = Authors::with('role')->get();
+            break;
+        }
         return response()->json($data);
     }
 

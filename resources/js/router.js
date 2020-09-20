@@ -28,7 +28,8 @@ let router = new Router({
             name: 'home',
             component: Home,
             meta: {
-                requiresRegister: true
+                requiresRegister: true,
+                roles: [1, 2, 3, 4]
             }
         },
         {
@@ -44,7 +45,8 @@ let router = new Router({
             name: 'profile',
             component: Profile,
             meta: {
-                requiresRegister: true
+                requiresRegister: true,
+                roles: [1, 2, 3, 4]
             }
         },
         {
@@ -52,27 +54,44 @@ let router = new Router({
             name: 'publications',
             component: Publications,
             meta: {
-                requiresRegister: true
+                requiresRegister: true,
+                roles: [1, 2, 3, 4]
             }
         },
         {
             path: '/publications/add',
             name: 'publications-add',
-            component: PublicationsAdd
+            component: PublicationsAdd,
+            meta: {
+                requiresRegister: true,
+                roles: [1, 2, 3, 4]
+            }
         },
         {
             path: '/publications/:id',
-            component: PublicationsView
+            component: PublicationsView,
+            meta: {
+                requiresRegister: true,
+                roles: [1, 2, 3, 4]
+            }
         },
         {
             path: '/notifications',
             name: 'notifications',
-            component: Notifications
+            component: Notifications,
+            meta: {
+                requiresRegister: true,
+                roles: [1, 2, 3, 4]
+            }
         },
         {
             path: '/users',
             name: 'users',
-            component: Users
+            component: Users,
+            meta: {
+                requiresRegister: true,
+                roles: [2, 3, 4]
+            }
         },
         {
             path: '*',

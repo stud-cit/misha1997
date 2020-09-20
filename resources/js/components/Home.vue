@@ -3,7 +3,11 @@
         <div class="page-list">
             <router-link :to="{name: 'publications'}" class="page-link">Переглянути список публікацій</router-link>
             <router-link :to="{name: 'publications-add'}" class="page-link">Додати нову публікацію</router-link>
-            <router-link :to="{name: 'users'}" class="page-link">Список усіх користувачів</router-link>
+            <router-link 
+                v-if="userRole == 4 || userRole == 3 || userRole == 2"
+                :to="{name: 'users'}" 
+                class="page-link"
+            >Список усіх користувачів</router-link>
             <button 
                 v-if="userRole == 4 && access == 'close'"
                 class="page-link success" 

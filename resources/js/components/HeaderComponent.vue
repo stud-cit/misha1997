@@ -17,7 +17,11 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <router-link :to="{name: 'publications'}" class="dropdown-item">Переглянути список публікацій</router-link>
                                 <router-link :to="{name: 'publications-add'}" class="dropdown-item">Додати нову публікацію</router-link>
-                                <router-link :to="{name: 'users'}" class="dropdown-item">Список усіх користувачів</router-link>
+                                <router-link 
+                                    v-if="userRole == 4 || userRole == 3 || userRole == 2"
+                                    :to="{name: 'users'}" 
+                                    class="dropdown-item"
+                                >Список усіх користувачів</router-link>
                                 <button
                                     v-if="userRole == 4 && access == 'close'"
                                     class="dropdown-item success" 

@@ -11,11 +11,12 @@ use App\Models\Notifications;
 
 class PublicationsController extends Controller
 {
-    function getAll() {
-        $data = Publications::with('publicationType', 'scienceType', 'supervisor')->get();
-
-        foreach ($data as $key => $value) {
-            $value->authors = AuthorsPublications::with('author')->where('publications_id', $value->id)->get();
+    function getAll(Request $request) {
+        $data = Publications::with('publicationType', 'scienceType', 'supervisor', 'authors')->get();
+        foreach ($data as $key => $publication) {
+            foreach ($publication->authors as $key => $value) {
+                $value['author'] = $value->author;
+            }
         }
         return response()->json($data);
     }
