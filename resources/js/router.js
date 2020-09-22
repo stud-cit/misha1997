@@ -1,5 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
+import store from './store.js'
+
 import Home from "./components/Home";
 import Auth from "./components/Auth";
 import Profile from "./components/Profile";
@@ -10,8 +12,6 @@ import Notifications from "./components/Notifications";
 import Users from "./components/Users";
 import Register from "./components/Register";
 import Error404 from './components/Error404';
-
-import store from './store/user';
 
 Vue.use(Router);
 
@@ -28,7 +28,7 @@ let router = new Router({
             name: 'home',
             component: Home,
             meta: {
-                requiresRegister: false
+                requiresRegister: true
             }
         },
         {
@@ -36,7 +36,7 @@ let router = new Router({
             name: 'register',
             component: Register,
             meta: {
-                requiresAuth: false
+                requiresAuth: true
             }
         },
         {
@@ -44,7 +44,7 @@ let router = new Router({
             name: 'profile',
             component: Profile,
             meta: {
-                requiresRegister: false
+                requiresRegister: true
             }
         },
         {
@@ -52,7 +52,7 @@ let router = new Router({
             name: 'publications',
             component: Publications,
             meta: {
-                requiresRegister: false
+                requiresRegister: true
             }
         },
         {
@@ -85,27 +85,29 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
     if(to.matched.some(record => record.meta.requiresAuth)) {
-        axios.get('/api/check-login')
-        .then((response) => {
-            if(response.data == 'ok') {
-                next();
-            } else {
-                next({
-                    path: '/',
-                    params: { nextUrl: to.fullPath }
-                });
-            }
-        })
+        if(!store.getters.authUser) {
+            next();
+        } else {
+            next({
+                path: '/',
+                params: { nextUrl: to.fullPath }
+            });
+        }
     } else if (to.matched.some(record => record.meta.requiresRegister)) {
-        axios.get('/api/check-register')
+        axios.get('/api/check-user')
         .then((response) => {
-            if(response.data.status == 'ok') {
-                localStorage.setItem('userId', response.data.userId);
+            if(response.data.status == 'register') {
+                store.dispatch('setUser', response.data.user)
                 next();
-            } else {
-                localStorage.removeItem('userId');
+            } else if(response.data.status == 'login') {
                 next({
                     path: '/register',
+                    params: { nextUrl: to.fullPath }
+                });
+            } else {
+                store.dispatch('logout')
+                next({
+                    path: '/',
                     params: { nextUrl: to.fullPath }
                 });
             }

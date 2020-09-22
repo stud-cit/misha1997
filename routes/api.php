@@ -3,11 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('check-login', 'PassportController@checkLogin');
-Route::get('check-register', 'PassportController@checkRegister');
-
-Route::post('login', 'PassportController@login')->name('login');
-Route::post('register', 'PassportController@register');
+Route::get('check-user', 'AuthController@checkUser');
+Route::post('register', 'AuthController@register');
 
 //authors
 Route::get('login-author', 'AuthorsController@getLoginUser');
@@ -37,8 +34,3 @@ Route::get('type-publications', 'PublicationsController@typePublications');
 Route::get('country', 'PublicationsController@getCountry');
 
 Route::get('export', 'PublicationsController@Export');
-
-Route::middleware('auth:api')->group(function () {
-    Route::get('user', 'PassportController@details');
-});
-
