@@ -7,7 +7,7 @@
         <!--        exports-->
         <div class="exports">
 
-            <export-rating class="export-block"></export-rating>
+            <export-rating :publicationTypes="publicationTypes" :years="years" :countries="countries" class="export-block"></export-rating>
 
             <export-publications class="export-block" :exportList="exportOwnPublication"></export-publications>
         </div>

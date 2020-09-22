@@ -4,23 +4,7 @@
             Крок 2 з 4. Додання авторів
         </p>
         <div class=" step-content">
-            <div class="form-group">
-                <label class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) </label>
-                <div class="add-group">
-                    <div class="input-container">
-                        <button class="add-button btn-blue" @click="showNewAuthor(1)">
-                            Додати автора з СумДУ
-                        </button>
-                        <div class="hint white-hint" ><span>Додати автора з СумДУ</span></div>
-                    </div>
-                    <div class="input-container">
-                        <button class="add-button" @click="showNewAuthor(2)">
-                            Створити нового автора
-                        </button>
-                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                    </div>
-                </div>
-            </div>
+
 
             <!--add to db author-->
             <div class="other-author" v-if="otherAuthor">
@@ -207,6 +191,7 @@
 
             </div>
 
+
             <div class="form-group" v-if="stepData.useSupervisor == '1'">
                 <label class="item-title">Керівник *</label>
                 <div class="input-container authors">
@@ -269,6 +254,28 @@
 
 
             </div>
+            <div class="form-group find-author" v-if="!findAuthor">
+                <label class="item-title"><a href="#" @click.prevent="findAuthor=!findAuthor" >Не знайшли потрібного вам автора?</a></label>
+            </div>
+            <transition name="component-fade" mode="out-in">
+                <div class="form-group " v-if="findAuthor">
+                    <label class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) </label>
+                    <div class="add-group">
+                        <div class="input-container">
+                            <button class="add-button btn-blue" @click="showNewAuthor(1)">
+                                Додати автора з СумДУ
+                            </button>
+                            <div class="hint white-hint" ><span>Додати автора з СумДУ</span></div>
+                        </div>
+                        <div class="input-container">
+                            <button class="add-button" @click="showNewAuthor(2)">
+                                Створити нового автора
+                            </button>
+                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
             <div class="form-group">
                 <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
                 <div class="input-container">
@@ -299,7 +306,7 @@
             return {
                 jobType: null,
                 modalAlias: false,
-
+                findAuthor: false,
 
                 categ: [
                     {
@@ -488,7 +495,7 @@
 
             addNewAuthor(newAuthor) {
 
-                this.$v.newAuthor.$touch()
+                this.$v.newAuthor.$touch();
                 if (this.$v.newAuthor.$invalid) {
                     swal("Не всі поля заповнено!", {
                         icon: "error",
@@ -526,7 +533,9 @@
 </script>
 
 <style lang="scss" scoped>
-
+    .find-author{
+        margin-bottom: 20px;
+    }
     .other-author{
         position: absolute;
         top: 0;
@@ -629,4 +638,5 @@
         }
 
     }
+
 </style>
