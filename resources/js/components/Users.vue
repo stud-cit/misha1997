@@ -72,7 +72,7 @@
                     <tr v-for="(item, index) in filteredList" :key="item.id">
                         <td scope="row">{{ index+1+(currentPage-1)*perPage}}</td>
 <!--                        <td>{{ item.role.name }}</td>-->
-                        <td><router-link :to="{path: `/profile/${item.id}`}">{{ item.name }}</router-link></td>
+                        <td><router-link :to="{path: `/user/${item.id}`}">{{ item.name }}</router-link></td>
                         <td></td>
                         <td>{{ item.department }}</td>
                         <td>{{ item.faculty }}</td>

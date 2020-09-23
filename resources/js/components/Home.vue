@@ -3,12 +3,12 @@
         <div class="page-list">
             <router-link :to="{name: 'publications'}" class="page-link">Переглянути список публікацій</router-link>
             <router-link
-                v-if="access == 'open'"
+                v-if="userRole == 4 || access == 'open'"
                 :to="{name: 'publications-add'}"
                 class="page-link"
             >Додати нову публікацію</router-link>
             <router-link
-                v-if="access == 'open' && (userRole == 4 || userRole == 3 || userRole == 2)"
+                v-if="userRole == 4 || (access == 'open' && (userRole == 3 || userRole == 2))"
                 :to="{name: 'users'}"
                 class="page-link"
             >Список усіх користувачів</router-link>

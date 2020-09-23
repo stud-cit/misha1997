@@ -110,7 +110,7 @@
               this.stepData.publication_type = "";
 
             },
-            nextStep() {
+            async nextStep() {
                 this.$v.$touch()
                 if (this.$v.$invalid) {
                     swal("Не всі поля заповнено!", {
@@ -118,12 +118,28 @@
                     });
                     return
                 }
-                // check scopus
-                if(this.stepData.science_type_id){
-                    this.$parent.isScopus = true;
-
+                // check title
+                let checkTitle = new Promise((resolve, reject) => {
+                    axios.post(`/api/check-publication`, {
+                        title: this.stepData.title.replace(/ +/g, ' ').trim()
+                    }).then(response => {
+                        if (response.data) {
+                            swal("Публікація з такою назвою вже існує!", {
+                                icon: "error",
+                            });
+                            resolve(true)
+                        } else {
+                            resolve(false)
+                        }
+                    })
+                });
+                if(await checkTitle) {
+                    return
                 }
-                else{
+                // check scopus
+                if(this.stepData.science_type_id) {
+                    this.$parent.isScopus = true;
+                } else {
                     this.$parent.isScopus = false;
                 }
                 //
