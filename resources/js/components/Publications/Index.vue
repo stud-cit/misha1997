@@ -128,7 +128,7 @@
                         <td>{{ item.supervisor ? item.supervisor.name : '' }}</td>
                         <td class="icons">
                             <input 
-                                v-if="item.authors.find(itemAuthor => itemAuthor.author.id == authUser.id) || authUser.roles_id == 4"
+                                v-if="access == 'open' && (item.authors.find(itemAuthor => itemAuthor.author.id == authUser.id) || authUser.roles_id == 4)"
                                 type="checkbox" 
                                 :checked="selectPublications.indexOf(item) != -1 ? true : false" 
                                 @click="selectItem(item)"
@@ -152,7 +152,7 @@
                     prev-class="page-link"
                     next-class="page-link">
                 </paginate>
-                <div class="edit-block">
+                <div class="edit-block" v-if="access == 'open'">
                     <button class="mr-2 edit">Редагувати</button>
                     <button class="delete" @click="deletePublications">Видалити</button>
                 </div>
@@ -254,6 +254,9 @@
         computed: {
             authUser() {
                 return this.$store.getters.authUser
+            },
+            access() {
+                return this.$store.getters.accessMode
             },
             filteredList() {
                 let arr = this.data.filter(item => {

@@ -15,7 +15,8 @@ Route::group(['middleware' => ['web']], function() {
 
     //authors
     Route::get('login-author', 'AuthorsController@getLoginUser');
-    Route::get('authors', 'AuthorsController@getAll');
+    Route::get('authors', 'AuthorsController@get');
+    Route::get('authors-all', 'AuthorsController@getAll');
     Route::get('persons/{categ}/{id}', 'AuthorsController@getPersons');
     Route::get('author/{id}', 'AuthorsController@getId');
     Route::post('author', 'AuthorsController@postAuthor');

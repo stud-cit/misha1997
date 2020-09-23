@@ -480,7 +480,7 @@
                 }
             },
             getAuthors() {
-                axios.get(`/api/authors`).then(response => {
+                axios.get(`/api/authors-all`).then(response => {
                     console.log(response.data)
                     this.authors = response.data;
                 })

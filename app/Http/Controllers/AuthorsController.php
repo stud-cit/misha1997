@@ -13,7 +13,7 @@ use Session;
 class AuthorsController extends Controller
 {
     // authors
-    function getAll(Request $request) {
+    function get(Request $request) {
         $data = [];
         switch ($request->session()->get('person')['roles_id']) {
             case 2:
@@ -26,6 +26,12 @@ class AuthorsController extends Controller
                 $data = Authors::with('role')->get();
             break;
         }
+        return response()->json($data);
+    }
+
+    // authors
+    function getAll(Request $request) {
+        $data = Authors::with('role')->get();
         return response()->json($data);
     }
 
