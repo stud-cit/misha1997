@@ -7,7 +7,7 @@
         <!--        exports-->
         <div class="exports">
 
-            <export-rating class="export-block"></export-rating>
+            <export-rating :publicationTypes="publicationTypes" :years="years" :countries="countries" class="export-block"></export-rating>
 
             <export-publications class="export-block" :exportList="exportOwnPublication"></export-publications>
         </div>
@@ -127,10 +127,10 @@
                         <td>{{ item.science_type ? item.science_type.type : '' }}</td>
                         <td>{{ item.supervisor ? item.supervisor.name : '' }}</td>
                         <td class="icons">
-                            <input 
+                            <input
                                 v-if="access == 'open' && (item.authors.find(itemAuthor => itemAuthor.author.id == authUser.id) || authUser.roles_id == 4)"
-                                type="checkbox" 
-                                :checked="selectPublications.indexOf(item) != -1 ? true : false" 
+                                type="checkbox"
+                                :checked="selectPublications.indexOf(item) != -1 ? true : false"
                                 @click="selectItem(item)"
                             >
 <!--                            <i class="fas fa-pen-square"></i>-->
@@ -312,7 +312,6 @@
         .export-block{
             display: grid;
             margin-bottom: 20px;
-
         }
     }
     @media (max-width: 575px){
@@ -323,10 +322,7 @@
             margin-top: 35px;
         }
         .exports{
-
             margin-top: 25px;
-
         }
     }
-
 </style>

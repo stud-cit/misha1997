@@ -4,23 +4,7 @@
             Крок 2 з 4. Додання авторів
         </p>
         <div class=" step-content">
-            <div class="form-group">
-                <label class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) </label>
-                <div class="add-group">
-                    <div class="input-container">
-                        <button class="add-button btn-blue" @click="showNewAuthor(1)">
-                            Додати автора з СумДУ
-                        </button>
-                        <div class="hint white-hint" ><span>Додати автора з СумДУ</span></div>
-                    </div>
-                    <div class="input-container">
-                        <button class="add-button" @click="showNewAuthor(2)">
-                            Створити нового автора
-                        </button>
-                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                    </div>
-                </div>
-            </div>
+
 
             <!--add to db author-->
             <div class="other-author" v-if="otherAuthor">
@@ -266,8 +250,64 @@
                 <div class="error" v-if="$v.stepData.authors.$each.$iter[i].$error">
                     Поле обов'язкове для заповнення
                 </div>
+            </div>
+
+            <div v-for="(item, i) in $v.stepData.authors.$each.$iter" :key="i" class="form-group">
+                <label for="">Прізвище, ім’я, по-батькові автора *</label>
+                <div class="input-container authors">
+                    <multiselect
+                        v-model="stepData.authors[i]"
+                        :searchable="true"
+                        :options="authors"
+                        selectLabel="Натисніть для вибору"
+                        selectedLabel="Вибрано"
+                        deselectLabel='Натисніть для видалення'
+                        placeholder="Пошук в базі данних сайту"
+                        :custom-label="nameWithInfo"
+                    >
+                        <span slot="noResult">По даному запиту немає результатів</span>
+                    </multiselect>
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <button class="remove-author" @click="removeAuthor(i)">&times;</button>
+                </div>
+                <div class="error" v-if="$v.stepData.authors.$each.$iter[i].$error">
+                    Поле обов'язкове для заповнення
+                </div>
 
 
+
+            </div>
+            <div class="form-group find-author" v-if="!findAuthor">
+                <label class="item-title"><a href="#" @click.prevent="findAuthor=!findAuthor" >Не знайшли потрібного вам автора?</a></label>
+            </div>
+            <transition name="component-fade" mode="out-in">
+                <div class="form-group " v-if="findAuthor">
+                    <label class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) </label>
+                    <div class="add-group">
+                        <div class="input-container">
+                            <button class="add-button btn-blue" @click="showNewAuthor(1)">
+                                Додати автора з СумДУ
+                            </button>
+                            <div class="hint white-hint" ><span>Додати автора з СумДУ</span></div>
+                        </div>
+                        <div class="input-container">
+                            <button class="add-button" @click="showNewAuthor(2)">
+                                Створити нового автора
+                            </button>
+                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+            <div class="form-group">
+                <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="stepData.initials">
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
+                </div>
+                <div class="error" v-if="$v.stepData.initials.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
@@ -299,7 +339,7 @@
             return {
                 jobType: null,
                 modalAlias: false,
-
+                findAuthor: false,
 
                 categ: [
                     {
@@ -488,7 +528,7 @@
 
             addNewAuthor(newAuthor) {
 
-                this.$v.newAuthor.$touch()
+                this.$v.newAuthor.$touch();
                 if (this.$v.newAuthor.$invalid) {
                     swal("Не всі поля заповнено!", {
                         icon: "error",
@@ -499,19 +539,12 @@
                 newAuthor.job = this.jobType == 1 ? newAuthor.job : "Не працює";
                 axios.post('/api/author', newAuthor)
                 .then((response) => {
-                    if(response.data.status == 'ok') {
-                        this.ssuAuthor = "";
-                        this.otherAuthor = false;
-                        this.authors.push(response.data.user);
-                        swal("Автора успішно додано!", {
-                            icon: "success",
-                        });
-                    } else {
-                        swal({
-                            icon: "error",
-                            title: response.data.message
-                        });
-                    }
+                    this.ssuAuthor = "";
+                    this.otherAuthor = false;
+                    this.authors.push(response.data);
+                    swal("Автора успішно додано!", {
+                        icon: "success",
+                    });
                 })
                 .catch(() => {
                     this.otherAuthor = false;
@@ -533,7 +566,9 @@
 </script>
 
 <style lang="scss" scoped>
-
+    .find-author{
+        margin-bottom: 20px;
+    }
     .other-author{
         position: absolute;
         top: 0;
@@ -561,16 +596,13 @@
             }
         }
     }
-
     .add-group {
         display: flex;
         justify-content: space-between;
-
         .hint {
             top: 10px;
             left: 10px
         }
-
         .add-button {
             padding: 13px 48px;
             padding-right: 0;
@@ -584,14 +616,12 @@
             outline: none;
             background: transparent;
         }
-
         .btn-blue {
             background: #007BFF;
             color: #fff;
             outline: none;
             padding-right: 15px;
         }
-
         .white-hint {
             background: url("/img/hint_white.svg");
         }
@@ -602,38 +632,25 @@
         font-weight: bold;
         margin: 30px 0;
     }
-
     @media  (max-width: 575px) {
         .other-author{
             padding: 10% 10px;
-
             .popup-layout{
                 padding: 15px;
-
                 .popup-title{
                     margin-bottom: 20px;
-
                     font-size: 25px;
-
                 }
-
             }
         }
-
         .add-group {
-
             flex-wrap: wrap;
-
-
-
             .add-button {
                 margin-top: 10px;
             }
             .hint{
                 top: 20px;
             }
-
         }
-
     }
 </style>

@@ -16,24 +16,24 @@
                                 <img class="ml-1 pb2" src="/img/arrow-down.svg" alt=""></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <router-link :to="{name: 'publications'}" class="dropdown-item">Переглянути список публікацій</router-link>
-                                <router-link 
+                                <router-link
                                     v-if="access == 'open'"
-                                    :to="{name: 'publications-add'}" 
+                                    :to="{name: 'publications-add'}"
                                     class="dropdown-item"
                                 >Додати нову публікацію</router-link>
-                                <router-link 
+                                <router-link
                                     v-if="access == 'open' && (userRole == 4 || userRole == 3 || userRole == 2)"
-                                    :to="{name: 'users'}" 
+                                    :to="{name: 'users'}"
                                     class="dropdown-item"
                                 >Список усіх користувачів</router-link>
                                 <button
                                     v-if="userRole == 4 && access == 'close'"
-                                    class="dropdown-item success" 
+                                    class="dropdown-item success"
                                     @click="setAccess('open')"
                                 >Перевести сервіс в звичайний режим</button>
-                                <button 
+                                <button
                                     v-if="userRole == 4 && access == 'open'"
-                                    class="dropdown-item danger" 
+                                    class="dropdown-item danger"
                                     @click="setAccess('close')"
                                 >Перевести сервіс в режим  з обмеженим доступом</button>
                             </div>
@@ -113,7 +113,6 @@
         left: 0px;
         top: 0px;
         background: #FFFFFF;
-
         z-index: 10;
     }
     .shadow{
@@ -143,7 +142,6 @@
             width: 100%;
             display: flex;
             justify-content: center;
-
             li{
                 font-family: Arial;
                 font-style: normal;
@@ -156,7 +154,6 @@
                     color: #465E82;
                 }
                 .success{
-
                     background-color: #7EF583;
                     color: #FFFFFF;
                     &:hover{
@@ -164,7 +161,6 @@
                     }
                 }
                 .danger{
-
                     background-color: #FF6A6A;
                     color: #FFFFFF;
                     &:hover{
@@ -172,7 +168,6 @@
                     }
                 }
             /*    .number{*/
-
             /*        border-radius: 50%;*/
             /*        background: #6293DB;*/
             /*        padding: 2px 7px;*/
@@ -182,7 +177,6 @@
             /*        font-weight: normal;*/
             /*        font-size: 18px;*/
             /*    }*/
-
             }
             /*.note{*/
             /*    color: #6293DB;*/
@@ -210,36 +204,24 @@
     .dropdown-toggle::after{
         display: none;
     }
-
     @media (max-width: 1365px ) and (min-width: 992px) {
-
-
         .navbar-brand {
-
             left: 20px;
         }
         .navbar-expand-lg {
             padding-left: 125px;
-
-
             .navbar-nav {
-
                 li {
-
                     margin: 0 30px;
-
-
                 }
             }
         }
-
     }
     @media (max-width: 991px )  {
         .header {
             padding: 15px 0;
             min-height: 85px;
         }
-
         .navbar-brand {
             padding-top: 10px;
             position: static;
@@ -251,14 +233,9 @@
         .navbar-expand-lg {
             padding: 0;
             justify-content: space-between;
-
             .navbar-nav {
-
-
                 li {
-
                     margin: 0 25px;
-
                 }
             }
         }
@@ -267,7 +244,6 @@
         /*}*/
         .dropdown-item {
             max-width: 100%;
-
         }
     }
     @media (max-width: 575px )  {
@@ -275,13 +251,9 @@
             padding: 10px 0;
             min-height: auto;
         }
-
-
         .navbar-expand-lg {
-
             .navbar-nav {
                 padding-top: 10px;
-
                 li {
                     font-family: Arial;
                     font-style: normal;
@@ -290,16 +262,11 @@
                     text-align: center;
                     color: #465E82;
                     margin: 0 25px;
-
                 }
             }
         }
         .dropdown-item {
-
-
             font-size: 16px;
-
         }
     }
 </style>
-

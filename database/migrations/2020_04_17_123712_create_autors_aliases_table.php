@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAuthorsHasPublicationsTable extends Migration
+class CreateAutorsAliasesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,22 +13,18 @@ class CreateAuthorsHasPublicationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('authors_has_publications', function (Blueprint $table) {
+        Schema::create('autors_aliases', function (Blueprint $table) {
             $table->id();
+            $table->string('surname_initials');
             $table->foreignId('autors_id');
-            $table->foreignId('publications_id');
+            $table->boolean('select')->default(0);
+            $table->timestamps();
         });
 
-        Schema::table('authors_has_publications', function (Blueprint $table) {
+        Schema::table('autors_aliases', function (Blueprint $table) {
             $table->index('autors_id');
             $table->foreign('autors_id')->references('id')->on('authors')->onDelete('cascade');
         });
-
-        Schema::table('authors_has_publications', function (Blueprint $table) {
-            $table->index('publications_id');
-            $table->foreign('publications_id')->references('id')->on('publications')->onDelete('cascade');
-        });
-
     }
 
     /**
@@ -38,6 +34,6 @@ class CreateAuthorsHasPublicationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('authors_has_publications');
+        Schema::dropIfExists('autors_aliases');
     }
 }

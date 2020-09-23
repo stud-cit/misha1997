@@ -188,6 +188,11 @@ body {
             border-bottom-color: #585252;
         }
     }
+    &.no-hint{
+        input,select{
+            padding: 10px 20px;
+        }
+    }
 }
 .d-flex .two-col{
     padding: 0;
@@ -390,6 +395,10 @@ button{
     img{
         margin-right: 10px;
     }
+    &:active, &:focus{
+        border: none;
+        outline: none;
+    }
 
 }
 .edit-block{
@@ -417,12 +426,39 @@ button{
         outline: none;
 
     }
+    .next{
+        background: #007BFF;
+        border-radius: 6px;
+        color: #fff;
+
+    }
+    .prev{
+        background: transparent;
+        font-family: Arial;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 22px;
+        line-height: 25px;
+        text-align: center;
+        color: #212529;
+        margin-right: 10px;
+
+    }
+}
+//animation
+.component-fade-enter-active, .component-fade-leave-active {
+    transition: opacity .5s ease;
+}
+.component-fade-enter, .component-fade-leave-to
+    /* .component-fade-leave-active до версии 2.1.8 */ {
+    opacity: 0;
 }
 .step-button-group{
     margin-top: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
     button{
         min-width: 292px;
         padding: 22px 10px;
@@ -527,7 +563,11 @@ button{
             top: 5px;
         }
 
-
+        &.no-hint{
+            input,select{
+                padding: 10px 20px;
+            }
+        }
     }
     .d-flex .two-col{
         padding: 0;
