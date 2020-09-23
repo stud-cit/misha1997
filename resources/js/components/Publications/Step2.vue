@@ -20,7 +20,7 @@
                                 <select class="item-value" v-model="selectCateg" @change="getPersonAPI">
                                     <option
                                         v-for="item in categ"
-                                        :key="item.value"
+                                        :key="'item-'+item.value"
                                         :value="item.value"
                                     >
                                         {{item.name}}
@@ -115,7 +115,7 @@
                                         <select class="item-value" v-model="newAuthor.country">
                                             <option
                                                 v-for="(item, index) in country"
-                                                :key="index"
+                                                :key="'country-'+index"
                                                 :value="item.name"
                                             >{{item.name}}</option>
                                         </select>
@@ -229,7 +229,7 @@
                 </div>
             </div>
 
-            <div v-for="(item, i) in $v.stepData.authors.$each.$iter" :key="i" class="form-group">
+            <div v-for="(item, i) in $v.stepData.authors.$each.$iter" :key="'author-'+i" class="form-group">
                 <label for="">Прізвище, ім’я, по-батькові автора *</label>
                 <div class="input-container authors">
                     <multiselect
@@ -252,31 +252,7 @@
                 </div>
             </div>
 
-            <div v-for="(item, i) in $v.stepData.authors.$each.$iter" :key="i" class="form-group">
-                <label for="">Прізвище, ім’я, по-батькові автора *</label>
-                <div class="input-container authors">
-                    <multiselect
-                        v-model="stepData.authors[i]"
-                        :searchable="true"
-                        :options="authors"
-                        selectLabel="Натисніть для вибору"
-                        selectedLabel="Вибрано"
-                        deselectLabel='Натисніть для видалення'
-                        placeholder="Пошук в базі данних сайту"
-                        :custom-label="nameWithInfo"
-                    >
-                        <span slot="noResult">По даному запиту немає результатів</span>
-                    </multiselect>
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                    <button class="remove-author" @click="removeAuthor(i)">&times;</button>
-                </div>
-                <div class="error" v-if="$v.stepData.authors.$each.$iter[i].$error">
-                    Поле обов'язкове для заповнення
-                </div>
 
-
-
-            </div>
             <div class="form-group find-author" v-if="!findAuthor">
                 <label class="item-title"><a href="#" @click.prevent="findAuthor=!findAuthor" >Не знайшли потрібного вам автора?</a></label>
             </div>
@@ -299,16 +275,6 @@
                     </div>
                 </div>
             </transition>
-            <div class="form-group">
-                <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
-                <div class="input-container">
-                    <input class="item-value" type="text" v-model="stepData.initials">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
-                </div>
-                <div class="error" v-if="$v.stepData.initials.$error">
-                    Поле обов'язкове для заповнення
-                </div>
-            </div>
             <div class="form-group">
                 <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
                 <div class="input-container">
