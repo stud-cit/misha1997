@@ -9,7 +9,8 @@
 
             <export-rating :publicationTypes="publicationTypes" :years="years" :countries="countries" class="export-block"></export-rating>
 
-            <export-publications class="export-block" :exportList="exportOwnPublication"></export-publications>
+            <export-publications class="export-block" :exportList="exportPublication"></export-publications>
+            <export-list-publications class="export-block" :exportList="exportPublication"></export-list-publications>
         </div>
         <!---->
         <div class="main-content">
@@ -160,6 +161,7 @@
 <script>
     import ExportRating from "./Exports/ExportRating";
     import ExportPublications from "./Exports/ExportPublications";
+    import ExportListPublications from "./Exports/ExportListPublications";
     import XLSX from 'xlsx';
     export default {
         data() {
@@ -172,7 +174,7 @@
                 countries: [],
                 publicationTypes: [],
                 exportData: {},
-                exportOwnPublication: [],
+                exportPublication: [],
 
                 filters: {
                     title: '',
@@ -190,7 +192,8 @@
         },
         components: {
             ExportRating,
-            ExportPublications
+            ExportPublications,
+            ExportListPublications
         },
         mounted () {
             this.getData();
@@ -246,7 +249,7 @@
                     return result
 
                 });
-                this.exportOwnPublication = arr;
+                this.exportPublication = arr;
                 this.numPage = Math.ceil(arr.length/this.perPage);
 
 

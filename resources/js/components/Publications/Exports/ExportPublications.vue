@@ -3,7 +3,7 @@
 
 
 
-        <button class="export-button" @click="exportPublications('export')"><img src="/img/download.png" alt=""> Експорт усіх публікацій</button>
+        <button class="export-button" @click="exportPublications('export')"><img src="/img/download.png" alt=""> Експорт публікацій word</button>
         <div id="export" v-show="false">
             <template v-if="filteredData.articles[0]">
             <h2>	Статті</h2>
@@ -121,19 +121,20 @@
                 let result = "";
                 switch(item.publication_type.type){
                   case "article":
-                      result = item.initials + ' ' + item.title + '. ' + item.name_magazine + '. ' + item.year + '. № ' + item.number + '. С. ' + item.pages + '.' + (item.doi ? ' DOI: ' + item.doi : '');
+                      result = item.initials + ' ' + item.title + '. ' + item.name_magazine + '. ' + item.year +  '. С. ' + item.pages + '.' + (item.doi ? ' DOI: ' + item.doi : '');
+                      // result = item.initials + ' ' + item.title + '. ' + item.name_magazine + '. ' + item.year + '. №' + item.number + '. С. ' + item.pages + '.' + (item.doi ? ' DOI: ' + item.doi : '');
                       break;
                   case "book":
-                      result = item.initials + ' ' + item.title + ': ' + item.publication_type.title.toLowerCase() + (item.by_editing ? ' / за ред. ' + item.by_editing : '') + '. ' + item.year + '. ' + item.pages + 'с.' + (item.doi ? ' DOI: ' + item.doi : '');
-                      // result = item.initials + ' ' + item.title + ': ' + item.publication_type.title.toLowerCase() + (item.by_editing ? ' / за ред. ' + item.by_editing : '') + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. ' + item.pages + 'с.' + (item.doi ? ' DOI: ' + item.doi : '');
+                      result = item.initials + ' ' + item.title + ': ' + item.publication_type.title.toLowerCase() + (item.by_editing ? ' / за ред. ' + item.by_editing : '') + '. ' + item.year + '. ' + item.pages + ' с.' + (item.doi ? ' DOI: ' + item.doi : '');
+                      // result = item.initials + ' ' + item.title + ': ' + item.publication_type.title.toLowerCase() + (item.by_editing ? ' / за ред. ' + item.by_editing : '') + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. ' + item.pages + ' с.' + (item.doi ? ' DOI: ' + item.doi : '');
                       break;
                   case "book-part":
-                      result = item.initials + ' ' + item.title + ': ' + item.publication_type.title.toLowerCase() + (item.by_editing ? ' / за ред. ' + item.by_editing : '') + '. ' + item.year + '. С.' + item.pages + '.';
-                      // result = item.initials + ' ' + item.title + ': ' + item.publication_type.title.toLowerCase() + (item.by_editing ? ' / за ред. ' + item.by_editing : '') + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. С.' + item.pages + '.';
+                      result = item.initials + ' ' + item.title + ': ' + item.publication_type.title.toLowerCase() + (item.by_editing ? ' / за ред. ' + item.by_editing : '') + '. ' + item.year + '. С. ' + item.pages + '.';
+                      // result = item.initials + ' ' + item.title + ': ' + item.publication_type.title.toLowerCase() + (item.by_editing ? ' / за ред. ' + item.by_editing : '') + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. С. ' + item.pages + '.';
                       break;
                   case "thesis":
-                      result = item.initials + ' ' + item.title + ': матеріали ' + item.name_conference + '. ' + ', ' + item.year + '. С.' + item.pages + '. ' + (item.doi ? ' DOI: ' + item.doi : '');
-                      // result = item.initials + ' ' + item.title + ': матеріали ' + item.name_conference + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. С.' + item.pages + '. ' + (item.doi ? ' DOI: ' + item.doi : '');
+                      result = item.initials + ' ' + item.title + ': матеріали ' + item.name_conference + '. ' + ', ' + item.year + '. С. ' + item.pages + '. ' + (item.doi ? ' DOI: ' + item.doi : '');
+                      // result = item.initials + ' ' + item.title + ': матеріали ' + item.name_conference + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. С. ' + item.pages + '. ' + (item.doi ? ' DOI: ' + item.doi : '');
                       break;
                   case "patent":
                       result =  item.title + ': пат. ' + item.number_certificate + ' ' + item.country + ': МПК ' + item.mpk + '. № ' + item.application_number + '; заявл. ' + item.date_application + '; опубл. ' + item.date_publication + ', Бюл. № ' + item.newsletter_number + '.';
@@ -143,12 +144,12 @@
                       // result =  'Свідоцтво про реєстрацію авторського права на твір № ' +  item.number_certificate + '. ' + item.title + ' / ' + item.initials + ' ' + item.country + '; заявл. ' + item.date_application + '; опубл. ' + item.date_publication + '.';
                       break;
                   case "methodical":
-                      result =  item.initials + ' ' + item.title + '. '  + item.year + '. ' + item.pages + 'с.';
-                      // result =  item.initials + ' ' + item.title + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. ' + item.pages + 'с.';
+                      result =  item.initials + ' ' + item.title + '. '  + item.year + '. ' + item.pages + ' с.';
+                      // result =  item.initials + ' ' + item.title + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. ' + item.pages + ' с.';
                       break;
                   case "electronic":
-                      result =  item.initials + ' ' + item.title + '. '  + item.year + '. ' + item.pages + 'с. URL: ' + item.url;
-                      // result =  item.initials + ' ' + item.title + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. ' + item.pages + 'с. URL: ' + item.url;
+                      result =  item.initials + ' ' + item.title + '. '  + item.year + '. ' + item.pages + ' с. URL: ' + item.url;
+                      // result =  item.initials + ' ' + item.title + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. ' + item.pages + ' с. URL: ' + item.url;
                       break;
 
 
