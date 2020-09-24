@@ -5,6 +5,7 @@ import store from './store.js'
 import Home from "./components/Home";
 import Auth from "./components/Auth";
 import Profile from "./components/Profile";
+import User from "./components/User";
 import Publications from "./components/Publications/Index";
 import PublicationsAdd from "./components/Publications/Add";
 import PublicationsView from "./components/Publications/View";
@@ -41,12 +42,19 @@ let router = new Router({
             }
         },
         {
-            path: '/profile/:id',
+            path: '/profile',
             name: 'profile',
             component: Profile,
             meta: {
                 requiresRegister: true,
-                roles: [1, 2, 3, 4]
+            }
+        },
+        {
+            path: '/user/:id',
+            name: 'user',
+            component: User,
+            meta: {
+                requiresRegister: true,
             }
         },
         {

@@ -11,6 +11,10 @@ use App\Models\Notifications;
 
 class PublicationsController extends Controller
 {
+    function checkPublication(Request $request) {
+        return response()->json(Publications::where('title', 'like', $request->title)->exists());
+    }
+
     function getAll(Request $request) {
         $data = Publications::with('publicationType', 'scienceType', 'supervisor', 'authors')->get();
         foreach ($data as $key => $publication) {

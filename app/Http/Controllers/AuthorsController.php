@@ -29,13 +29,13 @@ class AuthorsController extends Controller
         return response()->json($data);
     }
 
-    // authors
+    // authors All (admin)
     function getAll(Request $request) {
         $data = Authors::with('role')->get();
         return response()->json($data);
     }
 
-    //cabinet users
+    // cabinet users (add publication page)
     function getPersons($categ, $id) {
         $asu_key = 'eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG';
         $mode = 1;
@@ -44,25 +44,27 @@ class AuthorsController extends Controller
         return response()->json($getPersons);
     }
 
+    // profile
+    function profile(Request $request) {
+        $data = Authors::with('role')->find($request->session()->get('person')['id']);
+        return response()->json($data);
+    }
+
+    // updateProfile
+    function updateProfile(Request $request) {
+        $data = $request->all();
+        Authors::find($request->session()->get('person')['id'])->update($data);
+        $user = Authors::find($request->session()->get('person')['id']);
+        return response()->json($user);
+    }
+
+    // getId
     function getId($id) {
         $data = Authors::with('publications', 'role', 'notifications')->where("id", $id)->first();
         return response()->json($data);
     }
 
-    function getLoginUser() {
-        session_start();
-        $data = [];
-
-        $getPersonInfo1 = json_decode(file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersonInfo1?key='.$_SESSION['key']), true);
-
-        $data['guid'] = $_SESSION['person']['result']['guid'];
-        $data['name'] = $_SESSION['person']['result']['surname']." ".$_SESSION['person']['result']['name']." ".$_SESSION['person']['result']['patronymic'];
-        $data['email'] = $_SESSION['person']['result']['email'];
-        $data['faculty'] = $getPersonInfo1['result'][0]['NAME_DIV'];
-
-        return response()->json($data);
-    }
-
+    // postAuthor (add publication page)
     function postAuthor(Request $request) {
         if(!Authors::where("name", "like", $request->name)->exists()) {
             $model = new Authors();
@@ -80,39 +82,20 @@ class AuthorsController extends Controller
         }
     }
 
+    // updateAuthor
     function updateAuthor(Request $request, $id) {
-        $edit_author = Authors::find($id);
-        $edit_notifications = Notifications::where("autors_id", $id)->first();
-
-        $edit_author->id = $request->id;
-        $edit_author->name = $request->name;
-        $edit_author->guid = $request->guid;
-        $edit_author->job = $request->job;
-        $edit_author->country = $request->country;
-        $edit_author->h_index = $request->hIndex;
-        $edit_author->scopus_autor_id = $request->scopusAutorId;
-        $edit_author->scopus_researcher_id = $request->scopusResearcherId;
-        $edit_author->orcid = $request->orcid;
-        $edit_author->department = $request->department;
-        $edit_author->faculty = $request->faculty;
-        $edit_author->academic_code = $request->academicCode;
-        $edit_author->email = $request->email;
-        $edit_author->roles_id = $request->rolesId;
-
-        if($request->id == $edit_notifications->autors_id) {
-            //$notifications = Notifications::find($id);
-            $edit_notifications->text = $request->text;
-            $edit_notifications->save();
-        }
-        $edit_author->save();
-    }
-
-    function deleteAuthor($id) {
-        $model = Authors::with('notifications')->find($id);
-        $model->delete();
+        $data = $request->all();
+        Authors::find($id)->update($data);
         return response('ok', 200);
     }
 
+    // deleteAuthor
+    function deleteAuthor($id) {
+        Authors::with('notifications')->find($id)->delete();
+        return response('ok', 200);
+    }
+
+    // getRoles
     function getRoles() {
         $data = Roles::get();
         return response()->json($data);
