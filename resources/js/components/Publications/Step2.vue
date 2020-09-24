@@ -68,9 +68,9 @@
                             <li class="row">
                                 <div class="col-lg-3 list-item list-title">Прізвище, ім’я, по-батькові *</div>
                                 <div class="col-lg-9 list-item list-text">
-                                    <div class="input-container">
+                                    <div class="input-container hint-container">
                                         <input class="item-value" type="text" v-model="newAuthor.name">
-                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                                        <div class="hint" ><span>Вказати прізвище, ім’я, по-батькові мовою оригіналу публікації:</span></div>
                                     </div>
                                     <div class="error" v-if="$v.newAuthor.name.$error">
                                         Поле обов'язкове для заповнення
@@ -181,12 +181,12 @@
             </div>
             <div class="form-group">
                 <label class="item-title">Під керівництвом</label>
-                <div class="input-container">
+                <div class="input-container hint-container">
                     <select class="item-value" v-model="stepData.useSupervisor">
                         <option value="1">Так </option>
                         <option value="0">Ні </option>
                     </select>
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>Зазначити "Так" у випадку одноосібної публікації студента</span></div>
                 </div>
 
             </div>
@@ -220,11 +220,11 @@
             <div class="form-group">
                 <label class="item-title" >Автори:</label>
                 <div class="add-group">
-                    <div class="input-container">
+                    <div class="input-container hint-container">
                         <button class="add-button btn-blue" @click="addAuthor">
                             Додати автора
                         </button>
-                        <div class="hint white-hint" ><span>Прізвище, ім’я, по-батькові</span></div>
+                        <div class="hint white-hint" ><span>Додати авторів з бази даних сайту, якщо їх більше одного</span></div>
                     </div>
                 </div>
             </div>
@@ -301,9 +301,9 @@
             </transition>
             <div class="form-group">
                 <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
-                <div class="input-container">
+                <div class="input-container hint-container">
                     <input class="item-value" type="text" v-model="stepData.initials">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
+                    <div class="hint" ><span>Ввести через кому прізвише та ініціали авторів мовою оригіналу публікації</span></div>
                 </div>
                 <div class="error" v-if="$v.stepData.initials.$error">
                     Поле обов'язкове для заповнення
@@ -604,7 +604,7 @@
             left: 10px
         }
         .add-button {
-            padding: 13px 48px;
+            padding: 13px;
             padding-right: 0;
             font-family: Arial;
             font-style: normal;
@@ -624,6 +624,11 @@
         }
         .white-hint {
             background: url("/img/hint_white.svg");
+        }
+        .hint-container{
+            .add-button {
+                padding: 13px 48px;
+            }
         }
     }
     .loading{

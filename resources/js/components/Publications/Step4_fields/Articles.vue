@@ -22,7 +22,7 @@
             </div>
 
             <div class="form-group">
-                <label class="item-title">Номер (том) *</label>
+                <label class="item-title">Номер (том) </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.number">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
@@ -57,7 +57,7 @@
             </div>
 
             <div class="form-group">
-                <label class="item-title">DOI *</label>
+                <label class="item-title">DOI </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.doi">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
@@ -104,13 +104,13 @@
                     required
                 },
                 number: {
-                    required
+                    // required
                 },
                 pages: {
                     required
                 },
                 doi: {
-                    required
+                    // required
                 },
 
 
@@ -132,7 +132,13 @@
                 })
             },
             nextStep() {
-
+                this.$v.$touch();
+                if (this.$v.$invalid) {
+                    swal("Не всі поля заповнено!", {
+                        icon: "error",
+                    });
+                    return
+                }
                 this.$parent.$emit('getData', this.stepData);
             },
             prevStep(){

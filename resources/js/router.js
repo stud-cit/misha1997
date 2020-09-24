@@ -102,38 +102,38 @@ let router = new Router({
     ]
 });
 
-router.beforeEach((to, from, next) => {
-    if(to.matched.some(record => record.meta.requiresAuth)) {
-        if(!store.getters.authUser) {
-            next();
-        } else {
-            next({
-                path: '/',
-                params: { nextUrl: to.fullPath }
-            });
-        }
-    } else if (to.matched.some(record => record.meta.requiresRegister)) {
-        axios.get('/api/check-user')
-        .then((response) => {
-            if(response.data.status == 'register') {
-                store.dispatch('setUser', response.data.user)
-                next();
-            } else if(response.data.status == 'login') {
-                next({
-                    path: '/register',
-                    params: { nextUrl: to.fullPath }
-                });
-            } else {
-                store.dispatch('logout')
-                next({
-                    path: '/',
-                    params: { nextUrl: to.fullPath }
-                });
-            }
-        })
-    } else {
-        next();
-    }
-})
+// router.beforeEach((to, from, next) => {
+//     if(to.matched.some(record => record.meta.requiresAuth)) {
+//         if(!store.getters.authUser) {
+//             next();
+//         } else {
+//             next({
+//                 path: '/',
+//                 params: { nextUrl: to.fullPath }
+//             });
+//         }
+//     } else if (to.matched.some(record => record.meta.requiresRegister)) {
+//         axios.get('/api/check-user')
+//         .then((response) => {
+//             if(response.data.status == 'register') {
+//                 store.dispatch('setUser', response.data.user)
+//                 next();
+//             } else if(response.data.status == 'login') {
+//                 next({
+//                     path: '/register',
+//                     params: { nextUrl: to.fullPath }
+//                 });
+//             } else {
+//                 store.dispatch('logout')
+//                 next({
+//                     path: '/',
+//                     params: { nextUrl: to.fullPath }
+//                 });
+//             }
+//         })
+//     } else {
+//         next();
+//     }
+// })
 
 export default router

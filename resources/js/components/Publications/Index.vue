@@ -9,21 +9,22 @@
 
             <export-rating :publicationTypes="publicationTypes" :years="years" :countries="countries" class="export-block"></export-rating>
 
-            <export-publications class="export-block" :exportList="exportOwnPublication"></export-publications>
+            <export-publications class="export-block" :exportList="exportPublication"></export-publications>
+            <export-list-publications class="export-block" :exportList="exportPublication"></export-list-publications>
         </div>
         <!---->
         <div class="main-content">
             <form class="search-block">
                 <div class="form-group">
                     <label >Назва публікації</label>
-                    <div class="input-container">
+                    <div class="input-container hint-container">
                         <input type="text" v-model="filters.title" >
-                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                        <div class="hint" ><span>Зазначається назва публікації мовою оригіналу</span></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label >Прізвище та ініціали автора</label>
-                    <div class="input-container">
+                    <div class="input-container hint-container">
                         <input type="text" v-model="filters.initials" >
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
@@ -165,6 +166,7 @@
 <script>
     import ExportRating from "./Exports/ExportRating";
     import ExportPublications from "./Exports/ExportPublications";
+    import ExportListPublications from "./Exports/ExportListPublications";
     import XLSX from 'xlsx';
     export default {
         data() {
@@ -179,7 +181,7 @@
                 countries: [],
                 publicationTypes: [],
                 exportData: {},
-                exportOwnPublication: [],
+                exportPublication: [],
 
                 filters: {
                     title: '',
@@ -197,7 +199,8 @@
         },
         components: {
             ExportRating,
-            ExportPublications
+            ExportPublications,
+            ExportListPublications
         },
         mounted () {
             this.getData();
@@ -282,7 +285,7 @@
                     return result
 
                 });
-                this.exportOwnPublication = arr;
+                this.exportPublication = arr;
                 this.numPage = Math.ceil(arr.length/this.perPage);
 
 

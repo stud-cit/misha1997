@@ -109,23 +109,23 @@
             </div>
             <div class="form-group">
                 <label class="item-title">Комерціалізовано університетом *</label>
-                <div class="input-container">
+                <div class="input-container hint-container">
                     <select class="item-value" v-model="stepData.commerc_university">
                         <option value="1">Так </option>
                         <option value="0">Ні </option>
                     </select>
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>"так" -у разі надходження коштів на рахунок університету</span></div>
                 </div>
 
             </div>
             <div class="form-group">
                 <label class="item-title">Комерціалізовано штатними співробітниками університету *</label>
-                <div class="input-container">
+                <div class="input-container hint-container">
                     <select class="item-value" v-model="stepData.commerc_employees">
                         <option value="1">Так </option>
                         <option value="0">Ні </option>
                     </select>
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>"так" - при отриманні коштів автором - штатним співробітником університету</span></div>
                 </div>
 
             </div>

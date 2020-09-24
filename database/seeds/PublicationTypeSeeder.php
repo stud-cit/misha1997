@@ -67,7 +67,7 @@ class PublicationTypeSeeder extends Seeder
             'scopus_wos' => 0
         ]);
         DB::table('publication_type')->insert([
-            'title' => 'Методичні вказівки',
+            'title' => 'Методичні вказівки / конспекти лекцій',
             'type' => 'methodical',
             'scopus_wos' => 0
         ]);

@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Заявник *</label>
+                <label class="item-title">Власник майнових прав *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.applicant">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
@@ -35,27 +35,27 @@
                     Поле обов'язкове для заповнення
                 </div>
             </div>
+<!--            <div class="form-group">-->
+<!--                <label class="item-title">Дата подачі заявки *</label>-->
+<!--                <div class="input-container">-->
+<!--                    <date-picker-->
+<!--                        v-model="stepData.date_application"-->
+<!--                        value-type="YYYY-MM-DD"-->
+<!--                        :lang="datepicker.lang"-->
+<!--                        :default-value="datepicker.minDate"-->
+<!--                        :disabled-date="rangeDate"-->
+<!--                        :editable="false"-->
+<!--                        :popup-style="datepicker.styles"-->
+<!--                    ></date-picker>-->
+<!--                    <input style="display:none" class="item-value" type="text" v-model="stepData.date_application">-->
+<!--                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>-->
+<!--                </div>-->
+<!--                <div class="error" v-if="$v.stepData.date_application.$error">-->
+<!--                    Поле обов'язкове для заповнення-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="form-group">
-                <label class="item-title">Дата подачі заявки *</label>
-                <div class="input-container">
-                    <date-picker
-                        v-model="stepData.date_application"
-                        value-type="YYYY-MM-DD"
-                        :lang="datepicker.lang"
-                        :default-value="datepicker.minDate"
-                        :disabled-date="rangeDate"
-                        :editable="false"
-                        :popup-style="datepicker.styles"
-                    ></date-picker>
-                    <input style="display:none" class="item-value" type="text" v-model="stepData.date_application">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                </div>
-                <div class="error" v-if="$v.stepData.date_application.$error">
-                    Поле обов'язкове для заповнення
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="item-title">Дата публікації про видачу свідоцтва/рішення *</label>
+                <label class="item-title">Дата реєстрації свідоцтва/рішення *</label>
                 <div class="input-container">
                     <date-picker
                         v-model="stepData.date_publication"
@@ -75,23 +75,23 @@
             </div>
             <div class="form-group">
                 <label class="item-title">Комерціалізовано університетом *</label>
-                <div class="input-container">
+                <div class="input-container hint-container">
                     <select class="item-value" v-model="stepData.commerc_university">
                         <option value="1">Так </option>
                         <option value="0">Ні </option>
                     </select>
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>"так" -у разі надходження коштів на рахунок університету</span></div>
                 </div>
 
             </div>
             <div class="form-group">
                 <label class="item-title">Комерціалізовано штатними співробітниками університету *</label>
-                <div class="input-container">
+                <div class="input-container hint-container">
                     <select class="item-value" v-model="stepData.commerc_employees">
                         <option value="1">Так </option>
                         <option value="0">Ні </option>
                     </select>
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>"так" - при отриманні коштів автором - штатним співробітником університету</span></div>
                 </div>
 
             </div>
@@ -119,7 +119,7 @@
                     number_certificate: '',
                     country: 'Україна',
                     applicant: '',
-                    date_application: '',
+                    // date_application: '',
                     date_publication: '',
                     commerc_university: 0,
                     commerc_employees: 0
@@ -156,9 +156,9 @@
                 applicant: {
                     required
                 },
-                date_application: {
-                    required
-                },
+                // date_application: {
+                //     required
+                // },
                 date_publication: {
                     required
                 },
