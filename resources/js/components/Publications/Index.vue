@@ -16,14 +16,14 @@
             <form class="search-block">
                 <div class="form-group">
                     <label >Назва публікації</label>
-                    <div class="input-container">
+                    <div class="input-container hint-container">
                         <input type="text" v-model="filters.title" >
-                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                        <div class="hint" ><span>Зазначається назва публікації мовою оригіналу</span></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label >Прізвище та ініціали автора</label>
-                    <div class="input-container">
+                    <div class="input-container hint-container">
                         <input type="text" v-model="filters.initials" >
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>

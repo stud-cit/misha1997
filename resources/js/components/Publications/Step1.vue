@@ -9,10 +9,10 @@
 
             <div class="form-group">
                 <label >Назва публікації *</label>
-                <div class="input-container">
+                <div class="input-container hint-container">
                     <input type="text"  v-model.trim="stepData.title" @blur="$v.stepData.title.$touch()">
 
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>Зазначається назва публікації мовою оригіналу, починаючи з великої літери</span></div>
                 </div>
 
                 <div class="error" v-if="$v.stepData.title.$error">

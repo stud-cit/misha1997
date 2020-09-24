@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Місто видання *</label>
+                <label class="item-title">Місто видання </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.city">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Видавництво *</label>
+                <label class="item-title">Видавництво </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.editor_name">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
@@ -89,10 +89,10 @@
 
 
                 city: {
-                    required
+                    // required
                 },
                 editor_name: {
-                    required
+                    // required
                 },
                 pages: {
                     required

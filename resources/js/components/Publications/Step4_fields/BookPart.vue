@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">За редакцією *</label>
+                <label class="item-title">За редакцією </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.by_editing">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Місто видання *</label>
+                <label class="item-title">Місто видання </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.city">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Видавництво *</label>
+                <label class="item-title">Видавництво </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.editor_name">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
@@ -57,22 +57,22 @@
             </div>
             <div class="form-group">
                 <label class="item-title">Сторінки *</label>
-                <div class="input-container">
+                <div class="input-container hint-container">
                     <input class="item-value" type="text" v-model="stepData.pages">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>Вказати номера сторінок вашого розділу</span></div>
                 </div>
                 <div class="error" v-if="$v.stepData.pages.$error">
                     Поле обов'язкове для заповнення
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Опубліковано мовами ОЕСР та ЄС *</label>
-                <div class="input-container">
+                <label class="item-title">Опубліковано мовами ОЕСР *</label>
+                <div class="input-container hint-container">
                     <select class="item-value" v-model="stepData.languages">
                         <option value="1">Так </option>
                         <option value="0">Ні </option>
                     </select>
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>Опубліковано мовою країн організації економічного співробітництва та розвитку</span></div>
                 </div>
 
             </div>
@@ -113,13 +113,13 @@
             stepData: {
 
                 by_editing: {
-                    required
+                    // required
                 },
                 city: {
-                    required
+                    // required
                 },
                 editor_name: {
-                    required
+                    // required
                 },
                 pages: {
                     required

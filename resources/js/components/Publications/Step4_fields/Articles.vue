@@ -57,7 +57,7 @@
             </div>
 
             <div class="form-group">
-                <label class="item-title">DOI *</label>
+                <label class="item-title">DOI </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.doi">
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
@@ -104,13 +104,13 @@
                     required
                 },
                 number: {
-                    required
+                    // required
                 },
                 pages: {
                     required
                 },
                 doi: {
-                    required
+                    // required
                 },
 
 
