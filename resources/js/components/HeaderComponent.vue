@@ -1,15 +1,15 @@
 <template>
 
-    <header :class="{shadow: navbar, header: true}">
+    <header :class="{header: true}">
 
         <div class="container">
 
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <a class="navbar-brand" href="/home"><img src="/img/logo.svg" alt=""></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="navbar">
-                    <span class="navbar-toggler-icon" ></span>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="$route.name != 'auth'">
+                    <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav" v-if="navbar">
+                <div class="collapse navbar-collapse" id="navbarNav" v-if="$route.name != 'auth'">
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle"  href="#" data-toggle="dropdown" >Мої публікації
@@ -62,9 +62,7 @@
 
     export default {
         data() {
-            return {
-                navbar: true,
-            };
+            return {};
         },
         computed: {
             userRole() {
@@ -75,20 +73,18 @@
             }
         },
         created () {
-            this.checkAuth();
             this.getAccess();
         },
         methods: {
-            checkAuth() {
-                if(this.$route.name == "auth") {
-                    this.navbar = false;
-                }
-            },
             getAccess() {
                 this.$store.dispatch('getAccess')
             },
             setAccess(mode) {
                 this.$store.dispatch('setAccess', mode)
+            },
+            exit() {
+                this.$store.dispatch('logout')
+                window.location.href = '/';
             }
         },
         watch: {
