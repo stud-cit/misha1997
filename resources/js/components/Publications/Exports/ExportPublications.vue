@@ -137,7 +137,7 @@
                       // result = item.initials + ' ' + item.title + ': матеріали ' + item.name_conference + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. С. ' + item.pages + '. ' + (item.doi ? ' DOI: ' + item.doi : '');
                       break;
                   case "patent":
-                      result =  item.title + ': пат. ' + item.number_certificate + ' ' + item.country + ': МПК ' + item.mpk + '. № ' + item.application_number + '; заявл. ' + item.date_application + '; опубл. ' + item.date_publication + ', Бюл. № ' + item.newsletter_number + '.';
+                      result =  item.title + ': пат. ' + item.number_certificate + ' ' + item.country + ': МПК ' + item.mpk + '. № ' + item.application_number +  '; опубл. ' + item.date_publication + ', Бюл. № ' + item.newsletter_number + '.';
                       break;
                   case "certificate":
                       result =  'Свідоцтво про реєстрацію авторського права на твір № ' +  item.number_certificate + '. ' + item.title + ' / ' + item.initials + ' ' + item.country + ';  опубл. ' + item.date_publication + '.';

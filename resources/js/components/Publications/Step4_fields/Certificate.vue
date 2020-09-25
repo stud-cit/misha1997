@@ -28,8 +28,21 @@
             <div class="form-group">
                 <label class="item-title">Власник майнових прав *</label>
                 <div class="input-container">
+
+                    <select class="item-value" v-model="applicant_id">
+                        <option value="0">СумДУ</option>
+                        <option value="1">не  СумДУ</option>
+                    </select>
+                    <div class="hint" ><span></span></div>
+                </div>
+
+            </div>
+            <div class="form-group" v-if="applicant_id == '1'">
+                <label class="item-title">Вкажіть власника майнових прав не СумДУ *</label>
+                <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.applicant">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+
+                    <div class="hint" ><span></span></div>
                 </div>
                 <div class="error" v-if="$v.stepData.applicant.$error">
                     Поле обов'язкове для заповнення
@@ -106,7 +119,7 @@
 </template>
 
 <script>
-    import {required} from "vuelidate/lib/validators";
+    import {required, requiredIf} from "vuelidate/lib/validators";
     import DatePicker from 'vue2-datepicker';
     import 'vue2-datepicker/index.css';
     const nowDate = new Date();
@@ -115,10 +128,12 @@
         data() {
             return {
                 country: [],
+                applicant_id: '0',
                 stepData: {
                     number_certificate: '',
                     country: 'Україна',
                     applicant: '',
+
                     // date_application: '',
                     date_publication: '',
                     commerc_university: 0,
@@ -154,7 +169,9 @@
                     required
                 },
                 applicant: {
-                    required
+                    required: requiredIf( function() {
+                        return this.applicant_id == '1';
+                    }),
                 },
                 // date_application: {
                 //     required
@@ -183,6 +200,9 @@
                         icon: "error",
                     });
                     return
+                }
+                if(this.applicant_id == '0'){
+                    this.stepData.applicant = 'СумДУ';
                 }
                 this.$parent.$emit('getData', this.stepData);
             },

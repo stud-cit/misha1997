@@ -67,17 +67,17 @@
                     Поле обов'язкове для заповнення
                 </div>
             </div>
-            <div class="form-group">
-                <label class="item-title">Опубліковано мовами ОЕСР *</label>
-                <div class="input-container hint-containe">
-                    <select class="item-value" v-model="stepData.languages">
-                        <option value="1">Так </option>
-                        <option value="0">Ні </option>
-                    </select>
-                    <div class="hint" ><span>Опубліковано мовою країн організації економічного співробітництва та розвитку</span></div>
-                </div>
+<!--            <div class="form-group">-->
+<!--                <label class="item-title">Опубліковано мовами ОЕСР *</label>-->
+<!--                <div class="input-container hint-containe">-->
+<!--                    <select class="item-value" v-model="stepData.languages">-->
+<!--                        <option value="1">Так </option>-->
+<!--                        <option value="0">Ні </option>-->
+<!--                    </select>-->
+<!--                    <div class="hint" ><span>Опубліковано мовою країн організації економічного співробітництва та розвитку</span></div>-->
+<!--                </div>-->
 
-            </div>
+<!--            </div>-->
             <div class="form-group">
                 <label class="item-title">DOI </label>
                 <div class="input-container hint-container">
@@ -114,7 +114,7 @@
                     city: '',
                     editor_name: '',
                     pages: '',
-                    languages: 0,
+                    // languages: 0,
                     doi: ''
                 }
             }

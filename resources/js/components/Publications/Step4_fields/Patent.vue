@@ -35,10 +35,23 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Заявник *</label>
+                <label class="item-title">Власник майнових прав *</label>
+                <div class="input-container">
+
+                    <select class="item-value" v-model="applicant_id">
+                        <option value="0">СумДУ</option>
+                        <option value="1">не  СумДУ</option>
+                    </select>
+                    <div class="hint" ><span></span></div>
+                </div>
+
+            </div>
+            <div class="form-group" v-if="applicant_id == '1'">
+                <label class="item-title">Вкажіть власника майнових прав не СумДУ *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="stepData.applicant">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+
+                    <div class="hint" ><span></span></div>
                 </div>
                 <div class="error" v-if="$v.stepData.applicant.$error">
                     Поле обов'язкове для заповнення
@@ -54,49 +67,49 @@
                     Поле обов'язкове для заповнення
                 </div>
             </div>
-            <div class="form-row">
-                <div class="col-lg-6 form-group">
-                    <label class="item-title">Дата подачі заявки *</label>
-                    <div class="input-container">
 
-                        <date-picker
-                            v-model="stepData.date_application"
-                            value-type="YYYY-MM-DD"
-                            :lang="datepicker.lang"
-                            :default-value="datepicker.minDate"
-                            :disabled-date="rangeDate"
-                            :editable="false"
-                            :popup-style="datepicker.styles"
-                        ></date-picker>
-                            <input style="display:none" class="item-value" type="text" v-model="stepData.date_application" required>
-                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                    </div>
-                    <div class="error" v-if="$v.stepData.date_application.$error">
-                        Поле обов'язкове для заповнення
-                    </div>
+<!--                <div class="col-lg-6 form-group">-->
+<!--                    <label class="item-title">Дата подачі заявки *</label>-->
+<!--                    <div class="input-container">-->
+
+<!--                        <date-picker-->
+<!--                            v-model="stepData.date_application"-->
+<!--                            value-type="YYYY-MM-DD"-->
+<!--                            :lang="datepicker.lang"-->
+<!--                            :default-value="datepicker.minDate"-->
+<!--                            :disabled-date="rangeDate"-->
+<!--                            :editable="false"-->
+<!--                            :popup-style="datepicker.styles"-->
+<!--                        ></date-picker>-->
+<!--                            <input style="display:none" class="item-value" type="text" v-model="stepData.date_application" required>-->
+<!--                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>-->
+<!--                    </div>-->
+<!--                    <div class="error" v-if="$v.stepData.date_application.$error">-->
+<!--                        Поле обов'язкове для заповнення-->
+<!--                    </div>-->
+<!--                </div>-->
+            <div class="form-group">
+                <label class="item-title">Дата реєстрації патенту *</label>
+                <div class="input-container">
+
+                    <date-picker
+                        v-model="stepData.date_publication"
+                        value-type="YYYY-MM-DD"
+                        :lang="datepicker.lang"
+                        :default-value="datepicker.minDate"
+                        :disabled-date="rangeDate"
+                        :editable="false"
+                        :popup-style="datepicker.styles"
+                    ></date-picker>
+                        <input style="display:none" class="item-value" type="text" v-model="stepData.date_publication" required>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
-                <div class="col-lg-6 form-group">
-                    <label class="item-title">Дата публікації про видачу патенту *</label>
-                    <div class="input-container">
-
-                        <date-picker
-                            v-model="stepData.date_publication"
-                            value-type="YYYY-MM-DD"
-                            :lang="datepicker.lang"
-                            :default-value="datepicker.minDate"
-                            :disabled-date="rangeDate"
-                            :editable="false"
-                            :popup-style="datepicker.styles"
-                        ></date-picker>
-                            <input style="display:none" class="item-value" type="text" v-model="stepData.date_publication" required>
-                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                    </div>
-                    <div class="error" v-if="$v.stepData.date_publication.$error">
-                        Поле обов'язкове для заповнення
-                    </div>
+                <div class="error" v-if="$v.stepData.date_publication.$error">
+                    Поле обов'язкове для заповнення
                 </div>
-
             </div>
+
+
             <div class="form-group">
                 <label class="item-title">№ бюлетеня *</label>
                 <div class="input-container">
@@ -141,7 +154,7 @@
 <script>
     import DatePicker from 'vue2-datepicker';
     import 'vue2-datepicker/index.css';
-    import {required} from "vuelidate/lib/validators";
+    import {required, requiredIf} from "vuelidate/lib/validators";
 
     const nowDate = new Date();
 
@@ -152,13 +165,14 @@
         data() {
             return {
                 country: [],
+                applicant_id: '0',
                 stepData: {
                     number_certificate: '',
                     country: 'Україна',
                     mpk: '',
                     applicant: '',
                     application_number: '',
-                    date_application: '',
+                    // date_application: '',
                     date_publication: '',
                     newsletter_number: '',
                     commerc_university: 0,
@@ -194,14 +208,16 @@
                     required
                 },
                 applicant: {
-                    required
+                    required: requiredIf( function() {
+                        return this.applicant_id == '1';
+                    }),
                 },
                 application_number: {
                     required
                 },
-                date_application: {
-                    required
-                },
+                // date_application: {
+                //     required
+                // },
                 date_publication: {
                     required
                 },

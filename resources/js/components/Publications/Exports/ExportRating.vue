@@ -12,10 +12,23 @@
 
                 <form class="search-form">
                     <div class="form-row">
+
                         <div class="form-group col-lg-6">
-                            <label >Індексування БД Scopus\WoS</label>
+                            <label >Інститут / факультет </label>
                             <div class="input-container ">
-                                <select  v-model="filters.science_type_id">
+                                <select  v-model="filters.faculty">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in years" :key="index" :value="item">{{item}}</option>
+
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label >Університет</label>
+                            <div class="input-container ">
+                                <select  v-model="filters.university">
                                     <option value=""></option>
                                     <option value="1">Scopus</option>
                                     <option value="2">Wos</option>
@@ -24,15 +37,31 @@
 
                             </div>
                         </div>
+
+                    </div>
+                    <div class="form-row">
                         <div class="form-group col-lg-6">
-                            <label >Рік
-                                видання </label>
+                            <label >Кафедра</label>
                             <div class="input-container ">
-                                <select  v-model="filters.year">
+                                <select  v-model="filters.department">
                                     <option value=""></option>
-                                    <option v-for="(item, index) in years" :key="index" :value="item">{{item}}</option>
+                                    <option value="1">1</option>
+                                    <option value="0">2</option>
+                                    >
 
+                                </select>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label >Індексування БД Scopus\WoS</label>
+                            <div class="input-container ">
+                                <select  v-model="filters.science_type_id">
+                                    <option value=""></option>
+                                    <option value="1">Scopus</option>
+                                    <option value="2">Wos</option>
+                                    <option value="3">Scopus та Wos</option>
                                 </select>
 
                             </div>
@@ -53,12 +82,18 @@
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
-                            <label >Місто видання</label>
+                            <label >Квартиль журналу SCOPUS </label>
                             <div class="input-container ">
-                                <input type="text"  v-model="filters.city">
+                                <select  v-model="filters.quartil_scopus">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in 4" :value="item" :key="index">{{item}}</option>
+
+                                </select>
 
                             </div>
                         </div>
+
+
 
                     </div>
                     <div class="form-row">
@@ -74,47 +109,33 @@
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
-                            <label >Публікації
-                                за авторством та
-                                співавторством студентів</label>
+                            <label >Квартиль журналу WOS</label>
                             <div class="input-container ">
-                                <select  v-model="filters.withStudents">
+                                <select  v-model="filters.quartil_wos">
                                     <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
+                                    <option v-for="(item, index) in 4" :value="item" :key="index">{{item}}</option>
 
                                 </select>
 
                             </div>
                         </div>
+
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
-                            <label >Публікації у співавторстві з іноземними партнерами</label>
+                            <label >Рік
+                                видання </label>
                             <div class="input-container ">
-                                <select  v-model="filters.withForeigners">
+                                <select  v-model="filters.year">
                                     <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
+                                    <option v-for="(item, index) in years" :key="index" :value="item">{{item}}</option>
+
 
                                 </select>
 
                             </div>
                         </div>
-                        <div class="form-group col-lg-6">
-                            <label >Публікації опубліковані за кордоном мовами ОЕСР та ЕС</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.languages">
-                                    <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
 
-                                </select>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
                         <div class="form-group col-lg-6">
                             <label >Публікації опубліковані у виданнях з показником SNIP більше ніж 1,0 </label>
                             <div class="input-container ">
@@ -127,8 +148,23 @@
 
                             </div>
                         </div>
+
+                    </div>
+                    <div class="form-row">
                         <div class="form-group col-lg-6">
-                            <label >Статті у виданнях, які входять до SCIE</label>
+                            <label >Публікації з цифровим ідентифікатором DOI</label>
+                            <div class="input-container ">
+                                <select  v-model="filters.doi ">
+                                    <option value=""></option>
+                                    <option value="1">Так</option>
+                                    <option value="0">Ні</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label >Статті у виданнях, які входять до підбази WOS - SCIE</label>
                             <div class="input-container ">
                                 <select  v-model="filters.scie ">
                                     <option value=""></option>
@@ -142,7 +178,21 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
-                            <label >Статті у виданнях, які входять до SSCI</label>
+                            <label >Публікації
+                                за авторством та
+                                співавторством студентів</label>
+                            <div class="input-container ">
+                                <select  v-model="filters.withStudents">
+                                    <option value=""></option>
+                                    <option value="1">Так</option>
+                                    <option value="0">Ні</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label >Статті у виданнях, які входять до підбази WOS - SSCI </label>
                             <div class="input-container ">
                                 <select  v-model="filters.ssci ">
                                     <option value=""></option>
@@ -153,27 +203,18 @@
 
                             </div>
                         </div>
-                        <div class="form-group col-lg-6">
-                            <label >Публікації у виданнях з імпакт-фактором більше ніж 0,5</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.impact_factor ">
-                                    <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
 
-                                </select>
 
-                            </div>
-                        </div>
                     </div>
                     <div class="form-row">
+
                         <div class="form-group col-lg-6">
-                            <label >Публікації з цифровим ідентифікатором DOI</label>
+                            <label >Охоронні документи</label>
                             <div class="input-container ">
-                                <select  v-model="filters.doi ">
+                                <select  v-model="filters.applicant">
                                     <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
+                                    <option value="СумДУ">Отромані на ім'я СумДУ</option>
+                                    <option value="не СумДУ">отримані не на ім'я СумДУ</option>
 
                                 </select>
 
@@ -196,6 +237,18 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
+                            <label >Комерціалізовані охоронні документи</label>
+                            <div class="input-container ">
+                                <select  v-model="filters.commercial_applicant">
+                                    <option value=""></option>
+                                    <option value="1">Університетом</option>
+                                    <option value="2">Штатними співробітниками</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
                             <label >Публікації опубліковані за кордоном</label>
                             <div class="input-container ">
                                 <select  v-model="filters.abroad ">
@@ -207,85 +260,25 @@
 
                             </div>
                         </div>
-                    </div>
-<!--                    <div class="form-row">-->
-<!--                    <div class="form-group col-lg-6">-->
-<!--                        <label >Публікації у журналах Nature Scince</label>-->
-<!--                        <div class="input-container ">-->
-<!--                            <select  v-model="filters.nature ">-->
-<!--                                <option value=""></option>-->
-<!--                                <option value="1">Так</option>-->
-<!--                                <option value="0">Ні</option>-->
 
-<!--                            </select>-->
-
-<!--                        </div>-->
-<!--                    </div>-->
-                        <!--<div class="form-group col-lg-6">
-                            <label >Тези опубліковані за кордоном</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.thesis_abroad ">
-                                    <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
-
-                                </select>
-
-                            </div>
-                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
-                            <label >Тези опубліковані зі студентами</label>
+                            <label >Публікації у співавторстві з іноземними партнерами</label>
                             <div class="input-container ">
-                                <select  v-model="filters.thesis_student ">
+                                <select  v-model="filters.withForeigners">
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
-
-                                </select>
-
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label >Тези опубліковані з іноземними партнерами</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.snip ">
-                                    <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
+                                    <option value="10">В тому числі мають індекс гірша за Scopus та WoS не нижче 10</option>
 
                                 </select>
 
                             </div>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group col-lg-6">
-                            <label >Статті опубліковані за кордоном</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.snip ">
-                                    <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
 
-                                </select>
 
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label >Статті опубліковані з іноземними партнерами</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.snip ">
-                                    <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
-
-                                </select>
-
-                            </div>
-                        </div>
-                    </div>-->
 
 
 
@@ -617,21 +610,27 @@
             return {
                 showFilters: false,
                 filters: {
+                    faculty: '',
+                    university: '',
+                    department: '',
                     withStudents: '',
                     withForeigners: '',
                     science_type_id: '',
                     year: '',
                     country: '',
-                    city: '',
+                    quartil_scopus: '',
+                    quartil_wos: '',
                     publication_type_id: '',
-                    languages: '',
+
                     snip: '',
                     scie: '',
                     ssci: '',
-                    impact_factor: '',
+
                     doi: '',
                     other_organization: '',
-                    abroad: ''
+                    abroad: '',
+                    applicant: '',
+                    commercial_applicant: ''
 
 
 
