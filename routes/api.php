@@ -37,6 +37,7 @@ Route::group(['middleware' => ['web']], function() {
     Route::post('notifications/{id}/{autors_id}', 'AuthorsController@editNotifications');
 
     //publications
+    Route::get('publications-names', 'PublicationsController@getAllNames');
     Route::get('publications', 'PublicationsController@getAll');
     Route::get('publication/{id}', 'PublicationsController@getId');
     Route::post('publication', 'PublicationsController@post');

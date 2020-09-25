@@ -15,6 +15,11 @@ class PublicationsController extends Controller
         return response()->json(Publications::where('title', 'like', $request->title)->exists());
     }
 
+    function getAllNames() {
+        $data = Publications::select('title')->get();
+        return response()->json($data);
+    }
+
     function getAll(Request $request) {
         $data = Publications::with('publicationType', 'scienceType', 'supervisor', 'authors')->get();
         foreach ($data as $key => $publication) {

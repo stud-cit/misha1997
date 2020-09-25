@@ -38,7 +38,7 @@
                     <div class="input-container">
                         <select  v-model.trim="stepData.publication_type" v-if="stepData.science_type_id">
 
-                            <option v-for="(item, i) in publicationTypes" :key="i" v-if="item.scopus_wos" :value="item">{{item.title }}</option>
+                            <option v-for="(item, i) in publicationTypes" :key="i" v-show="item.scopus_wos" :value="item">{{item.title }}</option>
 
 
                         </select>
@@ -119,23 +119,23 @@
                     return
                 }
                 // check title
-                let checkTitle = new Promise((resolve, reject) => {
-                    axios.post(`/api/check-publication`, {
-                        title: this.stepData.title.replace(/ +/g, ' ').trim()
-                    }).then(response => {
-                        if (response.data) {
-                            swal("Публікація з такою назвою вже існує!", {
-                                icon: "error",
-                            });
-                            resolve(true)
-                        } else {
-                            resolve(false)
-                        }
-                    })
-                });
-                if(await checkTitle) {
-                    return
-                }
+                // let checkTitle = new Promise((resolve, reject) => {
+                //     axios.post(`/api/check-publication`, {
+                //         title: this.stepData.title.replace(/ +/g, ' ').trim()
+                //     }).then(response => {
+                //         if (response.data) {
+                //             swal("Публікація з такою назвою вже існує!", {
+                //                 icon: "error",
+                //             });
+                //             resolve(true)
+                //         } else {
+                //             resolve(false)
+                //         }
+                //     })
+                // });
+                // if(await checkTitle) {
+                //     return
+                // }
                 // check scopus
                 if(this.stepData.science_type_id) {
                     this.$parent.isScopus = true;
