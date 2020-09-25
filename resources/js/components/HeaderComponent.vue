@@ -39,9 +39,7 @@
                             </div>
 
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" >Підтримка</a>
-                        </li>
+
                         <li class="nav-item">
                             <router-link class="nav-link" :to="{path: '/profile'}" >Профіль</router-link>
                         </li>
@@ -49,6 +47,9 @@
 
 <!--                            <a class="nav-link note" exist :to="{name: 'notifications'}" active-class="active">Повідомлення&nbsp;<span class="number">2</span></a>-->
                             <router-link class="nav-link" :to="{path: '/notifications'}" >Повідомлення</router-link>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" >Вихід</a>
                         </li>
                     </ul>
                 </div>
