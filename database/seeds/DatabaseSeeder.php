@@ -14,13 +14,12 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesSeeder::class,
             AuthorsSeeder::class,
-            NotificationsSeeder::class,
             ScienceTypeSeeder::class,
             PublicationTypeSeeder::class,
             PublicationsSeeder::class,
             AuthorsPublicationsSeeder::class,
-            RatingIndicatorsSeeder::class,
-            CountriesSeeder::class
+            CountriesSeeder::class,
+            ServiceSeeder::class
         ]);
     }
 }

@@ -14,18 +14,19 @@
                     <div class="form-row">
 
                         <div class="form-group col-lg-6">
-                            <label >Інститут / факультет </label>
-                            <div class="input-container ">
-                                <select  v-model="filters.faculty">
+                            <label>Інститут / факультет </label>
+                            <div class="input-container">
+                                <select v-model="filters.faculty" @change="getDepartments">
                                     <option value=""></option>
-                                    <option v-for="(item, index) in years" :key="index" :value="item">{{item}}</option>
-
-
+                                    <option
+                                        v-for="(item, index) in divisions.institute"
+                                        :key="index"
+                                        :value="item"
+                                    >{{item.NAME_DIV}}</option>
                                 </select>
-
                             </div>
                         </div>
-                        <div class="form-group col-lg-6">
+                        <!-- <div class="form-group col-lg-6">
                             <label >Університет</label>
                             <div class="input-container ">
                                 <select  v-model="filters.university">
@@ -36,21 +37,21 @@
                                 </select>
 
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
                             <label >Кафедра</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.department">
+                            <div class="input-container">
+                                <select v-model="filters.department">
                                     <option value=""></option>
-                                    <option value="1">1</option>
-                                    <option value="0">2</option>
-                                    >
-
+                                    <option
+                                        v-for="(item, index) in departments"
+                                        :key="index"
+                                        :value="item"
+                                    >{{item.NAME_DIV}}</option>
                                 </select>
-
                             </div>
                         </div>
 
@@ -609,6 +610,11 @@
         data() {
             return {
                 showFilters: false,
+                departments: [],
+                divisions: {
+                    institute: [],
+                    department: []
+                },
                 filters: {
                     faculty: '',
                     university: '',
@@ -631,11 +637,7 @@
                     abroad: '',
                     applicant: '',
                     commercial_applicant: ''
-
-
-
                 }
-
             };
         },
         props:{
@@ -643,18 +645,25 @@
             countries: Array,
             years: Array,
         },
-        components: {
-
+        created() {
+            this.getDivisions();
         },
 
         methods: {
-
-
-            openFiltersPopup (){
-              this.showFilters = true;
+            getDivisions() {
+                axios.get('/api/divisions').then(response => {
+                    this.divisions = response.data;
+                })
             },
-            exportRating(){
-
+            getDepartments() {
+                this.departments = this.divisions.department.filter(item => {
+                    return this.filters.faculty.ID_DIV == item.ID_PAR
+                })
+            },
+            openFiltersPopup() {
+                this.showFilters = true;
+            },
+            exportRating() {
                 const workbook = XLSX.utils.table_to_book(document.getElementById('exportRating'));
                 console.log(workbook.Sheets.Sheet1);
                 var wscols = [

@@ -37,17 +37,20 @@ Route::group(['middleware' => ['web']], function() {
     Route::post('notifications/{id}/{autors_id}', 'AuthorsController@editNotifications');
 
     //publications
-    Route::get('publications-names', 'PublicationsController@getAllNames');
-    Route::get('publications', 'PublicationsController@getAll');
+    Route::get('publications-names', 'PublicationsController@getAllNames'); // всі назви публікацій
+    Route::get('publications', 'PublicationsController@getAll'); // всі публікації з додатковими залежностями
     Route::get('publication/{id}', 'PublicationsController@getId');
     Route::post('publication', 'PublicationsController@post');
 
-    Route::post('check-publication','PublicationsController@checkPublication');
+    // Route::post('check-publication','PublicationsController@checkPublication');
     Route::post('update-publication/{id}','PublicationsController@updatePublication');
     Route::post('delete-publications','PublicationsController@deletePublications');
 
     Route::get('type-publications', 'PublicationsController@typePublications');
     Route::get('country', 'PublicationsController@getCountry');
+
+    // ASU
+    Route::get('divisions', 'ASUController@getDivisions');
 
     Route::get('export', 'PublicationsController@Export');
 });
