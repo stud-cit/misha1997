@@ -28,6 +28,8 @@ class CreateAuthorsTable extends Migration
             $table->string('orcid')->nullable();
             $table->string('academic_code')->nullable();
             $table->foreignId('roles_id')->default(1);
+            $table->foreignId('categ_1')->nullable();
+            $table->foreignId('categ_2')->nullable();
             $table->timestamps();
         });
 

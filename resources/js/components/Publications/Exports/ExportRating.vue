@@ -21,7 +21,7 @@
                                     <option
                                         v-for="(item, index) in divisions.institute"
                                         :key="index"
-                                        :value="item"
+                                        :value="item.ID_DIV"
                                     >{{item.NAME_DIV}}</option>
                                 </select>
                             </div>
@@ -35,7 +35,7 @@
                                     <option
                                         v-for="(item, index) in departments"
                                         :key="index"
-                                        :value="item"
+                                        :value="item.ID_DIV"
                                     >{{item.NAME_DIV}}</option>
                                 </select>
                             </div>
@@ -616,7 +616,7 @@
             },
             getDepartments() {
                 this.departments = this.divisions.department.filter(item => {
-                    return this.filters.faculty.ID_DIV == item.ID_PAR
+                    return this.filters.faculty == item.ID_PAR
                 })
             },
             openFiltersPopup() {

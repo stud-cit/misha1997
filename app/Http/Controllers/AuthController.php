@@ -15,11 +15,11 @@ class AuthController extends Controller
 
     function checkUser(Request $request) {
         $person = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->header('Authorization') . '&token=' . $this->cabinet_service_token), true);
-        if($person['result']['categ1'] == 10) {
-            return response()->json([
-                "message" => "Сервіс дступний лише для співробітників та аспірантів."
-            ]);
-        }
+        // if($person['result']['categ1'] == 10) {
+        //     return response()->json([
+        //         "message" => "Сервіс дступний лише для співробітників та аспірантів."
+        //     ]);
+        // }
         if ($person['status'] == 'OK') {
             if (Authors::where("guid", $person['result']['guid'])->exists()) {
                 $person = Authors::where("guid", $person['result']['guid'])->first();
@@ -63,7 +63,7 @@ class AuthController extends Controller
                 "guid" => $cabinetInfo['result']['guid'],
                 "name" => $cabinetInfo['result']['surname']." ".$cabinetInfo['result']['name']." ".$cabinetInfo['result']['patronymic'],
                 "email" => $cabinetInfo['result']['email'],
-                "job" => $cabinetInfo['result']['info2'][0]['NAME_DIV'],
+                "job" => "СумДУ",
                 "faculty_code" => $cabinetInfo['result']['info1'][0]['KOD_DIV'] ? $cabinetInfo['result']['info1'][0]['KOD_DIV'] : "",
                 "department_code" => $cabinetInfo['result']['info1'][0]['NAME_DIV'] ? $cabinetInfo['result']['info1'][0]['NAME_DIV'] : "",
                 "country" => $request->country,

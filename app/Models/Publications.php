@@ -45,15 +45,6 @@ class Publications extends Model
         'supervisor_id'
     ];
 
-    function author() {
-        return $this->hasManyThrough(
-            'App\Models\Authors',
-            'App\Models\AuthorsPublications',
-            'autors_id',
-            'id'
-        );
-    }
-
     function supervisor() {
         return $this->belongsTo('App\Models\Authors', 'supervisor_id');
     }

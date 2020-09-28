@@ -511,6 +511,8 @@
                         return `${name} - ${department}`
                     } else if(categ_2 == 1) {
                         return `${name} - ${job}`
+                    } else {
+                        return `${name}`
                     }
                 } else {
                     return "Пошук в базі данних сайту"

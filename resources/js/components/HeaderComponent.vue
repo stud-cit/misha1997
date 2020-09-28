@@ -49,7 +49,7 @@
                             <router-link class="nav-link" :to="{path: '/notifications'}" >Повідомлення</router-link>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" >Вихід</a>
+                            <a class="nav-link" @click="exit" style="cursor:pointer">Вихід</a>
                         </li>
                     </ul>
                 </div>
@@ -85,7 +85,7 @@
             },
             exit() {
                 this.$store.dispatch('logout')
-                window.location.href = '/';
+                this.$router.push({path: '/'})
             }
         },
         watch: {
