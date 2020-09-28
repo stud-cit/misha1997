@@ -26,6 +26,21 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="form-group col-lg-6">
+                            <label >Кафедра</label>
+                            <div class="input-container">
+                                <select v-model="filters.department">
+                                    <option value=""></option>
+                                    <option
+                                        v-for="(item, index) in departments"
+                                        :key="index"
+                                        :value="item"
+                                    >{{item.NAME_DIV}}</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <!-- <div class="form-group col-lg-6">
                             <label >Університет</label>
                             <div class="input-container ">
@@ -42,44 +57,12 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
-                            <label >Кафедра</label>
-                            <div class="input-container">
-                                <select v-model="filters.department">
-                                    <option value=""></option>
-                                    <option
-                                        v-for="(item, index) in departments"
-                                        :key="index"
-                                        :value="item"
-                                    >{{item.NAME_DIV}}</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-lg-6">
-                            <label >Індексування БД Scopus\WoS</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.science_type_id">
-                                    <option value=""></option>
-                                    <option value="1">Scopus</option>
-                                    <option value="2">Wos</option>
-                                    <option value="3">Scopus та Wos</option>
-                                </select>
-
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-lg-6">
                             <label >Країна видання </label>
                             <div class="input-container ">
                                 <select  v-model="filters.country">
                                     <option value=""></option>
                                     <option v-for="(item, index) in countries" :value="item.name" :key="index">{{item.name}}</option>
-
                                 </select>
-
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
@@ -88,14 +71,9 @@
                                 <select  v-model="filters.quartil_scopus">
                                     <option value=""></option>
                                     <option v-for="(item, index) in 4" :value="item" :key="index">{{item}}</option>
-
                                 </select>
-
                             </div>
                         </div>
-
-
-
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
@@ -104,9 +82,7 @@
                                 <select  v-model="filters.publication_type_id">
                                     <option value=""></option>
                                     <option v-for="(item, index) in publicationTypes" :value="item.id" :key="index">{{item.title}}</option>
-
                                 </select>
-
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
@@ -115,9 +91,7 @@
                                 <select  v-model="filters.quartil_wos">
                                     <option value=""></option>
                                     <option v-for="(item, index) in 4" :value="item" :key="index">{{item}}</option>
-
                                 </select>
-
                             </div>
                         </div>
 
@@ -130,10 +104,7 @@
                                 <select  v-model="filters.year">
                                     <option value=""></option>
                                     <option v-for="(item, index) in years" :key="index" :value="item">{{item}}</option>
-
-
                                 </select>
-
                             </div>
                         </div>
 
@@ -144,9 +115,7 @@
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
-
                                 </select>
-
                             </div>
                         </div>
 
@@ -159,9 +128,7 @@
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
-
                                 </select>
-
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
@@ -171,9 +138,7 @@
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
-
                                 </select>
-
                             </div>
                         </div>
                     </div>
@@ -187,9 +152,7 @@
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
-
                                 </select>
-
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
@@ -199,9 +162,7 @@
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
-
                                 </select>
-
                             </div>
                         </div>
 
@@ -216,9 +177,7 @@
                                     <option value=""></option>
                                     <option value="СумДУ">Отромані на ім'я СумДУ</option>
                                     <option value="не СумДУ">отримані не на ім'я СумДУ</option>
-
                                 </select>
-
                             </div>
                         </div>
 
@@ -229,9 +188,7 @@
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
-
                                 </select>
-
                             </div>
                         </div>
 
@@ -244,9 +201,7 @@
                                     <option value=""></option>
                                     <option value="1">Університетом</option>
                                     <option value="2">Штатними співробітниками</option>
-
                                 </select>
-
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
@@ -256,9 +211,7 @@
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
-
                                 </select>
-
                             </div>
                         </div>
 
@@ -272,16 +225,22 @@
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
                                     <option value="10">В тому числі мають індекс гірша за Scopus та WoS не нижче 10</option>
-
                                 </select>
 
                             </div>
                         </div>
+                        <div class="form-group col-lg-6">
+                            <label >Індексування БД Scopus\WoS</label>
+                            <div class="input-container ">
+                                <select  v-model="filters.science_type_id">
+                                    <option value=""></option>
+                                    <option value="1">Scopus</option>
+                                    <option value="2">Wos</option>
+                                    <option value="3">Scopus та Wos</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-
-
-
-
 
                 </form>
                 <div class="step-button-group">
