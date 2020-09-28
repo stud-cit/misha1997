@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
             AuthorsSeeder::class,
             ScienceTypeSeeder::class,
             PublicationTypeSeeder::class,
-            PublicationsSeeder::class,
-            AuthorsPublicationsSeeder::class,
+            // PublicationsSeeder::class,
+            // AuthorsPublicationsSeeder::class,
             CountriesSeeder::class,
             ServiceSeeder::class
         ]);

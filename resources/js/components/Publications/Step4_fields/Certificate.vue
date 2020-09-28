@@ -40,11 +40,11 @@
             <div class="form-group" v-if="applicant_id == '1'">
                 <label class="item-title">Вкажіть власника майнових прав не СумДУ *</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="stepData.applicant">
+                    <input class="item-value" type="text" v-model="newApplicant">
 
                     <div class="hint" ><span></span></div>
                 </div>
-                <div class="error" v-if="$v.stepData.applicant.$error">
+                <div class="error" v-if="$v.newApplicant.$error">
                     Поле обов'язкове для заповнення
                 </div>
             </div>
@@ -74,8 +74,6 @@
                         v-model="stepData.date_publication"
                         value-type="YYYY-MM-DD"
                         :lang="datepicker.lang"
-                        :default-value="datepicker.minDate"
-                        :disabled-date="rangeDate"
                         :editable="false"
                         :popup-style="datepicker.styles"
                     ></date-picker>
@@ -122,13 +120,13 @@
     import {required, requiredIf} from "vuelidate/lib/validators";
     import DatePicker from 'vue2-datepicker';
     import 'vue2-datepicker/index.css';
-    const nowDate = new Date();
     export default {
 
         data() {
             return {
                 country: [],
                 applicant_id: '0',
+                newApplicant: '',
                 stepData: {
                     number_certificate: '',
                     country: 'Україна',
@@ -140,8 +138,6 @@
                     commerc_employees: 0
                 },
                 datepicker: {
-                    minDate: new Date(String(nowDate.getFullYear()-18) + '-' + String(nowDate.getMonth()+1) + '-' + nowDate.getDate()).setHours(0, 0, 0, 0),
-                    maxDate: new Date(String(nowDate.getFullYear()) + '-' + String(nowDate.getMonth()+1) + '-' + nowDate.getDate()).setHours(0, 0, 0, 0),
                     lang: {
                         formatLocale: {
                             months: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
@@ -162,9 +158,7 @@
             this.getCountry();
         },
         validations: {
-
             stepData: {
-
                 number_certificate: {
                     required
                 },
@@ -179,13 +173,7 @@
                 date_publication: {
                     required
                 },
-
-
-
             },
-
-
-
         },
         methods:{
             getCountry() {
@@ -204,14 +192,12 @@
                 if(this.applicant_id == '0'){
                     this.stepData.applicant = 'СумДУ';
                 }
+                this.stepData.applicant = this.applicant_id ? "СумДУ" : this.newApplicant;
                 this.$parent.$emit('getData', this.stepData);
             },
-            prevStep(){
+            prevStep() {
                 this.$parent.$emit('prevStep');
-            },
-            rangeDate(date) {
-                return date <= this.datepicker.minDate || date >= this.datepicker.maxDate;
-            },
+            }
         }
     }
 </script>

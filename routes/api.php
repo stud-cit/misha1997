@@ -42,15 +42,14 @@ Route::group(['middleware' => ['web']], function() {
     Route::get('publication/{id}', 'PublicationsController@getId');
     Route::post('publication', 'PublicationsController@post');
 
-    // Route::post('check-publication','PublicationsController@checkPublication');
     Route::post('update-publication/{id}','PublicationsController@updatePublication');
     Route::post('delete-publications','PublicationsController@deletePublications');
 
     Route::get('type-publications', 'PublicationsController@typePublications');
     Route::get('country', 'PublicationsController@getCountry');
 
+    Route::post('export', 'PublicationsController@export');
+
     // ASU
     Route::get('divisions', 'ASUController@getDivisions');
-
-    Route::get('export', 'PublicationsController@Export');
 });

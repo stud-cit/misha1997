@@ -10,18 +10,20 @@ class Authors extends Model
 
     protected $fillable = [
         'guid',
-        'job',
         'name',
+        'email',
+        'job',
+        'faculty_code',
+        'department_code',
         'country',
         'h_index',
         'scopus_autor_id',
         'scopus_researcher_id',
         'orcid',
-        'department',
-        'faculty',
         'academic_code',
-        'email',
-        'roles_id'
+        'roles_id',
+        'categ_1',
+        'categ_2'
     ];
 
     function role() {

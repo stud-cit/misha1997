@@ -11,15 +11,13 @@ use App\Models\Notifications;
 
 class PublicationsController extends Controller
 {
-    function checkPublication(Request $request) {
-        return response()->json(Publications::where('title', 'like', $request->title)->exists());
-    }
-
+    // всі назви поблікацій
     function getAllNames() {
         $data = Publications::select('title')->get();
         return response()->json($data);
     }
 
+    // всі публікації
     function getAll(Request $request) {
         $data = Publications::with('publicationType', 'scienceType', 'supervisor', 'authors')->get();
         foreach ($data as $key => $publication) {
@@ -29,12 +27,15 @@ class PublicationsController extends Controller
         }
         return response()->json($data);
     }
+
+    // публікація по ID
     function getId($id) {
         $data = Publications::with('publicationType', 'scienceType', 'supervisor')->find($id);
         $data->authors = AuthorsPublications::with('author')->where('publications_id', $id)->get();
         return response()->json($data);
     }
 
+    // додавання публікації
     function post(Request $request) {
         $modelPublications = new Publications();
         $dataPublications = $request->all();
@@ -55,46 +56,14 @@ class PublicationsController extends Controller
         return response('ok', 200);
     }
 
-    function updatePublication(Request $request, $id)
-    {
-        $edit_publication = Publications::find($id);
-        $edit_publication->title = $request->title;
-        $edit_publication->science_type_id = $request->scienceTypeId;
-        $edit_publication->publication_type_id = $request->publicationTypeId;
-        $edit_publication->snip = $request->snip;
-        $edit_publication->impact_factor = $request->impactFactor;
-        $edit_publication->quartil_scopus = $request->quartilScopus;
-        $edit_publication->quartil_wos = $request->quartilWos;
-        $edit_publication->sub_db_index = $request->subDbIndex;
-        $edit_publication->year = $request->year;
-        $edit_publication->number = $request->number;
-        $edit_publication->pages = $request->pages;
-        $edit_publication->initials = $request->initials;
-        $edit_publication->country = $request->country;
-        $edit_publication->name_magazine = $request->nameMagazine;
-        $edit_publication->number_volumes = $request->numberVolumes;
-        $edit_publication->by_editing = $request->byEditing;
-        $edit_publication->city = $request->city;
-        $edit_publication->editor_name = $request->editorName;
-        $edit_publication->languages = $request->Languages;
-        $edit_publication->number_certificate = $request->numberCertificate;
-        $edit_publication->applicant = $request->applicant;
-        $edit_publication->date_application = $request->dateApplication;
-        $edit_publication->date_publication = $request->datePublication;
-        $edit_publication->commerc_university = $request->commercUniversity;
-        $edit_publication->commerc_employees = $request->commercEmployees;
-        $edit_publication->access_mode = $request->accessMode;
-        $edit_publication->mpk = $request->mpk;
-        $edit_publication->application_number = $request->applicationNumber;
-        $edit_publication->newsletter_number = $request->newsletterNumber;
-        $edit_publication->name_conference = $request->nameConference;
-//        $edit_publication->publisher = $request->publisher;
-        $edit_publication->doi = $request->doi;
-        $edit_publication->url = $request->url;
-        $edit_publication->supervisor_id = $request->supervisorId;
-        $edit_publication->save();
+    // оновлення публікації
+    function updatePublication(Request $request, $id) {
+        $data = $request->all();
+        Publications::find($id)->update($data);
+        return response('ok', 200);
     }
 
+    // видалення публікації
     function deletePublications(Request $request) {
         foreach ($request->publications as $key => $publication) {
             foreach ($publication['authors'] as $k => $author) {
@@ -108,19 +77,70 @@ class PublicationsController extends Controller
         return response('ok', 200);
     }
 
+    // список країн
     function getCountry() {
         $data = Countries::get();
         return response()->json($data);
     }
 
+    // список типів публікацій
     function typePublications() {
         $data = PublicationType::get();
         return response()->json($data);
     }
 
-    function Export() {
+    // рейтингові показники
+    function export(Request $request) {
+        $data = Publications::with('authors')
+            ->where('country', 'like', "%".$request->country."%") // Країна видання
+            ->where('publication_type_id', 'like', "%".$request->publication_type_id."%") // Вид публікацій
+            ->get();
 
-        $data = [
+        if($request->year) {
+            $data = $data->where('year', $request->year); // Рік видання
+        }
+
+        if($request->doi == 1) {
+            $data = $data->whereNotNull('doi'); // Публікації з цифровим ідентифікатором DOI
+        } elseif($request->doi != "" && $request->doi == 0) {
+            $data = $data->whereNull('doi'); // Публікації без цифрового ідентифікатора DOI
+        }
+
+        if($request->applicant == "СумДУ") {
+            $data = $data->where('applicant', 'СумДУ'); // Охоронні документи СумДУ
+        } elseif($request->applicant != "" && $request->applicant != "СумДУ") {
+            $data = $data->where('applicant', '!=', 'СумДУ'); // Охоронні документи не СумДУ
+        }
+
+        if($request->commercial_applicant == 1) {
+            $data = $data->where('commerc_university', 1); // Комерціалізовані охоронні документи (Університетом)
+        } elseif($request->commercial_applicant != "" && $request->commercial_applicant == 2) {
+            $data = $data->where('commerc_employees', 1); // Комерціалізовані охоронні документи (Штатними співробітниками)
+        }
+
+        if($request->science_type_id) {
+            $data = $data->where('science_type_id', $request->science_type_id); // Індексування БД Scopus\WoS
+        }
+
+        if($request->quartil_scopus) {
+            $data = $data->where('quartil_scopus', $request->quartil_scopus); // Квартиль журналу SCOPUS
+        }
+
+        if($request->quartil_wos) {
+            $data = $data->where('quartil_wos', $request->quartil_wos); // Квартиль журналу WOS
+        }
+
+        if($request->snip) {
+            $data = $data->where('snip', '>', 1); // Публікації опубліковані у виданнях з показником SNIP більше ніж 1,0
+        }
+
+        if($request->abroad == 1) {
+            $data = $data->where('country', '!=', 'Україна'); // Публікації опубліковані за кордоном
+        }
+
+        // return response()->json($data);
+
+        $rating = [
             "countPublications" => 0,
             "countForeignPublications" => 0,
             "countIndexHirsha" => 0,
@@ -131,37 +151,36 @@ class PublicationsController extends Controller
             "countScopusWosPublications" => 0,
         ];
 
-        $data["countPublications"] = Publications::count();
+        $rating["countPublications"] = count($data);
 
-        $foreignPublications = Publications::with('author', 'publicationType', 'scienceType')->get();
-
-        // return response()->json($foreignPublications);
-
-        foreach ($foreignPublications as $key => $value) {
+        foreach ($data as $key => $value) {
             $foreign = 0;
             foreach ($value['author'] as $k => $v) {
                 if($v['country'] != "Україна") {
                     $foreign = 1;
                 }
                 if($v['h_index'] >= 10) {
-                    $data["countIndexHirsha"] += 1;
+                    $rating["countIndexHirsha"] += 1;
                 }
             }
-            $data["countForeignPublications"] += $foreign;
+            $rating["countForeignPublications"] += $foreign;
 
             if($value->publicationType['type'] == 'article') {
-                $data["countArticle"] += 1;
+                $rating["countArticle"] += 1;
             }
             if($value->publicationType['type'] == 'book') {
-                $data["countTextbooks"] += 1;
+                $rating["countTextbooks"] += 1;
             }
 
             if($value->science_type_id) {
-                $data["countScopusWosPublications"] += 1;
+                $rating["countScopusWosPublications"] += 1;
             }
         }
 
-        return error;
+        return response()->json([
+            "rating" => $rating,
+            "publications" => $data
+        ]);
     }
 
 }

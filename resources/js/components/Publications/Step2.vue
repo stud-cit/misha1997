@@ -29,14 +29,14 @@
                                 <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
                             </div>
                         </div>
-                        <div v-if="loadingPersons" class="loading" >Завантаження</div>
 
+                        <div v-if="loadingPersons" class="loading" >Завантаження</div>
 
                         <div class="form-group" v-if="persons.length > 0">
                             <label class="item-title">Прізвище, ім’я, по-батькові</label>
                             <div class="input-container authors">
                                 <multiselect
-                                    v-model="ssuAuthor"
+                                    v-model="newAuthor"
                                     label="name"
                                     :options="persons"
                                     :preserve-search="true"
@@ -50,12 +50,54 @@
                                 </multiselect>
                                 <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                             </div>
-
                         </div>
-                        <div class="step-button-group sumdu-base ">
-                            <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
-                            <button class="next active" @click="addNewAuthor(ssuAuthor)">Додати </button>
 
+                        <div class="row" v-if="newAuthor.name">
+                            <div class="form-group col pl-0">
+                                <label>Інститут / факультет</label>
+                                <div class="input-container">
+                                    <select v-model="newAuthor.faculty_code">
+                                        <option value=""></option>
+                                        <option
+                                            v-for="(item, index) in divisions.institute"
+                                            :key="index"
+                                            :value="item.ID_DIV"
+                                        >{{item.NAME_DIV}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col pr-0">
+                                <label>Кафедра</label>
+                                <div class="input-container">
+                                    <select v-model="newAuthor.department_code">
+                                        <option value=""></option>
+                                        <option
+                                            v-for="(item, index) in divisions.department"
+                                            :key="index"
+                                            :value="item.ID_DIV"
+                                        >{{item.NAME_DIV}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" v-if="newAuthor.name">
+                            <label >Країна *</label>
+                            <div class="input-container">
+                                <select class="item-value" v-model="newAuthor.country">
+                                    <option
+                                        v-for="(item, index) in country"
+                                        :key="index"
+                                        :value="item.name"
+                                    >{{item.name}}</option>
+                                </select>
+                                <div class="hint" ><span>Країна:</span></div>
+                            </div>
+                        </div>
+
+                        <div class="step-button-group sumdu-base">
+                            <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
+                            <button class="next active" @click="addNewAuthor">Додати </button>
                         </div>
                     </template>
 
@@ -119,10 +161,41 @@
                                                 :value="item.name"
                                             >{{item.name}}</option>
                                         </select>
-                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
+                                        <div class="hint" ><span>Країна автора</span></div>
                                     </div>
                                 </div>
+                            </li>
 
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Інститут / факультет</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <select class="item-value" v-model="newAuthor.faculty_code" @change="getDepartments">
+                                            <option
+                                                v-for="(item, index) in divisions.institute"
+                                                :key="index"
+                                                :value="item.ID_DIV"
+                                            >{{item.NAME_DIV}}</option>
+                                        </select>
+                                        <div class="hint" ><span>Інститут / факультет</span></div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="row">
+                                <div class="col-lg-3 list-item list-title">Кафедра</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <select class="item-value" v-model="newAuthor.department_code">
+                                            <option
+                                                v-for="(item, index) in departments"
+                                                :key="index"
+                                                :value="item.ID_DIV"
+                                            >{{item.NAME_DIV}}</option>
+                                        </select>
+                                        <div class="hint" ><span>Кафедра</span></div>
+                                    </div>
+                                </div>
                             </li>
 
                             <li class="row">
@@ -169,7 +242,7 @@
                         </ul>
                         <div class="step-button-group">
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
-                            <button class="next active" @click="addNewAuthor(newAuthor)">Додати </button>
+                            <button class="next active" @click="addNewAuthor">Додати </button>
 
                         </div>
                     </template>
@@ -303,6 +376,11 @@
         name: "Step2",
         data() {
             return {
+                departments: [],
+                divisions: {
+                    institute: [],
+                    department: []
+                },
                 jobType: null,
                 modalAlias: false,
                 findAuthor: false,
@@ -320,10 +398,10 @@
                         name: "Аспірант",
                         value: "categ1/4"
                     },
-                    {
-                        name: "Випускник",
-                        value: "categ1/8"
-                    },
+                    // {
+                    //     name: "Випускник",
+                    //     value: "categ1/8"
+                    // },
                     {
                         name: "Співробітник",
                         value: "categ2/2"
@@ -332,14 +410,13 @@
                         name: "Викладач",
                         value: "categ2/4"
                     },
-                    {
-                        name: "Менеджер",
-                        value: "categ2/8"
-                    }
+                    // {
+                    //     name: "Менеджер",
+                    //     value: "categ2/8"
+                    // }
                 ],
                 selectCateg: null,
                 loadingPersons: false,
-                ssuAuthor: "",
                 persons: [],
                 supervisors: [],
                 authors: [],
@@ -350,23 +427,18 @@
                     guid: null,
                     job: null,
                     name: '',
-                    country: "Україна",
+                    country: '',
                     h_index: '',
                     scopus_autor_id: '',
                     scopus_researcher_id: '',
                     orcid: '',
-
+                    faculty_code: '',
+                    department_code: ''
                 },
                 stepData: {
                     useSupervisor: '0',
                     supervisor: '',
-                    authors: [
-                        {
-                            name: '',
-                            faculty: "",
-                            academic_code: ""
-                        },
-                    ],
+                    authors: [],
                     initials: '',
                 }
             }
@@ -375,6 +447,7 @@
             Multiselect,
         },
         created() {
+            this.stepData.authors.push(this.$store.getters.authUser);
             this.getAuthors();
         },
 
@@ -420,12 +493,27 @@
 
         },
         methods: {
-
-            nameWithInfo({name, faculty, academic_code, job}) {
-                if(name == "") {
-                    return "Пошук в базі данних сайту"
+            getDepartments() {
+                this.departments = this.divisions.department.filter(item => {
+                    return this.newAuthor.faculty_code == item.ID_PAR
+                })
+            },
+            getDivisions() {
+                axios.get('/api/divisions').then(response => {
+                    this.divisions = response.data;
+                })
+            },
+            nameWithInfo({name, faculty, department, academic_code, job, categ_1, categ_2}) {
+                if(name) {
+                    if(categ_1 == 1) {
+                        return `${name} - ${academic_code}`
+                    } else if(categ_1 == 2 || categ_2 == 2) {
+                        return `${name} - ${department}`
+                    } else if(categ_2 == 1) {
+                        return `${name} - ${job}`
+                    }
                 } else {
-                    return `${name} — ${academic_code ? academic_code : (faculty ? faculty : job)}`
+                    return "Пошук в базі данних сайту"
                 }
             },
             nextStep () {
@@ -462,6 +550,7 @@
             },
             showNewAuthor(n) {
                 this.getCountry();
+                this.getDivisions();
                 this.otherAuthor = n;
             },
             getPersonAPI() {
@@ -471,12 +560,17 @@
                     axios.get(`/api/persons/${this.selectCateg}`).then(response => {
                         return response.data.result.map(item => {
                             return {
+                                categ_1: item.CATEG_1,
+                                categ_2: item.CATEG_2,
                                 guid: item.ID_FIO,
                                 name: item.F_FIO + " " + item.I_FIO + " " + item.O_FIO,
-                                academic_code: item.NAME_GROUP,
-                                faculty: item.NAME_DIV
+                                academic_code: item.CATEG_1 == 1 ? item.NAME_GROUP : "",
+                                faculty_code: item.CATEG_1 == 1 ? item.KOD_DIV : "",
+                                department_code: (item.CATEG_1 == 2 || item.CATEG_2 == 2) ? item.KOD_DIV : "",
+                                job: item.CATEG_2 == 1 ? item.NAME_DIV : "",
                             }
                         });
+
                     }).then(result => {
                         this.persons = result;
                         this.loadingPersons = false;
@@ -488,12 +582,12 @@
             getAuthors() {
                 axios.get(`/api/authors-all`).then(response => {
                     console.log(response.data)
+
                     this.authors = response.data;
                 })
             },
 
-            addNewAuthor(newAuthor) {
-
+            addNewAuthor() {
                 this.$v.newAuthor.$touch();
                 if (this.$v.newAuthor.$invalid) {
                     swal("Не всі поля заповнено!", {
@@ -501,25 +595,23 @@
                     });
                     return
                 }
-
-                newAuthor.job = this.jobType == 1 ? newAuthor.job : "Не працює";
-                axios.post('/api/author', newAuthor)
+                this.newAuthor.job = this.jobType == 1 ? this.newAuthor.job : "Не працює";
+                axios.post('/api/author', this.newAuthor)
                 .then((response) => {
-                    this.ssuAuthor = "";
-                    this.otherAuthor = false;
-                    this.authors.push(response.data);
-                    swal("Автора успішно додано!", {
-                        icon: "success",
-                    });
+                    if(response.data.status == 'ok') {
+                        this.otherAuthor = false;
+                        this.authors.push(response.data.user);
+                        swal("Автора успішно додано!", {
+                            icon: "success",
+                        });
+                    } else {
+                        swal({
+                            icon: "error",
+                            title: 'Помилка',
+                            text: "Автор вже зареєстрований в системі"
+                        });
+                    }
                 })
-                .catch(() => {
-                    this.otherAuthor = false;
-                    swal({
-                        icon: "error",
-                        title: 'Помилка',
-                        text: String(error.response.status)
-                    });
-                });
             },
             getCountry() {
                 axios.get('/api/country').then(response => {

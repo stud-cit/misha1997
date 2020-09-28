@@ -15,18 +15,18 @@ class CreateAuthorsTable extends Migration
     {
         Schema::create('authors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('guid')->nullable();
+            $table->string('name');
+            $table->string('email')->nullable();
             $table->string('job')->nullable();
+            $table->string('faculty_code')->nullable();
+            $table->string('department_code')->nullable();
             $table->string('country')->nullable();
             $table->string('h_index')->nullable();
             $table->integer('scopus_autor_id')->nullable();
             $table->integer('scopus_researcher_id')->nullable();
             $table->string('orcid')->nullable();
-            $table->string('department')->nullable();
-            $table->string('faculty')->nullable();
             $table->string('academic_code')->nullable();
-            $table->string('email')->nullable();
             $table->foreignId('roles_id')->default(1);
             $table->timestamps();
         });

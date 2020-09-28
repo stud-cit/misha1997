@@ -76,8 +76,7 @@ class AuthorsController extends Controller
             ]);
         } else {
             return response()->json([
-                "status" => "error",
-                "message" => "Автор вже зареєстрований в системі"
+                "status" => "error"
             ]);
         }
     }

@@ -12,7 +12,7 @@
                             :value="item.name"
                         >{{item.name}}</option>
                     </select>
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>Країна:</span></div>
                 </div>
             </div>
 
@@ -21,7 +21,7 @@
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="data.scopus_autor_id">
 
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>Індекс Гірша Scopus:</span></div>
                 </div>
             </div>
             <div class="form-group">
@@ -29,7 +29,7 @@
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="data.h_index">
 
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>Індекс Гірша Wos:</span></div>
                 </div>
             </div>
             <div class="form-group">
@@ -37,15 +37,15 @@
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="data.scopus_researcher_id">
 
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>Research ID:</span></div>
                 </div>
             </div>
             <div class="form-group">
-                <label> ORCID</label>
+                <label>ORCID</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="data.orcid">
 
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <div class="hint" ><span>ORCID:</span></div>
                 </div>
             </div>
 
