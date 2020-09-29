@@ -29,7 +29,7 @@ let router = new Router({
             name: 'home',
             component: Home,
             meta: {
-                requiresRegister: true,
+                requiresRegister: false,
                 roles: [1, 2, 3, 4]
             }
         },
@@ -38,7 +38,7 @@ let router = new Router({
             name: 'register',
             component: Register,
             meta: {
-                requiresAuth: true
+                requiresAuth: false
             }
         },
         {
@@ -46,7 +46,7 @@ let router = new Router({
             name: 'profile',
             component: Profile,
             meta: {
-                requiresRegister: true,
+                requiresRegister: false,
             }
         },
         {
@@ -54,7 +54,7 @@ let router = new Router({
             name: 'user',
             component: User,
             meta: {
-                requiresRegister: true,
+                requiresRegister: false,
             }
         },
         {
@@ -62,7 +62,7 @@ let router = new Router({
             name: 'publications',
             component: Publications,
             meta: {
-                requiresRegister: true,
+                requiresRegister: false,
                 roles: [1, 2, 3, 4]
             }
         },
@@ -71,7 +71,7 @@ let router = new Router({
             name: 'publications-add',
             component: PublicationsAdd,
             meta: {
-                requiresRegister: true,
+                requiresRegister: false,
                 roles: [1, 2, 3, 4]
             }
         },
@@ -79,7 +79,7 @@ let router = new Router({
             path: '/publications/:id',
             component: PublicationsView,
             meta: {
-                requiresRegister: true,
+                requiresRegister: false,
                 roles: [1, 2, 3, 4]
             }
         },
@@ -88,7 +88,7 @@ let router = new Router({
             name: 'notifications',
             component: Notifications,
             meta: {
-                requiresRegister: true,
+                requiresRegister: false,
                 roles: [1, 2, 3, 4]
             }
         },
@@ -97,7 +97,7 @@ let router = new Router({
             name: 'users',
             component: Users,
             meta: {
-                requiresRegister: true,
+                requiresRegister: false,
                 roles: [2, 3, 4]
             }
         },
