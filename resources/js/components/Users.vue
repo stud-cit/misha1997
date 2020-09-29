@@ -13,25 +13,29 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-lg-4">
-                        <label >Інститут/факультет</label>
+                        <label >Інститут / факультет</label>
                         <div class="input-container">
-                            <select  v-model="filters.faculty">
+                            <select v-model="filters.faculty_code" @change="getDepartments">
                                 <option value=""></option>
-                                <option value="1">факультет 1</option>
-                                <option value="1">факультет 2</option>
-                                <option value="Медичний інститут">Медичний інститут</option>
+                                <option
+                                    v-for="(item, index) in divisions.institute"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
                             </select>
-                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                            <div class="hint"><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
                     <div class="form-group col-lg-4">
                         <label >Кафедра</label>
                         <div class="input-container">
-                            <select  v-model="filters.department">
+                            <select v-model="filters.department_code">
                                 <option value=""></option>
-                                <option value="Кафедра X">Кафедра X</option>
-                                <option value="1">факультет 1</option>
-                                <option value="1">факультет 2</option>
+                                <option
+                                    v-for="(item, index) in departments"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
                             </select>
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
@@ -105,11 +109,16 @@
     export default {
         data() {
             return {
+                departments: [],
+                divisions: {
+                    institute: [],
+                    department: []
+                },
                 data: [],
                 filters: {
                     name: '',
-                    faculty: '',
-                    department: '',
+                    faculty_code: '',
+                    department_code: '',
                     birthday: ''
                 },
                 currentPage: 1,
@@ -117,9 +126,6 @@
                 numPage: 1,
 
             };
-        },
-        components: {
-
         },
         computed: {
             filteredList() {
@@ -147,8 +153,19 @@
 
         created() {
             this.getData();
+            this.getDivisions();
         },
         methods: {
+            getDepartments() {
+                this.departments = this.divisions.department.filter(item => {
+                    return this.filters.faculty_code == item.ID_PAR
+                })
+            },
+            getDivisions() {
+                axios.get('/api/divisions').then(response => {
+                    this.divisions = response.data;
+                })
+            },
             getData() {
                 axios.get('/api/authors').then(response => {
                     this.data = response.data;

@@ -568,7 +568,9 @@
                                 name: item.F_FIO + " " + item.I_FIO + " " + item.O_FIO,
                                 academic_code: item.CATEG_1 == 1 ? item.NAME_GROUP : "",
                                 faculty_code: item.CATEG_1 == 1 ? item.KOD_DIV : "",
+                                faculty: item.CATEG_1 == 1 ? item.NAME_DIV : "",
                                 department_code: (item.CATEG_1 == 2 || item.CATEG_2 == 2) ? item.KOD_DIV : "",
+                                department: (item.CATEG_1 == 2 || item.CATEG_2 == 2) ? item.NAME_DIV : "",
                                 job: item.CATEG_2 == 1 ? item.NAME_DIV : "",
                             }
                         });
@@ -583,8 +585,6 @@
             },
             getAuthors() {
                 axios.get(`/api/authors-all`).then(response => {
-                    console.log(response.data)
-
                     this.authors = response.data;
                 })
             },

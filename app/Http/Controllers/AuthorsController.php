@@ -10,28 +10,54 @@ use App\Models\Notifications;
 use Carbon\Carbon;
 use Session;
 
-class AuthorsController extends Controller
+class AuthorsController extends ASUController
 {
     // authors
     function get(Request $request) {
+        $divisions = $this->getDivisions();
         $data = [];
         switch ($request->session()->get('person')['roles_id']) {
             case 2:
-                $data = Authors::with('role')->where('faculty', $request->session()->get('person')['faculty'])->get();
+                $data = Authors::with('role')->where('faculty_code', $request->session()->get('person')['faculty_code'])->get();
             break;
             case 3:
-                $data = Authors::with('role')->where('department', $request->session()->get('person')['department'])->get();
+                $data = Authors::with('role')->where('department_code', $request->session()->get('person')['department_code'])->get();
             break;
             case 4:
                 $data = Authors::with('role')->get();
             break;
+        }
+        foreach ($data as $key => $value) {
+            foreach($divisions->original['department']  as $k => $v) {
+                if ($value['department_code'] == $v['ID_DIV']) {
+                    $value['department'] = $v['NAME_DIV'];
+                }
+            }
+            foreach($divisions->original['institute'] as $k => $v) {
+                if ($value['faculty_code'] == $v['ID_DIV']) {
+                    $value['faculty'] = $v['NAME_DIV'];
+                }
+            }
         }
         return response()->json($data);
     }
 
     // authors All (admin)
     function getAll(Request $request) {
+        $divisions = $this->getDivisions();
         $data = Authors::with('role')->get();
+        foreach ($data as $key => $value) {
+            foreach($divisions->original['department']  as $k => $v) {
+                if ($value['department_code'] == $v['ID_DIV']) {
+                    $value['department'] = $v['NAME_DIV'];
+                }
+            }
+            foreach($divisions->original['institute'] as $k => $v) {
+                if ($value['faculty_code'] == $v['ID_DIV']) {
+                    $value['faculty'] = $v['NAME_DIV'];
+                }
+            }
+        }
         return response()->json($data);
     }
 
