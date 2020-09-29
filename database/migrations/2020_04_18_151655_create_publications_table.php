@@ -41,7 +41,7 @@ class CreatePublicationsTable extends Migration
             $table->integer('newsletter_number')->nullable(); // № бюлетеня
             $table->string('name_conference')->nullable(); // Назва конференції
             $table->string('url')->nullable(); // url електронне видання
-//            $table->string('publisher')->nullable(); // Видавництво
+            $table->text('out_data')->nullable(); // Вихідні дані
             $table->string('doi')->nullable();
             $table->foreignId('supervisor_id')->nullable(); // керівник
             $table->timestamps();

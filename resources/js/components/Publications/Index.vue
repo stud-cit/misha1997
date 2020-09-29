@@ -10,7 +10,7 @@
             <export-rating :publicationTypes="publicationTypes" :years="years" :countries="countries" class="export-block"></export-rating>
 
             <export-publications class="export-block" :exportList="exportPublication"></export-publications>
-            <export-list-publications class="export-block" :exportList="exportPublication"></export-list-publications>
+
         </div>
         <!---->
         <div class="main-content">
@@ -161,7 +161,7 @@
 <script>
     import ExportRating from "./Exports/ExportRating";
     import ExportPublications from "./Exports/ExportPublications";
-    import ExportListPublications from "./Exports/ExportListPublications";
+
     import XLSX from 'xlsx';
     export default {
         data() {
@@ -193,7 +193,7 @@
         components: {
             ExportRating,
             ExportPublications,
-            ExportListPublications
+
         },
         mounted () {
             this.getData();

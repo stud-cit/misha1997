@@ -82,7 +82,7 @@ class PublicationsController extends Controller
         $edit_publication->application_number = $request->applicationNumber;
         $edit_publication->newsletter_number = $request->newsletterNumber;
         $edit_publication->name_conference = $request->nameConference;
-//        $edit_publication->publisher = $request->publisher;
+        $edit_publication->out_data = $request->outData;
         $edit_publication->doi = $request->doi;
         $edit_publication->url = $request->url;
         $edit_publication->supervisor_id = $request->supervisorId;
