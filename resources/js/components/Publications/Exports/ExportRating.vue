@@ -559,8 +559,33 @@
 
 
         </table>
+        <table id="exportList" v-show="false" >
+            <tr>
+                <th>№</th>
+                <th>Назва роботи(мовою оригіналу)</th>
+                <th>Вид публікації</th>
+                <th>Scopus </th>
+                <th>WoS </th>
+                <th>Країна видання публікаціїї </th>
+                <th>Вихідні дані  </th>
+                <th>К-сть сторінок </th>
+                <th>Посада</th>
+                <th>Прізвище, ініціали </th>
+                <th>Під керівництвом </th>
+                <th>Прізвище, ініціали наукового керівника </th>
+                <th>Факультет/країна(для співавторів - громадян інших країн) </th>
+                <th>Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ) </th>
+                <th>Тип </th>
+                <th>Іноземець</th>
+                <th>Рік</th>
 
-</div>
+            </tr>
+            <tr>
+
+            </tr>
+        </table>
+
+    </div>
 </template>
 
 <script>
@@ -622,18 +647,35 @@
             openFiltersPopup() {
                 this.showFilters = true;
             },
-            exportRating() {
-                const workbook = XLSX.utils.table_to_book(document.getElementById('exportRating'));
-                console.log(workbook.Sheets.Sheet1);
-                var wscols = [
+            exportRating(){
+                const rating = XLSX.utils.table_to_book(document.getElementById('exportRating'));
+                const publications = XLSX.utils.table_to_book(document.getElementById('exportList'));
+                const wb = XLSX.utils.book_new();
+                wb.SheetNames.push("Publications");
+                wb.SheetNames.push("Rating");
+                wb.Sheets.Publications = publications.Sheets.Sheet1;
+                wb.Sheets.Rating = rating.Sheets.Sheet1;
+
+                const wscols =[];
+                for (let i = 0; i < 16; i++) {
+                    if(i > 10 && i < 14) {
+                        wscols.push({ wch: 50 })
+                    }
+                    else{
+                        wscols.push({ wch: 30 })
+                    }
+
+                }
+                const wscols2 = [
                     {wch:65},
                     {wch:65},
                     {wch:40},
                     {wch:10}
                 ];
-                workbook.Sheets.Sheet1['!cols'] = wscols;
+                wb.Sheets.Rating['!cols'] = wscols2;
+                wb.Sheets.Publications['!cols'] = wscols;
 
-                XLSX.writeFile(workbook, 'filename.xlsx');
+                XLSX.writeFile(wb, 'Rating.xlsx');
             }
         },
 

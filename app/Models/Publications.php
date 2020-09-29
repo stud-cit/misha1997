@@ -39,7 +39,7 @@ class Publications extends Model
         'newsletter_number',
         'name_conference',
         'url',
-//        'publisher',
+        'out_data',
         'name_magazine',
         'doi',
         'supervisor_id'
