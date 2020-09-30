@@ -9,7 +9,7 @@ use App\Models\Countries;
 use App\Models\PublicationType;
 use App\Models\Notifications;
 
-class PublicationsController extends Controller
+class PublicationsController extends ASUController
 {
     // всі назви поблікацій
     function getAllNames() {
@@ -91,7 +91,8 @@ class PublicationsController extends Controller
 
     // рейтингові показники
     function export(Request $request) {
-        $data = Publications::with('authors.author')
+        $divisions = $this->getDivisions();
+        $data = Publications::with('authors.author', 'publicationType', 'scienceType', 'supervisor')
             ->where('country', 'like', "%".$request->country."%") // Країна видання
             ->where('publication_type_id', 'like', "%".$request->publication_type_id."%"); // Вид публікацій
 
@@ -268,7 +269,31 @@ class PublicationsController extends Controller
         ];
 
         foreach ($data as $key => $value) {
+            // Кафедра - керівника
+            foreach($divisions->original['department'] as $keyDepartment => $department) {
+                if ($value['supervisor']['department_code'] == $department['ID_DIV']) {
+                    $value['supervisor']['department'] = $department['NAME_DIV'];
+                }
+            }
+            // Інcтитут / факультет - керівника
+            foreach($divisions->original['institute'] as $keyInstitute => $institute) {
+                if ($value['supervisor']['faculty_code'] == $institute['ID_DIV']) {
+                    $value['supervisor']['faculty'] = $institute['NAME_DIV'];
+                }
+            }
             foreach ($value['authors'] as $k => $v) {
+                // Кафедра - автора
+                foreach($divisions->original['department'] as $keyDepartment => $department) {
+                    if ($v['author']['department_code'] == $department['ID_DIV']) {
+                        $v['author']['department'] = $department['NAME_DIV'];
+                    }
+                }
+                // Інcтитут / факультет - автора
+                foreach($divisions->original['institute'] as $keyInstitute => $institute) {
+                    if ($v['author']['faculty_code'] == $institute['ID_DIV']) {
+                        $v['author']['faculty'] = $institute['NAME_DIV'];
+                    }
+                }
                 // Кількість статей за авторством та співавторством студентів
                 $withStudent = 0;
                 if($v['author']['categ_1'] == 1) {
