@@ -559,7 +559,7 @@
 
 
         </table>
-        <table id="exportList" v-show="true" >
+        <table id="exportList" v-show="false" >
             <tr>
                 <th>№</th>
                 <th>Назва роботи(мовою оригіналу)</th>
@@ -570,7 +570,7 @@
                 <th>Вихідні дані  </th>
                 <th>К-сть сторінок </th>
 
-                <th>Прізвище, ініціали </th>
+                <th>Прізвище, ім'я </th>
                 <th>Під керівництвом </th>
                 <th>Прізвище, ініціали наукового керівника </th>
                 <th>Факультет/країна(для співавторів - громадян інших країн) </th>
@@ -584,19 +584,19 @@
             <tr v-for="(a, i) in item.authors" >
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ind+1}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.title}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.title}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.title}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.title}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.publication_type.title}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{(item.science_type_id && item.science_type_id != 2) ? 'Так' : 'Ні' }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ (item.science_type_id && item.science_type_id != 1) ? 'Так' : 'Ні' }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.country}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.out_data}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.pages}}</td>
                 <td >{{a.author.name}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor_id ? 'Так' : 'Ні'}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor_id }}</td>
-                <td >{{a.author.faculty_code}}</td>
-                <td >{{a.author.department_code}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? 'Так' : 'Ні'}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? item.supervisor.name : '' }}</td>
+                <td >{{a.author.faculty}}</td>
+                <td >{{a.author.department}}</td>
                 <td >{{a.author.country != 'Україна' ? 'Так' : 'Ні'}}</td>
-                <td v-if="i == 0" :rowspan="item.year">{{item.year}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.year}}</td>
 
 
             </tr>
