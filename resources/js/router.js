@@ -29,7 +29,7 @@ let router = new Router({
             name: 'home',
             component: Home,
             meta: {
-                requiresRegister: false,
+                requiresRegister: true,
                 roles: [1, 2, 3, 4]
             }
         },
@@ -38,7 +38,7 @@ let router = new Router({
             name: 'register',
             component: Register,
             meta: {
-                requiresAuth: false
+                requiresAuth: true
             }
         },
         {
@@ -46,7 +46,7 @@ let router = new Router({
             name: 'profile',
             component: Profile,
             meta: {
-                requiresRegister: false,
+                requiresRegister: true,
             }
         },
         {
@@ -54,7 +54,7 @@ let router = new Router({
             name: 'user',
             component: User,
             meta: {
-                requiresRegister: false,
+                requiresRegister: true,
             }
         },
         {
@@ -62,7 +62,7 @@ let router = new Router({
             name: 'publications',
             component: Publications,
             meta: {
-                requiresRegister: false,
+                requiresRegister: true,
                 roles: [1, 2, 3, 4]
             }
         },
@@ -71,7 +71,7 @@ let router = new Router({
             name: 'publications-add',
             component: PublicationsAdd,
             meta: {
-                requiresRegister: false,
+                requiresRegister: true,
                 roles: [1, 2, 3, 4]
             }
         },
@@ -79,7 +79,7 @@ let router = new Router({
             path: '/publications/:id',
             component: PublicationsView,
             meta: {
-                requiresRegister: false,
+                requiresRegister: true,
                 roles: [1, 2, 3, 4]
             }
         },
@@ -88,7 +88,7 @@ let router = new Router({
             name: 'notifications',
             component: Notifications,
             meta: {
-                requiresRegister: false,
+                requiresRegister: true,
                 roles: [1, 2, 3, 4]
             }
         },
@@ -97,7 +97,7 @@ let router = new Router({
             name: 'users',
             component: Users,
             meta: {
-                requiresRegister: false,
+                requiresRegister: true,
                 roles: [2, 3, 4]
             }
         },
@@ -110,38 +110,38 @@ let router = new Router({
     ]
 });
 
-// router.beforeEach((to, from, next) => {
-//     if(to.matched.some(record => record.meta.requiresAuth)) {
-//         if(!store.getters.authUser) {
-//             next();
-//         } else {
-//             next({
-//                 path: '/',
-//                 params: { nextUrl: to.fullPath }
-//             });
-//         }
-//     } else if (to.matched.some(record => record.meta.requiresRegister)) {
-//         axios.get('/api/check-user')
-//         .then((response) => {
-//             if(response.data.status == 'register') {
-//                 store.dispatch('setUser', response.data.user)
-//                 next();
-//             } else if(response.data.status == 'login') {
-//                 next({
-//                     path: '/register',
-//                     params: { nextUrl: to.fullPath }
-//                 });
-//             } else {
-//                 store.dispatch('logout')
-//                 next({
-//                     path: '/',
-//                     params: { nextUrl: to.fullPath }
-//                 });
-//             }
-//         })
-//     } else {
-//         next();
-//     }
-// })
+router.beforeEach((to, from, next) => {
+    if(to.matched.some(record => record.meta.requiresAuth)) {
+        if(!store.getters.authUser) {
+            next();
+        } else {
+            next({
+                path: '/',
+                params: { nextUrl: to.fullPath }
+            });
+        }
+    } else if (to.matched.some(record => record.meta.requiresRegister)) {
+        axios.get('/api/check-user')
+        .then((response) => {
+            if(response.data.status == 'register') {
+                store.dispatch('setUser', response.data.user)
+                next();
+            } else if(response.data.status == 'login') {
+                next({
+                    path: '/register',
+                    params: { nextUrl: to.fullPath }
+                });
+            } else {
+                store.dispatch('logout')
+                next({
+                    path: '/',
+                    params: { nextUrl: to.fullPath }
+                });
+            }
+        })
+    } else {
+        next();
+    }
+})
 
 export default router
