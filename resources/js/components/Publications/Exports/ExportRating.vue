@@ -631,12 +631,20 @@
         },
         created() {
             this.getDivisions();
+            this.getExportData();
         },
 
         methods: {
             getDivisions() {
-                axios.get('/api/divisions').then(response => {
+                axios.post('/api/divisions').then(response => {
                     this.divisions = response.data;
+                })
+            },
+            getExportData() {
+                axios.post('/api/export', this.filters).then(response => {
+                    console.log(response.data);
+                }).catch((error)=>{
+                    console.log(error);
                 })
             },
             getDepartments() {
