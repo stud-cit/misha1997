@@ -569,20 +569,38 @@
                 <th>Країна видання публікаціїї </th>
                 <th>Вихідні дані  </th>
                 <th>К-сть сторінок </th>
-                <th>Посада</th>
-                <th>Прізвище, ініціали </th>
+
+                <th>Прізвище, ім'я </th>
                 <th>Під керівництвом </th>
                 <th>Прізвище, ініціали наукового керівника </th>
                 <th>Факультет/країна(для співавторів - громадян інших країн) </th>
                 <th>Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ) </th>
-                <th>Тип </th>
+
                 <th>Іноземець</th>
                 <th>Рік</th>
 
             </tr>
-            <tr>
+            <template v-for="(item, ind) in publicationsData" >
+            <tr v-for="(a, i) in item.authors" >
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ind+1}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.title}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.publication_type.title}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{(item.science_type_id && item.science_type_id != 2) ? 'Так' : 'Ні' }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ (item.science_type_id && item.science_type_id != 1) ? 'Так' : 'Ні' }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.country}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.out_data}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.pages}}</td>
+                <td >{{a.author.name}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? 'Так' : 'Ні'}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? item.supervisor.name : '' }}</td>
+                <td >{{a.author.faculty}}</td>
+                <td >{{a.author.department}}</td>
+                <td >{{a.author.country != 'Україна' ? 'Так' : 'Ні'}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.year}}</td>
+
 
             </tr>
+            </template>
         </table>
 
     </div>
@@ -599,6 +617,8 @@
                     institute: [],
                     department: []
                 },
+                publicationsData: [],
+                ratingData: [],
                 filters: {
                     faculty: '',
                     university: '',
@@ -631,12 +651,22 @@
         },
         created() {
             this.getDivisions();
+            this.getExportData();
         },
 
         methods: {
             getDivisions() {
                 axios.get('/api/divisions').then(response => {
                     this.divisions = response.data;
+                })
+            },
+            getExportData() {
+                axios.post('/api/export', this.filters).then(response => {
+                    this.publicationsData = response.data.publications;
+                    this.ratingData = response.data.rating;
+                    console.log(response.data);
+                }).catch((error)=>{
+                    console.log(error);
                 })
             },
             getDepartments() {

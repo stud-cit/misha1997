@@ -145,6 +145,11 @@
                 //
                 this.$emit('getData', this.stepData);
             },
+            checkString(s){
+
+                const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
+                return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
+            }
 
         }
     }
