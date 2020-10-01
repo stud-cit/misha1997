@@ -140,6 +140,9 @@
                     </tr>
                     </tbody>
                 </table>
+                <div class="spinner-border mt-4" role="status" v-if="loading">
+                    <span class="sr-only">Loading...</span>
+                </div>
                 <paginate
                     v-model="currentPage"
                     :page-count="numPage"
@@ -172,7 +175,7 @@
         data() {
             return {
                 selectPublications: [],
-
+                loading: true,
                 currentPage: 1,
                 perPage: 10,
                 numPage: 1,
@@ -218,6 +221,9 @@
             getData() {
                 axios.get('/api/publications').then(response => {
                     this.data = response.data;
+                    this.loading = false;
+                }).catch(() => {
+                    this.loading = false;
                 })
             },
             getCountry() {

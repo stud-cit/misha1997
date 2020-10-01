@@ -24,7 +24,7 @@ class AuthorsController extends ASUController
                 $data = Authors::with('role')->where('department_code', $request->session()->get('person')['department_code'])->get();
             break;
             case 4:
-                $data = Authors::with('role')->get();
+                $data = Authors::with('role')->where('roles_id', '!=', 4)->get();
             break;
         }
         foreach ($data as $key => $value) {
@@ -92,7 +92,7 @@ class AuthorsController extends ASUController
 
     // postAuthor (add publication page)
     function postAuthor(Request $request) {
-        if(!Authors::where("name", "like", $request->name)->exists()) {
+        if(!Authors::where("name", "like", $request->name)->orWhere("guid", $request->guid)->exists()) {
             $model = new Authors();
             $data = $request->all();
             $response = $model->create($data);

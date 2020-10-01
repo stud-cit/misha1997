@@ -17,6 +17,34 @@
             </div>
 
             <div class="form-group">
+                <label >Інститут/факультет *</label>
+                <div class="input-container">
+                    <select v-model="data.faculty_code">
+                        <option value=""></option>
+                        <option
+                            v-for="(item, index) in divisions.institute"
+                            :key="index"
+                            :value="item.ID_DIV"
+                        >{{item.NAME_DIV}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label >Кафедра *</label>
+                <div class="input-container">
+                    <select v-model="data.department_code">
+                        <option value=""></option>
+                        <option
+                            v-for="(item, index) in divisions.department"
+                            :key="index"
+                            :value="item.ID_DIV"
+                        >{{item.NAME_DIV}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label >Індекс Гірша Scopus</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="data.scopus_autor_id">
@@ -67,6 +95,11 @@
     export default {
         data() {
             return {
+                departments: [],
+                divisions: {
+                    institute: [],
+                    department: []
+                },
                 data: {
                     country: "Україна",
                     h_index: "",
@@ -81,8 +114,14 @@
         },
         mounted () {
             this.getCountry();
+            this.getDivisions();
         },
         methods: {
+            getDivisions() {
+                axios.get('/api/divisions').then(response => {
+                    this.divisions = response.data;
+                })
+            },
             getCountry() {
                 axios.get('/api/country').then(response => {
                     this.country = response.data;

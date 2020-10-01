@@ -15,6 +15,10 @@
                     <div class="hint" ><span>Зазначається назва публікації мовою оригіналу, починаючи з великої літери</span></div>
                 </div>
 
+                <div class="error" v-if="errorName">
+                    Публікація з такою назвою вже існує
+                </div>
+
                 <div class="error" v-if="$v.stepData.title.$error">
                     Поле обов'язкове для заповнення
                 </div>
@@ -76,6 +80,8 @@
         data() {
             return {
                 publicationTypes: [],
+                publicationNames: [],
+                errorName: false,
                 prevVal: '',
                 stepData: {
                     title: '',
@@ -86,6 +92,7 @@
         },
         created() {
             this.getTypePublications();
+            this.getNamePublications();
         },
         validations: {
 
@@ -106,11 +113,16 @@
                     this.publicationTypes = response.data;
                 })
             },
+            getNamePublications() {
+                axios.get(`/api/publications-names`).then(response => {
+                    this.publicationNames = response.data;
+                })
+            },
             changeScienceType(){
               this.stepData.publication_type = "";
 
             },
-            async nextStep() {
+            nextStep() {
                 this.$v.$touch()
                 if (this.$v.$invalid) {
                     swal("Не всі поля заповнено!", {
@@ -118,24 +130,12 @@
                     });
                     return
                 }
-                // check title
-                // let checkTitle = new Promise((resolve, reject) => {
-                //     axios.post(`/api/check-publication`, {
-                //         title: this.stepData.title.replace(/ +/g, ' ').trim()
-                //     }).then(response => {
-                //         if (response.data) {
-                //             swal("Публікація з такою назвою вже існує!", {
-                //                 icon: "error",
-                //             });
-                //             resolve(true)
-                //         } else {
-                //             resolve(false)
-                //         }
-                //     })
-                // });
-                // if(await checkTitle) {
-                //     return
-                // }
+                if(this.publicationNames.find(item => this.checkString(item.title) == this.checkString(this.stepData.title))) {
+                    this.errorName = true;
+                    return
+                } else {
+                    this.errorName = false;
+                }
                 // check scopus
                 if(this.stepData.science_type_id) {
                     this.$parent.isScopus = true;
@@ -145,12 +145,10 @@
                 //
                 this.$emit('getData', this.stepData);
             },
-            checkString(s){
-
+            checkString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
                 return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
             }
-
         }
     }
 </script>

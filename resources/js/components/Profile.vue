@@ -20,7 +20,7 @@
                     <div class="col-lg-3 list-item list-title">Роль:</div>
                     <div class="col-lg-9 list-item list-text">{{data.role.name}}</div>
                 </li>
-                <li class="row">
+                <!-- <li class="row">
                     <div class="col-lg-3 list-item list-title">Рік народження:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container">
@@ -28,7 +28,7 @@
                             <div class="hint" ><span>title</span></div>
                         </div>
                     </div>
-                </li>
+                </li> -->
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Посада в СумДУ:</div>
                     <div class="col-lg-9 list-item list-text">
@@ -42,8 +42,14 @@
                     <div class="col-lg-3 list-item list-title">Інститут/факультет:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container">
-                            <input class="item-value" type="text" v-model="data.faculty">
-                            <div class="hint" ><span>title</span></div>
+                            <select v-model="data.faculty_code">
+                                <option value=""></option>
+                                <option
+                                    v-for="(item, index) in divisions.institute"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
+                            </select>
                         </div>
                     </div>
                 </li>
@@ -51,8 +57,14 @@
                     <div class="col-lg-3 list-item list-title">Кафедра:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container">
-                            <input class="item-value" type="text" v-model="data.department">
-                            <div class="hint" ><span>title</span></div>
+                            <select v-model="data.department_code">
+                                <option value=""></option>
+                                <option
+                                    v-for="(item, index) in divisions.department"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
+                            </select>
                         </div>
                     </div>
                 </li>
@@ -110,6 +122,11 @@
     export default {
         data() {
             return {
+                departments: [],
+                divisions: {
+                    institute: [],
+                    department: []
+                },
                 data: {
                     name: "",
                     roles_id: "",
@@ -117,6 +134,8 @@
                     h_index: "",
                     scopus_researcher_id: "",
                     academic_code: "",
+                    faculty_code: "",
+                    department_code: "",
                     orcid: "",
                     email: "",
                     job: "",
@@ -132,8 +151,14 @@
             this.getData();
             this.getCountry();
             this.getRoles();
+            this.getDivisions();
         },
         methods: {
+            getDivisions() {
+                axios.get('/api/divisions').then(response => {
+                    this.divisions = response.data;
+                })
+            },
             getData() {
                 axios.get(`/api/profile`).then(response => {
                     console.log(response.data)

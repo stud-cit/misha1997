@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-lg-4">
+                    <div class="form-group col-lg-6">
                         <label >Інститут / факультет</label>
                         <div class="input-container">
                             <select v-model="filters.faculty_code" @change="getDepartments">
@@ -26,7 +26,7 @@
                             <div class="hint"><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
-                    <div class="form-group col-lg-4">
+                    <div class="form-group col-lg-6">
                         <label >Кафедра</label>
                         <div class="input-container">
                             <select v-model="filters.department_code">
@@ -40,7 +40,7 @@
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
-                    <div class="form-group col-lg-4">
+                    <!-- <div class="form-group col-lg-4">
                         <label >Рік народження</label>
                         <div class="input-container">
                             <select v-model="filters.birthday">
@@ -50,7 +50,7 @@
                             </select>
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
 
@@ -68,7 +68,7 @@
                         <th scope="col">Інститут/
                             факультет</th>
                         <th scope="col">E-mail</th>
-                        <th scope="col">Рік народження</th>
+                        <!-- <th scope="col">Рік народження</th> -->
 
                     </tr>
                     </thead>
@@ -77,14 +77,21 @@
                         <td scope="row">{{ index+1+(currentPage-1)*perPage}}</td>
 <!--                        <td>{{ item.role.name }}</td>-->
                         <td><router-link :to="{path: `/user/${item.id}`}">{{ item.name }}</router-link></td>
-                        <td></td>
+                        <td v-if="item.categ_1 == 1">Студент</td>
+                        <td v-else-if="item.categ_1 == 2">Аспірант</td>
+                        <td v-else-if="item.categ_2 == 1">Співробітник</td>
+                        <td v-else-if="item.categ_2 == 2">Викладач</td>
+                        <td v-else></td>
                         <td>{{ item.department }}</td>
                         <td>{{ item.faculty }}</td>
                         <td>{{ item.email }}</td>
-                        <td></td>
+                        <!-- <td></td> -->
                     </tr>
                     </tbody>
                 </table>
+                <div class="spinner-border mt-4" role="status" v-if="loading">
+                    <span class="sr-only">Loading...</span>
+                </div>
                 <paginate
                     v-model="currentPage"
                     :page-count="numPage"
@@ -109,6 +116,7 @@
     export default {
         data() {
             return {
+                loading: true,
                 departments: [],
                 divisions: {
                     institute: [],
@@ -169,6 +177,9 @@
             getData() {
                 axios.get('/api/authors').then(response => {
                     this.data = response.data;
+                    this.loading = false;
+                }).catch(() => {
+                    this.loading = false;
                 })
             },
             clean(){

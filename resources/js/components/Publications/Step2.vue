@@ -598,6 +598,7 @@
                     return
                 }
                 this.newAuthor.job = this.jobType == 1 ? this.newAuthor.job : "Не працює";
+                console.log(this.newAuthor)
                 axios.post('/api/author', this.newAuthor)
                 .then((response) => {
                     if(response.data.status == 'ok') {
