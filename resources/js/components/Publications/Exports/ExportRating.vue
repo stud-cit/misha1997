@@ -245,7 +245,7 @@
                 </form>
                 <div class="step-button-group">
                     <button class="prev" @click="showFilters = false">Назад</button>
-                    <button class="next active" @click="exportRating">Експортувати дані </button>
+                    <button class="next active" @click="getExportData">Експортувати дані </button>
 
                 </div>
 
@@ -261,7 +261,7 @@
                     співавторством студентів
                 </td>
 
-                <td>value</td>
+                <td>{{ratingData.countStudentPublications}}</td>
 
             </tr>
 
@@ -274,7 +274,7 @@
                     Всього
                 </td>
 
-                <td>value</td>
+                <td>{{ratingData.countForeignPublications}}</td>
 
             </tr>
             <tr>
@@ -282,7 +282,7 @@
                     Мають індекс Гірша за БД Scopus або WoS не нижче 10
                 </td>
 
-                <td>value</td>
+                <td>{{ratingData.countIndexHirsha}}</td>
             </tr>
 
             <tr>
@@ -290,7 +290,7 @@
                     Кількість публікацій всього
                     у тому числі:
                 </td>
-
+                <td>{{ratingData.countPublications}}</td>
 
             </tr>
 
@@ -299,7 +299,7 @@
                     - підручників
                 </td>
 
-                <td>value</td>
+                <td>{{ratingData.countBooks}}</td>
             </tr>
 
             <tr>
@@ -307,7 +307,7 @@
                     - посібників
                 </td>
 
-                <td>value</td>
+                <td>{{ratingData.countManuals}}</td>
             </tr>
 
             <tr>
@@ -315,18 +315,10 @@
                     - монографій
                 </td>
 
-                <td>value</td>
+                <td>{{ratingData.countMonographs}}</td>
             </tr>
 
-            <tr>
-                <td colspan="3">
-                    - опублікованих за кордоном мовами ОЕСР та ЕС
-                    проіндексовані БД Scopus або WoS
-                    статей у фахових за статусом виданнях
-                </td>
 
-                <td>value</td>
-            </tr>
 
             <tr>
                 <td colspan="3">
@@ -347,7 +339,7 @@
                     за БД Scopus та WoS:
                 </td>
 
-                <td>value</td>
+                <td>{{ratingData.countScopusAndWoS}}</td>
 
             </tr>
             <tr>
@@ -355,14 +347,14 @@
                     за БД Scopus або WoS:
                 </td>
 
-                <td>value</td>
+                <td>{{ratingData.countScopusOrWoS}}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     -	 у тому числі у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
                 </td>
 
-                <td>value</td>
+                <td>{{ratingData.countSnipScopus}}</td>
             </tr>
             <tr>
                 <td >
@@ -372,7 +364,7 @@
                     -	за БД WoS
                 </td>
 
-                <td>value</td>
+                <td>{{ratingData.countSCIEWoS}}</td>
             </tr>
             <tr>
                 <td >
@@ -380,7 +372,7 @@
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countSSCIWoS}}</td>
             </tr>
             <tr>
                 <td >
@@ -388,7 +380,7 @@
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countImpactFactorWoS}}</td>
             </tr>
             <tr>
                 <td colspan="2">
@@ -412,7 +404,7 @@
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countOtherOrganization}}</td>
             </tr>
             <tr>
                 <td colspan="2">
@@ -449,7 +441,7 @@
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countDOI}}</td>
             </tr>
             <tr>
 
@@ -467,7 +459,7 @@
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countFiveYearScopus}}</td>
             </tr>
 
 
@@ -488,7 +480,7 @@
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countThese}}</td>
             </tr>
 
             <tr>
@@ -498,7 +490,7 @@
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countTheseAbroad}}</td>
             </tr>
 
             <tr>
@@ -508,7 +500,7 @@
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countTheseWithStudent}}</td>
             </tr>
 
             <tr>
@@ -518,30 +510,33 @@
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countTheseWithForeign}}</td>
             </tr>
 
             <tr>
 
-                <td colspan="2" rowspan="2">
+                <td colspan="3" >
                     Кількість статей (всього), з них:
                 </td>
-                <td>
+                <td>{{ratingData.countArticle}}</td>
+
+            </tr>
+            <tr>
+                <td colspan="3">
                     -	статей опублікованих за кордоном
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countArticleAbroad}}</td>
             </tr>
-
             <tr>
 
-                <td >
+                <td colspan="3">
                     -	статей з іноземними партнерами
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countArticleWithForeign}}</td>
             </tr>
 
             <tr>
@@ -551,7 +546,7 @@
                 </td>
 
 
-                <td>value</td>
+                <td>{{ratingData.countEmployees}}</td>
             </tr>
 
 
@@ -569,6 +564,7 @@
                 <th>Країна видання публікаціїї </th>
                 <th>Вихідні дані  </th>
                 <th>К-сть сторінок </th>
+                <th>Посада</th>
 
                 <th>Прізвище, ім'я </th>
                 <th>Під керівництвом </th>
@@ -590,12 +586,13 @@
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.country}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.out_data}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.pages}}</td>
+                <td >{{a.author.job}}</td>
                 <td >{{a.author.name}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? 'Так' : 'Ні'}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? item.supervisor.name : '' }}</td>
-                <td >{{a.author.faculty}}</td>
-                <td >{{a.author.department}}</td>
-                <td >{{a.author.country != 'Україна' ? 'Так' : 'Ні'}}</td>
+                <td >{{a.author.faculty ? a.author.faculty : a.author.country }}</td>
+                <td >{{a.author.department ? a.author.department : a.author.job}}</td>
+                <td >{{a.author.country == 'Україна' ? 'Ні' :  a.author.country ? 'Так' : 'Не вказано'}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.year}}</td>
 
 
@@ -651,7 +648,7 @@
         },
         created() {
             this.getDivisions();
-            this.getExportData();
+
         },
 
         methods: {
@@ -664,7 +661,9 @@
                 axios.post('/api/export', this.filters).then(response => {
                     this.publicationsData = response.data.publications;
                     this.ratingData = response.data.rating;
-                    console.log(response.data);
+
+                }).then(() => {
+                    this.exportRating();
                 }).catch((error)=>{
                     console.log(error);
                 })
@@ -678,6 +677,7 @@
                 this.showFilters = true;
             },
             exportRating(){
+
                 const rating = XLSX.utils.table_to_book(document.getElementById('exportRating'));
                 const publications = XLSX.utils.table_to_book(document.getElementById('exportList'));
                 const wb = XLSX.utils.book_new();
