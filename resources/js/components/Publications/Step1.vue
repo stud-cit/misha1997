@@ -76,6 +76,7 @@
         data() {
             return {
                 publicationTypes: [],
+                publicationNames: [],
                 prevVal: '',
                 stepData: {
                     title: '',
@@ -86,6 +87,7 @@
         },
         created() {
             this.getTypePublications();
+            this.getNamesPublications();
         },
         validations: {
 
@@ -106,6 +108,12 @@
                     this.publicationTypes = response.data;
                 })
             },
+            getNamesPublications() {
+                axios.get(`/api/publications-names`).then(response => {
+                    this.publicationNames = response.data.map(n => this.parseString(n.title));
+
+                })
+            },
             changeScienceType(){
               this.stepData.publication_type = "";
 
@@ -118,6 +126,8 @@
                     });
                     return
                 }
+
+
                 // check title
                 // let checkTitle = new Promise((resolve, reject) => {
                 //     axios.post(`/api/check-publication`, {
@@ -143,9 +153,17 @@
                     this.$parent.isScopus = false;
                 }
                 //
-                this.$emit('getData', this.stepData);
+                if(!this.publicationNames.includes(this.parseString(this.stepData.title))){
+                    this.$emit('getData', this.stepData);
+                }
+                else{
+                    swal("Публікація з такою назвою вже існує!", {
+                                        icon: "error",
+                    });
+                }
+
             },
-            checkString(s){
+            parseString(s){
 
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
                 return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
