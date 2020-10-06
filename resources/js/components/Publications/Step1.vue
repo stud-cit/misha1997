@@ -140,7 +140,7 @@
               this.stepData.publication_type = "";
 
             },
-            async nextStep() {
+            nextStep() {
                 this.$v.$touch()
                 if (this.$v.$invalid) {
                     swal("Не всі поля заповнено!", {
@@ -158,7 +158,14 @@
                     this.$parent.isScopus = false;
                 }
                 //
-                if(!this.publicationNames.includes(this.parseString(this.stepData.title)) | this.parseString(this.stepData.title) == this.parseString(this.publicationData.title)){
+
+                let editTitle = false;
+
+                if(this.$route.name == 'publications-edit'){
+                    editTitle = this.parseString(this.stepData.title) == this.parseString(this.publicationData.title);
+                }
+
+                if(!this.publicationNames.includes(this.parseString(this.stepData.title)) | editTitle){
                     this.$emit('getData', this.stepData);
                 }
                 else{
