@@ -35,7 +35,7 @@
                 } catch (err) {
                     console.log(err);
                 }
-                if (location.indexOf("jv.") > 0) {
+                if (location.indexOf("scipub.") > 0) {
                     this.auth_window.close();
                     window.location.href = '/home';
                 }
