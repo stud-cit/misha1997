@@ -1,0 +1,128 @@
+////tables and lists
+
+.table-list{
+    margin-top: 40px;
+    table{
+        margin: 0;
+        th{
+            font-family: Arial;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 15px;
+            line-height: 17px;
+            text-align: center;
+            color: #FFFFFF;
+            padding: 35px 20px;
+            background: #465E82;
+            border: 2px solid #fff;
+            border-top: 1px solid #465E82;
+            vertical-align: middle;
+        }
+
+        td{
+            border: 2px solid #fff;
+            font-family: Arial;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 15px;
+            line-height: 17px;
+            color: #555555;
+            padding: 35px 20px;
+            background: #F2F2F2;
+            vertical-align: middle;
+
+        }
+        .icons{
+
+            input{
+                transform: scale(1.3);
+                //margin-left: -1px;
+            }
+            i{
+                margin-top: 8px;
+                font-size: 20px;
+            }
+            .fa-pen-square{
+                color: steelblue;
+                //margin-left: 5px;
+            }
+            .fa-trash-alt{
+                color: red;
+            }
+        }
+
+    }
+}
+.list-view{
+    .row{
+        border: 1px solid #C4C4C4;
+        //margin-bottom: -1px;
+        border-bottom: none;
+        align-items: center;
+        .list-item{
+            padding: 15px 25px;
+            font-family: Arial;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            line-height: 23px;
+            text-align: left;
+            color: #212529;
+        }
+        .list-title{
+            font-weight: bold;
+
+        }
+        &:last-of-type{
+            border: 1px solid #C4C4C4;
+        }
+
+    }
+}
+@media (max-width: 575px) {
+    ////tables and lists
+
+    .table-list{
+        margin-top: 30px;
+        table{
+            margin: 0;
+            th{
+                font-size: 14px;
+                line-height: 16px;
+                padding: 20px 15px;
+            }
+            td{
+                font-size: 14px;
+                line-height: 16px;
+                padding: 20px 15px;
+
+            }
+            .icons{
+
+                input{
+                    transform: scale(1.3);
+                    //margin-left: -1px;
+                }
+
+            }
+
+        }
+    }
+    .list-view{
+        .row{
+            margin: 0;
+            .list-item{
+                padding: 10px 15px;
+                font-size: 18px;
+                line-height: 20px;
+
+            }
+            .list-title{
+
+                padding-bottom: 0;
+
+            }
+
+        }
+    }
+}

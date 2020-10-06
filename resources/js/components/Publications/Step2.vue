@@ -553,7 +553,9 @@
             showNewAuthor(n) {
                 this.getCountry();
                 this.getDivisions();
+                window.scrollTo(0,0);
                 this.otherAuthor = n;
+
             },
             getPersonAPI() {
                 if(this.selectCateg) {

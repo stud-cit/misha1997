@@ -143,7 +143,15 @@
                     this.$parent.isScopus = false;
                 }
                 //
-                this.$emit('getData', this.stepData);
+                if(!this.publicationNames.includes(this.parseString(this.stepData.title))){
+                    this.$emit('getData', this.stepData);
+                }
+                else{
+                    swal("Публікація з такою назвою вже існує!", {
+                                        icon: "error",
+                    });
+                }
+
             },
             checkString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
