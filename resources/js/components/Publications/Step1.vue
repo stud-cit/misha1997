@@ -24,7 +24,7 @@
                 <div class="form-group col-lg-4">
                     <label >БД Scopus\WoS</label>
                     <div class="input-container">
-                        <select  v-model="stepData.science_type_id" @change="changeScienceType">
+                        <select  v-model="stepData.science_type_id" >
                             <option value=""></option>
                             <option value="1">Scopus</option>
                             <option value="2">Wos</option>
@@ -75,19 +75,24 @@
         name: "Step1",
         data() {
             return {
+
                 publicationTypes: [],
                 publicationNames: [],
                 prevVal: '',
                 stepData: {
                     title: '',
-                    science_type_id: '',
+                    science_type_id: 0,
                     publication_type: null
                 }
             }
         },
-        created() {
+        props : {
+            publicationData: Object
+        },
+        mounted() {
             this.getTypePublications();
             this.getNamesPublications();
+            this.checkPublicationsData();
         },
         validations: {
 
@@ -103,6 +108,23 @@
 
         },
         methods: {
+            checkPublicationsData() {
+
+
+
+                    if(this.publicationData && this.$route.name == 'publications-edit'){
+
+                        this.stepData.title = this.publicationData.title;
+
+                        this.stepData.science_type_id = this.publicationData.science_type_id;
+
+                        this.stepData.publication_type = this.publicationData.publication_type;
+
+                        // clearInterval(timer);
+                    }
+
+
+            },
             getTypePublications() {
                 axios.get(`/api/type-publications`).then(response => {
                     this.publicationTypes = response.data;
@@ -128,24 +150,7 @@
                 }
 
 
-                // check title
-                // let checkTitle = new Promise((resolve, reject) => {
-                //     axios.post(`/api/check-publication`, {
-                //         title: this.stepData.title.replace(/ +/g, ' ').trim()
-                //     }).then(response => {
-                //         if (response.data) {
-                //             swal("Публікація з такою назвою вже існує!", {
-                //                 icon: "error",
-                //             });
-                //             resolve(true)
-                //         } else {
-                //             resolve(false)
-                //         }
-                //     })
-                // });
-                // if(await checkTitle) {
-                //     return
-                // }
+
                 // check scopus
                 if(this.stepData.science_type_id) {
                     this.$parent.isScopus = true;
@@ -153,7 +158,7 @@
                     this.$parent.isScopus = false;
                 }
                 //
-                if(!this.publicationNames.includes(this.parseString(this.stepData.title))){
+                if(!this.publicationNames.includes(this.parseString(this.stepData.title)) | this.parseString(this.stepData.title) == this.parseString(this.publicationData.title)){
                     this.$emit('getData', this.stepData);
                 }
                 else{

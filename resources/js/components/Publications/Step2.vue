@@ -443,12 +443,16 @@
                 }
             }
         },
+        props: {
+          publicationData: Object
+        },
         components: {
             Multiselect,
         },
         created() {
             this.stepData.authors.push(this.$store.getters.authUser);
             this.getAuthors();
+            this.checkPublicationsData();
         },
 
         validations: {
@@ -493,6 +497,24 @@
 
         },
         methods: {
+            checkPublicationsData() {
+
+
+
+                if(this.publicationData && this.$route.name == 'publications-edit'){
+
+                    this.useSupervisor = this.publicationData.supervisor_id ? '1' : '0';
+
+                    this.stepData.supervisor = this.publicationData.supervisor;
+                    this.stepData.initials = this.publicationData.initials;
+                    console.log(this.publicationData.authors.map((a)=>a.author));
+                    this.stepData.authors = this.publicationData.authors.map((a)=>a.author);
+
+
+                }
+
+
+            },
             getDepartments() {
                 this.departments = this.divisions.department.filter(item => {
                     return this.newAuthor.faculty_code == item.ID_PAR
