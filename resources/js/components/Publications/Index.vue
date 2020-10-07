@@ -55,10 +55,6 @@
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
-
-                </div>
-
-                <div class="form-row">
                     <div class="form-group col-lg-4">
                         <label >Країна видання</label>
                         <div class="input-container">
@@ -70,15 +66,9 @@
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
-                    <div class="form-group col-lg-4">
-                        <label >Місто видання</label>
-                        <div class="input-container">
-                            <input type="text"  v-model="filters.city">
-                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                        </div>
-                    </div>
-
                 </div>
+
+                
                 <div class="form-group">
                     <label >Вид публікації</label>
                     <div class="input-container">
@@ -189,7 +179,6 @@
                     science_type_id: '',
                     year: '',
                     country: '',
-                    city: '',
                     publication_type_id: '',
 
 
