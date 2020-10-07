@@ -59,7 +59,7 @@
                         <label >Підбаза WoS</label>
                         <div class="input-container">
                             <select  v-model="stepData.sub_db_index" >
-                                <option value="0"></option>
+                                <option value=""></option>
                                 <option value="1">Science Citation Index Expanded (SCIE)</option>
                                 <option value="2">Social Science Citation Index</option>
 
@@ -104,25 +104,43 @@
                     impact_factor: '',
                     quartil_scopus: null,
                     quartil_wos: null,
-                    sub_db_index: 0
+                    sub_db_index: ''
                 }
 
             }
         },
+        props: {
+            publicationData: Object
+        },
+        created() {
+            this.checkPublicationData();
+        },
         methods:{
+            checkPublicationData() {
+
+                if(this.publicationData && this.$route.name == 'publications-edit'){
+
+                    this.stepData.snip = this.publicationData.snip;
+                    this.stepData.impact_factor = this.publicationData.impact_factor;
+                    this.stepData.quartil_scopus = this.publicationData.quartil_scopus;
+                    this.stepData.quartil_wos = this.publicationData.quartil_wos;
+                    this.stepData.sub_db_index = this.publicationData.sub_db_index;
+
+
+                }
+
+            },
             nextStep() {
 
                 this.$emit('getData', this.stepData);
             },
             prevStep(){
-                this.$emit('prevStep');
+                this.$emit('prevStep', this.stepData);
             },
 
 
         },
-        created() {
 
-        }
     }
 </script>
 

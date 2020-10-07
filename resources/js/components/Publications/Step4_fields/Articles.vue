@@ -95,6 +95,7 @@
         },
         created() {
             this.getCountry();
+            this.checkPublicationData();
         },
         validations: {
 
@@ -126,6 +127,24 @@
             },
         },
         methods:{
+            checkPublicationData() {
+
+
+
+                if(this.publicationData && this.$route.name == 'publications-edit'){
+
+                    this.useSupervisor = this.publicationData.supervisor_id ? '1' : '0';
+
+                    this.stepData.supervisor = this.publicationData.supervisor;
+                    this.stepData.initials = this.publicationData.initials;
+
+                    this.stepData.authors = this.publicationData.authors.map((a)=>a.author);
+
+
+                }
+
+
+            },
             getCountry() {
                 axios.get('/api/country').then(response => {
                     this.country = response.data;

@@ -452,7 +452,7 @@
         created() {
             this.stepData.authors.push(this.$store.getters.authUser);
             this.getAuthors();
-            this.checkPublicationsData();
+            this.checkPublicationData();
         },
 
         validations: {
@@ -497,7 +497,7 @@
 
         },
         methods: {
-            checkPublicationsData() {
+            checkPublicationData() {
 
 
 
@@ -507,7 +507,7 @@
 
                     this.stepData.supervisor = this.publicationData.supervisor;
                     this.stepData.initials = this.publicationData.initials;
-                    console.log(this.publicationData.authors.map((a)=>a.author));
+
                     this.stepData.authors = this.publicationData.authors.map((a)=>a.author);
 
 

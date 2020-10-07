@@ -24,7 +24,7 @@
                 <div class="form-group col-lg-4">
                     <label >БД Scopus\WoS</label>
                     <div class="input-container">
-                        <select  v-model="stepData.science_type_id" >
+                        <select  v-model="stepData.science_type_id" @change="changeScienceType">
                             <option value=""></option>
                             <option value="1">Scopus</option>
                             <option value="2">Wos</option>
@@ -81,7 +81,7 @@
                 prevVal: '',
                 stepData: {
                     title: '',
-                    science_type_id: 0,
+                    science_type_id: '',
                     publication_type: null
                 }
             }
@@ -92,7 +92,7 @@
         mounted() {
             this.getTypePublications();
             this.getNamesPublications();
-            this.checkPublicationsData();
+            this.checkPublicationData();
         },
         validations: {
 
@@ -108,7 +108,7 @@
 
         },
         methods: {
-            checkPublicationsData() {
+            checkPublicationData() {
 
 
 
@@ -120,7 +120,7 @@
 
                         this.stepData.publication_type = this.publicationData.publication_type;
 
-                        // clearInterval(timer);
+
                     }
 
 
@@ -139,6 +139,7 @@
             changeScienceType(){
               this.stepData.publication_type = "";
 
+
             },
             nextStep() {
                 this.$v.$touch()
@@ -156,6 +157,7 @@
                     this.$parent.isScopus = true;
                 } else {
                     this.$parent.isScopus = false;
+
                 }
                 //
 
