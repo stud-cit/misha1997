@@ -114,11 +114,11 @@
 
                     if(this.publicationData && this.$route.name == 'publications-edit'){
 
-                        this.stepData.title = this.publicationData.title;
+                        const {title, science_type_id, publication_type} = this.publicationData;
 
-                        this.stepData.science_type_id = this.publicationData.science_type_id;
-
-                        this.stepData.publication_type = this.publicationData.publication_type;
+                        this.stepData.title = title;
+                        this.stepData.science_type_id = science_type_id;
+                        this.stepData.publication_type = publication_type;
 
 
                     }

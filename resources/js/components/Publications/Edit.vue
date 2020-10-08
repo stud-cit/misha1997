@@ -79,10 +79,10 @@
                     // this.currentStep++;
                 } else {
                     this.stepData.out_data = this.outDataParser(this.stepData);
-                    axios.post('/api/publication', this.stepData)
+                    axios.post(`/api/update-publication/${this.$route.params.id}`, this.stepData)
                         .then((response) => {
 
-                            swal("Публікацію успішно додано!", {
+                            swal("Публікацію успішно змінено!", {
                                 icon: "success",
                             });
                             this.$router.push({path: '/publications'});

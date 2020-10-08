@@ -17,7 +17,7 @@
                 <electronic :data="data" v-if="data.publication_type.type == 'electronic'"></electronic>
 
             <div class="edit-block">
-                <button class="mr-2 edit">Редагувати</button>
+                <button class="mr-2 edit" @click="editPublication">Редагувати</button>
                 <button class="delete" @click="deletePublication">Видалити</button>
             </div>
 
@@ -54,6 +54,7 @@
 
         },
         methods: {
+
             getPublicationData(){
 
                 axios.get(`/api/publication/${this.$route.params.id}`).then(response => {
@@ -61,6 +62,9 @@
                 }).catch(error => {
                     console.log(error);
                 });
+            },
+            editPublication() {
+                this.$router.push({path: `/publications/edit/${this.$route.params.id}`});
             },
             deletePublication(){
                 let question = confirm("Ви підтверджуєте видалення публікації");

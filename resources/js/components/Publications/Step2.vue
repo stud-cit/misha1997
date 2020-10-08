@@ -503,12 +503,12 @@
 
                 if(this.publicationData && this.$route.name == 'publications-edit'){
 
-                    this.useSupervisor = this.publicationData.supervisor_id ? '1' : '0';
+                    const {supervisor, initials, authors} = this.publicationData;
 
-                    this.stepData.supervisor = this.publicationData.supervisor;
-                    this.stepData.initials = this.publicationData.initials;
-
-                    this.stepData.authors = this.publicationData.authors.map((a)=>a.author);
+                    this.stepData.useSupervisor = supervisor ? '1' : '0';
+                    this.stepData.supervisor = supervisor;
+                    this.stepData.initials = initials;
+                    this.stepData.authors = authors.map((a)=>a.author);
 
 
                 }

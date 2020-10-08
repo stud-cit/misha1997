@@ -119,12 +119,12 @@
             checkPublicationData() {
 
                 if(this.publicationData && this.$route.name == 'publications-edit'){
-
-                    this.stepData.snip = this.publicationData.snip;
-                    this.stepData.impact_factor = this.publicationData.impact_factor;
-                    this.stepData.quartil_scopus = this.publicationData.quartil_scopus;
-                    this.stepData.quartil_wos = this.publicationData.quartil_wos;
-                    this.stepData.sub_db_index = this.publicationData.sub_db_index;
+                    const {snip, impact_factor, quartil_scopus, quartil_wos, sub_db_index} = this.publicationData;
+                    this.stepData.snip = snip;
+                    this.stepData.impact_factor = impact_factor;
+                    this.stepData.quartil_scopus = quartil_scopus;
+                    this.stepData.quartil_wos = quartil_wos;
+                    this.stepData.sub_db_index = sub_db_index;
 
 
                 }
