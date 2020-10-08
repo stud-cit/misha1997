@@ -255,7 +255,7 @@
             <div class="form-group">
                 <label class="item-title">Під керівництвом</label>
                 <div class="input-container hint-container">
-                    <select class="item-value" v-model="stepData.useSupervisor">
+                    <select class="item-value" v-model="stepData.useSupervisor" @change="changeSupervisor">
                         <option value="1">Так </option>
                         <option value="0">Ні </option>
                     </select>
@@ -554,6 +554,12 @@
             },
             prevStep () {
                 this.$emit('prevStep');
+            },
+            changeSupervisor(){
+
+                if(this.stepData.useSupervisor == '0'){
+                    this.stepData.supervisor = null;
+                }
             },
             addAuthor() {
                 this.stepData.authors.push({
