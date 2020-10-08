@@ -76,6 +76,7 @@
         name: "Step1",
         data() {
             return {
+
                 publicationTypes: [],
                 publicationNames: [],
                 prevVal: '',
@@ -86,9 +87,13 @@
                 }
             }
         },
-        created() {
+        props : {
+            publicationData: Object
+        },
+        mounted() {
             this.getTypePublications();
             this.getNamesPublications();
+            this.checkPublicationData();
         },
         validations: {
 
@@ -104,6 +109,23 @@
 
         },
         methods: {
+            checkPublicationData() {
+
+
+
+                    if(this.publicationData && this.$route.name == 'publications-edit'){
+
+                        const {title, science_type_id, publication_type} = this.publicationData;
+
+                        this.stepData.title = title;
+                        this.stepData.science_type_id = science_type_id;
+                        this.stepData.publication_type = publication_type;
+
+
+                    }
+
+
+            },
             getTypePublications() {
                 axios.get(`/api/type-publications`).then(response => {
                     this.publicationTypes = response.data;
@@ -118,8 +140,9 @@
             changeScienceType(){
               this.stepData.publication_type = "";
 
+
             },
-            async nextStep() {
+            nextStep() {
                 this.$v.$touch()
                 if (this.$v.$invalid) {
                     swal("Не всі поля заповнено!", {
@@ -129,32 +152,23 @@
                 }
 
 
-                // check title
-                // let checkTitle = new Promise((resolve, reject) => {
-                //     axios.post(`/api/check-publication`, {
-                //         title: this.stepData.title.replace(/ +/g, ' ').trim()
-                //     }).then(response => {
-                //         if (response.data) {
-                //             swal("Публікація з такою назвою вже існує!", {
-                //                 icon: "error",
-                //             });
-                //             resolve(true)
-                //         } else {
-                //             resolve(false)
-                //         }
-                //     })
-                // });
-                // if(await checkTitle) {
-                //     return
-                // }
+
                 // check scopus
                 if(this.stepData.science_type_id) {
                     this.$parent.isScopus = true;
                 } else {
                     this.$parent.isScopus = false;
+
                 }
                 //
-                if(!this.publicationNames.includes(this.parseString(this.stepData.title))){
+
+                let editTitle = false;
+
+                if(this.$route.name == 'publications-edit'){
+                    editTitle = this.parseString(this.stepData.title) == this.parseString(this.publicationData.title);
+                }
+
+                if(!this.publicationNames.includes(this.parseString(this.stepData.title)) | editTitle){
                     this.$emit('getData', this.stepData);
                 }
                 else{

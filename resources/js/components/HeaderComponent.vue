@@ -1,6 +1,6 @@
 <template>
 
-    <header :class="{header: true}">
+    <header :class="{header: true, shadow: $route.name != 'auth'}">
 
         <div class="container">
 
@@ -111,6 +111,7 @@
         top: 0px;
         background: #FFFFFF;
         z-index: 10;
+
     }
     .shadow{
         box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);

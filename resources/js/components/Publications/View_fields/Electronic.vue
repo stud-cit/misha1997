@@ -22,7 +22,7 @@
                 <div class="col-lg-9 list-item list-text">{{data.supervisor.name}}</div>
             </li>
         </template>
-        
+
         <template v-else>
             <li class="row">
                 <div class="col-lg-3 list-item list-title">Під керівництвом:</div>
@@ -42,7 +42,7 @@
                 <div class="col-lg-3 list-item list-title">Квартиль журналу (БД Scopus):</div>
                 <div class="col-lg-9 list-item list-text">{{data.quartil_scopus}}</div>
             </li>
-        
+
             <li class="row">
                 <div class="col-lg-3 list-item list-title">Імпакт-фактор (БД WoS):</div>
                 <div class="col-lg-9 list-item list-text">{{data.impact_factor}}</div>
@@ -93,11 +93,7 @@
             <div class="col-lg-3 list-item list-title">Електронна адреса (url):</div>
             <div class="col-lg-9 list-item list-text">{{data.url}}</div>
         </li>
-        <li class="row">
-            <div class="col-lg-3 list-item list-title">Опубліковано мовами ОЕСР та ЄС:</div>
-            <div class="col-lg-9 list-item list-text" v-if="data.languages==0">Ні</div>
-            <div class="col-lg-9 list-item list-text" v-if="data.languages==1">Так</div>
-        </li>
+
         <li class="row">
             <div class="col-lg-3 list-item list-title">Режим доступу:</div>
             <div class="col-lg-9 list-item list-text" v-if="data.access_mode==0">Закритий</div>

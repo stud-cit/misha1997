@@ -50,6 +50,15 @@
 
                     if(!this.isScopus && this.currentStep == 2){
                         this.currentStep+=2;
+                        const falseScinceType = {
+                            snip: null,
+                            impact_factor: null,
+                            quartil_scopus: null,
+                            quartil_wos: null,
+                            sub_db_index: null
+                        };
+                        this.stepData = Object.assign(this.stepData, falseScinceType);
+
                     }
                     else {
                         this.currentStep++;

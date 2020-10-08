@@ -220,6 +220,9 @@
                     this.publicationTypes = response.data;
                 })
             },
+            editPublication() {
+			    this.$router.push({path: `/publications/edit/${this.selectPublications[0].id}`});
+            },
             deletePublications() {
 				swal({
 					title: "Бажаєте видалити?",
