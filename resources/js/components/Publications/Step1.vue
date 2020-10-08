@@ -64,6 +64,7 @@
         </div>
 
         <div class="step-button-group">
+            <router-link :to="'/home'" tag="button" class="prev">Назад</router-link>
             <button class="next" @click="nextStep" >Продовжити </button>
         </div>
     </div>

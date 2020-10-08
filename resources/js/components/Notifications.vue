@@ -22,8 +22,11 @@
                     <p class="text">{{ item.text }}</p>
                 </li>
             </ul>
+            <div class="step-button-group">
+                <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
+            </div>
+            
         </div>
-
     </div>
 
 

@@ -97,9 +97,11 @@
                 </li>
 
             </ul>
-
+                
             <div class="text-center">
-                <button class="btn save-btn" @click="save()">Зберегти</button>
+                    <router-link :to="'/home'" tag="button" class="btn save-btn bg-primary">Назад</router-link>
+                    <button class="btn save-btn" @click="save()">Зберегти</button>
+              
             </div>
         </div>
     </div>

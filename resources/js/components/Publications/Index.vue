@@ -144,8 +144,9 @@
                     next-class="page-link">
                 </paginate>
                 <div class="edit-block" v-if="access == 'open'">
+                    <router-link :to="'/home'" tag="button" class="mr-2">Назад</router-link>
                     <button class="mr-2 edit">Редагувати</button>
-                    <button class="delete" @click="deletePublications">Видалити</button>
+                    <button class="mr-2 delete" @click="deletePublications">Видалити</button>
                 </div>
             </div>
 <!--            <router-view></router-view>-->

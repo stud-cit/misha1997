@@ -98,6 +98,9 @@
                     prev-class="page-link"
                     next-class="page-link">
                 </paginate>
+                <div class="step-button-group">
+            <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
+        </div>
             </div>
         </div>
     </div>
