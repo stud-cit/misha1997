@@ -443,12 +443,16 @@
                 }
             }
         },
+        props: {
+          publicationData: Object
+        },
         components: {
             Multiselect,
         },
         created() {
             this.stepData.authors.push(this.$store.getters.authUser);
             this.getAuthors();
+            this.checkPublicationData();
         },
 
         validations: {
@@ -493,6 +497,24 @@
 
         },
         methods: {
+            checkPublicationData() {
+
+
+
+                if(this.publicationData && this.$route.name == 'publications-edit'){
+
+                    const {supervisor, initials, authors} = this.publicationData;
+
+                    this.stepData.useSupervisor = supervisor ? '1' : '0';
+                    this.stepData.supervisor = supervisor;
+                    this.stepData.initials = initials;
+                    this.stepData.authors = authors.map((a)=>a.author);
+
+
+                }
+
+
+            },
             getDepartments() {
                 this.departments = this.divisions.department.filter(item => {
                     return this.newAuthor.faculty_code == item.ID_PAR

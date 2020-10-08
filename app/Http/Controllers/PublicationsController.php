@@ -59,6 +59,9 @@ class PublicationsController extends ASUController
     // оновлення публікації
     function updatePublication(Request $request, $id) {
         $data = $request->all();
+        if($data['supervisor']) {
+            $data['supervisor_id'] = $data['supervisor']['id'];
+        }
         Publications::find($id)->update($data);
         return response('ok', 200);
     }

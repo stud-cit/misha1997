@@ -144,7 +144,7 @@
                     next-class="page-link">
                 </paginate>
                 <div class="edit-block" v-if="access == 'open'">
-                    <button class="mr-2 edit">Редагувати</button>
+                    <button class="mr-2 edit" @click="editPublication">Редагувати</button>
                     <button class="delete" @click="deletePublications">Видалити</button>
                 </div>
             </div>
@@ -218,6 +218,9 @@
                 axios.get(`/api/type-publications`).then(response => {
                     this.publicationTypes = response.data;
                 })
+            },
+            editPublication() {
+			    this.$router.push({path: `/publications/edit/${this.selectPublications[0].id}`});
             },
             deletePublications() {
 				swal({
