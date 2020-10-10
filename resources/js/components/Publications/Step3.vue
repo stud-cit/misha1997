@@ -3,11 +3,9 @@
         <p class="step-subtitle">
             Крок 3 з 4.
         </p>
-
         <div class=" step-content">
             <form class="form-block">
-
-                <div class="form-row">
+                <div class="form-row" v-if="publicationData.science_type_id == 1 || publicationData.science_type_id == 3">
                     <div class="form-group col-lg-8">
                         <label >SNIP журналу (БД Scopus)</label>
                         <div class="input-container">
@@ -16,22 +14,17 @@
                         </div>
                     </div>
                     <div class="form-group col-lg-4">
-                        <label >Квартиль журналу (БД Scopus)</label>
+                        <label>Квартиль журналу (БД Scopus)</label>
                         <div class="input-container">
-
                             <select  v-model="stepData.quartil_scopus" >
                                 <option value=""></option>
                                 <option v-for="n in 4" :key="n" :value="n">{{n }}</option>
-
-
                             </select>
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
-
                 </div>
-
-                <div class="form-row">
+                <div class="form-row" v-if="publicationData.science_type_id == 2 || publicationData.science_type_id == 3">
                     <div class="form-group col-lg-8">
                         <label >Імпакт-фактор (БД WoS)</label>
                         <div class="input-container">
@@ -46,15 +39,13 @@
                             <select  v-model="stepData.quartil_wos" >
                                 <option value=""></option>
                                 <option v-for="n in 4" :key="n" :value="n">{{n }}</option>
-
-
                             </select>
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-row" v-if="publicationData.science_type_id == 2 || publicationData.science_type_id == 3">
                     <div class="form-group col-lg-8">
                         <label >Підбаза WoS</label>
                         <div class="input-container">
@@ -62,23 +53,12 @@
                                 <option value=""></option>
                                 <option value="1">Science Citation Index Expanded (SCIE)</option>
                                 <option value="2">Social Science Citation Index</option>
-
-
                             </select>
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
-
-
                 </div>
-
-
-
-
             </form>
-
-
-
         </div>
 
         <div class="step-button-group">
@@ -97,8 +77,6 @@
         },
         data() {
             return {
-
-
                 stepData:{
                     snip: '',
                     impact_factor: '',
@@ -106,7 +84,6 @@
                     quartil_wos: null,
                     sub_db_index: ''
                 }
-
             }
         },
         props: {
@@ -117,7 +94,6 @@
         },
         methods:{
             checkPublicationData() {
-
                 if(this.publicationData && this.$route.name == 'publications-edit'){
                     const {snip, impact_factor, quartil_scopus, quartil_wos, sub_db_index} = this.publicationData;
                     this.stepData.snip = snip;
@@ -125,22 +101,15 @@
                     this.stepData.quartil_scopus = quartil_scopus;
                     this.stepData.quartil_wos = quartil_wos;
                     this.stepData.sub_db_index = sub_db_index;
-
-
                 }
-
             },
             nextStep() {
-
                 this.$emit('getData', this.stepData);
             },
             prevStep(){
                 this.$emit('prevStep', this.stepData);
             },
-
-
         },
-
     }
 </script>
 

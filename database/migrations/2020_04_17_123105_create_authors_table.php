@@ -21,7 +21,7 @@ class CreateAuthorsTable extends Migration
             $table->string('job')->nullable();
             $table->string('faculty_code')->nullable();
             $table->string('department_code')->nullable();
-            $table->string('country')->nullable();
+            $table->string('country')->default("Україна");
             $table->string('h_index')->nullable();
             $table->integer('scopus_autor_id')->nullable();
             $table->integer('scopus_researcher_id')->nullable();

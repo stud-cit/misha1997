@@ -52,7 +52,7 @@
                             </div>
                         </div>
 
-                        <div class="row" v-if="newAuthor.name">
+                        <div class="row" v-if="newAuthor.name && selectCateg != 'categ1/2'">
                             <div class="form-group col pl-0">
                                 <label>Інститут / факультет</label>
                                 <div class="input-container">
@@ -81,7 +81,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group" v-if="newAuthor.name">
+                        <div class="form-group" v-if="newAuthor.name && selectCateg != 'categ1/2'">
                             <label >Країна *</label>
                             <div class="input-container">
                                 <select class="item-value" v-model="newAuthor.country">
@@ -127,7 +127,7 @@
                                     <div class="input-container">
                                         <select class="item-value" v-model="jobType">
                                             <option value="1">Учбовий заклад</option>
-                                            <option value="1">Підприємство</option>
+                                            <option value="2">Підприємство</option>
                                             <option value="0">Не працює</option>
                                         </select>
                                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
@@ -137,8 +137,8 @@
                                 </div>
 
                             </li>
-                            <li class="row" v-if="jobType == 1">
-                                <div class="col-lg-3 list-item list-title">Назва учбового закладу/підприємства</div>
+                            <li class="row" v-if="jobType == 1 || jobType == 2">
+                                <div class="col-lg-3 list-item list-title">{{ jobType == 1 ? 'Назва учбового закладу' : 'Підприємство' }}</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
                                         <input class="item-value" type="text" v-model="newAuthor.job">
@@ -162,38 +162,6 @@
                                             >{{item.name}}</option>
                                         </select>
                                         <div class="hint" ><span>Країна автора</span></div>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li class="row">
-                                <div class="col-lg-3 list-item list-title">Інститут / факультет</div>
-                                <div class="col-lg-9 list-item list-text">
-                                    <div class="input-container">
-                                        <select class="item-value" v-model="newAuthor.faculty_code" @change="getDepartments">
-                                            <option
-                                                v-for="(item, index) in divisions.institute"
-                                                :key="index"
-                                                :value="item.ID_DIV"
-                                            >{{item.NAME_DIV}}</option>
-                                        </select>
-                                        <div class="hint" ><span>Інститут / факультет</span></div>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li class="row">
-                                <div class="col-lg-3 list-item list-title">Кафедра</div>
-                                <div class="col-lg-9 list-item list-text">
-                                    <div class="input-container">
-                                        <select class="item-value" v-model="newAuthor.department_code">
-                                            <option
-                                                v-for="(item, index) in departments"
-                                                :key="index"
-                                                :value="item.ID_DIV"
-                                            >{{item.NAME_DIV}}</option>
-                                        </select>
-                                        <div class="hint" ><span>Кафедра</span></div>
                                     </div>
                                 </div>
                             </li>
@@ -427,7 +395,7 @@
                     guid: null,
                     job: null,
                     name: '',
-                    country: '',
+                    country: 'Україна',
                     h_index: '',
                     scopus_autor_id: '',
                     scopus_researcher_id: '',
@@ -449,14 +417,16 @@
         components: {
             Multiselect,
         },
-        created() {
-            this.stepData.authors.push(this.$store.getters.authUser);
+        mounted() {
+            console.log(this.publicationData)
+            if(this.publicationData.whose_publication == 'my') {
+                this.stepData.authors.push(this.$store.getters.authUser);
+            }
             this.getAuthors();
             this.checkPublicationData();
         },
 
         validations: {
-
             stepData: {
                 supervisor: {
                     required: requiredIf ( function() {
@@ -491,29 +461,17 @@
                         return this.otherAuthor == '2';
                     })
                 }
-
             }
-
-
         },
         methods: {
             checkPublicationData() {
-
-
-
                 if(this.publicationData && this.$route.name == 'publications-edit'){
-
                     const {supervisor, initials, authors} = this.publicationData;
-
                     this.stepData.useSupervisor = supervisor ? '1' : '0';
                     this.stepData.supervisor = supervisor;
                     this.stepData.initials = initials;
                     this.stepData.authors = authors.map((a)=>a.author);
-
-
                 }
-
-
             },
             getDepartments() {
                 this.departments = this.divisions.department.filter(item => {
@@ -548,8 +506,6 @@
                     });
                     return
                 }
-
-
                 this.$emit('getData', this.stepData);
             },
             prevStep () {

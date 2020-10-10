@@ -5,8 +5,16 @@
             Крок 1 з 4.
         </p>
         <div  class="step-content">
-
-
+            <div class="form-group" v-show="userRole != 1">
+                <label>Додати власну публікацію або співробітника кафедри *</label>
+                <div class="input-container">
+                    <select  v-model="stepData.whose_publication">
+                        <option value="my">Власна публікація</option>
+                        <option value="another">Публікація співробітника кафедри</option>
+                    </select>
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
+            </div>
             <div class="form-group">
                 <label >Назва публікації *</label>
                 <div class="input-container hint-container">
@@ -81,6 +89,7 @@
                 publicationNames: [],
                 prevVal: '',
                 stepData: {
+                    whose_publication: 'my',
                     title: '',
                     science_type_id: '',
                     publication_type: null
@@ -96,8 +105,6 @@
             this.checkPublicationData();
         },
         validations: {
-
-
             stepData: {
                 title: {
                     required,
@@ -106,25 +113,20 @@
                     required,
                 },
             },
-
+        },
+        computed: {
+            userRole() {
+                return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null
+            }
         },
         methods: {
             checkPublicationData() {
-
-
-
                     if(this.publicationData && this.$route.name == 'publications-edit'){
-
                         const {title, science_type_id, publication_type} = this.publicationData;
-
                         this.stepData.title = title;
                         this.stepData.science_type_id = science_type_id;
                         this.stepData.publication_type = publication_type;
-
-
                     }
-
-
             },
             getTypePublications() {
                 axios.get(`/api/type-publications`).then(response => {
@@ -139,8 +141,6 @@
             },
             changeScienceType(){
               this.stepData.publication_type = "";
-
-
             },
             nextStep() {
                 this.$v.$touch()
@@ -150,18 +150,13 @@
                     });
                     return
                 }
-
-
-
                 // check scopus
                 if(this.stepData.science_type_id) {
                     this.$parent.isScopus = true;
                 } else {
                     this.$parent.isScopus = false;
-
                 }
                 //
-
                 let editTitle = false;
 
                 if(this.$route.name == 'publications-edit'){
@@ -173,22 +168,15 @@
                 }
                 else{
                     swal("Публікація з такою назвою вже існує!", {
-                                        icon: "error",
+                        icon: "error",
                     });
                 }
 
             },
-            parseString(s){
-
+            parseString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
                 return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
             }
-
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-
-</style>

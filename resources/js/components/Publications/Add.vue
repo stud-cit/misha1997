@@ -4,8 +4,8 @@
         <transition name="component-fade" mode="out-in">
             <keep-alive>
                 <step1 v-if="currentStep==1" @getData="getStepData($event)"></step1>
-                <step2 v-if="currentStep==2" @getData="getStepData($event)" @prevStep="prevStep"></step2>
-                <step3 v-if="currentStep==3" @getData="getStepData($event)" @prevStep="prevStep" ></step3>
+                <step2 v-if="currentStep==2" @getData="getStepData($event)" @prevStep="prevStep" :publicationData="stepData"></step2>
+                <step3 v-if="currentStep==3" @getData="getStepData($event)" @prevStep="prevStep" :publicationData="stepData"></step3>
                 <step4 v-if="currentStep==4" @getData="getStepData($event)" @prevStep="prevStep" :publicationType="stepData.publication_type.type"></step4>
             </keep-alive>
         </transition>
