@@ -25,11 +25,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <label >Індекс Гірша Wos</label>
+                <label >Індекс Гірша WoS</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="data.h_index">
 
-                    <div class="hint" ><span>Індекс Гірша Wos:</span></div>
+                    <div class="hint" ><span>Індекс Гірша WoS:</span></div>
                 </div>
             </div>
             <div class="form-group">

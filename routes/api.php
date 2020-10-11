@@ -51,5 +51,6 @@ Route::group(['middleware' => ['web']], function() {
     Route::post('export', 'PublicationsController@export');
 
     // ASU
+    Route::get('sort-divisions', 'ASUController@getSortDivisions');
     Route::get('divisions', 'ASUController@getDivisions');
 });

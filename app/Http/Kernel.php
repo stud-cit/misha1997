@@ -39,11 +39,13 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
+        'throttle' => ['throttle:99,1'],
+
         'api' => [
+            'throttle:160,1',
+            'bindings',
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            'throttle:60,1',
-            'bindings',
         ],
     ];
 

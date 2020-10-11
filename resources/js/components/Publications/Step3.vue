@@ -9,7 +9,7 @@
                     <div class="form-group col-lg-8">
                         <label >SNIP журналу (БД Scopus)</label>
                         <div class="input-container">
-                            <input type="text" v-model="stepData.snip">
+                            <input type="number" v-model="stepData.snip">
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
@@ -58,6 +58,18 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="form-row" v-if="$route.name == 'publications-edit' && userRole == 4">
+                    <div class="form-group col-lg-8">
+                        <label>Публікації у виданнях що індексуються в БД Scopus та/або WoS</label>
+                        <div class="input-container">
+                            <select  v-model="stepData.index_scopus_wos">
+                                <option value="1">Так</option>
+                                <option value="2">Ні</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
 
@@ -82,7 +94,8 @@
                     impact_factor: '',
                     quartil_scopus: null,
                     quartil_wos: null,
-                    sub_db_index: ''
+                    sub_db_index: '',
+                    index_scopus_wos: null
                 }
             }
         },
@@ -91,6 +104,11 @@
         },
         created() {
             this.checkPublicationData();
+        },
+        computed: {
+            userRole() {
+                return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null
+            }
         },
         methods:{
             checkPublicationData() {

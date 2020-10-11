@@ -30,7 +30,7 @@
                             </div>
                         </div>
 
-                        <div v-if="loadingPersons" class="loading" >Завантаження</div>
+                        <div v-if="loadingPersons" class="loading">Завантаження</div>
 
                         <div class="form-group" v-if="persons.length > 0">
                             <label class="item-title">Прізвище, ім’я, по-батькові</label>
@@ -56,10 +56,10 @@
                             <div class="form-group col pl-0">
                                 <label>Інститут / факультет</label>
                                 <div class="input-container">
-                                    <select v-model="newAuthor.faculty_code">
+                                    <select v-model="newAuthor.faculty_code" @change="getDepartments">
                                         <option value=""></option>
                                         <option
-                                            v-for="(item, index) in divisions.institute"
+                                            v-for="(item, index) in divisions"
                                             :key="index"
                                             :value="item.ID_DIV"
                                         >{{item.NAME_DIV}}</option>
@@ -72,26 +72,12 @@
                                     <select v-model="newAuthor.department_code">
                                         <option value=""></option>
                                         <option
-                                            v-for="(item, index) in divisions.department"
+                                            v-for="(item, index) in departments"
                                             :key="index"
                                             :value="item.ID_DIV"
                                         >{{item.NAME_DIV}}</option>
                                     </select>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group" v-if="newAuthor.name && selectCateg != 'categ1/2'">
-                            <label >Країна *</label>
-                            <div class="input-container">
-                                <select class="item-value" v-model="newAuthor.country">
-                                    <option
-                                        v-for="(item, index) in country"
-                                        :key="index"
-                                        :value="item.name"
-                                    >{{item.name}}</option>
-                                </select>
-                                <div class="hint" ><span>Країна:</span></div>
                             </div>
                         </div>
 
@@ -316,7 +302,7 @@
                     </div>
                 </div>
             </transition>
-            <div class="form-group">
+            <div class="form-group" v-show="stepData.authors.length > 0">
                 <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
                 <div class="input-container hint-container">
                     <input class="item-value" type="text" v-model="stepData.initials">
@@ -345,10 +331,7 @@
         data() {
             return {
                 departments: [],
-                divisions: {
-                    institute: [],
-                    department: []
-                },
+                divisions: [],
                 jobType: null,
                 modalAlias: false,
                 findAuthor: false,
@@ -366,10 +349,6 @@
                         name: "Аспірант",
                         value: "categ1/4"
                     },
-                    // {
-                    //     name: "Випускник",
-                    //     value: "categ1/8"
-                    // },
                     {
                         name: "Співробітник",
                         value: "categ2/2"
@@ -377,11 +356,7 @@
                     {
                         name: "Викладач",
                         value: "categ2/4"
-                    },
-                    // {
-                    //     name: "Менеджер",
-                    //     value: "categ2/8"
-                    // }
+                    }
                 ],
                 selectCateg: null,
                 loadingPersons: false,
@@ -418,7 +393,6 @@
             Multiselect,
         },
         mounted() {
-            console.log(this.publicationData)
             if(this.publicationData.whose_publication == 'my') {
                 this.stepData.authors.push(this.$store.getters.authUser);
             }
@@ -467,22 +441,26 @@
             checkPublicationData() {
                 if(this.publicationData && this.$route.name == 'publications-edit'){
                     const {supervisor, initials, authors} = this.publicationData;
+                    console.log(this.publicationData)
                     this.stepData.useSupervisor = supervisor ? '1' : '0';
                     this.stepData.supervisor = supervisor;
                     this.stepData.initials = initials;
                     this.stepData.authors = authors.map((a)=>a.author);
                 }
             },
+
             getDepartments() {
-                this.departments = this.divisions.department.filter(item => {
-                    return this.newAuthor.faculty_code == item.ID_PAR
-                })
+                this.departments = this.divisions.find(item => {
+                    return this.newAuthor.faculty_code == item.ID_DIV
+                }).departments;
             },
+
             getDivisions() {
-                axios.get('/api/divisions').then(response => {
+                axios.get('/api/sort-divisions').then(response => {
                     this.divisions = response.data;
                 })
             },
+
             nameWithInfo({name, faculty, department, academic_code, job, categ_1, categ_2}) {
                 if(name) {
                     if(categ_1 == 1) {
@@ -498,6 +476,7 @@
                     return "Пошук в базі данних сайту"
                 }
             },
+
             nextStep () {
                 this.$v.stepData.$touch();
                 if (this.$v.stepData.$invalid) {
@@ -512,9 +491,15 @@
                 this.$emit('prevStep');
             },
             changeSupervisor(){
-
-                if(this.stepData.useSupervisor == '0'){
+                if(this.stepData.useSupervisor == '0') {
                     this.stepData.supervisor = null;
+                    if(this.publicationData.whose_publication == 'my') {
+                        this.stepData.authors.push(this.$store.getters.authUser);
+                    }
+                } else {
+                    if(this.$route.name != 'publications-edit') {
+                        this.stepData.authors.splice(this.stepData.authors.indexOf(this.$store.getters.authUser), 1);
+                    }
                 }
             },
             addAuthor() {
@@ -571,6 +556,7 @@
             },
             getAuthors() {
                 axios.get(`/api/authors-all`).then(response => {
+                    console.log(response.data)
                     this.authors = response.data;
                 })
             },
@@ -583,12 +569,17 @@
                     });
                     return
                 }
-                this.newAuthor.job = this.jobType == 1 ? this.newAuthor.job : "Не працює";
+                if(this.newAuthor.categ_2 == 2) {
+                    this.newAuthor.job = "СумДУ";
+                } else {
+                    this.newAuthor.job = this.jobType == 1 ? this.newAuthor.job : "Не працює";
+                }
+
                 axios.post('/api/author', this.newAuthor)
                 .then((response) => {
                     if(response.data.status == 'ok') {
                         this.otherAuthor = false;
-                        this.authors.push(response.data.user);
+                        this.getAuthors();
                         swal("Автора успішно додано!", {
                             icon: "success",
                         });

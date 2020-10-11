@@ -42,7 +42,8 @@ class Publications extends Model
         'out_data',
         'name_magazine',
         'doi',
-        'supervisor_id'
+        'supervisor_id',
+        'index_scopus_wos'
     ];
 
     function supervisor() {

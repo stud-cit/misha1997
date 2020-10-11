@@ -5,7 +5,7 @@
             Крок 1 з 4.
         </p>
         <div  class="step-content">
-            <div class="form-group" v-show="userRole != 1">
+            <div class="form-group" v-show="userRole != 1 && $route.name != 'publications-edit'">
                 <label>Додати власну публікацію або співробітника кафедри *</label>
                 <div class="input-container">
                     <select  v-model="stepData.whose_publication">
@@ -17,12 +17,12 @@
             </div>
             <div class="form-group">
                 <label >Назва публікації *</label>
-                <div class="input-container hint-container">
-                    <input type="text"  v-model.trim="stepData.title" @blur="$v.stepData.title.$touch()">
-
-                    <div class="hint" ><span>Зазначається назва публікації мовою оригіналу, починаючи з великої літери</span></div>
+                <div class="input-container">
+                    <input v-model="stepData.title" type="text" list="names" @input="findNames">
+                    <datalist id="names">
+                        <option v-for="(item, index) in names" :key="index" :value="item">{{item}}</option>
+                    </datalist>
                 </div>
-
                 <div class="error" v-if="$v.stepData.title.$error">
                     Поле обов'язкове для заповнення
                 </div>
@@ -35,8 +35,8 @@
                         <select  v-model="stepData.science_type_id" @change="changeScienceType">
                             <option value=""></option>
                             <option value="1">Scopus</option>
-                            <option value="2">Wos</option>
-                            <option value="3">Scopus та Wos</option>
+                            <option value="2">WoS</option>
+                            <option value="3">Scopus та WoS</option>
                         </select>
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
@@ -79,12 +79,16 @@
 </template>
 
 <script>
+    import Multiselect from 'vue-multiselect';
     import { required, maxLength } from 'vuelidate/lib/validators';
     export default {
         name: "Step1",
+        components: {
+            Multiselect,
+        },
         data() {
             return {
-
+                names: [],
                 publicationTypes: [],
                 publicationNames: [],
                 prevVal: '',
@@ -120,6 +124,11 @@
             }
         },
         methods: {
+            findNames() {
+                this.names = this.publicationNames.filter(item => {
+                    return item.indexOf(this.stepData.title) + 1
+                })
+            },
             checkPublicationData() {
                     if(this.publicationData && this.$route.name == 'publications-edit'){
                         const {title, science_type_id, publication_type} = this.publicationData;
@@ -143,6 +152,7 @@
               this.stepData.publication_type = "";
             },
             nextStep() {
+                console.log(this.stepData)
                 this.$v.$touch()
                 if (this.$v.$invalid) {
                     swal("Не всі поля заповнено!", {
