@@ -95,7 +95,7 @@
                     quartil_scopus: null,
                     quartil_wos: null,
                     sub_db_index: '',
-                    index_scopus_wos: null
+                    index_scopus_wos: 0
                 }
             }
         },

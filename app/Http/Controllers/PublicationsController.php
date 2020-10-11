@@ -311,6 +311,16 @@ class PublicationsController extends ASUController
                     $value['supervisor']['faculty'] = $institute['NAME_DIV'];
                 }
             }
+
+            $withStudent = 0;
+            $theseWithStudent = 0;
+            $withForeign = 0;
+            $theseWithForeign = 0;
+            $articleWithForeign = 0;
+            $hasIndexHirsha = 0;
+            $hasOtherOrganization = 0;
+            $hasEmployees = 0;
+            
             foreach ($value['authors'] as $k => $v) {
                 // Кафедра - автора
                 foreach($divisions->original['department'] as $keyDepartment => $department) {
@@ -318,51 +328,50 @@ class PublicationsController extends ASUController
                         $v['author']['department'] = $department['NAME_DIV'];
                     }
                 }
+
                 // Інcтитут / факультет - автора
                 foreach($divisions->original['institute'] as $keyInstitute => $institute) {
                     if ($v['author']['faculty_code'] == $institute['ID_DIV']) {
                         $v['author']['faculty'] = $institute['NAME_DIV'];
                     }
                 }
+
                 // Кількість статей за авторством та співавторством студентів
-                $withStudent = 0;
                 if($v['author']['categ_1'] == 1) {
                     $withStudent = 1;
                 }
+
                 // Тез опублікованих зі студентами
-                $theseWithStudent = 0;
                 if($value->publication_type_id == 9 && $v['author']['categ_1'] == 1) {
                     $theseWithStudent = 1;
                 }
+
                 // Кількість публікацій у співавторстві з іноземними партнерами
-                $withForeign = 0;
                 if($v['author']['country'] != "Україна") {
                     $withForeign = 1;
                 }
+
                 // Тез опублікованих з іноземними партнерами
-                $theseWithForeign = 0;
                 if($value->publication_type_id == 9 && $v['author']['country'] != "Україна") {
                     $theseWithForeign = 1;
                 }
 
                 // - статей з іноземними партнерами
-                $articleWithForeign = 0;
                 if(($value->publication_type_id == 1 || $value->publication_type_id == 2) && $v['author']['country'] != "Україна") {
                     $articleWithForeign = 1;
                 }
+
                 // Мають індекс Гірша за БД Scopus або WoS не нижче 10
-                $hasIndexHirsha = 0;
                 if($v['author']['h_index'] >= 10) {
                     $hasIndexHirsha = 1;
                 }
+
                 // у т.ч. за співавторством з представниками інших організацій
-                $hasOtherOrganization = 0;
                 if($v['author']['job'] != "СумДУ") {
                     $hasOtherOrganization = 1;
                 }
 
                 // Чисельність штатних науково та науково-педагогічних працівників, які мають не менше 5-ти публікацій у виданнях, що індексуються БД Scopus та/або WoS.
-                $hasEmployees = 0;
                 if($value->index_scopus_wos && ($v['author']['categ_2'] == 1 || $v['author']['categ_2'] == 2) && (AuthorsPublications::where('autors_id', $v['author']['id'])->count() >= 5)) {
                     $hasEmployees = 1;
                 }

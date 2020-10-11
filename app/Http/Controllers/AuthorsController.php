@@ -93,12 +93,8 @@ class AuthorsController extends ASUController
 
     // postAuthor (add publication page)
     function postAuthor(Request $request) {
-<<<<<<< HEAD
-        if(!Authors::where("name", "like", $request->name)->orWhere("guid", $request->guid)->exists()) {
-=======
         if(!Authors::where("name", "like", $request->name)->exists()) {
             $divisions = $this->getDivisions();
->>>>>>> master
             $model = new Authors();
             $data = $request->all();
             $response = $model->create($data);

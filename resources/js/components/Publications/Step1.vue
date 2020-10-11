@@ -143,7 +143,7 @@
                     this.publicationTypes = response.data;
                 })
             },
-            getNamePublications() {
+            getNamesPublications() {
                 axios.get(`/api/publications-names`).then(response => {
                     this.publicationNames = response.data;
                 })
