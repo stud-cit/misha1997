@@ -4,21 +4,21 @@
             Крок 4 з 4. Вихідні дані
         </p>
 
-        <articles v-if="publicationType == 'article'"></articles>
+        <articles v-if="publicationType == 'article'" :publicationData="publicationData"></articles>
 
-        <book v-if="publicationType == 'book'"></book>
+        <book v-if="publicationType == 'book'" :publicationData="publicationData"></book>
 
-        <book-part v-if="publicationType == 'book-part'"></book-part>
+        <book-part v-if="publicationType == 'book-part'" :publicationData="publicationData"></book-part>
 
-        <thesis v-if="publicationType == 'thesis'"></thesis>
+        <thesis v-if="publicationType == 'thesis'" :publicationData="publicationData"></thesis>
 
-        <patent v-if="publicationType == 'patent'"></patent>
+        <patent v-if="publicationType == 'patent'" :publicationData="publicationData"></patent>
 
-        <certificate v-if="publicationType == 'certificate'"></certificate>
+        <certificate v-if="publicationType == 'certificate'" :publicationData="publicationData"></certificate>
 
-        <methodical v-if="publicationType == 'methodical'"></methodical>
+        <methodical v-if="publicationType == 'methodical'" :publicationData="publicationData"></methodical>
 
-        <electronic v-if="publicationType == 'electronic'"></electronic>
+        <electronic v-if="publicationType == 'electronic'" :publicationData="publicationData"></electronic>
     </div>
 </template>
 
@@ -48,12 +48,13 @@
     import Electronic from "./Step4_fields/Electronic";
 
     export default {
-        name: "Step5",
+        name: "Step4",
         data() {
             return {}
         },
         props:{
-            publicationType: String
+            publicationType: String,
+            publicationData: Object
         },
 
         components: {

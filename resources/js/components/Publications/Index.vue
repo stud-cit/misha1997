@@ -17,9 +17,11 @@
             <form class="search-block">
                 <div class="form-group">
                     <label >Назва публікації</label>
-                    <div class="input-container hint-container">
-                        <input type="text" v-model="filters.title" >
-                        <div class="hint" ><span>Зазначається назва публікації мовою оригіналу</span></div>
+                    <div class="input-container">
+                        <input v-model="filters.title" type="text" list="names" @input="findNames">
+                        <datalist id="names">
+                            <option v-for="(item, index) in names" :key="index" :value="item">{{item}}</option>
+                        </datalist>
                     </div>
                 </div>
                 <div class="form-group">
@@ -36,8 +38,8 @@
                             <select  v-model="filters.science_type_id">
                                 <option value=""></option>
                                 <option value="1">Scopus</option>
-                                <option value="2">Wos</option>
-                                <option value="3">Scopus та Wos</option>
+                                <option value="2">WoS</option>
+                                <option value="3">Scopus та WoS</option>
                             </select>
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
@@ -55,10 +57,6 @@
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
-
-                </div>
-
-                <div class="form-row">
                     <div class="form-group col-lg-4">
                         <label >Країна видання</label>
                         <div class="input-container">
@@ -70,15 +68,9 @@
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
-                    <div class="form-group col-lg-4">
-                        <label >Місто видання</label>
-                        <div class="input-container">
-                            <input type="text"  v-model="filters.city">
-                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                        </div>
-                    </div>
-
                 </div>
+
+
                 <div class="form-group">
                     <label >Вид публікації</label>
                     <div class="input-container">
@@ -91,6 +83,34 @@
                     </div>
                 </div>
 
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label>Інститут / факультет</label>
+                        <div class="input-container">
+                            <select v-model="filters.faculty_code" @change="getDepartments">
+                                <option value=""></option>
+                                <option
+                                    v-for="(item, index) in divisions"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col">
+                        <label>Кафедра</label>
+                        <div class="input-container">
+                            <select v-model="filters.department_code">
+                                <option value=""></option>
+                                <option
+                                    v-for="(item, index) in departments"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
             </form>
 
@@ -157,8 +177,8 @@
                     next-class="page-link">
                 </paginate>
                 <div class="edit-block" v-if="access == 'open'">
-                    <button class="mr-2 edit">Редагувати</button>
-                    <button class="delete" @click="deletePublications">Видалити</button>
+                    <router-link :to="'/home'" tag="button" class="mr-2">Назад</router-link>
+                    <button class="mr-2 delete" @click="deletePublications">Видалити</button>
                 </div>
             </div>
 <!--            <router-view></router-view>-->
@@ -174,6 +194,10 @@
     export default {
         data() {
             return {
+                departments: [],
+                divisions: [],
+                names: [],
+                publicationNames: [],
                 selectPublications: [],
                 loading: true,
                 currentPage: 1,
@@ -192,10 +216,9 @@
                     science_type_id: '',
                     year: '',
                     country: '',
-                    city: '',
                     publication_type_id: '',
-
-
+                    faculty_code: '',
+                    department_code: ''
                 }
 
             };
@@ -209,8 +232,27 @@
             this.getData();
             this.getCountry();
             this.getTypePublications();
+            this.getNamesPublications();
+            this.getDivisions();
         },
         methods: {
+            getDepartments() {
+                this.departments = this.divisions.find(item => {
+                    return this.filters.faculty_code == item.ID_DIV
+                }).departments;
+            },
+
+            getDivisions() {
+                axios.get('/api/sort-divisions').then(response => {
+                    this.divisions = response.data;
+                })
+            },
+
+            findNames() {
+                this.names = this.publicationNames.filter(item => {
+                    return item.indexOf(this.filters.title) + 1
+                })
+            },
 			selectItem(item) {
 				if(this.selectPublications.indexOf(item) == -1) {
 					this.selectPublications.push(item);
@@ -220,7 +262,11 @@
 			},
             getData() {
                 axios.get('/api/publications').then(response => {
-                    this.data = response.data;
+                    this.data = response.data.map(element => {
+                        element.faculty_code = element.authors.map(item => item.author.faculty_code).join();
+                        element.department_code = element.authors.map(item => item.author.department_code).join();
+                        return element;
+                    });
                     this.loading = false;
                 }).catch(() => {
                     this.loading = false;
@@ -235,6 +281,15 @@
                 axios.get(`/api/type-publications`).then(response => {
                     this.publicationTypes = response.data;
                 })
+            },
+            getNamesPublications() {
+                axios.get(`/api/publications-names`).then(response => {
+                    this.publicationNames = response.data.map(n => this.parseString(n.title));
+
+                })
+            },
+            editPublication() {
+			    this.$router.push({path: `/publications/edit/${this.selectPublications[0].id}`});
             },
             deletePublications() {
 				swal({
@@ -258,6 +313,10 @@
                         });
 					}
 				});
+            },
+            parseString(s) {
+                const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
+                return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
             }
         },
         computed: {
@@ -271,7 +330,9 @@
                 let arr = this.data.filter(item => {
                     let result = 1;
                     let keys = Object.keys(this.filters);
+                    console.log(keys);
                     let values = Object.values(this.filters);
+                    console.log(values)
                     for(let i = 0; i < keys.length; i++){
                         if(values[i]) {
 

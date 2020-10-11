@@ -13,13 +13,13 @@ class CreatePublicationsTable extends Migration
             $table->string('title');
             $table->foreignId('science_type_id')->nullable(); // Scopus WoS
             $table->foreignId('publication_type_id'); // тип публікації
-            $table->string('snip')->nullable(); // Коефіцієнт впливовості SNIP журналу SCOPUS
+            $table->float('snip', 8, 2)->nullable(); // Коефіцієнт впливовості SNIP журналу SCOPUS
             $table->string('impact_factor')->nullable(); // Коефіцієнт впливовості імпакт-фактор журналу WoS
             $table->string('quartil_scopus')->nullable(); // Квартиль журналу БД Scopus
             $table->string('quartil_wos')->nullable(); // Квартиль журналу БД WoS
             $table->integer('sub_db_index')->nullable(); // Підбаза WoS
             $table->integer('year')->nullable(); // Рік
-            $table->integer('number')->nullable(); // Номер (том)
+            $table->string('number')->nullable(); // Номер (том)
             $table->string('pages')->nullable(); // Кількість сторінок
             $table->string('initials')->nullable(); // Прізвище та ініціали
             $table->string('country')->nullable(); // Країна
@@ -44,6 +44,7 @@ class CreatePublicationsTable extends Migration
             $table->text('out_data')->nullable(); // Вихідні дані
             $table->string('doi')->nullable();
             $table->foreignId('supervisor_id')->nullable(); // керівник
+            $table->boolean('index_scopus_wos')->default(0); // публікації у виданнях що індексуються БД Scopus та/або WoS
             $table->timestamps();
         });
 

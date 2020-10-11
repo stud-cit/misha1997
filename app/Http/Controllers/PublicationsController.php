@@ -30,8 +30,33 @@ class PublicationsController extends ASUController
 
     // публікація по ID
     function getId($id) {
+        $divisions = $this->getDivisions();
         $data = Publications::with('publicationType', 'scienceType', 'supervisor')->find($id);
         $data->authors = AuthorsPublications::with('author')->where('publications_id', $id)->get();
+        foreach ($data->authors as $key => $value) {
+            foreach($divisions->original['department']  as $k => $v) {
+                if ($value['author']['department_code'] == $v['ID_DIV']) {
+                    $value['author']['department'] = $v['NAME_DIV'];
+                }
+            }
+            foreach($divisions->original['institute'] as $k => $v) {
+                if ($value['author']['faculty_code'] == $v['ID_DIV']) {
+                    $value['author']['faculty'] = $v['NAME_DIV'];
+                }
+            }
+        }
+
+        foreach($divisions->original['department']  as $k => $v) {
+            if ($data->supervisor['department_code'] == $v['ID_DIV']) {
+                $data->supervisor['department'] = $v['NAME_DIV'];
+            }
+        }
+        foreach($divisions->original['institute'] as $k => $v) {
+            if ($data->supervisor['faculty_code'] == $v['ID_DIV']) {
+                $data->supervisor['faculty'] = $v['NAME_DIV'];
+            }
+        }
+
         return response()->json($data);
     }
 
@@ -59,6 +84,11 @@ class PublicationsController extends ASUController
     // оновлення публікації
     function updatePublication(Request $request, $id) {
         $data = $request->all();
+        if($data['supervisor']) {
+            $data['supervisor_id'] = $data['supervisor']['id'];
+        } else {
+            $data['supervisor_id'] = null;
+        }
         Publications::find($id)->update($data);
         return response('ok', 200);
     }
@@ -333,7 +363,7 @@ class PublicationsController extends ASUController
 
                 // Чисельність штатних науково та науково-педагогічних працівників, які мають не менше 5-ти публікацій у виданнях, що індексуються БД Scopus та/або WoS.
                 $hasEmployees = 0;
-                if($value->publication_type_id && ($v['author']['categ_2'] == 1 || $v['author']['categ_2'] == 2) && (AuthorsPublications::where('autors_id', $v['author']['id'])->count() >= 5)) {
+                if($value->index_scopus_wos && ($v['author']['categ_2'] == 1 || $v['author']['categ_2'] == 2) && (AuthorsPublications::where('autors_id', $v['author']['id'])->count() >= 5)) {
                     $hasEmployees = 1;
                 }
             }

@@ -18,7 +18,7 @@
                             <select v-model="filters.faculty_code" @change="getDepartments">
                                 <option value=""></option>
                                 <option
-                                    v-for="(item, index) in divisions.institute"
+                                    v-for="(item, index) in divisions"
                                     :key="index"
                                     :value="item.ID_DIV"
                                 >{{item.NAME_DIV}}</option>
@@ -68,8 +68,6 @@
                         <th scope="col">Інститут/
                             факультет</th>
                         <th scope="col">E-mail</th>
-                        <!-- <th scope="col">Рік народження</th> -->
-
                     </tr>
                     </thead>
                     <tbody>
@@ -85,7 +83,6 @@
                         <td>{{ item.department }}</td>
                         <td>{{ item.faculty }}</td>
                         <td>{{ item.email }}</td>
-                        <!-- <td></td> -->
                     </tr>
                     </tbody>
                 </table>
@@ -105,6 +102,9 @@
                     prev-class="page-link"
                     next-class="page-link">
                 </paginate>
+                <div class="step-button-group">
+            <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
+        </div>
             </div>
         </div>
     </div>
@@ -118,10 +118,7 @@
             return {
                 loading: true,
                 departments: [],
-                divisions: {
-                    institute: [],
-                    department: []
-                },
+                divisions: [],
                 data: [],
                 filters: {
                     name: '',
@@ -165,17 +162,19 @@
         },
         methods: {
             getDepartments() {
-                this.departments = this.divisions.department.filter(item => {
-                    return this.filters.faculty_code == item.ID_PAR
-                })
+                this.departments = this.divisions.find(item => {
+                    return this.filters.faculty_code == item.ID_DIV
+                }).departments;
             },
+
             getDivisions() {
-                axios.get('/api/divisions').then(response => {
+                axios.get('/api/sort-divisions').then(response => {
                     this.divisions = response.data;
                 })
             },
             getData() {
                 axios.get('/api/authors').then(response => {
+                    console.log(response.data)
                     this.data = response.data;
                     this.loading = false;
                 }).catch(() => {

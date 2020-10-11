@@ -107,6 +107,25 @@ button{
 
     }
 }
+@media (max-width: 1199px ) and (min-width: 768px) {
+    .edit-block{
+        button{
+            &:last-of-type{
+                margin-top: 10px;
+            }
+        }
+    }
+}
+
+@media (max-width: 767px ) and (min-width: 576px) {
+    .edit-block{
+        button{
+                margin-top: 10px;
+            
+        }
+    }
+}
+
 @media (max-width: 575px) {
     //// buttons
 
@@ -129,9 +148,7 @@ button{
             padding: 15px;
             font-size: 16px;
             line-height: 20px;
-            &:last-of-type{
-                margin-top: 10px;
-            }
+            margin-top: 10px;
         }
     }
     .step-button-group{

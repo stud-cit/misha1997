@@ -9,6 +9,7 @@ import User from "./components/User";
 import Publications from "./components/Publications/Index";
 import PublicationsAdd from "./components/Publications/Add";
 import PublicationsView from "./components/Publications/View";
+import PublicationsEdit from "./components/Publications/Edit";
 import Notifications from "./components/Notifications";
 import Users from "./components/Users";
 import Register from "./components/Register";
@@ -80,6 +81,15 @@ let router = new Router({
             component: PublicationsView,
             meta: {
                 requiresRegister: true,
+                roles: [1, 2, 3, 4]
+            }
+        },
+        {
+            path: '/publications/edit/:id',
+            name: 'publications-edit',
+            component: PublicationsEdit,
+            meta: {
+                requiresRegister: false,
                 roles: [1, 2, 3, 4]
             }
         },

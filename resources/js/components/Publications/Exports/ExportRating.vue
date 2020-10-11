@@ -19,7 +19,7 @@
                                 <select v-model="filters.faculty" @change="getDepartments">
                                     <option value=""></option>
                                     <option
-                                        v-for="(item, index) in divisions.institute"
+                                        v-for="(item, index) in divisions"
                                         :key="index"
                                         :value="item.ID_DIV"
                                     >{{item.NAME_DIV}}</option>
@@ -47,8 +47,8 @@
                                 <select  v-model="filters.university">
                                     <option value=""></option>
                                     <option value="1">Scopus</option>
-                                    <option value="2">Wos</option>
-                                    <option value="3">Scopus та Wos</option>
+                                    <option value="2">WoS</option>
+                                    <option value="3">Scopus та WoS</option>
                                 </select>
 
                             </div>
@@ -66,7 +66,7 @@
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
-                            <label >Квартиль журналу SCOPUS </label>
+                            <label >Квартиль журналу Scopus </label>
                             <div class="input-container ">
                                 <select  v-model="filters.quartil_scopus">
                                     <option value=""></option>
@@ -86,7 +86,7 @@
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
-                            <label >Квартиль журналу WOS</label>
+                            <label >Квартиль журналу WoS</label>
                             <div class="input-container ">
                                 <select  v-model="filters.quartil_wos">
                                     <option value=""></option>
@@ -109,9 +109,9 @@
                         </div>
 
                         <div class="form-group col-lg-6">
-                            <label >Публікації опубліковані у виданнях з показником SNIP більше ніж 1,0 </label>
-                            <div class="input-container ">
-                                <select  v-model="filters.snip ">
+                            <label >Публікації опубліковані у виданнях з показником SNIP більше ніж 1.0 </label>
+                            <div class="input-container">
+                                <select v-model="filters.snip">
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
@@ -132,7 +132,7 @@
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
-                            <label >Статті у виданнях, які входять до підбази WOS - SCIE</label>
+                            <label >Статті у виданнях, які входять до підбази WoS - SCIE</label>
                             <div class="input-container ">
                                 <select  v-model="filters.scie ">
                                     <option value=""></option>
@@ -156,7 +156,7 @@
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
-                            <label >Статті у виданнях, які входять до підбази WOS - SSCI </label>
+                            <label >Статті у виданнях, які входять до підбази WoS - SSCI </label>
                             <div class="input-container ">
                                 <select  v-model="filters.ssci ">
                                     <option value=""></option>
@@ -235,8 +235,8 @@
                                 <select  v-model="filters.science_type_id">
                                     <option value=""></option>
                                     <option value="1">Scopus</option>
-                                    <option value="2">Wos</option>
-                                    <option value="3">Scopus та Wos</option>
+                                    <option value="2">WoS</option>
+                                    <option value="3">Scopus та WoS</option>
                                 </select>
                             </div>
                         </div>
@@ -564,6 +564,7 @@
                 <th>Країна видання публікаціїї </th>
                 <th>Вихідні дані  </th>
                 <th>К-сть сторінок </th>
+                <th>Номер (том) </th>
                 <th>Посада</th>
 
                 <th>Прізвище, ім'я </th>
@@ -574,10 +575,16 @@
 
                 <th>Іноземець</th>
                 <th>Рік</th>
-
+                <th>Квартиль журналу Scopus</th>
+                <th>Квартиль журналу WoS</th>
+                <th>SNIP</th>
+                <th>Імпакт-фактор (БД WoS)</th>
+                <th>Підбаза WoS</th>
+                <th>Опубліковано мовами ОЕСР та ЄС</th>
+                <th>DOI</th>
             </tr>
             <template v-for="(item, ind) in publicationsData" >
-            <tr v-for="(a, i) in item.authors" >
+            <tr v-for="(a, i) in item.authors" :key="i">
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ind+1}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.title}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.publication_type.title}}</td>
@@ -585,8 +592,12 @@
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ (item.science_type_id && item.science_type_id != 1) ? 'Так' : 'Ні' }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.country}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.out_data}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.pages}}</td>
-                <td >{{a.author.job}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">'{{item.pages}}'</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">'{{item.number}}'</td>
+                <td v-if="a.author.categ_1 == 1">Студент</td>
+                <td v-else-if="a.author.categ_1 == 2">Аспірант</td>
+                <td v-else-if="a.author.categ_2 == 1">Співробітник</td>
+                <td v-else-if="a.author.categ_2 == 2">Викладач</td>
                 <td >{{a.author.name}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? 'Так' : 'Ні'}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? item.supervisor.name : '' }}</td>
@@ -594,8 +605,14 @@
                 <td >{{a.author.department ? a.author.department : a.author.job}}</td>
                 <td >{{a.author.country == 'Україна' ? 'Ні' :  a.author.country ? 'Так' : 'Не вказано'}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.year}}</td>
-
-
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_scopus}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_wos}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.snip}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.impact_factor}}</td>
+                <td v-if="i == 0 && item.sub_db_index == 1" :rowspan="item.authors.length">Science Citation Index Expanded (SCIE)</td>
+                <td v-if="i == 0 && item.sub_db_index == 2" :rowspan="item.authors.length">Social Science Citation Index</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.languages}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.doi}}</td>
             </tr>
             </template>
         </table>
@@ -610,10 +627,7 @@
             return {
                 showFilters: false,
                 departments: [],
-                divisions: {
-                    institute: [],
-                    department: []
-                },
+                divisions: [],
                 publicationsData: [],
                 ratingData: [],
                 filters: {
@@ -653,7 +667,7 @@
 
         methods: {
             getDivisions() {
-                axios.get('/api/divisions').then(response => {
+                axios.get('/api/sort-divisions').then(response => {
                     this.divisions = response.data;
                 })
             },
@@ -669,14 +683,15 @@
                 })
             },
             getDepartments() {
-                this.departments = this.divisions.department.filter(item => {
-                    return this.filters.faculty == item.ID_PAR
-                })
+                this.departments = this.divisions.find(item => {
+                    return this.filters.faculty == item.ID_DIV
+                }).departments;
             },
             openFiltersPopup() {
                 this.showFilters = true;
             },
             exportRating(){
+
 
                 const rating = XLSX.utils.table_to_book(document.getElementById('exportRating'));
                 const publications = XLSX.utils.table_to_book(document.getElementById('exportList'));
@@ -686,24 +701,34 @@
                 wb.Sheets.Publications = publications.Sheets.Sheet1;
                 wb.Sheets.Rating = rating.Sheets.Sheet1;
 
-                const wscols =[];
-                for (let i = 0; i < 16; i++) {
-                    if(i > 10 && i < 14) {
-                        wscols.push({ wch: 50 })
-                    }
-                    else{
-                        wscols.push({ wch: 30 })
-                    }
-
-                }
                 const wscols2 = [
                     {wch:65},
                     {wch:65},
                     {wch:40},
                     {wch:10}
                 ];
+
                 wb.Sheets.Rating['!cols'] = wscols2;
-                wb.Sheets.Publications['!cols'] = wscols;
+                wb.Sheets.Publications['!cols'] = [
+                    { wch: 5 },
+                    { wch: 30 },
+                    { wch: 20 },
+                    { wch: 10 },
+                    { wch: 10 },
+                    { wch: 10 },
+                    { wch: 10 },
+                    { wch: 15 },
+                    { wch: 10 },
+                    { wch: 15 },
+                    { wch: 15 },
+                    { wch: 40 },
+                    { wch: 50 },
+                    { wch: 50 },
+                    { wch: 10 },
+                    { wch: 10 },
+                    { wch: 30 },
+                    { wch: 30 }
+                ];
 
                 XLSX.writeFile(wb, 'Rating.xlsx');
             }

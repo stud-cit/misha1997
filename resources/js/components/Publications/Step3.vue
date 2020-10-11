@@ -3,35 +3,28 @@
         <p class="step-subtitle">
             Крок 3 з 4.
         </p>
-
         <div class=" step-content">
             <form class="form-block">
-
-                <div class="form-row">
+                <div class="form-row" v-if="publicationData.science_type_id == 1 || publicationData.science_type_id == 3">
                     <div class="form-group col-lg-8">
                         <label >SNIP журналу (БД Scopus)</label>
                         <div class="input-container">
-                            <input type="text" v-model="stepData.snip">
+                            <input type="number" v-model="stepData.snip">
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
                     <div class="form-group col-lg-4">
-                        <label >Квартиль журналу (БД Scopus)</label>
+                        <label>Квартиль журналу (БД Scopus)</label>
                         <div class="input-container">
-
                             <select  v-model="stepData.quartil_scopus" >
                                 <option value=""></option>
                                 <option v-for="n in 4" :key="n" :value="n">{{n }}</option>
-
-
                             </select>
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
-
                 </div>
-
-                <div class="form-row">
+                <div class="form-row" v-if="publicationData.science_type_id == 2 || publicationData.science_type_id == 3">
                     <div class="form-group col-lg-8">
                         <label >Імпакт-фактор (БД WoS)</label>
                         <div class="input-container">
@@ -46,39 +39,38 @@
                             <select  v-model="stepData.quartil_wos" >
                                 <option value=""></option>
                                 <option v-for="n in 4" :key="n" :value="n">{{n }}</option>
-
-
                             </select>
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-row" v-if="publicationData.science_type_id == 2 || publicationData.science_type_id == 3">
                     <div class="form-group col-lg-8">
                         <label >Підбаза WoS</label>
                         <div class="input-container">
                             <select  v-model="stepData.sub_db_index" >
-                                <option value="0"></option>
+                                <option value=""></option>
                                 <option value="1">Science Citation Index Expanded (SCIE)</option>
                                 <option value="2">Social Science Citation Index</option>
-
-
                             </select>
                             <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
-
-
                 </div>
 
-
-
-
+                <div class="form-row" v-if="$route.name == 'publications-edit' && userRole == 4">
+                    <div class="form-group col-lg-8">
+                        <label>Публікації у виданнях що індексуються в БД Scopus та/або WoS</label>
+                        <div class="input-container">
+                            <select  v-model="stepData.index_scopus_wos">
+                                <option value="1">Так</option>
+                                <option value="2">Ні</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </form>
-
-
-
         </div>
 
         <div class="step-button-group">
@@ -97,32 +89,45 @@
         },
         data() {
             return {
-
-
                 stepData:{
                     snip: '',
                     impact_factor: '',
                     quartil_scopus: null,
                     quartil_wos: null,
-                    sub_db_index: 0
+                    sub_db_index: '',
+                    index_scopus_wos: null
                 }
-
+            }
+        },
+        props: {
+            publicationData: Object
+        },
+        created() {
+            this.checkPublicationData();
+        },
+        computed: {
+            userRole() {
+                return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null
             }
         },
         methods:{
+            checkPublicationData() {
+                if(this.publicationData && this.$route.name == 'publications-edit'){
+                    const {snip, impact_factor, quartil_scopus, quartil_wos, sub_db_index} = this.publicationData;
+                    this.stepData.snip = snip;
+                    this.stepData.impact_factor = impact_factor;
+                    this.stepData.quartil_scopus = quartil_scopus;
+                    this.stepData.quartil_wos = quartil_wos;
+                    this.stepData.sub_db_index = sub_db_index;
+                }
+            },
             nextStep() {
-
                 this.$emit('getData', this.stepData);
             },
             prevStep(){
-                this.$emit('prevStep');
+                this.$emit('prevStep', this.stepData);
             },
-
-
         },
-        created() {
-
-        }
     }
 </script>
 

@@ -27,6 +27,7 @@ class AuthorsController extends ASUController
                 $data = Authors::with('role')->where('roles_id', '!=', 4)->get();
             break;
         }
+        // $data = Authors::with('role')->get();
         foreach ($data as $key => $value) {
             foreach($divisions->original['department']  as $k => $v) {
                 if ($value['department_code'] == $v['ID_DIV']) {
@@ -92,10 +93,27 @@ class AuthorsController extends ASUController
 
     // postAuthor (add publication page)
     function postAuthor(Request $request) {
+<<<<<<< HEAD
         if(!Authors::where("name", "like", $request->name)->orWhere("guid", $request->guid)->exists()) {
+=======
+        if(!Authors::where("name", "like", $request->name)->exists()) {
+            $divisions = $this->getDivisions();
+>>>>>>> master
             $model = new Authors();
             $data = $request->all();
             $response = $model->create($data);
+
+            foreach($divisions->original['department']  as $k => $v) {
+                if ($response['department_code'] == $v['ID_DIV']) {
+                    $response['department'] = $v['NAME_DIV'];
+                }
+            }
+            foreach($divisions->original['institute'] as $k => $v) {
+                if ($response['faculty_code'] == $v['ID_DIV']) {
+                    $response['faculty'] = $v['NAME_DIV'];
+                }
+            }
+
             return response()->json([
                 "status" => "ok",
                 "user" => $response

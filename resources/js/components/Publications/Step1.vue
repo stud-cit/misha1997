@@ -5,20 +5,24 @@
             Крок 1 з 4.
         </p>
         <div  class="step-content">
-
-
+            <div class="form-group" v-show="userRole != 1 && $route.name != 'publications-edit'">
+                <label>Додати власну публікацію або співробітника кафедри *</label>
+                <div class="input-container">
+                    <select  v-model="stepData.whose_publication">
+                        <option value="my">Власна публікація</option>
+                        <option value="another">Публікація співробітника кафедри</option>
+                    </select>
+                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                </div>
+            </div>
             <div class="form-group">
                 <label >Назва публікації *</label>
-                <div class="input-container hint-container">
-                    <input type="text"  v-model.trim="stepData.title" @blur="$v.stepData.title.$touch()">
-
-                    <div class="hint" ><span>Зазначається назва публікації мовою оригіналу, починаючи з великої літери</span></div>
+                <div class="input-container">
+                    <input v-model="stepData.title" type="text" list="names" @input="findNames">
+                    <datalist id="names">
+                        <option v-for="(item, index) in names" :key="index" :value="item">{{item}}</option>
+                    </datalist>
                 </div>
-
-                <div class="error" v-if="errorName">
-                    Публікація з такою назвою вже існує
-                </div>
-
                 <div class="error" v-if="$v.stepData.title.$error">
                     Поле обов'язкове для заповнення
                 </div>
@@ -31,8 +35,8 @@
                         <select  v-model="stepData.science_type_id" @change="changeScienceType">
                             <option value=""></option>
                             <option value="1">Scopus</option>
-                            <option value="2">Wos</option>
-                            <option value="3">Scopus та Wos</option>
+                            <option value="2">WoS</option>
+                            <option value="3">Scopus та WoS</option>
                         </select>
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
@@ -68,35 +72,44 @@
         </div>
 
         <div class="step-button-group">
+            <router-link :to="'/home'" tag="button" class="prev">Назад</router-link>
             <button class="next" @click="nextStep" >Продовжити </button>
         </div>
     </div>
 </template>
 
 <script>
+    import Multiselect from 'vue-multiselect';
     import { required, maxLength } from 'vuelidate/lib/validators';
     export default {
         name: "Step1",
+        components: {
+            Multiselect,
+        },
         data() {
             return {
+                names: [],
                 publicationTypes: [],
                 publicationNames: [],
                 errorName: false,
                 prevVal: '',
                 stepData: {
+                    whose_publication: 'my',
                     title: '',
                     science_type_id: '',
                     publication_type: null
                 }
             }
         },
-        created() {
+        props : {
+            publicationData: Object
+        },
+        mounted() {
             this.getTypePublications();
-            this.getNamePublications();
+            this.getNamesPublications();
+            this.checkPublicationData();
         },
         validations: {
-
-
             stepData: {
                 title: {
                     required,
@@ -105,9 +118,26 @@
                     required,
                 },
             },
-
+        },
+        computed: {
+            userRole() {
+                return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null
+            }
         },
         methods: {
+            findNames() {
+                this.names = this.publicationNames.filter(item => {
+                    return item.indexOf(this.stepData.title) + 1
+                })
+            },
+            checkPublicationData() {
+                    if(this.publicationData && this.$route.name == 'publications-edit'){
+                        const {title, science_type_id, publication_type} = this.publicationData;
+                        this.stepData.title = title;
+                        this.stepData.science_type_id = science_type_id;
+                        this.stepData.publication_type = publication_type;
+                    }
+            },
             getTypePublications() {
                 axios.get(`/api/type-publications`).then(response => {
                     this.publicationTypes = response.data;
@@ -120,7 +150,6 @@
             },
             changeScienceType(){
               this.stepData.publication_type = "";
-
             },
             nextStep() {
                 this.$v.$touch()
@@ -130,12 +159,6 @@
                     });
                     return
                 }
-                if(this.publicationNames.find(item => this.checkString(item.title) == this.checkString(this.stepData.title))) {
-                    this.errorName = true;
-                    return
-                } else {
-                    this.errorName = false;
-                }
                 // check scopus
                 if(this.stepData.science_type_id) {
                     this.$parent.isScopus = true;
@@ -143,25 +166,26 @@
                     this.$parent.isScopus = false;
                 }
                 //
-                if(!this.publicationNames.includes(this.parseString(this.stepData.title))){
+                let editTitle = false;
+
+                if(this.$route.name == 'publications-edit'){
+                    editTitle = this.parseString(this.stepData.title) == this.parseString(this.publicationData.title);
+                }
+
+                if(!this.publicationNames.includes(this.parseString(this.stepData.title)) | editTitle){
                     this.$emit('getData', this.stepData);
                 }
                 else{
                     swal("Публікація з такою назвою вже існує!", {
-                                        icon: "error",
+                        icon: "error",
                     });
                 }
 
             },
-            checkString(s) {
+            parseString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
                 return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
             }
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-
-</style>

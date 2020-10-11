@@ -82,6 +82,10 @@
         },
         created() {
             this.getCountry();
+            this.checkPublicationData();
+        },
+        props: {
+            publicationData: Object
         },
         validations: {
 
@@ -104,6 +108,18 @@
 
         },
         methods: {
+
+            checkPublicationData() {
+
+                if(this.publicationData && this.$route.name == 'publications-edit'){
+
+                    for( let key in this.stepData){
+                        this.stepData[key] = this.publicationData[key];
+                    }
+
+                }
+
+            },
             getCountry() {
                 axios.get('/api/country').then(response => {
                     this.country = response.data;
