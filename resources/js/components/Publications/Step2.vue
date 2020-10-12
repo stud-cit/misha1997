@@ -54,7 +54,7 @@
 
                         <div class="row" v-if="newAuthor.name && selectCateg != 'categ1/2'">
                             <div class="form-group col pl-0">
-                                <label>Інститут / факультет</label>
+                                <label>Інститут / факультет *</label>
                                 <div class="input-container">
                                     <select v-model="newAuthor.faculty_code" @change="getDepartments">
                                         <option value=""></option>
@@ -65,9 +65,12 @@
                                         >{{item.NAME_DIV}}</option>
                                     </select>
                                 </div>
+                                <div class="error" v-if="$v.newAuthor.faculty_code.$error">
+                                    Поле обов'язкове для заповнення
+                                </div>
                             </div>
                             <div class="form-group col pr-0">
-                                <label>Кафедра</label>
+                                <label>Кафедра *</label>
                                 <div class="input-container">
                                     <select v-model="newAuthor.department_code">
                                         <option value=""></option>
@@ -77,6 +80,9 @@
                                             :value="item.ID_DIV"
                                         >{{item.NAME_DIV}}</option>
                                     </select>
+                                </div>
+                                <div class="error" v-if="$v.newAuthor.department_code.$error">
+                                    Поле обов'язкове для заповнення
                                 </div>
                             </div>
                         </div>
@@ -108,7 +114,7 @@
 
                             </li>
                             <li class="row">
-                                <div class="col-lg-3 list-item list-title">Місце роботи</div>
+                                <div class="col-lg-3 list-item list-title">Місце роботи *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
                                         <select class="item-value" v-model="jobType">
@@ -118,7 +124,9 @@
                                         </select>
                                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                                     </div>
-
+                                    <div class="error" v-if="$v.jobType.$error">
+                                        Поле обов'язкове для заповнення
+                                    </div>
 
                                 </div>
 
@@ -137,7 +145,7 @@
 
                             </li>
                             <li class="row">
-                                <div class="col-lg-3 list-item list-title">Країна автора</div>
+                                <div class="col-lg-3 list-item list-title">Країна автора *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
                                         <select class="item-value" v-model="newAuthor.country">
@@ -150,6 +158,7 @@
                                         <div class="hint" ><span>Країна автора</span></div>
                                     </div>
                                 </div>
+                                
                             </li>
 
                             <li class="row">
@@ -417,8 +426,14 @@
                 },
                 initials: {
                     required
-                }
+                },
 
+
+            },
+            jobType: {
+                required: requiredIf ( function() {
+                    return this.otherAuthor == '2';
+                }),
             },
             newAuthor: {
                 required: requiredIf ( function() {
@@ -434,8 +449,19 @@
                     required: requiredIf ( function() {
                         return this.otherAuthor == '2';
                     })
+                },
+                faculty_code: {
+                    required: requiredIf ( function() {
+                        return this.otherAuthor == '1';
+                    })
+                },
+                department_code: {
+                    required: requiredIf ( function() {
+                        return this.otherAuthor == '1';
+                    })
                 }
-            }
+            },
+        
         },
         methods: {
             checkPublicationData() {

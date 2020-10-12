@@ -136,6 +136,7 @@
                         <th scope="col">Науковий
                             керівник</th>
                         <th scope="col"></th>
+                        <th scope="col">Редагувати</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -157,6 +158,7 @@
 <!--                            <i class="fas fa-pen-square"></i>-->
 <!--                            <i class="fas fa-trash-alt"></i>-->
                         </td>
+                        <td><router-link tag="i" class="fa fa-edit fa-2x" :to="{path: `/publications/edit/${item.id}`}"></router-link> </td>
                     </tr>
                     </tbody>
                 </table>
@@ -396,3 +398,4 @@
         }
     }
 </style>
+

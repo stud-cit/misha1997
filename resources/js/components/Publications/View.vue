@@ -16,9 +16,10 @@
                 <methodical :data="data" v-if="data.publication_type.type == 'methodical'"></methodical>
                 <electronic :data="data" v-if="data.publication_type.type == 'electronic'"></electronic>
 
-            <div class="edit-block">
+            <div class="edit-block text-center">
+                <router-link :to="'/publications'" tag="button" class="mr-2">Назад</router-link>
                 <button class="mr-2 edit" @click="editPublication">Редагувати</button>
-                <button class="delete" @click="deletePublication">Видалити</button>
+                <button class="mr-2 delete" @click="deletePublication">Видалити</button>
             </div>
 
         </div>
