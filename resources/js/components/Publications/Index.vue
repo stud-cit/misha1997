@@ -15,6 +15,34 @@
         <!---->
         <div class="main-content">
             <form class="search-block">
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label>Інститут / факультет</label>
+                        <div class="input-container">
+                            <select v-model="filters.faculty_code" @change="getDepartments">
+                                <option value=""></option>
+                                <option
+                                    v-for="(item, index) in divisions"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col">
+                        <label>Кафедра</label>
+                        <div class="input-container">
+                            <select v-model="filters.department_code">
+                                <option value=""></option>
+                                <option
+                                    v-for="(item, index) in departments"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label >Назва публікації</label>
                     <div class="input-container">
@@ -82,36 +110,6 @@
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group col">
-                        <label>Інститут / факультет</label>
-                        <div class="input-container">
-                            <select v-model="filters.faculty_code" @change="getDepartments">
-                                <option value=""></option>
-                                <option
-                                    v-for="(item, index) in divisions"
-                                    :key="index"
-                                    :value="item.ID_DIV"
-                                >{{item.NAME_DIV}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col">
-                        <label>Кафедра</label>
-                        <div class="input-container">
-                            <select v-model="filters.department_code">
-                                <option value=""></option>
-                                <option
-                                    v-for="(item, index) in departments"
-                                    :key="index"
-                                    :value="item.ID_DIV"
-                                >{{item.NAME_DIV}}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
             </form>
 
 
@@ -136,7 +134,7 @@
                         <th scope="col">Науковий
                             керівник</th>
                         <th scope="col"></th>
-                        <th scope="col">Редагувати</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -148,6 +146,7 @@
                         <td>{{ item.year}}</td>
                         <td>{{ item.science_type ? item.science_type.type : '' }}</td>
                         <td>{{ item.supervisor ? item.supervisor.name : '' }}</td>
+                        <td><router-link tag="i" class="fa fa-edit fa-2x" :to="{path: `/publications/edit/${item.id}`}"></router-link> </td>
                         <td class="icons">
                             <input
                                 v-if="access == 'open' && (item.authors.find(itemAuthor => itemAuthor.author.id == authUser.id) || authUser.roles_id == 4)"
@@ -158,7 +157,6 @@
 <!--                            <i class="fas fa-pen-square"></i>-->
 <!--                            <i class="fas fa-trash-alt"></i>-->
                         </td>
-                        <td><router-link tag="i" class="fa fa-edit fa-2x" :to="{path: `/publications/edit/${item.id}`}"></router-link> </td>
                     </tr>
                     </tbody>
                 </table>
@@ -371,6 +369,9 @@
 </script>
 
 <style lang="scss" scoped>
+    .fa-edit {
+        cursor: pointer;
+    }
     .search-block{
         margin-top: 60px;
     }

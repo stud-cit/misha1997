@@ -15,22 +15,22 @@ class CreateAuthorsTable extends Migration
     {
         Schema::create('authors', function (Blueprint $table) {
             $table->id();
-            $table->string('guid')->nullable();
+            $table->string('guid')->nullable(); // guid кабінету
             $table->string('name'); // ім'я
-            $table->string('email')->nullable(); // email
+            $table->string('date_bth')->nullable(); // дата народження
             $table->string('job')->nullable(); // місце роботи
             $table->string('faculty_code')->nullable(); // код факультету
             $table->string('department_code')->nullable(); // код кафедри
             $table->string('country')->default("Україна"); // країна
-            $table->string('h_index')->nullable(); // індекс гірша
-            $table->integer('scopus_autor_id')->nullable();
-            $table->integer('scopus_researcher_id')->nullable();
-            $table->string('orcid')->nullable();
-            $table->string('academic_code')->nullable();
-            $table->foreignId('roles_id')->default(1);
-            $table->foreignId('categ_1')->nullable();
-            $table->foreignId('categ_2')->nullable();
-            $table->boolean('five_publications')->default(0);
+            $table->string('h_index')->nullable(); // Індекс Гірша БД Scopus БД WoS
+            $table->integer('scopus_autor_id')->nullable(); // Індекс Гірша БД Scopus
+            $table->integer('scopus_researcher_id')->nullable(); // Research ID
+            $table->string('orcid')->nullable(); // ORCID
+            $table->string('academic_code')->nullable(); // академічна група
+            $table->foreignId('roles_id')->default(1); // роль
+            $table->foreignId('categ_1')->nullable(); // categ_1 кабінету
+            $table->foreignId('categ_2')->nullable(); // categ_2 кабінету
+            $table->boolean('five_publications')->default(0); // 5 або більше публікацій в Scopus та/або WoS
             $table->timestamps();
         });
 

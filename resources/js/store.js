@@ -27,7 +27,8 @@ export default new Vuex.Store({
         //     scopus_researcher_id: null,
         //     updated_at: null
         // },
-        access: 'open'
+        access: 'open',
+        publication: {}
     },
     mutations: {
         auth(state, key) {
@@ -42,6 +43,10 @@ export default new Vuex.Store({
         logout(state) {
             state.key = ''
             state.user = null
+        },
+        setPublication(state, data) {
+            state.publication = Object.assign(state.publication, data)
+            // console.log(state.publication)
         },
     },
     actions: {
@@ -77,5 +82,6 @@ export default new Vuex.Store({
         isLoggedIn: state => !!state.key,
         authUser: state => state.user,
         accessMode: state => state.access,
+        getPublication: state => state.publication
     }
 })

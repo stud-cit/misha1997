@@ -13,6 +13,8 @@
 </template>
 
 <script>
+    import { mapGetters } from 'vuex';
+
     import Step1 from "./Step1";
     import Step2 from "./Step2";
     import Step3 from "./Step3";
@@ -42,6 +44,9 @@
         },
 
         methods: {
+            ...mapGetters([
+                "getPublication"
+            ]),
             getStepData(event){
                 this.stepData = Object.assign(this.stepData, event);
 
