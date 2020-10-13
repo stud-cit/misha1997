@@ -454,12 +454,12 @@
                 },
                 faculty_code: {
                     required: requiredIf ( function() {
-                        return this.otherAuthor == '1';
+                        return this.otherAuthor == '1' && this.selectCateg != 'categ1/2';
                     })
                 },
                 department_code: {
                     required: requiredIf ( function() {
-                        return this.otherAuthor == '1';
+                        return this.otherAuthor == '1' && this.selectCateg != 'categ1/2';
                     })
                 }
             },
