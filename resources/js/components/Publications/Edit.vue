@@ -55,6 +55,7 @@
                 });
             },
             getStepData(event){
+                this.publicationData = Object.assign(this.publicationData, event);
                 this.stepData = Object.assign(this.stepData, event);
 
                 if(this.currentStep !== 4) {

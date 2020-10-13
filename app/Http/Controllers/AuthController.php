@@ -11,7 +11,22 @@ class AuthController extends Controller
 
     protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
     protected $cabinet_service = "https://cabinet.sumdu.edu.ua/index/service/";
-    protected $cabinet_service_token = "TNWcmzpZ";
+    protected $cabinet_service_token = "7B4DIDiV";
+
+    function test(Request $request) {
+        $person = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->key . '&token=' . $this->cabinet_service_token), true);
+        if ($person['status'] == 'OK') {
+            if (Authors::where("guid", $person['result']['guid'])->exists()) {
+                $person = Authors::where("guid", $person['result']['guid'])->first();
+                $request->session()->put('person', $person);
+                    return redirect('/home');
+            } else {
+                return redirect('/register');
+            }
+        } else {
+            return redirect('/');
+        }
+    }
 
     function checkUser(Request $request) {
         $person = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->header('Authorization') . '&token=' . $this->cabinet_service_token), true);

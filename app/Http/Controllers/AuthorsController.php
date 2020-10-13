@@ -29,6 +29,10 @@ class AuthorsController extends ASUController
         }
         // $data = Authors::with('role')->get();
         foreach ($data as $key => $value) {
+            $value['position'] = $this->getPosition($value);
+            if($value['date_bth']) {
+                $value['age'] = $this->calculateAge($value['date_bth']);
+            }
             foreach($divisions->original['department']  as $k => $v) {
                 if ($value['department_code'] == $v['ID_DIV']) {
                     $value['department'] = $v['NAME_DIV'];
@@ -48,6 +52,8 @@ class AuthorsController extends ASUController
         $divisions = $this->getDivisions();
         $data = Authors::with('role')->get();
         foreach ($data as $key => $value) {
+            $value['position'] = $this->getPosition($value);
+            $value['age'] = $this->calculateAge($value['date_bth']);
             foreach($divisions->original['department']  as $k => $v) {
                 if ($value['department_code'] == $v['ID_DIV']) {
                     $value['department'] = $v['NAME_DIV'];
@@ -71,13 +77,14 @@ class AuthorsController extends ASUController
         return response()->json($getPersons);
     }
 
-    // profile
+    // profile (Сторінка профілю)
     function profile(Request $request) {
         $data = Authors::with('role')->find($request->session()->get('person')['id']);
+        $data->position = $this->getPosition($data);
         return response()->json($data);
     }
 
-    // updateProfile
+    // updateProfile (Оновлення информації профілю)
     function updateProfile(Request $request) {
         $data = $request->all();
         Authors::find($request->session()->get('person')['id'])->update($data);
@@ -85,7 +92,7 @@ class AuthorsController extends ASUController
         return response()->json($user);
     }
 
-    // getId
+    // getId (Користувач по id)
     function getId($id) {
         $divisions = $this->getDivisions();
         $data = Authors::with('publications', 'role', 'notifications')->where("id", $id)->first();
@@ -195,4 +202,31 @@ class AuthorsController extends ASUController
         ]);
         return response('ok', 200);
     }
+
+    // Визначити посаду
+    function getPosition($data) {
+        $result = "";
+        if($data->categ_1 == 1) {
+            $result = "Студент";
+        } elseif ($data->categ_1 == 2) {
+            $result = "Аспірант";
+        } elseif ($data->categ_2 == 1) {
+            $result = "Співробітник";
+        } elseif ($data->categ_2 == 2) {
+            $result = "Викладач";
+        } else {
+            $result = "";
+        }
+        return $result;
+    }
+
+    // Визначення віку користувача
+    function calculateAge($birthday) {
+        $birthday_timestamp = strtotime($birthday);
+        $age = date('Y') - date('Y', $birthday_timestamp);
+        if (date('md', $birthday_timestamp) > date('md')) {
+            $age--;
+        }
+        return $age;
+      }
 }

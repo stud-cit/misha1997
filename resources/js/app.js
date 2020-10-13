@@ -3,7 +3,7 @@ require('./bootstrap');
 window.Vue = require("vue");
 
 import router from "./router";
-import store from "./store";
+import store from "./store.js";
 
 import Paginate from 'vuejs-paginate'
 Vue.component('paginate', Paginate);
