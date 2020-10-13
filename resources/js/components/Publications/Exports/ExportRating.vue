@@ -581,6 +581,7 @@
                 <th>Імпакт-фактор (БД WoS)</th>
                 <th>Підбаза WoS</th>
                 <th>Опубліковано мовами ОЕСР та ЄС</th>
+                <th>Мова</th>
                 <th>DOI</th>
             </tr>
             <template v-for="(item, ind) in publicationsData" >
@@ -598,10 +599,11 @@
                 <td v-else-if="a.author.categ_1 == 2">Аспірант</td>
                 <td v-else-if="a.author.categ_2 == 1">Співробітник</td>
                 <td v-else-if="a.author.categ_2 == 2">Викладач</td>
+                <td v-else></td>
                 <td >{{a.author.name}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? 'Так' : 'Ні'}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? item.supervisor.name : '' }}</td>
-                <td >{{a.author.faculty ? a.author.faculty : a.author.country }}</td>
+                <td >{{a.author.faculty ? a.author.faculty : '' }}</td>
                 <td >{{a.author.department ? a.author.department : a.author.job}}</td>
                 <td >{{a.author.country == 'Україна' ? 'Ні' :  a.author.country ? 'Так' : 'Не вказано'}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.year}}</td>
@@ -611,8 +613,8 @@
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.impact_factor}}</td>
                 <td v-if="i == 0 && item.sub_db_index == 1" :rowspan="item.authors.length">Science Citation Index Expanded (SCIE)</td>
                 <td v-if="i == 0 && item.sub_db_index == 2" :rowspan="item.authors.length">Social Science Citation Index</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.languages}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.doi}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.languages }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.doi }}</td>
             </tr>
             </template>
         </table>
