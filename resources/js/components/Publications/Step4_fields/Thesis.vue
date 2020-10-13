@@ -95,7 +95,7 @@
                     name_conference: '',
                     editor_name: '',
                     pages: '',
-                    country: 'Україна',
+                    country: '',
                     city: '',
                     doi: ''
                 }

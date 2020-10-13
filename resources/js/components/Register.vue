@@ -101,7 +101,7 @@
                     department: []
                 },
                 data: {
-                    country: "Україна",
+                    country: "",
                     h_index: "",
                     scopus_autor_id: "",
                     scopus_researcher_id: "",

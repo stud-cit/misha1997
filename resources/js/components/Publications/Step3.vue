@@ -60,10 +60,22 @@
                 </div>
 
                 <div class="form-row" v-if="$route.name == 'publications-edit' && userRole == 4">
-                    <div class="form-group col-lg-8">
-                        <label>Публікації у виданнях що індексуються в БД Scopus та/або WoS</label>
+                    <div class="form-group col-lg-6">
+                        <label>До 10% за БД Scopus</label>
                         <div class="input-container">
-                            <select  v-model="stepData.index_scopus_wos">
+                            <select  v-model="stepData.db_scopus_percent">
+                                <option value="1">Так</option>
+                                <option value="2">Ні</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row" v-if="$route.name == 'publications-edit' && userRole == 4">
+                    <div class="form-group col-lg-6">
+                        <label>До 1% за БД WoS</label>
+                        <div class="input-container">
+                            <select  v-model="stepData.db_wos_percent">
                                 <option value="1">Так</option>
                                 <option value="2">Ні</option>
                             </select>
@@ -95,7 +107,8 @@
                     quartil_scopus: null,
                     quartil_wos: null,
                     sub_db_index: '',
-                    index_scopus_wos: 0
+                    db_scopus_percent: 0,
+                    db_wos_percent: 0,
                 }
             }
         },

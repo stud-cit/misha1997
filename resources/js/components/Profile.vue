@@ -107,13 +107,21 @@
                         </div>
                     </div>
                 </li>
-
+                <li class="row" v-if="userRole == 4">
+                    <div class="col-lg-3 list-item list-title">5 або більше публікацій в Scopus та/або WoS:</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container">
+                            <input class="item-value" type="text" v-model="data.five_publications">
+                            <div class="hint" ><span>title</span></div>
+                        </div>
+                    </div>
+                </li>
             </ul>
-                
+
             <div class="text-center">
                     <router-link :to="'/home'" tag="button" class="btn save-btn bg-primary">Назад</router-link>
                     <button class="btn save-btn" @click="save()">Зберегти</button>
-              
+
             </div>
         </div>
     </div>
@@ -141,6 +149,7 @@
                     orcid: "",
                     email: "",
                     job: "",
+                    five_publications: "",
                     role: {
                         name: ""
                     }
@@ -154,6 +163,11 @@
             this.getCountry();
             this.getRoles();
             this.getDivisions();
+        },
+        computed: {
+            userRole() {
+                return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null
+            }
         },
         methods: {
             getDivisions() {

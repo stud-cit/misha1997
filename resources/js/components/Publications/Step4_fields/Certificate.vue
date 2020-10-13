@@ -129,7 +129,7 @@
                 newApplicant: '',
                 stepData: {
                     number_certificate: '',
-                    country: 'Україна',
+                    country: '',
                     applicant: '',
 
                     // date_application: '',

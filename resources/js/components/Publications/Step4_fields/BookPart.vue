@@ -97,7 +97,7 @@
                     year: new Date().getFullYear(),
                     // number: '',
                     by_editing: '',
-                    country: 'Україна',
+                    country: '',
                     city: '',
                     editor_name: '',
                     pages: '',

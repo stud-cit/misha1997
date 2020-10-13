@@ -158,7 +158,7 @@
                                         <div class="hint" ><span>Країна автора</span></div>
                                     </div>
                                 </div>
-                                
+
                             </li>
 
                             <li class="row">
@@ -375,11 +375,12 @@
                 job: "",
                 country: [],
                 otherAuthor: false,
+                defaultNewAuthor: {},
                 newAuthor: {
                     guid: null,
                     job: null,
                     name: '',
-                    country: 'Україна',
+                    country: '',
                     h_index: '',
                     scopus_autor_id: '',
                     scopus_researcher_id: '',
@@ -402,6 +403,7 @@
             Multiselect,
         },
         mounted() {
+            this.defaultNewAuthor = Object.assign(this.defaultNewAuthor, this.newAuthor);
             if(this.publicationData.whose_publication == 'my') {
                 this.stepData.authors.push(this.$store.getters.authUser);
             }
@@ -461,7 +463,7 @@
                     })
                 }
             },
-        
+
         },
         methods: {
             checkPublicationData() {
@@ -606,6 +608,7 @@
                     if(response.data.status == 'ok') {
                         this.otherAuthor = false;
                         this.getAuthors();
+                        this.newAuthor = this.defaultNewAuthor;
                         swal("Автора успішно додано!", {
                             icon: "success",
                         });

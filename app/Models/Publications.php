@@ -43,7 +43,8 @@ class Publications extends Model
         'name_magazine',
         'doi',
         'supervisor_id',
-        'index_scopus_wos'
+        'db_scopus_percent',
+        'db_wos_percent'
     ];
 
     function supervisor() {

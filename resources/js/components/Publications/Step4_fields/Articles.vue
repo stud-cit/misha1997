@@ -88,7 +88,7 @@
                     year: new Date().getFullYear(),
                     number: '',
                     pages: '',
-                    country: 'Україна',
+                    country: '',
                     doi: ''
                 }
             }

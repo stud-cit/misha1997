@@ -23,7 +23,8 @@ class Authors extends Model
         'academic_code',
         'roles_id',
         'categ_1',
-        'categ_2'
+        'categ_2',
+        'five_publications'
     ];
 
     function role() {

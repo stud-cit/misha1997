@@ -65,9 +65,9 @@
                         <th scope="col">ПІБ користувача</th>
                         <th scope="col">Посада</th>
                         <th scope="col">Кафедра</th>
-                        <th scope="col">Інститут/
-                            факультет</th>
-                        <th scope="col">E-mail</th>
+                        <th scope="col">Інститут/факультет</th>
+                        <th scope="col">Індекс Гірша Scopus</th>
+                        <th scope="col">Індекс Гірша WoS</th>
                     </tr>
                     </thead>
                     <tbody>

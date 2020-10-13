@@ -44,7 +44,8 @@ class CreatePublicationsTable extends Migration
             $table->text('out_data')->nullable(); // Вихідні дані
             $table->string('doi')->nullable();
             $table->foreignId('supervisor_id')->nullable(); // керівник
-            $table->boolean('index_scopus_wos')->default(0); // публікації у виданнях що індексуються БД Scopus та/або WoS
+            $table->boolean('db_scopus_percent')->default(0); // до 10% за БД Scpous
+            $table->boolean('db_wos_percent')->default(0); // до 1% за БД WoS
             $table->timestamps();
         });
 

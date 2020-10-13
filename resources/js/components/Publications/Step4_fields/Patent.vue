@@ -165,7 +165,7 @@
                 newApplicant: '',
                 stepData: {
                     number_certificate: '',
-                    country: 'Україна',
+                    country: '',
                     mpk: '',
                     applicant: '',
                     application_number: '',

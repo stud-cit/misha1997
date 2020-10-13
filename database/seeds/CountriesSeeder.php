@@ -11,6 +11,7 @@ class CountriesSeeder extends Seeder
      */
     public function run()
     {
+		DB::table('countries')->insert(['name' => 'Україна']);
 		DB::table('countries')->insert(['name' => 'Австралія']);
 		DB::table('countries')->insert(['name' => 'Австрія']);
 		DB::table('countries')->insert(['name' => 'Азербайджан']);
@@ -188,7 +189,6 @@ class CountriesSeeder extends Seeder
 		DB::table('countries')->insert(['name' => 'Уганда']);
 		DB::table('countries')->insert(['name' => 'Угорщина']);
 		DB::table('countries')->insert(['name' => 'Узбекистан']);
-		DB::table('countries')->insert(['name' => 'Україна']);
 		DB::table('countries')->insert(['name' => 'Уругвай']);
 		DB::table('countries')->insert(['name' => 'Федеративні Штати Мікронезії']);
 		DB::table('countries')->insert(['name' => 'Фіджі']);

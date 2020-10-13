@@ -73,7 +73,7 @@
                 country: [],
                 stepData: {
                     year: new Date().getFullYear(),
-                    country: 'Україна',
+                    country: '',
                     city: '',
                     editor_name: '',
                     pages: ''
