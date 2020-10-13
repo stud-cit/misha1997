@@ -3,8 +3,7 @@
         <p class="step-subtitle">
             Крок 2 з 4. Додання авторів
         </p>
-        <div class=" step-content">
-
+        <div class="step-content">
 
             <!--add to db author-->
             <div class="other-author" v-if="otherAuthor">
@@ -51,42 +50,6 @@
                                 <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                             </div>
                         </div>
-
-                        <div class="row" v-if="newAuthor.name && selectCateg != 'categ1/2'">
-                            <div class="form-group col pl-0">
-                                <label>Інститут / факультет *</label>
-                                <div class="input-container">
-                                    <select v-model="newAuthor.faculty_code" @change="getDepartments">
-                                        <option value=""></option>
-                                        <option
-                                            v-for="(item, index) in divisions"
-                                            :key="index"
-                                            :value="item.ID_DIV"
-                                        >{{item.NAME_DIV}}</option>
-                                    </select>
-                                </div>
-                                <div class="error" v-if="$v.newAuthor.faculty_code.$error">
-                                    Поле обов'язкове для заповнення
-                                </div>
-                            </div>
-                            <div class="form-group col pr-0">
-                                <label>Кафедра *</label>
-                                <div class="input-container">
-                                    <select v-model="newAuthor.department_code">
-                                        <option value=""></option>
-                                        <option
-                                            v-for="(item, index) in departments"
-                                            :key="index"
-                                            :value="item.ID_DIV"
-                                        >{{item.NAME_DIV}}</option>
-                                    </select>
-                                </div>
-                                <div class="error" v-if="$v.newAuthor.department_code.$error">
-                                    Поле обов'язкове для заповнення
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="step-button-group sumdu-base">
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
                             <button class="next active" @click="addNewAuthor">Додати </button>
@@ -110,8 +73,6 @@
                                         Поле обов'язкове для заповнення
                                     </div>
                                 </div>
-
-
                             </li>
                             <li class="row">
                                 <div class="col-lg-3 list-item list-title">Місце роботи *</div>
@@ -127,9 +88,7 @@
                                     <div class="error" v-if="$v.jobType.$error">
                                         Поле обов'язкове для заповнення
                                     </div>
-
                                 </div>
-
                             </li>
                             <li class="row" v-if="jobType == 1 || jobType == 2">
                                 <div class="col-lg-3 list-item list-title">{{ jobType == 1 ? 'Назва учбового закладу' : 'Підприємство' }}</div>
@@ -142,7 +101,6 @@
                                         Поле обов'язкове для заповнення
                                     </div>
                                 </div>
-
                             </li>
                             <li class="row">
                                 <div class="col-lg-3 list-item list-title">Країна автора *</div>
@@ -158,9 +116,7 @@
                                         <div class="hint" ><span>Країна автора</span></div>
                                     </div>
                                 </div>
-
                             </li>
-
                             <li class="row">
                                 <div class="col-lg-3 list-item list-title">Індекс Гірша</div>
                                 <div class="col-lg-9  list-item list-text d-flex">
@@ -178,9 +134,7 @@
                                             <div class="hint" ><span>title</span></div>
                                         </div>
                                     </div>
-
                                 </div>
-
                             </li>
                             <li class="row">
                                 <div class="col-lg-3 list-item list-title">Research ID</div>
@@ -190,7 +144,6 @@
                                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                                     </div>
                                 </div>
-
                             </li>
                             <li class="row">
                                 <div class="col-lg-3 list-item list-title">ORCID</div>
@@ -200,19 +153,13 @@
                                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                                     </div>
                                 </div>
-
                             </li>
                         </ul>
                         <div class="step-button-group">
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
                             <button class="next active" @click="addNewAuthor">Додати </button>
-
                         </div>
                     </template>
-
-
-
-
                 </div>
             </div>
             <div class="form-group">
@@ -469,7 +416,6 @@
             checkPublicationData() {
                 if(this.publicationData && this.$route.name == 'publications-edit'){
                     const {supervisor, initials, authors} = this.publicationData;
-                    console.log(this.publicationData)
                     this.stepData.useSupervisor = supervisor ? '1' : '0';
                     this.stepData.supervisor = supervisor;
                     this.stepData.initials = initials;
@@ -552,7 +498,6 @@
                 this.getDivisions();
                 window.scrollTo(0,0);
                 this.otherAuthor = n;
-
             },
             getPersonAPI() {
                 if(this.selectCateg) {
@@ -584,19 +529,11 @@
             },
             getAuthors() {
                 axios.get(`/api/authors-all`).then(response => {
-                    console.log(response.data)
                     this.authors = response.data;
                 })
             },
 
             addNewAuthor() {
-                this.$v.newAuthor.$touch();
-                if (this.$v.newAuthor.$invalid) {
-                    swal("Не всі поля заповнено!", {
-                        icon: "error",
-                    });
-                    return
-                }
                 if(this.newAuthor.categ_2 == 2) {
                     this.newAuthor.job = "СумДУ";
                 } else {

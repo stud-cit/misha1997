@@ -87,7 +87,23 @@ class AuthorsController extends ASUController
 
     // getId
     function getId($id) {
+        $divisions = $this->getDivisions();
         $data = Authors::with('publications', 'role', 'notifications')->where("id", $id)->first();
+        foreach($divisions->original['institute'] as $k => $v) {
+            if ($data->faculty_code == $v['ID_DIV']) {
+                $data->faculty = $v['NAME_DIV'];
+            }
+        }
+        foreach($divisions->original['department']  as $k => $v) {
+            if ($data->department_code == $v['ID_DIV']) {
+                $data->department = $v['NAME_DIV'];
+                foreach($divisions->original['institute'] as $k2 => $v2) {
+                    if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                        $data->faculty = $v2['NAME_DIV'];
+                    }
+                }
+            }
+        }
         return response()->json($data);
     }
 
@@ -97,16 +113,34 @@ class AuthorsController extends ASUController
             $divisions = $this->getDivisions();
             $model = new Authors();
             $data = $request->all();
-            $response = $model->create($data);
 
-            foreach($divisions->original['department']  as $k => $v) {
-                if ($response['department_code'] == $v['ID_DIV']) {
-                    $response['department'] = $v['NAME_DIV'];
+            if($data['department_code']) {
+                foreach($divisions->original['department']  as $k => $v) {
+                    if ($data['department_code'] == $v['ID_DIV']) {
+                        foreach($divisions->original['institute'] as $k2 => $v2) {
+                            if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                                $data['faculty_code'] = $v2['ID_DIV'];
+                            }
+                        }
+                    }
                 }
             }
+
+            $response = $model->create($data);
+
             foreach($divisions->original['institute'] as $k => $v) {
-                if ($response['faculty_code'] == $v['ID_DIV']) {
-                    $response['faculty'] = $v['NAME_DIV'];
+                if ($response->faculty_code == $v['ID_DIV']) {
+                    $response->faculty = $v['NAME_DIV'];
+                }
+            }
+            foreach($divisions->original['department']  as $k => $v) {
+                if ($response->department_code == $v['ID_DIV']) {
+                    $response->department = $v['NAME_DIV'];
+                    foreach($divisions->original['institute'] as $k2 => $v2) {
+                        if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                            $response->faculty = $v2['NAME_DIV'];
+                        }
+                    }
                 }
             }
 
