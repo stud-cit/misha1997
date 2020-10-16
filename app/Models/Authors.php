@@ -27,6 +27,8 @@ class Authors extends Model
         'five_publications'
     ];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     function role() {
         return $this->belongsTo('App\Models\Roles', 'roles_id');
     }

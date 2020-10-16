@@ -84,8 +84,11 @@
                 this.$store.dispatch('setAccess', mode)
             },
             exit() {
-                this.$store.dispatch('logout')
-                this.$router.push({path: '/'})
+                axios.post('/api/logout').then(() => {
+                    window.location.href = '/';
+                }).catch(() => {
+                    console.log("error")
+                })
             }
         },
         watch: {

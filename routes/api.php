@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 // Авторизация юзера
 Route::get('check-user', 'AuthController@checkUser');
 Route::post('register', 'AuthController@register');
+Route::post('logout', 'AuthController@logout');
 
 Route::group(['middleware' => ['web']], function() {
 

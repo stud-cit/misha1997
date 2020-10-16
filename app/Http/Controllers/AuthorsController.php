@@ -79,8 +79,24 @@ class AuthorsController extends ASUController
 
     // profile (Сторінка профілю)
     function profile(Request $request) {
+        $divisions = $this->getDivisions();
         $data = Authors::with('role')->find($request->session()->get('person')['id']);
         $data->position = $this->getPosition($data);
+        foreach($divisions->original['institute'] as $k => $v) {
+            if ($data->faculty_code == $v['ID_DIV']) {
+                $data->faculty = $v['NAME_DIV'];
+            }
+        }
+        foreach($divisions->original['department']  as $k => $v) {
+            if ($data->department_code == $v['ID_DIV']) {
+                $data->department = $v['NAME_DIV'];
+                foreach($divisions->original['institute'] as $k2 => $v2) {
+                    if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                        $data->faculty = $v2['NAME_DIV'];
+                    }
+                }
+            }
+        }
         return response()->json($data);
     }
 

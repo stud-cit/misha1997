@@ -6,42 +6,105 @@ use App\Models\Authors;
 use Illuminate\Http\Request;
 use Session;
 
-class AuthController extends Controller
+class AuthController extends ASUController
 {
 
     protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
     protected $cabinet_service = "https://cabinet.sumdu.edu.ua/index/service/";
     protected $cabinet_service_token = "7B4DIDiV";
 
-    function test(Request $request) {
-        $person = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->key . '&token=' . $this->cabinet_service_token), true);
-        if ($person['status'] == 'OK') {
-            if (Authors::where("guid", $person['result']['guid'])->exists()) {
-                $person = Authors::where("guid", $person['result']['guid'])->first();
+    function checkCabinet(Request $request) {
+        $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->key . '&token=' . $this->cabinet_service_token), true);
+        if($personCabinet['result']['categ1'] == 10) {
+            return redirect('/');
+        }
+        if ($personCabinet['status'] == 'OK') {
+            $request->session()->put('key', $request->key);
+            $userModel = Authors::where("name", $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic']);
+            if($userModel->exists()) {
+                $divisions = $this->getDivisions();
+                $person = $userModel->first();
+
+                $person->guid = $personCabinet['result']['guid'];
+                $person->name = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
+                $person->job = $personCabinet['result']['info2'] ? $personCabinet['result']['info2'][0]['NAME_DIV'] : "";
+                $person->country = "Україна";
+                $person->academic_code = $personCabinet['result']['info1'] ? $personCabinet['result']['info1'][0]['NAME_GROUP'] : "";
+
+                if($personCabinet['result']['categ1'] == 10) {
+                    $person->categ_1 = 1;
+                } elseif($personCabinet['result']['categ1'] == 12) {
+                    $person->categ_1 = 2;
+                } else {
+                    $person->categ_1 = 0;
+                }
+                if($personCabinet['result']['categ2'] == 10) {
+                    $person->categ_2 = 1;
+                } elseif($personCabinet['result']['categ2'] == 12) {
+                    $person->categ_2 = 2;
+                } else {
+                    $person->categ_2 = 0;
+                }
+
+                foreach($divisions->original['institute'] as $k => $v) {
+                    if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v['ID_DIV']) {
+                        $person->department_code = $v['ID_DIV'];
+                    }
+                }
+                foreach($divisions->original['department']  as $k => $v) {
+                    if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v['ID_DIV']) {
+                        foreach($divisions->original['institute'] as $k2 => $v2) {
+                            if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                                $person->faculty_code = $v2['ID_DIV'];
+                            }
+                        }
+                    }
+                }
+
+                $userModel->update($person->toArray());
+
                 $request->session()->put('person', $person);
-                    return redirect('/home');
+                return view('app', [
+                    "status" => "register",
+                    "user" => $person
+                ]);
             } else {
-                return redirect('/register');
+                return view('app', [
+                    "status" => "login"
+                ]);
             }
         } else {
-            return redirect('/');
+            return view('app', [
+                "status" => "unauthorized"
+            ]);
         }
     }
 
     function checkUser(Request $request) {
-        $person = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->header('Authorization') . '&token=' . $this->cabinet_service_token), true);
-        // if($person['result']['categ1'] == 10) {
-        //     return response()->json([
-        //         "message" => "Сервіс дступний лише для співробітників та аспірантів."
-        //     ]);
-        // }
-        if ($person['status'] == 'OK') {
-            if (Authors::where("guid", $person['result']['guid'])->exists()) {
-                $person = Authors::where("guid", $person['result']['guid'])->first();
-                $request->session()->put('person', $person);
+        $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token), true);
+        if ($personCabinet['status'] == 'OK') {
+            $userModel = Authors::where("name", $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic']);
+            if ($userModel->exists()) {
+                $divisions = $this->getDivisions();
+                $user = $userModel->first();
+                foreach($divisions->original['institute'] as $k => $v) {
+                    if ($user['department_code'] == $v['ID_DIV']) {
+                        $user['department'] = $v['NAME_DIV'];
+                    }
+                }
+                foreach($divisions->original['department']  as $k => $v) {
+                    if ($user['department_code'] == $v['ID_DIV']) {
+                        $user['department'] = $v['NAME_DIV'];
+                        foreach($divisions->original['institute'] as $k2 => $v2) {
+                            if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                                $user['faculty'] = $v2['NAME_DIV'];
+                            }
+                        }
+                    }
+                }
                 return response()->json([
                     "status" => "register",
-                    "user" => $person
+                    "user" => $user
                 ]);
             } else {
                 return response()->json([
@@ -55,45 +118,76 @@ class AuthController extends Controller
         }
     }
 
+    function logout(Request $request) {
+        $request->session()->flush();
+        return response('ok', 200);
+    }
+
     function register(Request $request) {
-        $cabinetInfo = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key='.$request->header('Authorization')), true);
-        if(!Authors::where("guid", $cabinetInfo['result']['guid'])->exists()) {
-            $categ1 = null;
-            $categ2 = null;
-            if($cabinetInfo['result']['categ1'] == 10) {
-                $categ1 = 1;
-            } elseif($cabinetInfo['result']['categ1'] == 12) {
-                $categ1 = 2;
-            } else {
-                $categ1 = 0;
-            }
-            if($cabinetInfo['result']['categ2'] == 10) {
-                $categ2 = 1;
-            } elseif($cabinetInfo['result']['categ2'] == 12) {
-                $categ2 = 2;
-            } else {
-                $categ2 = 0;
-            }
-            $result = [
-                "guid" => $cabinetInfo['result']['guid'],
-                "name" => $cabinetInfo['result']['surname']." ".$cabinetInfo['result']['name']." ".$cabinetInfo['result']['patronymic'],
-                "email" => $cabinetInfo['result']['email'],
-                "job" => "СумДУ",
-                "faculty_code" => $cabinetInfo['result']['info1'][0]['KOD_DIV'] ? $cabinetInfo['result']['info1'][0]['KOD_DIV'] : "",
-                "department_code" => $cabinetInfo['result']['info1'][0]['NAME_DIV'] ? $cabinetInfo['result']['info1'][0]['NAME_DIV'] : "",
-                "country" => $request->country,
-                "h_index" => $request->h_index,
-                "scopus_autor_id" => $request->scopus_autor_id,
-                "scopus_researcher_id" => $request->scopus_researcher_id,
-                "orcid" => $request->orcid,
-                "categ_1" => $categ1,
-                "categ_2" => $categ2
-            ];
+        $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token), true);
 
-            $model = new Authors();
-            $response = $model->create($result);
+        if(!Authors::where("name", $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'])->exists()) {
+            $divisions = $this->getDivisions();
 
-            return response()->json($response);
+            $data = $request->all();
+
+            $data['guid'] = $personCabinet['result']['guid'];
+            $data['name'] = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
+            $data['job'] = $personCabinet['result']['info2'] ? $personCabinet['result']['info2'][0]['NAME_DIV'] : "";
+            $data['academic_code'] = $personCabinet['result']['info1'] ? $personCabinet['result']['info1'][0]['NAME_GROUP'] : "";
+
+            if($personCabinet['result']['categ1'] == 10) {
+                $data['categ_1'] = 1;
+            } elseif($personCabinet['result']['categ1'] == 12) {
+                $data['categ_1'] = 2;
+            } else {
+                $data['categ_1'] = 0;
+            }
+            if($personCabinet['result']['categ2'] == 10) {
+                $data['categ_2'] = 1;
+            } elseif($personCabinet['result']['categ2'] == 12) {
+                $data['categ_2'] = 2;
+            } else {
+                $data['categ_2'] = 0;
+            }
+
+            foreach($divisions->original['institute'] as $k => $v) {
+                if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v['ID_DIV']) {
+                    $data['department_code'] = $v['ID_DIV'];
+                }
+            }
+            foreach($divisions->original['department']  as $k => $v) {
+                if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v['ID_DIV']) {
+                    $data['department_code'] = $v['ID_DIV'];
+                    foreach($divisions->original['institute'] as $k2 => $v2) {
+                        if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                            $data['faculty_code'] = $v2['ID_DIV'];
+                        }
+                    }
+                }
+            }
+
+            $userModel = new Authors();
+            $newUser = $userModel->create($data);
+
+            foreach($divisions->original['institute'] as $k => $v) {
+                if ($newUser['department_code'] == $v['ID_DIV']) {
+                    $newUser['department'] = $v['NAME_DIV'];
+                }
+            }
+            foreach($divisions->original['department']  as $k => $v) {
+                if ($newUser['department_code'] == $v['ID_DIV']) {
+                    $newUser['department'] = $v['NAME_DIV'];
+                    foreach($divisions->original['institute'] as $k2 => $v2) {
+                        if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                            $newUser['faculty'] = $v2['NAME_DIV'];
+                        }
+                    }
+                }
+            }
+
+            $request->session()->put('person', $newUser);
+            return response()->json('ok', 200);
         } else {
             return response()->json([
                 "message" => "Користувач вже зареєстрований в системі"

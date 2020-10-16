@@ -468,6 +468,7 @@
                 if(this.stepData.useSupervisor == '0') {
                     this.stepData.supervisor = null;
                     if(this.publicationData.whose_publication == 'my') {
+                        console.log(this.$store.getters.authUser)
                         this.stepData.authors.push(this.$store.getters.authUser);
                     }
                 } else {

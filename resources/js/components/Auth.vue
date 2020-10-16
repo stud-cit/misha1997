@@ -31,7 +31,6 @@
                 let location = '';
                 try {
                     location = this.auth_window.location.toString()
-                    this.$store.dispatch('setKey', location.split('=')[1])
                 } catch (err) {
                     console.log(err);
                 }
