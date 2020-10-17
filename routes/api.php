@@ -21,6 +21,7 @@ Route::group(['middleware' => ['web']], function() {
 
     //author
     Route::post('author', 'AuthorsController@postAuthor');
+    Route::post('author-ssu', 'AuthorsController@postAuthorSSU');
     Route::get('author/{id}', 'AuthorsController@getId');
     Route::post('update-author/{id}','AuthorsController@updateAuthor');
     Route::post('delete-author/{id}','AuthorsController@deleteAuthor');

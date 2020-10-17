@@ -1,5 +1,4 @@
 <template>
-
     <div class=" auth-block">
         <div class="container page-content">
             <h1 class="title">Виконайте авторизацію</h1>
@@ -7,24 +6,14 @@
             <div class="text-center"><a href="#" class="open_auth" @click="open_auth">Авторизуватись через кабінет СумДУ</a></div>
         </div>
     </div>
-
-
 </template>
 
 <script>
-
     export default {
         data() {
             return {
                 auth_window: '',
-
             };
-        },
-        components: {
-
-        },
-        created () {
-
         },
         methods: {
             conditional_reload() {

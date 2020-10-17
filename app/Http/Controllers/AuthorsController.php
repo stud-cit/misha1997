@@ -74,7 +74,21 @@ class AuthorsController extends ASUController
         $mode = 1;
         $getPersons = file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key='.$asu_key.'&mode='.$mode.'&'.$categ.'='.$id);
         $getPersons = json_decode($getPersons, true);
-        return response()->json($getPersons);
+        $result = [];
+        foreach ($getPersons['result'] as $key => $value) {
+            array_push($result, [
+                "name" => $value['F_FIO'] . " " . $value['I_FIO'] . " " . $value['O_FIO'],
+                "kod_div" => $value['KOD_DIV'],
+                "name_div" => ($categ == 'categ1' && $id == 4) || $categ == 'categ2' ? $value['NAME_DIV'] : $value['NAME_GROUP'],
+                "categ_1" => $value['CATEG_1'],
+                "categ_2" => $value['CATEG_2'],
+                "job" => ($categ == 'categ1' && $id == 2) ? null : "СумДУ",
+                "country" => "Україна",
+                "academic_code" => ($categ == 'categ1' && $id == 2) ? $value['NAME_GROUP'] : null,
+                "guid" => $value['ID_FIO']
+            ]);
+        }
+        return response()->json($result);
     }
 
     // profile (Сторінка профілю)
@@ -133,9 +147,29 @@ class AuthorsController extends ASUController
     // postAuthor (add publication page)
     function postAuthor(Request $request) {
         if(!Authors::where("name", "like", $request->name)->exists()) {
+            $model = new Authors();
+            $data = $request->all();
+            $response = $model->create($data);
+            return response('ok', 200);
+        } else {
+            return response()->json(['message' => 'Автор вже зареєстрований в системі'], 500);
+        }
+    }
+
+    // postAuthorSSU
+    function postAuthorSSU(Request $request) {
+        if(!Authors::where("name", "like", $request->name)->exists()) {
             $divisions = $this->getDivisions();
             $model = new Authors();
             $data = $request->all();
+            $data['department_code'] = null;
+            $data['faculty_code'] = null;
+
+            foreach($divisions->original['department'] as $k2 => $v2) {
+                if ($request->kod_div == $v2['ID_DIV']) {
+                    $data['department_code'] = $v2['ID_DIV'];
+                }
+            }
 
             if($data['department_code']) {
                 foreach($divisions->original['department']  as $k => $v) {
@@ -149,32 +183,17 @@ class AuthorsController extends ASUController
                 }
             }
 
-            $response = $model->create($data);
-
-            foreach($divisions->original['institute'] as $k => $v) {
-                if ($response->faculty_code == $v['ID_DIV']) {
-                    $response->faculty = $v['NAME_DIV'];
-                }
-            }
-            foreach($divisions->original['department']  as $k => $v) {
-                if ($response->department_code == $v['ID_DIV']) {
-                    $response->department = $v['NAME_DIV'];
-                    foreach($divisions->original['institute'] as $k2 => $v2) {
-                        if ($v['ID_PAR'] == $v2['ID_DIV']) {
-                            $response->faculty = $v2['NAME_DIV'];
-                        }
-                    }
+            foreach($divisions->original['institute'] as $k2 => $v2) {
+                if ($request->kod_div == $v2['ID_DIV']) {
+                    $data['faculty_code'] = $v2['ID_DIV'];
                 }
             }
 
-            return response()->json([
-                "status" => "ok",
-                "user" => $response
-            ]);
+            $model->create($data);
+
+            return response()->json(["status" => "ok"]);
         } else {
-            return response()->json([
-                "status" => "error"
-            ]);
+            return response()->json(["status" => "error"]);
         }
     }
 

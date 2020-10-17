@@ -25,7 +25,6 @@
                                         {{item.name}}
                                     </option>
                                 </select>
-                                <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
                             </div>
                         </div>
 
@@ -35,7 +34,7 @@
                             <label class="item-title">Прізвище, ім’я, по-батькові</label>
                             <div class="input-container authors">
                                 <multiselect
-                                    v-model="newAuthor"
+                                    v-model="newAuthorSSU"
                                     label="name"
                                     :options="persons"
                                     :preserve-search="true"
@@ -43,16 +42,15 @@
                                     :selectLabel="'Натисніть для вибору'"
                                     :selectedLabel="'Вибрано'"
                                     :deselectLabel="'Натисніть для видалення'"
-                                    :custom-label="nameWithInfo"
+                                    :custom-label="nameWithInfoSSU"
                                 >
                                     <span slot="noResult">По даному запиту немає результатів</span>
                                 </multiselect>
-                                <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                             </div>
                         </div>
                         <div class="step-button-group sumdu-base">
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
-                            <button class="next active" @click="addNewAuthor">Додати </button>
+                            <button class="next active" @click="addNewAuthorSSU">Додати</button>
                         </div>
                     </template>
 
@@ -60,8 +58,6 @@
                     <template v-if="otherAuthor == 2">
                         <h2 class="popup-title">Створення нового автора</h2>
                         <ul class=" list-view">
-
-
                             <li class="row">
                                 <div class="col-lg-3 list-item list-title">Прізвище, ім’я, по-батькові *</div>
                                 <div class="col-lg-9 list-item list-text">
@@ -323,17 +319,24 @@
                 country: [],
                 otherAuthor: false,
                 defaultNewAuthor: {},
+                defaultNewAuthorSSU: {},
+                newAuthorSSU: {
+                    name: '',
+                    kod_div: '',
+                    name_div: '',
+                    categ_1: '',
+                    categ_2: '',
+                    job: '',
+                    country: ''
+                },
                 newAuthor: {
-                    guid: null,
                     job: null,
                     name: '',
                     country: '',
                     h_index: '',
                     scopus_autor_id: '',
                     scopus_researcher_id: '',
-                    orcid: '',
-                    faculty_code: '',
-                    department_code: ''
+                    orcid: ''
                 },
                 stepData: {
                     useSupervisor: '0',
@@ -351,6 +354,7 @@
         },
         mounted() {
             this.defaultNewAuthor = Object.assign(this.defaultNewAuthor, this.newAuthor);
+            this.defaultNewAuthorSSU = Object.assign(this.defaultNewAuthorSSU, this.newAuthorSSU);
             if(this.publicationData.whose_publication == 'my') {
                 this.stepData.authors.push(this.$store.getters.authUser);
             }
@@ -376,8 +380,6 @@
                 initials: {
                     required
                 },
-
-
             },
             jobType: {
                 required: requiredIf ( function() {
@@ -399,18 +401,7 @@
                         return this.otherAuthor == '2';
                     })
                 },
-                faculty_code: {
-                    required: requiredIf ( function() {
-                        return this.otherAuthor == '1';
-                    })
-                },
-                department_code: {
-                    required: requiredIf ( function() {
-                        return this.otherAuthor == '1';
-                    })
-                }
             },
-
         },
         methods: {
             checkPublicationData() {
@@ -439,10 +430,24 @@
                 if(name) {
                     if(categ_1 == 1) {
                         return `${name} - ${academic_code}`
-                    } else if(categ_1 == 2 || categ_2 == 2) {
-                        return `${name} - ${department}`
-                    } else if(categ_2 == 1) {
+                    } else if(categ_1 == 2 || categ_2 == 1 || categ_2 == 2) {
+                        if(department) {
+                            return `${name} - ${department}`
+                        } else {
+                            return `${name} - ${job}`
+                        }
+                    } else {
                         return `${name} - ${job}`
+                    }
+                } else {
+                    return "Пошук в базі данних сайту"
+                }
+            },
+
+            nameWithInfoSSU({name, name_div}) {
+                if(name) {
+                    if(name_div) {
+                        return `${name} - ${name_div}`
                     } else {
                         return `${name}`
                     }
@@ -464,11 +469,10 @@
             prevStep () {
                 this.$emit('prevStep');
             },
-            changeSupervisor(){
+            changeSupervisor() {
                 if(this.stepData.useSupervisor == '0') {
                     this.stepData.supervisor = null;
                     if(this.publicationData.whose_publication == 'my') {
-                        console.log(this.$store.getters.authUser)
                         this.stepData.authors.push(this.$store.getters.authUser);
                     }
                 } else {
@@ -505,23 +509,9 @@
                     this.loadingPersons = true;
                     this.persons = [];
                     axios.get(`/api/persons/${this.selectCateg}`).then(response => {
-                        return response.data.result.map(item => {
-                            return {
-                                categ_1: item.CATEG_1,
-                                categ_2: item.CATEG_2,
-                                guid: item.ID_FIO,
-                                name: item.F_FIO + " " + item.I_FIO + " " + item.O_FIO,
-                                academic_code: item.CATEG_1 == 1 ? item.NAME_GROUP : "",
-                                faculty_code: item.CATEG_1 == 1 ? item.KOD_DIV : "",
-                                faculty: item.CATEG_1 == 1 ? item.NAME_DIV : "",
-                                department_code: (item.CATEG_1 == 2 || item.CATEG_2 == 2) ? item.KOD_DIV : "",
-                                department: (item.CATEG_1 == 2 || item.CATEG_2 == 2) ? item.NAME_DIV : "",
-                                job: item.CATEG_2 == 1 ? item.NAME_DIV : "",
-                            }
-                        });
+                        this.persons = response.data;
 
                     }).then(result => {
-                        this.persons = result;
                         this.loadingPersons = false;
                     }).catch(() => {
                         this.loadingPersons = false;
@@ -535,18 +525,31 @@
             },
 
             addNewAuthor() {
-                if(this.newAuthor.categ_2 == 2) {
-                    this.newAuthor.job = "СумДУ";
-                } else {
-                    this.newAuthor.job = this.jobType == 1 ? this.newAuthor.job : "Не працює";
-                }
-
+                this.newAuthor.job = (this.jobType == 1 || this.jobType == 2) ? this.newAuthor.job : "Не працює";
                 axios.post('/api/author', this.newAuthor)
+                .then((response) => {
+                    this.otherAuthor = false;
+                    this.getAuthors();
+                    this.newAuthor = this.defaultNewAuthor;
+                    swal("Автора успішно додано!", {
+                        icon: "success",
+                    });
+                }).catch((error) => {
+                    swal({
+                        icon: "error",
+                        title: 'Помилка',
+                        text: error.message
+                    });
+                })
+            },
+            addNewAuthorSSU() {
+                axios.post('/api/author-ssu', this.newAuthorSSU)
                 .then((response) => {
                     if(response.data.status == 'ok') {
                         this.otherAuthor = false;
+                        this.persons = [];
                         this.getAuthors();
-                        this.newAuthor = this.defaultNewAuthor;
+                        this.newAuthorSSU = this.defaultNewAuthorSSU;
                         swal("Автора успішно додано!", {
                             icon: "success",
                         });

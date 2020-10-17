@@ -14,20 +14,21 @@ class AuthController extends ASUController
     protected $cabinet_service_token = "7B4DIDiV";
 
     function checkCabinet(Request $request) {
-        $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->key . '&token=' . $this->cabinet_service_token), true);
-        if($personCabinet['result']['categ1'] == 10) {
+        if(!isset($request->key)) {
             return redirect('/');
         }
+        $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->key . '&token=' . $this->cabinet_service_token), true);
+        // if($personCabinet['result']['categ1'] == 10) {
+        //     return redirect('/');
+        // }
         if ($personCabinet['status'] == 'OK') {
             $request->session()->put('key', $request->key);
-            $userModel = Authors::where("name", $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic']);
+            $userModel = Authors::where("guid", $personCabinet['result']['guid']);
             if($userModel->exists()) {
                 $divisions = $this->getDivisions();
                 $person = $userModel->first();
-
-                $person->guid = $personCabinet['result']['guid'];
                 $person->name = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
-                $person->job = $personCabinet['result']['info2'] ? $personCabinet['result']['info2'][0]['NAME_DIV'] : "";
+                $person->job = "СумДУ";
                 $person->country = "Україна";
                 $person->academic_code = $personCabinet['result']['info1'] ? $personCabinet['result']['info1'][0]['NAME_GROUP'] : "";
 
@@ -46,18 +47,30 @@ class AuthController extends ASUController
                     $person->categ_2 = 0;
                 }
 
-                foreach($divisions->original['institute'] as $k => $v) {
-                    if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v['ID_DIV']) {
-                        $person->department_code = $v['ID_DIV'];
+                $person->department_code = null;
+                $person->faculty_code = null;
+
+                foreach($divisions->original['department'] as $k2 => $v2) {
+                    if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                        $person->department_code = $v2['ID_DIV'];
                     }
                 }
-                foreach($divisions->original['department']  as $k => $v) {
-                    if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v['ID_DIV']) {
-                        foreach($divisions->original['institute'] as $k2 => $v2) {
-                            if ($v['ID_PAR'] == $v2['ID_DIV']) {
-                                $person->faculty_code = $v2['ID_DIV'];
+
+                if($person->department_code) {
+                    foreach($divisions->original['department']  as $k => $v) {
+                        if ($person->department_code == $v['ID_DIV']) {
+                            foreach($divisions->original['institute'] as $k2 => $v2) {
+                                if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                                    $person->faculty_code = $v2['ID_DIV'];
+                                }
                             }
                         }
+                    }
+                }
+
+                foreach($divisions->original['institute'] as $k2 => $v2) {
+                    if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                        $person->faculty_code = $v2['ID_DIV'];
                     }
                 }
 
@@ -126,14 +139,12 @@ class AuthController extends ASUController
     function register(Request $request) {
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token), true);
 
-        if(!Authors::where("name", $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'])->exists()) {
+        if(!Authors::where("guid", $personCabinet['result']['guid'])->exists()) {
             $divisions = $this->getDivisions();
-
             $data = $request->all();
-
-            $data['guid'] = $personCabinet['result']['guid'];
             $data['name'] = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
-            $data['job'] = $personCabinet['result']['info2'] ? $personCabinet['result']['info2'][0]['NAME_DIV'] : "";
+            $data['job'] = "СумДУ";
+            $data['country'] = "Україна";
             $data['academic_code'] = $personCabinet['result']['info1'] ? $personCabinet['result']['info1'][0]['NAME_GROUP'] : "";
 
             if($personCabinet['result']['categ1'] == 10) {
@@ -151,19 +162,27 @@ class AuthController extends ASUController
                 $data['categ_2'] = 0;
             }
 
-            foreach($divisions->original['institute'] as $k => $v) {
-                if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v['ID_DIV']) {
-                    $data['department_code'] = $v['ID_DIV'];
+            foreach($divisions->original['department'] as $k2 => $v2) {
+                if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                    $data['department_code'] = $v2['ID_DIV'];
                 }
             }
-            foreach($divisions->original['department']  as $k => $v) {
-                if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v['ID_DIV']) {
-                    $data['department_code'] = $v['ID_DIV'];
-                    foreach($divisions->original['institute'] as $k2 => $v2) {
-                        if ($v['ID_PAR'] == $v2['ID_DIV']) {
-                            $data['faculty_code'] = $v2['ID_DIV'];
+
+            if($data['department_code']) {
+                foreach($divisions->original['department']  as $k => $v) {
+                    if ($data['department_code'] == $v['ID_DIV']) {
+                        foreach($divisions->original['institute'] as $k2 => $v2) {
+                            if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                                $data['faculty_code'] = $v2['ID_DIV'];
+                            }
                         }
                     }
+                }
+            }
+
+            foreach($divisions->original['institute'] as $k2 => $v2) {
+                if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                    $data['faculty_code'] = $v2['ID_DIV'];
                 }
             }
 
