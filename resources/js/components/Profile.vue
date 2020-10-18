@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container general-block">
         <h1 class="blue-page-title">Ваш профіль</h1>
         <div class="page-content">
             <ul class="list-view">

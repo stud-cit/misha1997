@@ -19,7 +19,27 @@ class PublicationsController extends ASUController
 
     // всі публікації
     function getAll(Request $request) {
-        $data = Publications::with('publicationType', 'scienceType', 'supervisor', 'authors')->get();
+        $data = Publications::with('publicationType', 'scienceType', 'supervisor', 'authors')->whereHas('authors.author', function($q) use ($request) {
+            if($request->session()->get('person')['roles_id'] == 2) {
+                $q->where('department_code', $request->session()->get('person')['department_code']);
+            }
+            if($request->session()->get('person')['roles_id'] == 3) {
+                $q->where('faculty_code', $request->session()->get('person')['faculty_code']);
+            }
+        })->get();
+        foreach ($data as $key => $publication) {
+            foreach ($publication->authors as $key => $value) {
+                $value['author'] = $value->author;
+            }
+        }
+        return response()->json($data);
+    }
+
+    // мої публікації
+    function getMyPublications(Request $request) {
+        $data = Publications::with('publicationType', 'scienceType', 'supervisor', 'authors')->whereHas('authors', function($q) use ($request) {
+            $q->where('autors_id', $request->session()->get('person')['id']);
+        })->get();
         foreach ($data as $key => $publication) {
             foreach ($publication->authors as $key => $value) {
                 $value['author'] = $value->author;
@@ -76,20 +96,34 @@ class PublicationsController extends ASUController
             $authorsPublications->autors_id = $value['id'];
             $authorsPublications->publications_id = $response->id;
             $authorsPublications->save();
+            if($value['id'] != $request->session()->get('person')['id']) {
+                Notifications::create([
+                    "autors_id" => $value['id'],
+                    "text" => $request->session()->get('person')['name']." додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас співавтором публікації."
+                ]);
+            }
         }
-
         return response('ok', 200);
     }
 
     // оновлення публікації
     function updatePublication(Request $request, $id) {
         $data = $request->all();
+        $model = Publications::with('supervisor')->find($id);
         if($data['supervisor']) {
             $data['supervisor_id'] = $data['supervisor']['id'];
         } else {
             $data['supervisor_id'] = null;
         }
         Publications::find($id)->update($data);
+        foreach ($data['authors'] as $k => $author) {
+            if($author['author']['id'] != $request->session()->get('person')['id']) {
+                Notifications::create([
+                    "autors_id" => $author['author']['id'],
+                    "text" => "Корисувач " . $request->session()->get('person')['name'] . " оновив публікацію. " . $model->name."\"."
+                ]);
+            }
+        }
         return response('ok', 200);
     }
 
@@ -97,10 +131,12 @@ class PublicationsController extends ASUController
     function deletePublications(Request $request) {
         foreach ($request->publications as $key => $publication) {
             foreach ($publication['authors'] as $k => $author) {
-                Notifications::create([
-                    "autors_id" => $author['author']['id'],
-                    "text" => $request->user['name']." видалив публікацию \"".$publication['title']."\"."
-                ]);
+                if($author['author']['id'] != $request->session()->get('person')['id']) {
+                    Notifications::create([
+                        "autors_id" => $author['author']['id'],
+                        "text" => $request->user['name']." видалив публікацию \"".$publication['title']."\"."
+                    ]);
+                }
             }
             Publications::find($publication['id'])->delete();
         }

@@ -15,7 +15,8 @@
                             <a class="nav-link dropdown-toggle"  href="#" data-toggle="dropdown" >Меню публікацій
                                 <img class="ml-1 pb2" src="/img/arrow-down.svg" alt=""></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <router-link :to="{name: 'publications'}" class="dropdown-item">Переглянути список публікацій</router-link>
+                                <router-link :to="{name: 'my-publications'}" class="dropdown-item">Мої публікації</router-link>
+                                <router-link :to="{name: 'publications'}" class="dropdown-item">Cписок усіх публікацій</router-link>
                                 <router-link
                                     v-if="userRole == 4 || access == 'open'"
                                     :to="{name: 'publications-add'}"

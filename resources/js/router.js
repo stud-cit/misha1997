@@ -11,6 +11,7 @@ import Auth from "./components/Auth";
 import Profile from "./components/Profile";
 import User from "./components/User";
 import Publications from "./components/Publications/Index";
+import MyPublications from "./components/Publications/My";
 import PublicationsAdd from "./components/Publications/Add";
 import PublicationsView from "./components/Publications/View";
 import PublicationsEdit from "./components/Publications/Edit";
@@ -76,6 +77,14 @@ let router = new Router({
             path: '/publications',
             name: 'publications',
             component: Publications,
+            meta: {
+                middleware: auth
+            }
+        },
+        {
+            path: '/my-publications',
+            name: 'my-publications',
+            component: MyPublications,
             meta: {
                 middleware: auth
             }

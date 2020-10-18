@@ -36,10 +36,10 @@ class ASUController extends Controller
         $result = [];
         $data = json_decode(file_get_contents($this->asu_sumdu_api . $this->asu_key), true);
         foreach ($data['result'] as $key => $value) {
-            if(($value['KOD_TYPE'] == 7 || $value['KOD_TYPE'] == 9) && $value['CODE_DIV'] != "53.05" && $value['CODE_DIV'] != "61.00") {
+            if(($value['KOD_TYPE'] == 7 || $value['KOD_TYPE'] == 9 || $value['CODE_DIV'] == "35.00") && $value['CODE_DIV'] != "53.05" && $value['CODE_DIV'] != "61.00") {
                 $value['departments'] = [];
                 foreach ($data['result'] as $k => $v) {
-                    if($v['KOD_TYPE'] == 2 && ($value['ID_DIV'] == $v['ID_PAR'] || $v['CODE_DIV'] == "35.00") && $v['CODE_DIV'] != "61.00") {
+                    if($v['KOD_TYPE'] == 2 && $value['ID_DIV'] == $v['ID_PAR'] && $v['CODE_DIV'] != "61.00") {
                         array_push($value['departments'], $v);
                     }
                     if($value['CODE_DIV'] == "60.00") {

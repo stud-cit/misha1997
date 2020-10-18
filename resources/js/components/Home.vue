@@ -1,7 +1,8 @@
 <template>
-    <div class="container page-content">
+    <div class="container page-content general-block">
         <div class="page-list">
-            <router-link :to="{name: 'publications'}" class="page-link">Переглянути список публікацій</router-link>
+            <router-link :to="{name: 'my-publications'}" class="page-link">Мої публікації</router-link>
+            <router-link :to="{name: 'publications'}" class="page-link">Cписок усіх публікацій</router-link>
             <router-link
                 v-if="userRole == 4 || access == 'open'"
                 :to="{name: 'publications-add'}"
@@ -55,13 +56,16 @@
         align-content: center;
     }
     .page-list{
-        display: grid;
+        display: block;
+        width: 70%;
+        margin: 0 auto;
         align-content: center;
         justify-content: center;
         grid-gap: 25px;
         .page-link{
             padding: 15px 25px;
-            max-width: 750px;
+            width: 100%;
+            margin-bottom: 15px;
             font-family: Arial;
             font-style: normal;
             font-weight: normal;
@@ -85,6 +89,7 @@
     @media (max-width: 575px )  {
         .page-list{
             grid-gap: 20px;
+            width: 100%;
             .page-link{
                 padding: 12px 20px;
                 max-width: 100%;

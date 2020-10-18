@@ -82,7 +82,8 @@
                     whose_publication: 'my',
                     title: '',
                     science_type_id: '',
-                    publication_type: null
+                    publication_type: null,
+                    publication_type_id: null
                 }
             }
         },

@@ -1,5 +1,5 @@
 <template>
-    <div class="container page-content">
+    <div class="container page-content general-block">
         <h1 class="page-title">Реєстрація</h1>
         <form class="search-block">
             <div class="form-group">

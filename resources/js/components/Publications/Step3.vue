@@ -61,7 +61,7 @@
                     <div class="form-group col" v-if="publicationData.science_type_id == 1 || publicationData.science_type_id == 3">
                         <label>До 10% за БД Scopus</label>
                         <div class="input-container">
-                            <select  v-model="stepData.db_scopus_percent">
+                            <select v-model="stepData.db_scopus_percent">
                                 <option value="1">Так</option>
                                 <option value="2">Ні</option>
                             </select>
@@ -70,7 +70,7 @@
                      <div class="form-group col" v-if="publicationData.science_type_id == 2 || publicationData.science_type_id == 3">
                         <label>До 1% за БД WoS</label>
                         <div class="input-container">
-                            <select  v-model="stepData.db_wos_percent">
+                            <select v-model="stepData.db_wos_percent">
                                 <option value="1">Так</option>
                                 <option value="2">Ні</option>
                             </select>
@@ -121,7 +121,7 @@
         methods:{
             checkPublicationData() {
                 if(this.publicationData && this.$route.name == 'publications-edit'){
-                    const {snip, impact_factor, quartil_scopus, quartil_wos, sub_db_index} = this.publicationData;
+                    const {snip, impact_factor, quartil_scopus, quartil_wos, sub_db_index, db_scopus_percent, db_wos_percent} = this.publicationData;
                     this.stepData.snip = snip;
                     this.stepData.impact_factor = impact_factor;
                     this.stepData.quartil_scopus = quartil_scopus;

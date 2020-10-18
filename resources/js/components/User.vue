@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container general-block">
         <h1 class="blue-page-title">Профіль - {{ data.name }}</h1>
         <div class="page-content">
             <ul class=" list-view">

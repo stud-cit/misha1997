@@ -1,5 +1,5 @@
 <template>
-    <div class="container page-content">
+    <div class="container page-content general-block">
         <h1 class="page-title">Список працівників</h1>
         <div class="main-content">
             <form class="search-block">
