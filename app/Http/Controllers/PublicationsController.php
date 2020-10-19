@@ -335,16 +335,18 @@ class PublicationsController extends ASUController
         ];
 
         foreach ($data as $key => $value) {
-            // Кафедра - керівника
-            foreach($divisions->original['department'] as $keyDepartment => $department) {
-                if ($value['supervisor']['department_code'] == $department['ID_DIV']) {
-                    $value['supervisor']['department'] = $department['NAME_DIV'];
+            if($value['supervisor']) {
+                // Кафедра - керівника
+                foreach($divisions->original['department'] as $keyDepartment => $department) {
+                    if ($value['supervisor']['department_code'] == $department['ID_DIV']) {
+                        $value['supervisor']['department'] = $department['NAME_DIV'];
+                    }
                 }
-            }
-            // Інcтитут / факультет - керівника
-            foreach($divisions->original['institute'] as $keyInstitute => $institute) {
-                if ($value['supervisor']['faculty_code'] == $institute['ID_DIV']) {
-                    $value['supervisor']['faculty'] = $institute['NAME_DIV'];
+                // Інcтитут / факультет - керівника
+                foreach($divisions->original['institute'] as $keyInstitute => $institute) {
+                    if ($value['supervisor']['faculty_code'] == $institute['ID_DIV']) {
+                        $value['supervisor']['faculty'] = $institute['NAME_DIV'];
+                    }
                 }
             }
 

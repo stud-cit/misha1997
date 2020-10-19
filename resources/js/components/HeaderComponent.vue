@@ -86,7 +86,8 @@
             },
             exit() {
                 axios.post('/api/logout').then(() => {
-                    window.location.href = '/';
+                    this.$router.push({path: '/'});
+                    this.$store.dispatch('setUser', null);
                 }).catch(() => {
                     console.log("error")
                 })

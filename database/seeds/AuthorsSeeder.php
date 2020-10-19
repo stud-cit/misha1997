@@ -15,7 +15,6 @@ class AuthorsSeeder extends Seeder
             'guid' => '22e6106c-c580-e711-8194-001a4be6d04a',
             'job' => 'СумДУ',
             'name' => 'Admin',
-            'email' => 'admin@gmail.com',
             'roles_id' => 4
         ]);
     }

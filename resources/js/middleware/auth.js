@@ -10,7 +10,7 @@ export default function auth ({ next, store, to }) {
                 params: { nextUrl: to.fullPath }
             });
         } else {
-            store.dispatch('logout')
+            store.dispatch('setUser', null);
             return next({
                 path: '/',
                 params: { nextUrl: to.fullPath }

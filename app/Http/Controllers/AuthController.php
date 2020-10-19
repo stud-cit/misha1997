@@ -11,15 +11,19 @@ class AuthController extends ASUController
 
     protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
     protected $cabinet_service = "https://cabinet.sumdu.edu.ua/index/service/";
-    protected $cabinet_service_token = "7B4DIDiV";
+    protected $cabinet_service_token = "TNWcmzpZ";
 
     function checkCabinet(Request $request) {
         if(!isset($request->key)) {
-            return redirect('/');
+            return view('app', [
+                "status" => "unauthorized"
+            ]);
         }
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->key . '&token=' . $this->cabinet_service_token), true);
         // if($personCabinet['result']['categ1'] == 10) {
-        //     return redirect('/');
+        //     return view('app', [
+        //         "status" => "unauthorized"
+        //     ]);
         // }
         if ($personCabinet['status'] == 'OK') {
             $request->session()->put('key', $request->key);

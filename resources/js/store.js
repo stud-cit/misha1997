@@ -15,9 +15,6 @@ export default new Vuex.Store({
         access_mode(state, mode) {
             state.access = mode;
         },
-        logout(state) {
-            state.user = null;
-        }
     },
     actions: {
         setUser({commit}, user) {
@@ -34,13 +31,6 @@ export default new Vuex.Store({
                 mode
             }).then(() => {
                 commit('access_mode', mode)
-            })
-        },
-        logout({commit}) {
-            axios.post('/api/logout').then(() => {
-                commit('logout')
-            }).catch(() => {
-                console.log("error")
             })
         },
     },
