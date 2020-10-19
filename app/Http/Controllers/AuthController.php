@@ -14,6 +14,8 @@ class AuthController extends ASUController
     protected $cabinet_service_token = "TNWcmzpZ";
 
     function checkCabinet(Request $request) {
+        $this->mode($request);
+
         if(!isset($request->key)) {
             return view('app', [
                 "status" => "unauthorized"
@@ -219,6 +221,11 @@ class AuthController extends ASUController
     }
 
     function index(Request $request) {
+        $this->mode($request);
+        return view('app');
+    }
+
+    function mode($request) {
         $info = "Наукові публікації"; // Service description
         $icon = public_path() . "/service.png"; // Service icon (48x48)
         $mask = 13; // Service modes 3,2,0 (1101 bits)
@@ -241,6 +248,5 @@ class AuthController extends ASUController
             default:
                 exit;
         }
-        return view('app');
     }
 }
