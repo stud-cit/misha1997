@@ -1,14 +1,12 @@
 <template>
-
-    <div class="container page-content">
+    <div class="container page-content general-block">
         <h1 class="page-title">Список працівників</h1>
         <div class="main-content">
             <form class="search-block">
                 <div class="form-group">
                     <label >Прізвище, ім’я та по батькові користувача</label>
                     <div class="input-container">
-                        <input type="text" v-model="filters.name" >
-                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                        <input type="text" v-model="filters.name">
                     </div>
                 </div>
                 <div class="form-row">
@@ -23,7 +21,6 @@
                                     :value="item.ID_DIV"
                                 >{{item.NAME_DIV}}</option>
                             </select>
-                            <div class="hint"><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
                     <div class="form-group col-lg-6">
@@ -37,35 +34,20 @@
                                     :value="item.ID_DIV"
                                 >{{item.NAME_DIV}}</option>
                             </select>
-                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                         </div>
                     </div>
-                    <!-- <div class="form-group col-lg-4">
-                        <label >Рік народження</label>
-                        <div class="input-container">
-                            <select v-model="filters.birthday">
-                                <option value=""></option>
-                                <option value="1">2019</option>
-                                <option value="1">2020</option>
-                            </select>
-                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                        </div>
-                    </div> -->
                 </div>
-
-
             </form>
             <div class="table-responsive text-center table-list">
-
                 <table class="table table-bordered ">
                     <thead>
                     <tr>
                         <th scope="col">№</th>
-<!--                        <th scope="col">Роль</th>-->
                         <th scope="col">ПІБ користувача</th>
                         <th scope="col">Посада</th>
                         <th scope="col">Кафедра</th>
                         <th scope="col">Інститут/факультет</th>
+                        <th scope="col">Вік</th>
                         <th scope="col">Індекс Гірша Scopus</th>
                         <th scope="col">Індекс Гірша WoS</th>
                     </tr>
@@ -73,16 +55,13 @@
                     <tbody>
                     <tr v-for="(item, index) in filteredList" :key="item.id">
                         <td scope="row">{{ index+1+(currentPage-1)*perPage}}</td>
-<!--                        <td>{{ item.role.name }}</td>-->
                         <td><router-link :to="{path: `/user/${item.id}`}">{{ item.name }}</router-link></td>
-                        <td v-if="item.categ_1 == 1">Студент</td>
-                        <td v-else-if="item.categ_1 == 2">Аспірант</td>
-                        <td v-else-if="item.categ_2 == 1">Співробітник</td>
-                        <td v-else-if="item.categ_2 == 2">Викладач</td>
-                        <td v-else></td>
+                        <td>{{ item.position }}</td>
                         <td>{{ item.department }}</td>
                         <td>{{ item.faculty }}</td>
-                        <td>{{ item.email }}</td>
+                        <td>{{ item.age }}</td>
+                        <td>{{ item.scopus_autor_id }}</td>
+                        <td>{{ item.h_index }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -103,8 +82,8 @@
                     next-class="page-link">
                 </paginate>
                 <div class="step-button-group">
-            <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
-        </div>
+                    <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
+                </div>
             </div>
         </div>
     </div>
@@ -123,8 +102,7 @@
                 filters: {
                     name: '',
                     faculty_code: '',
-                    department_code: '',
-                    birthday: ''
+                    department_code: ''
                 },
                 currentPage: 1,
                 perPage: 10,
@@ -151,7 +129,6 @@
 
                 });
                 this.numPage = Math.ceil(list.length/this.perPage);
-
                 return list.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
             }
         },

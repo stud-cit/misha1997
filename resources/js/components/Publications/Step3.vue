@@ -45,37 +45,32 @@
                     </div>
                 </div>
 
-                <div class="form-row" v-if="publicationData.science_type_id == 2 || publicationData.science_type_id == 3">
-                    <div class="form-group col-lg-8">
-                        <label >Підбаза WoS</label>
-                        <div class="input-container">
-                            <select  v-model="stepData.sub_db_index" >
-                                <option value=""></option>
-                                <option value="1">Science Citation Index Expanded (SCIE)</option>
-                                <option value="2">Social Science Citation Index</option>
-                            </select>
-                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                        </div>
+                <div class="form-group" v-if="publicationData.science_type_id == 2 || publicationData.science_type_id == 3">
+                    <label >Підбаза WoS</label>
+                    <div class="input-container">
+                        <select  v-model="stepData.sub_db_index" >
+                            <option value=""></option>
+                            <option value="1">Science Citation Index Expanded (SCIE)</option>
+                            <option value="2">Social Science Citation Index</option>
+                        </select>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
                 </div>
 
                 <div class="form-row" v-if="$route.name == 'publications-edit' && userRole == 4">
-                    <div class="form-group col-lg-6">
+                    <div class="form-group col" v-if="publicationData.science_type_id == 1 || publicationData.science_type_id == 3">
                         <label>До 10% за БД Scopus</label>
                         <div class="input-container">
-                            <select  v-model="stepData.db_scopus_percent">
+                            <select v-model="stepData.db_scopus_percent">
                                 <option value="1">Так</option>
                                 <option value="2">Ні</option>
                             </select>
                         </div>
                     </div>
-                </div>
-
-                <div class="form-row" v-if="$route.name == 'publications-edit' && userRole == 4">
-                    <div class="form-group col-lg-6">
+                     <div class="form-group col" v-if="publicationData.science_type_id == 2 || publicationData.science_type_id == 3">
                         <label>До 1% за БД WoS</label>
                         <div class="input-container">
-                            <select  v-model="stepData.db_wos_percent">
+                            <select v-model="stepData.db_wos_percent">
                                 <option value="1">Так</option>
                                 <option value="2">Ні</option>
                             </select>
@@ -126,12 +121,14 @@
         methods:{
             checkPublicationData() {
                 if(this.publicationData && this.$route.name == 'publications-edit'){
-                    const {snip, impact_factor, quartil_scopus, quartil_wos, sub_db_index} = this.publicationData;
+                    const {snip, impact_factor, quartil_scopus, quartil_wos, sub_db_index, db_scopus_percent, db_wos_percent} = this.publicationData;
                     this.stepData.snip = snip;
                     this.stepData.impact_factor = impact_factor;
                     this.stepData.quartil_scopus = quartil_scopus;
                     this.stepData.quartil_wos = quartil_wos;
                     this.stepData.sub_db_index = sub_db_index;
+                    this.stepData.db_scopus_percent = db_scopus_percent;
+                    this.stepData.db_wos_percent = db_wos_percent;
                 }
             },
             nextStep() {
@@ -143,84 +140,3 @@
         },
     }
 </script>
-
-<style lang="scss" scoped>
-
-
-    /*.step-item{*/
-    /*    margin-top: 50px;*/
-    /*    display: flex;*/
-    /*    align-items: center;*/
-    /*    &:first-of-type{*/
-    /*        margin-top: 0;*/
-    /*    }*/
-    /*    .item-title{*/
-    /*        width: auto;*/
-    /*        font-family: Montserrat;*/
-    /*        font-style: normal;*/
-    /*        font-weight: normal;*/
-    /*        font-size: 25px;*/
-    /*        color: #A6A6A6;*/
-    /*        margin-right: 20px;*/
-    /*        margin-bottom: 0;*/
-    /*    }*/
-    /*    .item-input{*/
-    /*        padding: 12px;*/
-    /*        text-align: center;*/
-    /*        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);*/
-    /*        border-radius: 44.5px;*/
-    /*        border: none;*/
-    /*        outline: none;*/
-    /*        font-family: Montserrat;*/
-    /*        font-style: normal;*/
-    /*        font-weight: normal;*/
-    /*        font-size: 20px;*/
-    /*        color: #0E0E0E;*/
-    /*        min-width: 258px;*/
-
-    /*    }*/
-    /*    .categories-elem{*/
-    /*        display: flex;*/
-
-    /*        .small-box{*/
-    /*            width: 31px;*/
-    /*            padding: 4px 0;*/
-    /*            margin: 0 10px;*/
-    /*            border: 1px solid #18A0FB;*/
-    /*            box-sizing: border-box;*/
-    /*            border-radius: 10px;*/
-    /*            font-family: Montserrat;*/
-    /*            font-style: normal;*/
-    /*            font-weight: normal;*/
-    /*            font-size: 20px;*/
-    /*            color: #18A0FB;*/
-    /*            text-align: center;*/
-    /*            cursor: pointer;*/
-    /*        }*/
-    /*        .big-box{*/
-    /*            padding: 10px 40px;*/
-    /*            margin: 0 10px;*/
-    /*            border: 1px solid #18A0FB;*/
-    /*            box-sizing: border-box;*/
-    /*            border-radius: 44.5px;*/
-    /*            font-family: Montserrat;*/
-    /*            font-style: normal;*/
-    /*            font-weight: normal;*/
-    /*            font-size: 20px;*/
-    /*            color: #18A0FB;*/
-    /*            cursor: pointer;*/
-
-    /*        }*/
-    /*        input{*/
-    /*            display: none;*/
-    /*        }*/
-    /*        input:checked +label{*/
-    /*            background: #18A0FB;*/
-    /*            border: 1px solid #18A0FB;*/
-    /*            color: #fff;*/
-    /*        }*/
-    /*    }*/
-    /*}*/
-
-
-</style>

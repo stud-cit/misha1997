@@ -1,43 +1,8 @@
 <template>
     <div class="container page-content general-block">
-        <h1 class="page-title">Перегляд публікацій</h1>
-
-        <!-- exports-->
-        <div class="exports">
-            <export-rating :publicationTypes="publicationTypes" :years="years" :countries="countries" class="export-block"></export-rating>
-            <export-publications class="export-block" :exportList="exportPublication"></export-publications>
-        </div>
-        <!---->
+        <h1 class="page-title">Мої публікації</h1>
         <div class="main-content">
             <form class="search-block">
-                <div class="form-row">
-                    <div class="form-group col">
-                        <label>Інститут / факультет</label>
-                        <div class="input-container">
-                            <select v-model="filters.faculty_code" @change="getDepartments">
-                                <option value=""></option>
-                                <option
-                                    v-for="(item, index) in divisions"
-                                    :key="index"
-                                    :value="item.ID_DIV"
-                                >{{item.NAME_DIV}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col">
-                        <label>Кафедра</label>
-                        <div class="input-container">
-                            <select v-model="filters.department_code">
-                                <option value=""></option>
-                                <option
-                                    v-for="(item, index) in departments"
-                                    :key="index"
-                                    :value="item.ID_DIV"
-                                >{{item.NAME_DIV}}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
                 <div class="form-group">
                     <label>Назва публікації</label>
                     <div class="input-container">
@@ -48,7 +13,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Прізвище та ініціали автора</label>
+                    <label >Прізвище та ініціали співавтора</label>
                     <div class="input-container hint-container">
                         <input type="text" v-model="filters.initials">
                     </div>
@@ -57,7 +22,7 @@
                     <div class="form-group col-lg-4">
                         <label>БД Scopus\WoS</label>
                         <div class="input-container">
-                            <select v-model="filters.science_type_id">
+                            <select  v-model="filters.science_type_id">
                                 <option value=""></option>
                                 <option value="1">Scopus</option>
                                 <option value="2">WoS</option>
@@ -68,7 +33,7 @@
                     <div class="form-group col-lg-4">
                         <label>Рік видання</label>
                         <div class="input-container">
-                            <select v-model="filters.year">
+                            <select  v-model="filters.year">
                                 <option value=""></option>
                                 <option v-for="(item, index) in years" :key="index" :value="item">{{item}}</option>
                             </select>
@@ -77,7 +42,7 @@
                     <div class="form-group col-lg-4">
                         <label>Країна видання</label>
                         <div class="input-container">
-                            <select  v-model="filters.country">
+                            <select v-model="filters.country">
                                 <option value=""></option>
                                 <option v-for="(item, index) in countries" :value="item.name" :key="index">{{item.name}}</option>
                             </select>
@@ -85,9 +50,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label >Вид публікації</label>
+                    <label>Вид публікації</label>
                     <div class="input-container">
-                        <select v-model="filters.publication_type_id">
+                        <select  v-model="filters.publication_type_id">
                             <option value=""></option>
                             <option v-for="(item, index) in publicationTypes" :value="item.id" :key="index">{{item.title}}</option>
                         </select>
@@ -100,14 +65,14 @@
                     <thead>
                     <tr>
                         <th scope="col">№</th>
-                        <th scope="col">Вид пуб-ції</th>
+                        <th scope="col">Вид публікації</th>
                         <th scope="col">Прізвище та ініціали автора\співавторів</th>
                         <th scope="col">Назва публікації</th>
                         <th scope="col">Рік видання</th>
                         <th scope="col">БД Scopus\WoS</th>
                         <th scope="col">Науковий керівник</th>
-                        <th scope="col" v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)"></th>
-                        <th scope="col" v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)"></th>
+                        <th scope="col" v-if="access == 'open'"></th>
+                        <th scope="col" v-if="access == 'open'"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -115,14 +80,14 @@
                         <td scope="row">{{ index+1+(currentPage-1)*perPage }}</td>
                         <td>{{ item.publication_type.title }}</td>
                         <td>{{ item.initials }}</td>
-                        <td><router-link :to="{path: `/publications/${item.id}`}"> {{ item.title }} </router-link> </td>
+                        <td><router-link :to="{path: `/publications/${item.id}`}"> {{ item.title }} </router-link></td>
                         <td>{{ item.year}}</td>
                         <td>{{ item.science_type ? item.science_type.type : '' }}</td>
                         <td>{{ item.supervisor ? item.supervisor.name : '' }}</td>
-                        <td v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)">
+                        <td v-if="access == 'open'">
                             <router-link tag="i" class="fa fa-edit fa-2x" :to="{path: `/publications/edit/${item.id}`}"></router-link>
                         </td>
-                        <td class="icons" v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)">
+                        <td class="icons" v-if="access == 'open'">
                             <input
                                 type="checkbox"
                                 :checked="selectPublications.indexOf(item) != -1 ? true : false"
@@ -150,7 +115,7 @@
                 </paginate>
                 <div class="edit-block" v-if="access == 'open'">
                     <router-link :to="'/home'" tag="button" class="mr-2">Назад</router-link>
-                    <button class="mr-2 delete" @click="deletePublications">Видалити</button>
+                    <button class="mr-2 delete" @click="deletePublications" :disabled="selectPublications.length == 0">Видалити</button>
                 </div>
             </div>
         </div>
@@ -158,15 +123,9 @@
 </template>
 
 <script>
-    import ExportRating from "./Exports/ExportRating";
-    import ExportPublications from "./Exports/ExportPublications";
-
-    import XLSX from 'xlsx';
     export default {
         data() {
             return {
-                departments: [],
-                divisions: [],
                 names: [],
                 publicationNames: [],
                 selectPublications: [],
@@ -174,48 +133,26 @@
                 currentPage: 1,
                 perPage: 10,
                 numPage: 1,
-                fullSearch: false,
                 data: [],
                 countries: [],
                 publicationTypes: [],
-                exportData: {},
-                exportPublication: [],
                 filters: {
                     title: '',
                     initials: '',
                     science_type_id: '',
                     year: '',
                     country: '',
-                    publication_type_id: '',
-                    faculty_code: '',
-                    department_code: ''
+                    publication_type_id: ''
                 }
             };
-        },
-        components: {
-            ExportRating,
-            ExportPublications,
         },
         mounted () {
             this.getData();
             this.getCountry();
             this.getTypePublications();
             this.getNamesPublications();
-            this.getDivisions();
         },
         methods: {
-            getDepartments() {
-                this.departments = this.divisions.find(item => {
-                    return this.filters.faculty_code == item.ID_DIV
-                }).departments;
-            },
-
-            getDivisions() {
-                axios.get('/api/sort-divisions').then(response => {
-                    this.divisions = response.data;
-                })
-            },
-
             findNames() {
                 this.names = this.publicationNames.filter(item => {
                     return item.indexOf(this.filters.title) + 1
@@ -229,13 +166,8 @@
 				}
 			},
             getData() {
-                axios.get('/api/publications').then(response => {
-                    console.log(response.data)
-                    this.data = response.data.map(element => {
-                        element.faculty_code = element.authors.map(item => item.author.faculty_code).join();
-                        element.department_code = element.authors.map(item => item.author.department_code).join();
-                        return element;
-                    });
+                axios.get('/api/my-publications').then(response => {
+                    this.data = response.data;
                     this.loading = false;
                 }).catch(() => {
                     this.loading = false;

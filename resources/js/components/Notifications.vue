@@ -1,6 +1,6 @@
 <template>
 
-    <div class="container">
+    <div class="container general-block">
         <h1 class="blue-page-title">Перегляд повідомлень</h1>
         <div class="page-content">
             <template v-if="notifications.length > 0">
@@ -9,7 +9,7 @@
                 <ul class=" notifications-list mb-75">
                     <li class="notifications-item cursor" v-for="item in notifications" :key="item.id" @click="watchedNotification(item)">
                         <p class="date">{{ item.date }}</p>
-                        <p class="text">{{ item.text }}</p>
+                        <p class="text" v-html="item.text"></p>
                     </li>
                 </ul>
             </template>
@@ -19,7 +19,7 @@
             <ul class=" notifications-list before" v-if="viewedNotifications.length > 0">
                 <li class="notifications-item" v-for="item in viewedNotifications" :key="item.id">
                     <p class="date">{{ item.date }}</p>
-                    <p class="text">{{ item.text }}</p>
+                    <p class="text" v-html="item.text"></p>
                 </li>
             </ul>
             <div class="step-button-group">

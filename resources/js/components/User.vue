@@ -1,37 +1,28 @@
 <template>
-
-    <div class="container">
+    <div class="container general-block">
         <h1 class="blue-page-title">Профіль - {{ data.name }}</h1>
         <div class="page-content">
             <ul class=" list-view">
-
-
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Прізвище, ім’я, по-батькові:</div>
-                    <div class="col-lg-9 list-item list-text">
-                        <div class="input-container" v-if="user.roles_id == 4">
-                            <input class="item-value" type="text" v-model="data.name">
-                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                        </div>
-                        <div v-else>
-                            {{data.name}}
-                        </div>
-                    </div>
-
+                    <div class="col-lg-9 list-item list-text">{{data.name}}</div>
+                </li>
+                <li class="row">
+                    <div class="col-lg-3 list-item list-title">Дата народження:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.date_bth}}</div>
                 </li>
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Роль:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="user.roles_id == 4">
-                            <select  v-model="data.roles_id">
+                            <select v-model="data.roles_id">
                                 <option
                                     v-for="(item, index) in roles"
                                     :key="index"
                                     :value="item.id"
                                 >{{item.name}}</option>
-
                             </select>
-                            <div class="hint" ><span>title</span></div>
+                            <div class="hint"><span>title</span></div>
                         </div>
                         <template v-else>
                             {{data.role.name}}
@@ -39,77 +30,50 @@
                     </div>
                 </li>
                 <li class="row">
-                    <div class="col-lg-3 list-item list-title">Посада в СумДУ:</div>
-                    <div class="col-lg-9 list-item list-text">
-                        <div class="input-container" v-if="user.roles_id == 4">
-                            <input class="item-value" type="text" v-model="data.job">
-                            <div class="hint" ><span>title</span></div>
-                        </div>
-                        <div v-else>
-                            {{data.job}}
-                        </div>
-                    </div>
+                    <div class="col-lg-3 list-item list-title">Місце роботи:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.job}}</div>
                 </li>
-                <li class="row">
+                <li class="row" v-if="data.position">
+                    <div class="col-lg-3 list-item list-title">Посада:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.position}}</div>
+                </li>
+                <li class="row" v-if="data.faculty">
                     <div class="col-lg-3 list-item list-title">Інститут/факультет:</div>
-                    <div class="col-lg-9 list-item list-text">
-                        <div class="input-container" v-if="user.roles_id == 4">
-                            <select v-model="data.faculty_code">
-                                <option value=""></option>
-                                <option
-                                    v-for="(item, index) in divisions.institute"
-                                    :key="index"
-                                    :value="item.ID_DIV"
-                                >{{item.NAME_DIV}}</option>
-                            </select>
-                        </div>
-                        <div v-else>
-                            {{divisions.institute.map(item => item.ID_DIV == data.faculty_code ? item.NAME_DIV : "")}}
-                        </div>
-                    </div>
+                    <div class="col-lg-9 list-item list-text">{{data.faculty}}</div>
+                </li>
+                <li class="row" v-if="data.department">
+                    <div class="col-lg-3 list-item list-title">Кафедра:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.department}}</div>
+                </li>
+                <li class="row" v-if="data.academic_code">
+                    <div class="col-lg-3 list-item list-title">Академічна група:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.academic_code}}</div>
                 </li>
                 <li class="row">
-                    <div class="col-lg-3 list-item list-title">Кафедра:</div>
-                    <div class="col-lg-9 list-item list-text">
-                        <div class="input-container" v-if="user.roles_id == 4">
-                            <select v-model="data.department_code">
-                                <option value=""></option>
-                                <option
-                                    v-for="(item, index) in divisions.department"
-                                    :key="index"
-                                    :value="item.ID_DIV"
-                                >{{item.NAME_DIV}}</option>
-                            </select>
-                        </div>
-                        <div v-else>
-                            {{divisions.department.map(item => item.ID_DIV == data.department_code ? item.NAME_DIV : "")}}
-                        </div>
-                    </div>
+                    <div class="col-lg-3 list-item list-title">Країна:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.country}}</div>
                 </li>
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Індекс Гірша:</div>
                     <div class="col-lg-9  list-item list-text d-flex">
                         <div class="col-lg-6 two-col pr-2">
-                            <label for="">БД Scopus</label>
-                            <div class=" input-container" v-if="user.roles_id == 4">
+                            <label>БД Scopus</label>
+                            <div class="input-container" v-if="user.roles_id == 4">
                                 <input class="item-value" type="text" v-model="data.scopus_autor_id">
-                                <div class="hint" ><span>title</span></div>
                             </div>
                             <div v-else>
                                 {{data.scopus_autor_id}}
                             </div>
                         </div>
                         <div class="col-lg-6 two-col">
-                            <label for="">БД WoS</label>
-                            <div class=" input-container" v-if="user.roles_id == 4">
+                            <label>БД WoS</label>
+                            <div class="input-container" v-if="user.roles_id == 4">
                                 <input class="item-value" type="text" v-model="data.h_index">
-                                <div class="hint" ><span>title</span></div>
                             </div>
                             <div v-else>
                                 {{data.h_index}}
                             </div>
                         </div>
-
                     </div>
                 </li>
                 <li class="row">
@@ -117,7 +81,6 @@
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="user.roles_id == 4">
                             <input class="item-value" type="text" v-model="data.scopus_researcher_id">
-                            <div class="hint" ><span>title</span></div>
                         </div>
                         <div v-else>
                             {{data.scopus_researcher_id}}
@@ -129,17 +92,27 @@
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="user.roles_id == 4">
                             <input class="item-value" type="text" v-model="data.orcid">
-                            <div class="hint" ><span>title</span></div>
                         </div>
                         <div v-else>
                             {{data.scopus_researcher_id}}
                         </div>
                     </div>
                 </li>
-
+                <li class="row" v-if="userRole == 4">
+                    <div class="col-lg-3 list-item list-title">5 або більше публікацій в Scopus та/або WoS:</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container">
+                            <select v-model="data.five_publications">
+                                <option value=""></option>
+                                <option value="1">Так</option>
+                                <option value="0">Ні</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
             </ul>
-
             <div class="text-center">
+                <router-link :to="'/home'" tag="button" class="btn save-btn bg-primary">Назад</router-link>
                 <button class="btn save-btn" @click="save()" v-if="user.roles_id == 4">Зберегти</button>
             </div>
         </div>
@@ -151,56 +124,43 @@
     export default {
         data() {
             return {
-                departments: [],
-                divisions: {
-                    institute: [],
-                    department: []
-                },
                 data: {
                     name: "",
-                    roles_id: "",
-                    country: "",
-                    h_index: "",
-                    scopus_researcher_id: "",
-                    academic_code: "",
-                    faculty_code: "",
-                    department_code: "",
-                    orcid: "",
-                    email: "",
-                    job: "",
                     role: {
                         name: ""
-                    }
+                    },
+                    date_bth: "",
+                    job: "",
+                    position: "",
+                    faculty: "",
+                    department: "",
+                    academic_code: "",
+                    country: "",
+                    scopus_autor_id: "",
+                    h_index: "",
+                    scopus_researcher_id: "",
+                    orcid: "",
+                    five_publications: ""
                 },
-                country: [],
                 roles: []
             };
         },
         mounted () {
             this.getData();
-            this.getCountry();
             this.getRoles();
-            this.getDivisions();
         },
         computed: {
             user() {
                 return this.$store.getters.authUser
             },
+            userRole() {
+                return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null
+            }
         },
         methods: {
-            getDivisions() {
-                axios.get('/api/divisions').then(response => {
-                    this.divisions = response.data;
-                })
-            },
             getData() {
                 axios.get(`/api/author/${this.$route.params.id}`).then(response => {
                     this.data = response.data;
-                })
-            },
-            getCountry() {
-                axios.get('/api/country').then(response => {
-                    this.country = response.data;
                 })
             },
             getRoles() {
@@ -221,10 +181,7 @@
     }
 </script>
 <style lang="scss" scoped>
-
-
-
-    .save-btn{
+    .save-btn {
         margin-top: 50px;
         padding: 27px 85px;
         font-family: Arial;
@@ -236,23 +193,14 @@
         color: #FFFFFF;
         background: #7EF583;
         border-radius: 6px;
-
-
-
     }
     @media (max-width: 575px) {
-
-
         .save-btn{
             margin-top: 25px;
             padding: 15px 40px;
             font-size: 20px;
             line-height: 24px;
             border-radius: 6px;
-
         }
-
     }
-
-
 </style>

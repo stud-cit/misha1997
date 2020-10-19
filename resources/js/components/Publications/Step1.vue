@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <p class="step-subtitle">
             Крок 1 з 4.
         </p>
@@ -20,13 +19,12 @@
                 <div class="input-container">
                     <input v-model="stepData.title" type="text" list="names" @input="findNames">
                     <datalist id="names">
-                        <option v-for="(item, index) in names" :key="index" :value="item">{{item}}</option>
+                        <option v-for="(item, index) in names" :key="index" :value="item.title">{{item.title}}</option>
                     </datalist>
                 </div>
                 <div class="error" v-if="$v.stepData.title.$error">
                     Поле обов'язкове для заповнення
                 </div>
-
             </div>
             <div class="form-row">
                 <div class="form-group col-lg-4">
@@ -45,34 +43,21 @@
                     <label >Вид публікації *</label>
                     <div class="input-container">
                         <select  v-model.trim="stepData.publication_type" v-if="stepData.science_type_id">
-
                             <option v-for="(item, i) in publicationTypes" :key="i" v-show="item.scopus_wos" :value="item">{{item.title }}</option>
-
-
                         </select>
                         <select  v-model.trim="stepData.publication_type" v-else>
-
                             <option v-for="(item, i) in publicationTypes" :key="i" :value="item">{{item.title  }}</option>
-
-
                         </select>
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
                     </div>
-
                     <div class="error" v-if="$v.stepData.publication_type.$error">
                         Поле обов'язкове для заповнення
                     </div>
-
                 </div>
-
             </div>
-
-
-
         </div>
-
         <div class="step-button-group">
-            <router-link :to="'/home'" tag="button" class="prev">Назад</router-link>
+            <router-link :to="this.$route.name == 'publications-edit' ? '/publications' : '/home'" tag="button" class="prev">Назад</router-link>
             <button class="next" @click="nextStep" >Продовжити </button>
         </div>
     </div>
@@ -97,11 +82,12 @@
                     whose_publication: 'my',
                     title: '',
                     science_type_id: '',
-                    publication_type: null
+                    publication_type: null,
+                    publication_type_id: null
                 }
             }
         },
-        props : {
+        props: {
             publicationData: Object
         },
         mounted() {
@@ -127,7 +113,7 @@
         methods: {
             findNames() {
                 this.names = this.publicationNames.filter(item => {
-                    return item.indexOf(this.stepData.title) + 1
+                    return item.title.indexOf(this.stepData.title) + 1
                 })
             },
             checkPublicationData() {
@@ -165,22 +151,17 @@
                 } else {
                     this.$parent.isScopus = false;
                 }
-                //
                 let editTitle = false;
-
-                if(this.$route.name == 'publications-edit'){
+                if(this.$route.name == 'publications-edit') {
                     editTitle = this.parseString(this.stepData.title) == this.parseString(this.publicationData.title);
                 }
-
-                if(!this.publicationNames.includes(this.parseString(this.stepData.title)) | editTitle){
+                if(!this.publicationNames.find(item => item.title == this.stepData.title) || editTitle) {
                     this.$emit('getData', this.stepData);
-                }
-                else{
+                } else {
                     swal("Публікація з такою назвою вже існує!", {
                         icon: "error",
                     });
                 }
-
             },
             parseString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");

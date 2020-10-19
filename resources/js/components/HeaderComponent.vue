@@ -12,10 +12,11 @@
                 <div class="collapse navbar-collapse" id="navbarNav" v-if="$route.name != 'auth'">
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle"  href="#" data-toggle="dropdown" >Мої публікації
+                            <a class="nav-link dropdown-toggle"  href="#" data-toggle="dropdown" >Меню публікацій
                                 <img class="ml-1 pb2" src="/img/arrow-down.svg" alt=""></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <router-link :to="{name: 'publications'}" class="dropdown-item">Переглянути список публікацій</router-link>
+                                <router-link :to="{name: 'my-publications'}" class="dropdown-item">Мої публікації</router-link>
+                                <router-link :to="{name: 'publications'}" class="dropdown-item">Cписок усіх публікацій</router-link>
                                 <router-link
                                     v-if="userRole == 4 || access == 'open'"
                                     :to="{name: 'publications-add'}"
@@ -84,8 +85,11 @@
                 this.$store.dispatch('setAccess', mode)
             },
             exit() {
-                this.$store.dispatch('logout')
-                this.$router.push({path: '/'})
+                axios.post('/api/logout').then(() => {
+                    window.location.href = '/';
+                }).catch(() => {
+                    console.log("error")
+                })
             }
         },
         watch: {

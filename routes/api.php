@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 // Авторизация юзера
 Route::get('check-user', 'AuthController@checkUser');
 Route::post('register', 'AuthController@register');
+Route::post('logout', 'AuthController@logout');
 
 Route::group(['middleware' => ['web']], function() {
 
@@ -20,6 +21,7 @@ Route::group(['middleware' => ['web']], function() {
 
     //author
     Route::post('author', 'AuthorsController@postAuthor');
+    Route::post('author-ssu', 'AuthorsController@postAuthorSSU');
     Route::get('author/{id}', 'AuthorsController@getId');
     Route::post('update-author/{id}','AuthorsController@updateAuthor');
     Route::post('delete-author/{id}','AuthorsController@deleteAuthor');
@@ -39,6 +41,7 @@ Route::group(['middleware' => ['web']], function() {
     //publications
     Route::get('publications-names', 'PublicationsController@getAllNames'); // всі назви публікацій
     Route::get('publications', 'PublicationsController@getAll'); // всі публікації з додатковими залежностями
+    Route::get('my-publications', 'PublicationsController@getMyPublications');
     Route::get('publication/{id}', 'PublicationsController@getId');
     Route::post('publication', 'PublicationsController@post');
 

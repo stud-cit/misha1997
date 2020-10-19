@@ -29,6 +29,10 @@ class AuthorsController extends ASUController
         }
         // $data = Authors::with('role')->get();
         foreach ($data as $key => $value) {
+            $value['position'] = $this->getPosition($value);
+            if($value['date_bth']) {
+                $value['age'] = $this->calculateAge($value['date_bth']);
+            }
             foreach($divisions->original['department']  as $k => $v) {
                 if ($value['department_code'] == $v['ID_DIV']) {
                     $value['department'] = $v['NAME_DIV'];
@@ -48,6 +52,8 @@ class AuthorsController extends ASUController
         $divisions = $this->getDivisions();
         $data = Authors::with('role')->get();
         foreach ($data as $key => $value) {
+            $value['position'] = $this->getPosition($value);
+            $value['age'] = $this->calculateAge($value['date_bth']);
             foreach($divisions->original['department']  as $k => $v) {
                 if ($value['department_code'] == $v['ID_DIV']) {
                     $value['department'] = $v['NAME_DIV'];
@@ -68,16 +74,47 @@ class AuthorsController extends ASUController
         $mode = 1;
         $getPersons = file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key='.$asu_key.'&mode='.$mode.'&'.$categ.'='.$id);
         $getPersons = json_decode($getPersons, true);
-        return response()->json($getPersons);
+        $result = [];
+        foreach ($getPersons['result'] as $key => $value) {
+            array_push($result, [
+                "name" => $value['F_FIO'] . " " . $value['I_FIO'] . " " . $value['O_FIO'],
+                "kod_div" => $value['KOD_DIV'],
+                "name_div" => ($categ == 'categ1' && $id == 4) || $categ == 'categ2' ? $value['NAME_DIV'] : $value['NAME_GROUP'],
+                "categ_1" => $value['CATEG_1'],
+                "categ_2" => $value['CATEG_2'],
+                "job" => ($categ == 'categ1' && $id == 2) ? null : "СумДУ",
+                "country" => "Україна",
+                "academic_code" => ($categ == 'categ1' && $id == 2) ? $value['NAME_GROUP'] : null,
+                "guid" => $value['ID_FIO']
+            ]);
+        }
+        return response()->json($result);
     }
 
-    // profile
+    // profile (Сторінка профілю)
     function profile(Request $request) {
+        $divisions = $this->getDivisions();
         $data = Authors::with('role')->find($request->session()->get('person')['id']);
+        $data->position = $this->getPosition($data);
+        foreach($divisions->original['institute'] as $k => $v) {
+            if ($data->faculty_code == $v['ID_DIV']) {
+                $data->faculty = $v['NAME_DIV'];
+            }
+        }
+        foreach($divisions->original['department']  as $k => $v) {
+            if ($data->department_code == $v['ID_DIV']) {
+                $data->department = $v['NAME_DIV'];
+                foreach($divisions->original['institute'] as $k2 => $v2) {
+                    if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                        $data->faculty = $v2['NAME_DIV'];
+                    }
+                }
+            }
+        }
         return response()->json($data);
     }
 
-    // updateProfile
+    // updateProfile (Оновлення информації профілю)
     function updateProfile(Request $request) {
         $data = $request->all();
         Authors::find($request->session()->get('person')['id'])->update($data);
@@ -85,39 +122,78 @@ class AuthorsController extends ASUController
         return response()->json($user);
     }
 
-    // getId
+    // getId (Користувач по id)
     function getId($id) {
+        $divisions = $this->getDivisions();
         $data = Authors::with('publications', 'role', 'notifications')->where("id", $id)->first();
+        foreach($divisions->original['institute'] as $k => $v) {
+            if ($data->faculty_code == $v['ID_DIV']) {
+                $data->faculty = $v['NAME_DIV'];
+            }
+        }
+        foreach($divisions->original['department']  as $k => $v) {
+            if ($data->department_code == $v['ID_DIV']) {
+                $data->department = $v['NAME_DIV'];
+                foreach($divisions->original['institute'] as $k2 => $v2) {
+                    if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                        $data->faculty = $v2['NAME_DIV'];
+                    }
+                }
+            }
+        }
         return response()->json($data);
     }
 
     // postAuthor (add publication page)
     function postAuthor(Request $request) {
         if(!Authors::where("name", "like", $request->name)->exists()) {
-            $divisions = $this->getDivisions();
             $model = new Authors();
             $data = $request->all();
             $response = $model->create($data);
-
-            foreach($divisions->original['department']  as $k => $v) {
-                if ($response['department_code'] == $v['ID_DIV']) {
-                    $response['department'] = $v['NAME_DIV'];
-                }
-            }
-            foreach($divisions->original['institute'] as $k => $v) {
-                if ($response['faculty_code'] == $v['ID_DIV']) {
-                    $response['faculty'] = $v['NAME_DIV'];
-                }
-            }
-
-            return response()->json([
-                "status" => "ok",
-                "user" => $response
-            ]);
+            return response('ok', 200);
         } else {
-            return response()->json([
-                "status" => "error"
-            ]);
+            return response()->json(['message' => 'Автор вже зареєстрований в системі'], 500);
+        }
+    }
+
+    // postAuthorSSU
+    function postAuthorSSU(Request $request) {
+        if(!Authors::where("name", "like", $request->name)->exists()) {
+            $divisions = $this->getDivisions();
+            $model = new Authors();
+            $data = $request->all();
+            $data['department_code'] = null;
+            $data['faculty_code'] = null;
+
+            foreach($divisions->original['department'] as $k2 => $v2) {
+                if ($request->kod_div == $v2['ID_DIV']) {
+                    $data['department_code'] = $v2['ID_DIV'];
+                }
+            }
+
+            if($data['department_code']) {
+                foreach($divisions->original['department']  as $k => $v) {
+                    if ($data['department_code'] == $v['ID_DIV']) {
+                        foreach($divisions->original['institute'] as $k2 => $v2) {
+                            if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                                $data['faculty_code'] = $v2['ID_DIV'];
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach($divisions->original['institute'] as $k2 => $v2) {
+                if ($request->kod_div == $v2['ID_DIV']) {
+                    $data['faculty_code'] = $v2['ID_DIV'];
+                }
+            }
+
+            $model->create($data);
+
+            return response()->json(["status" => "ok"]);
+        } else {
+            return response()->json(["status" => "error"]);
         }
     }
 
@@ -161,4 +237,31 @@ class AuthorsController extends ASUController
         ]);
         return response('ok', 200);
     }
+
+    // Визначити посаду
+    function getPosition($data) {
+        $result = "";
+        if($data->categ_1 == 1) {
+            $result = "Студент";
+        } elseif ($data->categ_1 == 2) {
+            $result = "Аспірант";
+        } elseif ($data->categ_2 == 1) {
+            $result = "Співробітник";
+        } elseif ($data->categ_2 == 2) {
+            $result = "Викладач";
+        } else {
+            $result = "";
+        }
+        return $result;
+    }
+
+    // Визначення віку користувача
+    function calculateAge($birthday) {
+        $birthday_timestamp = strtotime($birthday);
+        $age = date('Y') - date('Y', $birthday_timestamp);
+        if (date('md', $birthday_timestamp) > date('md')) {
+            $age--;
+        }
+        return $age;
+      }
 }

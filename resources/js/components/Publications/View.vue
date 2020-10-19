@@ -1,7 +1,7 @@
 <template>
 
 
-    <div class="container">
+    <div class="container general-block">
 
         <h1 class="blue-page-title">{{data.title}}</h1>
         <transition name="component-fade" mode="out-in">

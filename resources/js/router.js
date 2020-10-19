@@ -2,11 +2,16 @@ import Vue from "vue";
 import Router from "vue-router";
 import store from './store.js'
 
+import auth from './middleware/auth';
+import guest from './middleware/guest';
+import register from './middleware/register';
+
 import Home from "./components/Home";
 import Auth from "./components/Auth";
 import Profile from "./components/Profile";
 import User from "./components/User";
 import Publications from "./components/Publications/Index";
+import MyPublications from "./components/Publications/My";
 import PublicationsAdd from "./components/Publications/Add";
 import PublicationsView from "./components/Publications/View";
 import PublicationsEdit from "./components/Publications/Edit";
@@ -23,15 +28,25 @@ let router = new Router({
         {
             path: '/',
             name: 'auth',
-            component: Auth
+            component: Auth,
+            meta: {
+                middleware: guest
+            }
+        },
+        {
+            path: '/cabinet*',
+            name: 'cabinet',
+            component: Home,
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '/home',
             name: 'home',
             component: Home,
             meta: {
-                requiresRegister: false,
-                roles: [1, 2, 3, 4]
+                middleware: auth
             }
         },
         {
@@ -39,7 +54,7 @@ let router = new Router({
             name: 'register',
             component: Register,
             meta: {
-                requiresAuth: false
+                middleware: register
             }
         },
         {
@@ -47,7 +62,7 @@ let router = new Router({
             name: 'profile',
             component: Profile,
             meta: {
-                requiresRegister: false,
+                middleware: auth
             }
         },
         {
@@ -55,7 +70,7 @@ let router = new Router({
             name: 'user',
             component: User,
             meta: {
-                requiresRegister: false,
+                middleware: auth
             }
         },
         {
@@ -63,8 +78,15 @@ let router = new Router({
             name: 'publications',
             component: Publications,
             meta: {
-                requiresRegister: false,
-                roles: [1, 2, 3, 4]
+                middleware: auth
+            }
+        },
+        {
+            path: '/my-publications',
+            name: 'my-publications',
+            component: MyPublications,
+            meta: {
+                middleware: auth
             }
         },
         {
@@ -72,16 +94,14 @@ let router = new Router({
             name: 'publications-add',
             component: PublicationsAdd,
             meta: {
-                requiresRegister: false,
-                roles: [1, 2, 3, 4]
+                middleware: auth
             }
         },
         {
             path: '/publications/:id',
             component: PublicationsView,
             meta: {
-                requiresRegister: false,
-                roles: [1, 2, 3, 4]
+                middleware: auth
             }
         },
         {
@@ -89,8 +109,7 @@ let router = new Router({
             name: 'publications-edit',
             component: PublicationsEdit,
             meta: {
-                requiresRegister: false,
-                roles: [1, 2, 3, 4]
+                middleware: auth
             }
         },
         {
@@ -98,8 +117,7 @@ let router = new Router({
             name: 'notifications',
             component: Notifications,
             meta: {
-                requiresRegister: false,
-                roles: [1, 2, 3, 4]
+                middleware: auth
             }
         },
         {
@@ -107,8 +125,7 @@ let router = new Router({
             name: 'users',
             component: Users,
             meta: {
-                requiresRegister: false,
-                roles: [2, 3, 4]
+                middleware: auth
             }
         },
         {
@@ -120,38 +137,24 @@ let router = new Router({
     ]
 });
 
+function nextFactory(context, middleware, index) {
+    const subsequentMiddleware = middleware[index];
+    if (!subsequentMiddleware) return context.next;
+    return (...parameters) => {
+        context.next(...parameters);
+        const nextMiddleware = nextFactory(context, middleware, index + 1);
+        subsequentMiddleware({ ...context, next: nextMiddleware });
+    };
+}
+
 router.beforeEach((to, from, next) => {
-    if(to.matched.some(record => record.meta.requiresAuth)) {
-        if(!store.getters.authUser) {
-            next();
-        } else {
-            next({
-                path: '/',
-                params: { nextUrl: to.fullPath }
-            });
-        }
-    } else if (to.matched.some(record => record.meta.requiresRegister)) {
-        axios.get('/api/check-user')
-        .then((response) => {
-            if(response.data.status == 'register') {
-                store.dispatch('setUser', response.data.user)
-                next();
-            } else if(response.data.status == 'login') {
-                next({
-                    path: '/register',
-                    params: { nextUrl: to.fullPath }
-                });
-            } else {
-                store.dispatch('logout')
-                next({
-                    path: '/',
-                    params: { nextUrl: to.fullPath }
-                });
-            }
-        })
-    } else {
-        next();
+    if (to.meta.middleware) {
+        const middleware = Array.isArray(to.meta.middleware) ? to.meta.middleware : [to.meta.middleware];
+        const context = { from, next, router, to, store };
+        const nextMiddleware = nextFactory(context, middleware, 1);
+        return middleware[0]({ ...context, next: nextMiddleware });
     }
-})
+    return next();
+});
 
 export default router

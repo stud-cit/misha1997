@@ -1,5 +1,4 @@
 <template>
-
     <div class=" auth-block">
         <div class="container page-content">
             <h1 class="title">Виконайте авторизацію</h1>
@@ -7,42 +6,31 @@
             <div class="text-center"><a href="#" class="open_auth" @click="open_auth">Авторизуватись через кабінет СумДУ</a></div>
         </div>
     </div>
-
-
 </template>
 
 <script>
-
     export default {
         data() {
             return {
                 auth_window: '',
-
             };
-        },
-        components: {
-
-        },
-        created () {
-
         },
         methods: {
             conditional_reload() {
                 let location = '';
                 try {
                     location = this.auth_window.location.toString()
-                    this.$store.dispatch('setKey', location.split('=')[1])
                 } catch (err) {
                     console.log(err);
                 }
-                if (location.indexOf("scipub.") > 0) {
+                if (location.indexOf("jv.") > 0) {
                     this.auth_window.close();
                     window.location.href = '/home';
                 }
             },
             open_auth() {
                 const strWindowFeatures = "menubar=no,location=no,resizable=no,scrollbars=yes,status=no,width=600,height=600";
-                this.auth_window = window.open("http://cabinet.sumdu.edu.ua/index/service/TNWcmzpZ", "Вход/Реєстрація через Кабинет", strWindowFeatures);
+                this.auth_window = window.open("http://cabinet.sumdu.edu.ua/index/service/7B4DIDiV", "Вход/Реєстрація через Кабинет", strWindowFeatures);
                 setInterval(this.conditional_reload, 250);
                 return false;
             }

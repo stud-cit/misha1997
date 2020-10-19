@@ -1,5 +1,5 @@
 <template>
-    <div class="container page-content">
+    <div class="container page-content general-block">
         <h1 class="page-title">Редагувати публікацію</h1>
         <transition name="component-fade" mode="out-in">
             <keep-alive>
@@ -50,11 +50,13 @@
 
                 axios.get(`/api/publication/${this.$route.params.id}`).then(response => {
                     this.publicationData = response.data;
+                    this.stepData = response.data;
                 }).catch(error => {
                     console.log(error);
                 });
             },
             getStepData(event){
+                this.publicationData = Object.assign(this.publicationData, event);
                 this.stepData = Object.assign(this.stepData, event);
 
                 if(this.currentStep !== 4) {
@@ -79,9 +81,18 @@
                     // this.currentStep++;
                 } else {
                     this.stepData.out_data = this.outDataParser(this.stepData);
+                    if(this.stepData.science_type_id == 1) {
+                        this.stepData.quartil_wos = null;
+                        this.stepData.impact_factor = null;
+                        this.stepData.sub_db_index = null;
+                    }
+                    if(this.stepData.science_type_id == 2) {
+                        this.stepData.snip = null;
+                        this.stepData.quartil_scopus = null;
+                    }
+                    console.log(this.stepData)
                     axios.post(`/api/update-publication/${this.$route.params.id}`, this.stepData)
                         .then((response) => {
-
                             swal("Публікацію успішно змінено!", {
                                 icon: "success",
                             });

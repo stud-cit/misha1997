@@ -1,91 +1,63 @@
 <template>
-
-    <div class="container">
+    <div class="container general-block">
         <h1 class="blue-page-title">Ваш профіль</h1>
         <div class="page-content">
-            <ul class=" list-view">
-
-
+            <ul class="list-view">
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Прізвище, ім’я, по-батькові:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.name}}</div>
+                </li>
+                <li class="row">
+                    <div class="col-lg-3 list-item list-title">Дата народження:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container">
-                            <input class="item-value" type="text" v-model="data.name">
-                            <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                            <input class="item-value" type="date" v-model="data.date_bth">
                         </div>
                     </div>
-
                 </li>
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Роль:</div>
                     <div class="col-lg-9 list-item list-text">{{data.role.name}}</div>
                 </li>
-                <!-- <li class="row">
-                    <div class="col-lg-3 list-item list-title">Рік народження:</div>
-                    <div class="col-lg-9 list-item list-text">
-                        <div class="input-container">
-                            <input class="item-value" type="text">
-                            <div class="hint" ><span>title</span></div>
-                        </div>
-                    </div>
-                </li> -->
                 <li class="row">
-                    <div class="col-lg-3 list-item list-title">Посада в СумДУ:</div>
-                    <div class="col-lg-9 list-item list-text">
-                        <div class="input-container">
-                            <input class="item-value" type="text" v-model="data.job">
-                            <div class="hint" ><span>title</span></div>
-                        </div>
-                    </div>
+                    <div class="col-lg-3 list-item list-title">Місце роботи:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.job}}</div>
                 </li>
-                <li class="row">
+                <li class="row" v-if="data.position">
+                    <div class="col-lg-3 list-item list-title">Посада:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.position}}</div>
+                </li>
+                <li class="row" v-if="data.faculty">
                     <div class="col-lg-3 list-item list-title">Інститут/факультет:</div>
-                    <div class="col-lg-9 list-item list-text">
-                        <div class="input-container">
-                            <select v-model="data.faculty_code">
-                                <option value=""></option>
-                                <option
-                                    v-for="(item, index) in divisions.institute"
-                                    :key="index"
-                                    :value="item.ID_DIV"
-                                >{{item.NAME_DIV}}</option>
-                            </select>
-                        </div>
-                    </div>
+                    <div class="col-lg-9 list-item list-text">{{data.faculty}}</div>
+                </li>
+                <li class="row" v-if="data.department">
+                    <div class="col-lg-3 list-item list-title">Кафедра:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.department}}</div>
+                </li>
+                <li class="row" v-if="data.academic_code">
+                    <div class="col-lg-3 list-item list-title">Академічна група:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.academic_code}}</div>
                 </li>
                 <li class="row">
-                    <div class="col-lg-3 list-item list-title">Кафедра:</div>
-                    <div class="col-lg-9 list-item list-text">
-                        <div class="input-container">
-                            <select v-model="data.department_code">
-                                <option value=""></option>
-                                <option
-                                    v-for="(item, index) in divisions.department"
-                                    :key="index"
-                                    :value="item.ID_DIV"
-                                >{{item.NAME_DIV}}</option>
-                            </select>
-                        </div>
-                    </div>
+                    <div class="col-lg-3 list-item list-title">Країна:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.country}}</div>
                 </li>
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Індекс Гірша:</div>
                     <div class="col-lg-9  list-item list-text d-flex">
                         <div class="col-lg-6 two-col pr-2">
-                            <label for="">БД Scopus</label>
+                            <label>БД Scopus</label>
                             <div class=" input-container">
                                 <input class="item-value" type="text" v-model="data.scopus_autor_id">
-                                <div class="hint" ><span>title</span></div>
                             </div>
                         </div>
                         <div class="col-lg-6 two-col">
-                            <label for="">БД WoS</label>
+                            <label>БД WoS</label>
                             <div class=" input-container">
                                 <input class="item-value" type="text" v-model="data.h_index">
-                                <div class="hint" ><span>title</span></div>
                             </div>
                         </div>
-
                     </div>
                 </li>
                 <li class="row">
@@ -93,9 +65,7 @@
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container">
                             <input class="item-value" type="text" v-model="data.scopus_researcher_id">
-                            <div class="hint" ><span>title</span></div>
                         </div>
-
                     </div>
                 </li>
                 <li class="row">
@@ -103,7 +73,6 @@
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container">
                             <input class="item-value" type="text" v-model="data.orcid">
-                            <div class="hint" ><span>title</span></div>
                         </div>
                     </div>
                 </li>
@@ -111,17 +80,18 @@
                     <div class="col-lg-3 list-item list-title">5 або більше публікацій в Scopus та/або WoS:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container">
-                            <input class="item-value" type="text" v-model="data.five_publications">
-                            <div class="hint" ><span>title</span></div>
+                            <select v-model="data.five_publications">
+                                <option value=""></option>
+                                <option value="1">Так</option>
+                                <option value="0">Ні</option>
+                            </select>
                         </div>
                     </div>
                 </li>
             </ul>
-
             <div class="text-center">
-                    <router-link :to="'/home'" tag="button" class="btn save-btn bg-primary">Назад</router-link>
-                    <button class="btn save-btn" @click="save()">Зберегти</button>
-
+                <router-link :to="'/home'" tag="button" class="btn save-btn bg-primary">Назад</router-link>
+                <button class="btn save-btn" @click="save()">Зберегти</button>
             </div>
         </div>
     </div>
@@ -132,37 +102,28 @@
     export default {
         data() {
             return {
-                departments: [],
-                divisions: {
-                    institute: [],
-                    department: []
-                },
                 data: {
                     name: "",
-                    roles_id: "",
-                    country: "",
-                    h_index: "",
-                    scopus_researcher_id: "",
-                    academic_code: "",
-                    faculty_code: "",
-                    department_code: "",
-                    orcid: "",
-                    email: "",
-                    job: "",
-                    five_publications: "",
                     role: {
                         name: ""
-                    }
-                },
-                country: [],
-                roles: []
+                    },
+                    date_bth: "",
+                    job: "",
+                    position: "",
+                    faculty: "",
+                    department: "",
+                    academic_code: "",
+                    country: "",
+                    scopus_autor_id: "",
+                    h_index: "",
+                    scopus_researcher_id: "",
+                    orcid: "",
+                    five_publications: ""
+                }
             };
         },
         mounted() {
             this.getData();
-            this.getCountry();
-            this.getRoles();
-            this.getDivisions();
         },
         computed: {
             userRole() {
@@ -170,25 +131,9 @@
             }
         },
         methods: {
-            getDivisions() {
-                axios.get('/api/divisions').then(response => {
-                    this.divisions = response.data;
-                })
-            },
             getData() {
                 axios.get(`/api/profile`).then(response => {
-                    console.log(response.data)
                     this.data = response.data;
-                })
-            },
-            getCountry() {
-                axios.get('/api/country').then(response => {
-                    this.country = response.data;
-                })
-            },
-            getRoles() {
-                axios.get('/api/roles').then(response => {
-                    this.roles = response.data;
                 })
             },
             save() {

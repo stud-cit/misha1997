@@ -11,7 +11,7 @@ class Authors extends Model
     protected $fillable = [
         'guid',
         'name',
-        'email',
+        'date_bth',
         'job',
         'faculty_code',
         'department_code',
@@ -26,6 +26,8 @@ class Authors extends Model
         'categ_2',
         'five_publications'
     ];
+
+    protected $hidden = ['created_at', 'updated_at'];
 
     function role() {
         return $this->belongsTo('App\Models\Roles', 'roles_id');
