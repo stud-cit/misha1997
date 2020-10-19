@@ -1,6 +1,9 @@
 <template>
     <div class="container page-content general-block">
         <h1 class="page-title">Список працівників</h1>
+        <div class="exports">
+            <button class="export-button" @click="exportUsers"><img src="/img/download.png" alt=""> Експорт списку користувачів</button>
+        </div>
         <div class="main-content">
             <form class="search-block">
                 <div class="form-group">
@@ -86,12 +89,50 @@
                 </div>
             </div>
         </div>
+        <table id="test" v-show="false">
+            <tr>
+                <td>cdsfdfsd</td>
+                <td>dfsfdsfds</td>
+            </tr>
+        </table>
+        <table id="exportUsers" v-show="false">
+            <tr>
+                <th>ID</th>
+                <th>ПІБ</th>
+                <th>Вік</th>
+                <th>Посада</th>
+                <th>Академічна група</th>
+                <th>Факультет/інститут</th>
+                <th>Кафедра</th>
+                <th>Країна</th>
+                <th>Індекс Гірша БД WoS</th>
+                <th>Індекс Гірша БД Scopus</th>
+                <th>Research ID</th>
+                <th>ORCID</th>
+                <th>5 або більше публікацій в Scopus та/або WoS</th>
+            </tr>
+            <tr v-for="(item, i) in filteredList" :key="i">
+                <td>{{i+1}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.age}}</td>
+                <td>{{item.position}}</td>
+                <td>{{item.academic_code}}</td>
+                <td>{{item.faculty}}</td>
+                <td>{{item.department}}</td>
+                <td>{{item.country}}</td>
+                <td>{{item.h_index}}</td>
+                <td>{{item.scopus_autor_id}}</td>
+                <td>{{item.scopus_researcher_id}}</td>
+                <td>{{item.orcid}}</td>
+                <td>{{item.five_publications ? "Так" : "Ні"}}</td>
+            </tr>
+        </table>
     </div>
 </template>
 
 <script>
+    import XLSX from 'xlsx';
     import {required, requiredIf} from "vuelidate/lib/validators";
-
     export default {
         data() {
             return {
@@ -158,11 +199,32 @@
                     this.loading = false;
                 })
             },
-            clean(){
+            clean() {
                 this.searchAuthor = '';
+            },
+            exportUsers() {
+                const authors = XLSX.utils.table_to_book(document.getElementById('exportUsers'));
+                const wb = XLSX.utils.book_new();
+                wb.SheetNames.push("Authors");
+                wb.Sheets.Authors = authors.Sheets.Sheet1;
+                wb.Sheets.Authors['!cols'] = [
+                    { wch: 5 },  // id
+                    { wch: 30 }, // ПІБ
+                    { wch: 5 },  // Вік
+                    { wch: 10 }, // Посада
+                    { wch: 20 }, // Академічна група
+                    { wch: 40 }, // Факультет/інститут
+                    { wch: 40 }, // Кафедра
+                    { wch: 15 }, // Країна
+                    { wch: 20 }, // Індекс Гірша БД WoS
+                    { wch: 20 }, // Індекс Гірша БД Scopus
+                    { wch: 10 }, // Research ID
+                    { wch: 10 }, // ORCID
+                    { wch: 40 }  // 5 або більше публікацій в Scopus та/або WoS
+                ];
+                XLSX.writeFile(wb, 'Authors.xlsx');
             }
-        },
-
+        }
     }
 </script>
 
@@ -170,9 +232,21 @@
     .search-block{
         margin-top: 60px;
     }
+    .exports{
+        display: grid;
+        justify-content: center;
+        margin-top: 50px;
+        .export-block{
+            display: grid;
+            margin-bottom: 20px;
+        }
+    }
     @media(max-width: 575px){
         .search-block{
             margin-top: 30px;
+        }
+        .exports{
+            margin-top: 25px;
         }
     }
 </style>

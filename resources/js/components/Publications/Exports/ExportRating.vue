@@ -664,7 +664,6 @@
         },
         created() {
             this.getDivisions();
-
         },
 
         methods: {
@@ -693,8 +692,6 @@
                 this.showFilters = true;
             },
             exportRating(){
-
-
                 const rating = XLSX.utils.table_to_book(document.getElementById('exportRating'));
                 const publications = XLSX.utils.table_to_book(document.getElementById('exportList'));
                 const wb = XLSX.utils.book_new();
@@ -712,26 +709,32 @@
 
                 wb.Sheets.Rating['!cols'] = wscols2;
                 wb.Sheets.Publications['!cols'] = [
-                    { wch: 5 },
-                    { wch: 30 },
-                    { wch: 20 },
-                    { wch: 10 },
-                    { wch: 10 },
-                    { wch: 10 },
-                    { wch: 10 },
-                    { wch: 15 },
-                    { wch: 10 },
-                    { wch: 15 },
-                    { wch: 15 },
-                    { wch: 40 },
-                    { wch: 50 },
-                    { wch: 50 },
-                    { wch: 10 },
-                    { wch: 10 },
-                    { wch: 30 },
-                    { wch: 30 }
+                    { wch: 5 },  // id
+                    { wch: 30 }, // Назва роботи(мовою оригіналу)
+                    { wch: 35 }, // Вид публікації
+                    { wch: 10 }, // Scopus
+                    { wch: 10 }, // WoS
+                    { wch: 15 }, // Країна видання
+                    { wch: 20 }, // Вихідні дані
+                    { wch: 15 }, // К-сть сторінок
+                    { wch: 10 }, // Номер (том)
+                    { wch: 10 }, // Посада
+                    { wch: 30 }, // Прізвище, ім'я
+                    { wch: 15 }, // Під керівництвом
+                    { wch: 35 }, // Прізвище, ініціали наукового керівника
+                    { wch: 50 }, // Факультет/країна(для співавторів - громадян інших країн)
+                    { wch: 70 }, // Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ)
+                    { wch: 10 }, // Іноземець
+                    { wch: 5 },  // Рік
+                    { wch: 25 }, // Квартиль журналу Scopus
+                    { wch: 25 }, // Квартиль журналу WoS
+                    { wch: 5 },  // SNIP
+                    { wch: 20 }, // Імпакт-фактор (БД WoS)
+                    { wch: 15 }, // Підбаза WoS
+                    { wch: 30 }, // Опубліковано мовами ОЕСР та ЄС
+                    { wch: 10 }, // Мова
+                    { wch: 10 }, // DOI
                 ];
-
                 XLSX.writeFile(wb, 'Rating.xlsx');
             }
         },
