@@ -106,8 +106,8 @@
                         <th scope="col">Рік видання</th>
                         <th scope="col">БД Scopus\WoS</th>
                         <th scope="col">Науковий керівник</th>
-                        <th scope="col" v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)"></th>
-                        <th scope="col" v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)"></th>
+                        <th scope="col" v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)">Редагувати</th>
+                        <th scope="col" v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)">Обрати</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -150,7 +150,7 @@
                 </paginate>
                 <div class="edit-block" v-if="access == 'open'">
                     <router-link :to="'/home'" tag="button" class="mr-2">Назад</router-link>
-                    <button class="mr-2 delete" @click="deletePublications">Видалити</button>
+                    <button class="ml-2 delete" @click="deletePublications" :disabled="selectPublications.length == 0">Видалити</button>
                 </div>
             </div>
         </div>
@@ -273,7 +273,7 @@
                         .then(() => {
                             this.selectPublications = [];
                             this.getData();
-                            swal("Публікація успішно видалена", {
+                            swal("Публікації успішно видалені", {
                                 icon: "success",
                             });
                         });

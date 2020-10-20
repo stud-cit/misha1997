@@ -53,6 +53,8 @@
                         <th scope="col">Вік</th>
                         <th scope="col">Індекс Гірша Scopus</th>
                         <th scope="col">Індекс Гірша WoS</th>
+                        <th scope="col">5 або більше публікацій в Scopus та/або WoS</th>
+                        <th scope="col" v-if="authUser.roles_id == 4">Обрати</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -65,6 +67,14 @@
                         <td>{{ item.age }}</td>
                         <td>{{ item.scopus_autor_id }}</td>
                         <td>{{ item.h_index }}</td>
+                        <td>{{item.five_publications ? "Так" : "Ні"}}</td>
+                        <td class="icons" v-if="authUser.roles_id == 4">
+                            <input
+                                type="checkbox"
+                                :checked="selectUsers.indexOf(item) != -1 ? true : false"
+                                @click="selectItem(item)"
+                            >
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -86,15 +96,10 @@
                 </paginate>
                 <div class="step-button-group">
                     <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
+                    <button class="ml-2 delete" @click="deleteItem" :disabled="selectUsers.length == 0">Видалити</button>
                 </div>
             </div>
         </div>
-        <table id="test" v-show="false">
-            <tr>
-                <td>cdsfdfsd</td>
-                <td>dfsfdsfds</td>
-            </tr>
-        </table>
         <table id="exportUsers" v-show="false">
             <tr>
                 <th>ID</th>
@@ -140,6 +145,7 @@
                 departments: [],
                 divisions: [],
                 data: [],
+                selectUsers: [],
                 filters: {
                     name: '',
                     faculty_code: '',
@@ -152,6 +158,9 @@
             };
         },
         computed: {
+            authUser() {
+                return this.$store.getters.authUser
+            },
             filteredList() {
                 let list = this.data.filter(users => {
                     let result = 1;
@@ -173,7 +182,6 @@
                 return list.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
             }
         },
-
         created() {
             this.getData();
             this.getDivisions();
@@ -192,7 +200,6 @@
             },
             getData() {
                 axios.get('/api/authors').then(response => {
-                    console.log(response.data)
                     this.data = response.data;
                     this.loading = false;
                 }).catch(() => {
@@ -201,6 +208,35 @@
             },
             clean() {
                 this.searchAuthor = '';
+            },
+			selectItem(item) {
+				if(this.selectUsers.indexOf(item) == -1) {
+					this.selectUsers.push(item);
+				} else {
+					this.selectUsers.splice(this.selectUsers.indexOf(item), 1);
+				}
+			},
+            deleteItem() {
+				swal({
+					title: "Бажаєте видалити?",
+					text: "Після видалення ви не зможете відновити дані!",
+					icon: "warning",
+					buttons: true,
+					dangerMode: true,
+				}).then((willDelete) => {
+					if (willDelete) {
+						axios.post('/api/delete-users', {
+                            users: this.selectUsers
+						})
+                        .then(() => {
+                            this.selectUsers = [];
+                            this.getData();
+                            swal("Користувачі успішно видалені", {
+                                icon: "success",
+                            });
+                        });
+					}
+				});
             },
             exportUsers() {
                 const authors = XLSX.utils.table_to_book(document.getElementById('exportUsers'));

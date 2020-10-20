@@ -42,6 +42,8 @@ class Publications extends Model
         'out_data',
         'name_magazine',
         'doi',
+        'nature_index',
+        'nature_science',
         'supervisor_id',
         'db_scopus_percent',
         'db_wos_percent'

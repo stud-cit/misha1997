@@ -41,10 +41,6 @@
             Step4,
         },
 
-        computed: {
-
-        },
-
         methods: {
             getPublicationData(){
 

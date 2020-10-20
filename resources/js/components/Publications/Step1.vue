@@ -11,7 +11,6 @@
                         <option value="my">Власна публікація</option>
                         <option value="another">Публікація співробітника кафедри</option>
                     </select>
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
             </div>
             <div class="form-group">
@@ -19,11 +18,14 @@
                 <div class="input-container">
                     <input v-model="stepData.title" type="text" list="names" @input="findNames">
                     <datalist id="names">
-                        <option v-for="(item, index) in names" :key="index" :value="item.title">{{item.title}}</option>
+                        <option v-for="(item, index) in names" :key="index" :value="item.title">{{item.publication_type.title}}</option>
                     </datalist>
                 </div>
                 <div class="error" v-if="$v.stepData.title.$error">
                     Поле обов'язкове для заповнення
+                </div>
+                <div class="error" v-if="errorName">
+                    Публікація вже додана на сайт: {{ errorName.title }} - {{ errorName.publication_type.title }}
                 </div>
             </div>
             <div class="form-row">
@@ -36,7 +38,6 @@
                             <option value="2">WoS</option>
                             <option value="3">Scopus та WoS</option>
                         </select>
-                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                     </div>
                 </div>
                 <div class="form-group col-lg-8">
@@ -76,7 +77,7 @@
                 names: [],
                 publicationTypes: [],
                 publicationNames: [],
-                errorName: false,
+                errorName: null,
                 prevVal: '',
                 stepData: {
                     whose_publication: 'my',
@@ -111,18 +112,17 @@
             }
         },
         methods: {
+            // пошук схожих назв публікацій
             findNames() {
                 this.names = this.publicationNames.filter(item => {
                     return item.title.indexOf(this.stepData.title) + 1
                 })
             },
             checkPublicationData() {
-                    if(this.publicationData && this.$route.name == 'publications-edit'){
-                        const {title, science_type_id, publication_type} = this.publicationData;
-                        this.stepData.title = title;
-                        this.stepData.science_type_id = science_type_id;
-                        this.stepData.publication_type = publication_type;
-                    }
+                    const {title, science_type_id, publication_type} = this.publicationData;
+                    this.stepData.title = title;
+                    this.stepData.science_type_id = science_type_id;
+                    this.stepData.publication_type = publication_type;
             },
             getTypePublications() {
                 axios.get(`/api/type-publications`).then(response => {
@@ -137,6 +137,7 @@
             changeScienceType(){
               this.stepData.publication_type = "";
             },
+            // перехід на наступний крок
             nextStep() {
                 this.$v.$touch()
                 if (this.$v.$invalid) {
@@ -155,13 +156,16 @@
                 if(this.$route.name == 'publications-edit') {
                     editTitle = this.parseString(this.stepData.title) == this.parseString(this.publicationData.title);
                 }
-                if(!this.publicationNames.find(item => item.title == this.stepData.title) || editTitle) {
-                    this.$emit('getData', this.stepData);
+
+                // перевірка унікальності назви і типу публікації
+                var findPublication = this.publicationNames.find(item => item.title.toLowerCase() == this.stepData.title.toLowerCase() && item.publication_type_id == this.stepData.publication_type_id);
+                if(findPublication) {
+                    this.errorName = findPublication;
+                    return;
                 } else {
-                    swal("Публікація з такою назвою вже існує!", {
-                        icon: "error",
-                    });
+                    this.errorName = null;
                 }
+                this.$emit('getData', this.stepData);
             },
             parseString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");

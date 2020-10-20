@@ -17,6 +17,7 @@ Route::group(['middleware' => ['web']], function() {
     //authors
     Route::get('authors', 'AuthorsController@get');
     Route::get('authors-all', 'AuthorsController@getAll');
+    Route::get('others-authors-name', 'AuthorsController@getOtherAuthorNames');
     Route::get('persons/{categ}/{id}', 'AuthorsController@getPersons');
 
     //author
@@ -24,7 +25,7 @@ Route::group(['middleware' => ['web']], function() {
     Route::post('author-ssu', 'AuthorsController@postAuthorSSU');
     Route::get('author/{id}', 'AuthorsController@getId');
     Route::post('update-author/{id}','AuthorsController@updateAuthor');
-    Route::post('delete-author/{id}','AuthorsController@deleteAuthor');
+    Route::post('delete-users','AuthorsController@deleteAuthor');
 
     // profile
     Route::post('profile', 'AuthorsController@updateProfile');

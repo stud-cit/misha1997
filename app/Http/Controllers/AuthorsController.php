@@ -144,21 +144,26 @@ class AuthorsController extends ASUController
         return response()->json($data);
     }
 
-    // postAuthor (add publication page)
+    function getOtherAuthorNames() {
+        $data = Authors::select('name', 'job')->where("guid", null)->get();
+        return response()->json($data);
+    }
+
+    // додання автора не з СумДУ
     function postAuthor(Request $request) {
-        if(!Authors::where("name", "like", $request->name)->exists()) {
+        if(!Authors::where("guid", null)->where("name", "like", $request->name)->where("job", "like", $request->job)->exists()) {
             $model = new Authors();
             $data = $request->all();
             $response = $model->create($data);
-            return response('ok', 200);
+            return response()->json(["status" => "ok"]);
         } else {
-            return response()->json(['message' => 'Автор вже зареєстрований в системі'], 500);
+            return response()->json(["status" => "error"]);
         }
     }
 
-    // postAuthorSSU
+    // додання автора з СумДУ
     function postAuthorSSU(Request $request) {
-        if(!Authors::where("name", "like", $request->name)->exists()) {
+        if(!Authors::where("guid", $request->guid)->where("name", "like", $request->name)->where("cated_1", $request->categ_1)->where("cated_2", $request->categ_2)->exists()) {
             $divisions = $this->getDivisions();
             $model = new Authors();
             $data = $request->all();
@@ -205,8 +210,10 @@ class AuthorsController extends ASUController
     }
 
     // deleteAuthor
-    function deleteAuthor($id) {
-        Authors::with('notifications')->find($id)->delete();
+    function deleteAuthor(Request $request) {
+        foreach ($request->users as $key => $user) {
+            Authors::find($user['id'])->delete();
+        }
         return response('ok', 200);
     }
 

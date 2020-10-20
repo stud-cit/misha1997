@@ -13,7 +13,7 @@ class PublicationsController extends ASUController
 {
     // всі назви поблікацій
     function getAllNames() {
-        $data = Publications::select('title')->get();
+        $data = Publications::select('title', 'publication_type_id')->with('publicationType')->get();
         return response()->json($data);
     }
 

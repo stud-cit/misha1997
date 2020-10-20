@@ -33,10 +33,10 @@
                     <div class="col-lg-3 list-item list-title">Місце роботи:</div>
                     <div class="col-lg-9 list-item list-text">{{data.job}}</div>
                 </li>
-                <li class="row" v-if="data.position">
+                <!-- <li class="row" v-if="data.position">
                     <div class="col-lg-3 list-item list-title">Посада:</div>
                     <div class="col-lg-9 list-item list-text">{{data.position}}</div>
-                </li>
+                </li> -->
                 <li class="row" v-if="data.faculty">
                     <div class="col-lg-3 list-item list-title">Інститут/факультет:</div>
                     <div class="col-lg-9 list-item list-text">{{data.faculty}}</div>

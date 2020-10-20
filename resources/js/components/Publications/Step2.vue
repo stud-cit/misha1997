@@ -62,11 +62,17 @@
                                 <div class="col-lg-3 list-item list-title">Прізвище, ім’я, по-батькові *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container hint-container">
-                                        <input class="item-value" type="text" v-model="newAuthor.name">
-                                        <div class="hint" ><span>Вказати прізвище, ім’я, по-батькові мовою оригіналу публікації:</span></div>
+                                        <input class="item-value" type="text" list="names" v-model="newAuthor.name" @input="findNames">
+                                        <datalist id="names">
+                                            <option v-for="(item, index) in names" :key="index" :value="item.name">{{ item.job }}</option>
+                                        </datalist>
+                                        <div class="hint"><span>Вказати прізвище, ім’я, по-батькові мовою оригіналу публікації:</span></div>
                                     </div>
                                     <div class="error" v-if="$v.newAuthor.name.$error">
                                         Поле обов'язкове для заповнення
+                                    </div>
+                                     <div class="error" v-if="errorName">
+                                        Автор вже зареєстрований в системи: {{ errorName.name }} - {{ errorName.job }}
                                     </div>
                                 </div>
                             </li>
@@ -74,12 +80,11 @@
                                 <div class="col-lg-3 list-item list-title">Місце роботи *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
-                                        <select class="item-value" v-model="jobType">
+                                        <select class="item-value" v-model="jobType" @change="setJobType">
                                             <option value="1">Учбовий заклад</option>
                                             <option value="2">Підприємство</option>
                                             <option value="0">Не працює</option>
                                         </select>
-                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                                     </div>
                                     <div class="error" v-if="$v.jobType.$error">
                                         Поле обов'язкове для заповнення
@@ -87,13 +92,26 @@
                                 </div>
                             </li>
                             <li class="row" v-if="jobType == 1 || jobType == 2">
-                                <div class="col-lg-3 list-item list-title">{{ jobType == 1 ? 'Назва учбового закладу' : 'Підприємство' }}</div>
+                                <div class="col-lg-3 list-item list-title">{{ jobType == 1 ? 'Назва учбового закладу *' : 'Підприємство *' }}</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
                                         <input class="item-value" type="text" v-model="newAuthor.job">
-                                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                                     </div>
                                     <div class="error" v-if="$v.newAuthor.job.$error">
+                                        Поле обов'язкове для заповнення
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="row" v-if="jobType == 2">
+                                <div class="col-lg-3 list-item list-title">Входить до списків Forbes та Fortune *</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <select v-model="stepData.forbes_fortune">
+                                            <option value="1">Так</option>
+                                            <option value="2">Ні</option>
+                                        </select>
+                                    </div>
+                                    <div class="error" v-if="$v.newAuthor.forbes_fortune.$error">
                                         Поле обов'язкове для заповнення
                                     </div>
                                 </div>
@@ -110,6 +128,9 @@
                                             >{{item.name}}</option>
                                         </select>
                                         <div class="hint" ><span>Країна автора</span></div>
+                                    </div>
+                                    <div class="error" v-if="$v.newAuthor.country.$error">
+                                        Поле обов'язкове для заповнення
                                     </div>
                                 </div>
                             </li>
@@ -315,10 +336,11 @@
                 persons: [],
                 supervisors: [],
                 authors: [],
-                job: "",
                 country: [],
                 otherAuthor: false,
-                defaultNewAuthor: {},
+                errorName: null,
+                otherAuthorNames: [],
+                names: [],
                 defaultNewAuthorSSU: {},
                 newAuthorSSU: {
                     name: '',
@@ -332,11 +354,12 @@
                 newAuthor: {
                     job: null,
                     name: '',
-                    country: '',
+                    country: null,
                     h_index: '',
                     scopus_autor_id: '',
                     scopus_researcher_id: '',
-                    orcid: ''
+                    orcid: '',
+                    forbes_fortune: null
                 },
                 stepData: {
                     useSupervisor: '0',
@@ -353,7 +376,6 @@
             Multiselect,
         },
         mounted() {
-            this.defaultNewAuthor = Object.assign(this.defaultNewAuthor, this.newAuthor);
             this.defaultNewAuthorSSU = Object.assign(this.defaultNewAuthorSSU, this.newAuthorSSU);
             if(this.publicationData.whose_publication == 'my') {
                 this.stepData.authors.push(this.$store.getters.authUser);
@@ -382,28 +404,42 @@
                 },
             },
             jobType: {
-                required: requiredIf ( function() {
-                    return this.otherAuthor == '2';
-                }),
+                required
             },
             newAuthor: {
-                required: requiredIf ( function() {
-                    return this.otherAuthor == '2';
-                }),
-
+                country: {
+                    required
+                },
                 job: {
-                    required: requiredIf ( function() {
+                    required: requiredIf(function() {
                         return this.jobType > 0;
-                    }),
+                    })
+                },
+                forbes_fortune: {
+                    required: requiredIf(function() {
+                        return this.jobType == 2;
+                    })
                 },
                 name: {
-                    required: requiredIf ( function() {
-                        return this.otherAuthor == '2';
-                    })
+                    required
                 },
             },
         },
         methods: {
+            // задає місце роботи для новго автора не з СумДУ
+            setJobType() {
+                if(this.jobType == 0) {
+                    this.newAuthor.job = "Не працює";
+                } else {
+                    this.newAuthor.job = null;
+                }
+            },
+            // пошук схожих імен авторів не з СумДУ
+            findNames() {
+                this.names = this.otherAuthorNames.filter(item => {
+                    return item.name.toLowerCase().indexOf(this.newAuthor.name.toLowerCase()) + 1
+                })
+            },
             checkPublicationData() {
                 if(this.publicationData && this.$route.name == 'publications-edit'){
                     const {supervisor, initials, authors} = this.publicationData;
@@ -413,19 +449,7 @@
                     this.stepData.authors = authors.map((a)=>a.author);
                 }
             },
-
-            getDepartments() {
-                this.departments = this.divisions.find(item => {
-                    return this.newAuthor.faculty_code == item.ID_DIV
-                }).departments;
-            },
-
-            getDivisions() {
-                axios.get('/api/sort-divisions').then(response => {
-                    this.divisions = response.data;
-                })
-            },
-
+            // форматування відображення списку авторів зареєстрованих на сайті (новий автор, керівник)
             nameWithInfo({name, faculty, department, academic_code, job, categ_1, categ_2}) {
                 if(name) {
                     if(categ_1 == 1) {
@@ -443,7 +467,7 @@
                     return "Пошук в базі данних сайту"
                 }
             },
-
+            // форматування відображення списку авторів із СумДУ в формі додання нового автора СумДУ
             nameWithInfoSSU({name, name_div}) {
                 if(name) {
                     if(name_div) {
@@ -481,6 +505,7 @@
                     }
                 }
             },
+            // додання автора в список авторів публікації
             addAuthor() {
                 this.stepData.authors.push({
                     name: '',
@@ -488,6 +513,7 @@
                     academic_code: ""
                 })
             },
+            // видалення автора із списку авторів публікації
             removeAuthor(i) {
                 if(this.stepData.authors.length>1) {
                     this.stepData.authors.splice(i, 1);
@@ -498,12 +524,40 @@
                     });
                 }
             },
+            // відображення форми додання автора з СумДУ (n = 1) та іншого (n = 2)
             showNewAuthor(n) {
-                this.getCountry();
-                this.getDivisions();
+                if(n == 1) {
+                    this.getDivisions();
+                }
+                if(n == 2) {
+                    this.getOtherAuthorNames();
+                    this.getCountry();
+                }
                 window.scrollTo(0,0);
                 this.otherAuthor = n;
             },
+            // сортування кафедр по факультету
+            getDepartments() {
+                this.departments = this.divisions.find(item => {
+                    return this.newAuthor.faculty_code == item.ID_DIV
+                }).departments;
+            },
+
+            //getters API
+            // імена користувачів не з СумДУ
+            getOtherAuthorNames() {
+                axios.get(`/api/others-authors-name`).then(response => {
+                    this.names = [];
+                    this.otherAuthorNames = response.data;
+                })
+            },
+            // всі користувачів зареєстровані на сайті
+            getAuthors() {
+                axios.get(`/api/authors-all`).then(response => {
+                    this.authors = response.data;
+                })
+            },
+            // список корисувачів з API ASU по обраній категорії
             getPersonAPI() {
                 if(this.selectCateg) {
                     this.loadingPersons = true;
@@ -518,31 +572,24 @@
                     })
                 }
             },
-            getAuthors() {
-                axios.get(`/api/authors-all`).then(response => {
-                    this.authors = response.data;
+            // всі країни
+            getCountry() {
+                axios.get('/api/country').then(response => {
+                    this.country = response.data;
+                })
+            },
+            // всі факультети, кафедри
+            getDivisions() {
+                axios.get('/api/sort-divisions').then(response => {
+                    this.divisions = response.data;
                 })
             },
 
-            addNewAuthor() {
-                this.newAuthor.job = (this.jobType == 1 || this.jobType == 2) ? this.newAuthor.job : "Не працює";
-                axios.post('/api/author', this.newAuthor)
-                .then((response) => {
-                    this.otherAuthor = false;
-                    this.getAuthors();
-                    this.newAuthor = this.defaultNewAuthor;
-                    swal("Автора успішно додано!", {
-                        icon: "success",
-                    });
-                }).catch((error) => {
-                    swal({
-                        icon: "error",
-                        title: 'Помилка',
-                        text: error.message
-                    });
-                })
-            },
+            // posts API
+            // додання новго автора з СумДУ
             addNewAuthorSSU() {
+                console.log(this.newAuthorSSU)
+                return
                 axios.post('/api/author-ssu', this.newAuthorSSU)
                 .then((response) => {
                     if(response.data.status == 'ok') {
@@ -562,12 +609,49 @@
                     }
                 })
             },
-            getCountry() {
-                axios.get('/api/country').then(response => {
-                    this.country = response.data;
+            // додання нового автора не з СумДУ
+            addNewAuthor() {
+                this.$v.$touch();
+                if (this.$v.newAuthor.$invalid) {
+                    swal("Не всі поля заповнено!", {
+                        icon: "error",
+                    });
+                    return;
+                }
+                var findAuthor = this.otherAuthorNames.find(item => item.name.toLowerCase() == this.newAuthor.name.toLowerCase() && item.job.toLowerCase() == this.newAuthor.job.toLowerCase());
+                if(findAuthor) {
+                    this.errorName = findAuthor;
+                    return;
+                } else {
+                    this.errorName = null;
+                }
+                axios.post('/api/author', this.newAuthor)
+                .then((response) => {
+                    this.otherAuthor = false;
+                    this.getAuthors();
+                    this.jobType = null;
+                    this.newAuthor = {
+                        job: null,
+                        name: '',
+                        country: null,
+                        h_index: '',
+                        scopus_autor_id: '',
+                        scopus_researcher_id: '',
+                        orcid: '',
+                        forbes_fortune: ''
+                    };
+                    this.$v.$reset();
+                    swal("Автора успішно додано!", {
+                        icon: "success",
+                    });
+                }).catch((error) => {
+                    swal({
+                        icon: "error",
+                        title: 'Помилка',
+                        text: error.message
+                    });
                 })
             },
-
         }
     }
 </script>

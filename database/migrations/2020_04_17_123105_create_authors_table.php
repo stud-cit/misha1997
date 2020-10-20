@@ -30,6 +30,7 @@ class CreateAuthorsTable extends Migration
             $table->foreignId('roles_id')->default(1); // роль
             $table->foreignId('categ_1')->nullable(); // categ_1 кабінету
             $table->foreignId('categ_2')->nullable(); // categ_2 кабінету
+            $table->boolean('forbes_fortune')->nullable(); // Входить до списків Forbes та Fortune
             $table->boolean('five_publications')->default(0); // 5 або більше публікацій в Scopus та/або WoS
             $table->timestamps();
         });

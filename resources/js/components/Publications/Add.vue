@@ -38,21 +38,12 @@
             Step3,
             Step4,
         },
-
-        computed: {
-
-        },
-
+        
         methods: {
-            ...mapGetters([
-                "getPublication"
-            ]),
             getStepData(event) {
                 this.stepData = Object.assign(this.stepData, event);
-
                 if(this.currentStep !== 4) {
                     // этот код скрывает 3 шаг
-
                     if(!this.isScopus && this.currentStep == 2){
                         this.currentStep+=2;
                         const falseScinceType = {
@@ -63,13 +54,10 @@
                             sub_db_index: null
                         };
                         this.stepData = Object.assign(this.stepData, falseScinceType);
-
                     }
                     else {
                         this.currentStep++;
                     }
-                    //
-
                     // this.currentStep++;
                 } else {
                     this.stepData.out_data = this.outDataParser(this.stepData);
