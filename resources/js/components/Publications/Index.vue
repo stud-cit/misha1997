@@ -4,7 +4,7 @@
 
         <!-- exports-->
         <div class="exports">
-            <export-rating :publicationTypes="publicationTypes" :years="years" :countries="countries" class="export-block"></export-rating>
+            <export-rating v-if="authUser.roles_id == 4" :publicationTypes="publicationTypes" :years="years" :countries="countries" class="export-block"></export-rating>
             <export-publications class="export-block" :exportList="exportPublication"></export-publications>
         </div>
         <!---->
@@ -148,8 +148,8 @@
                     prev-class="page-link"
                     next-class="page-link">
                 </paginate>
-                <div class="edit-block" v-if="access == 'open'">
-                    <router-link :to="'/home'" tag="button" class="mr-2">Назад</router-link>
+                <div class="step-button-group" v-if="access == 'open'">
+                    <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
                     <button class="ml-2 delete" @click="deletePublications" :disabled="selectPublications.length == 0">Видалити</button>
                 </div>
             </div>
@@ -230,7 +230,6 @@
 			},
             getData() {
                 axios.get('/api/publications').then(response => {
-                    console.log(response.data)
                     this.data = response.data.map(element => {
                         element.faculty_code = element.authors.map(item => item.author.faculty_code).join();
                         element.department_code = element.authors.map(item => item.author.department_code).join();

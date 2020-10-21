@@ -113,9 +113,9 @@
                     prev-class="page-link"
                     next-class="page-link">
                 </paginate>
-                <div class="edit-block" v-if="access == 'open'">
-                    <router-link :to="'/home'" tag="button" class="mr-2">Назад</router-link>
-                    <button class="mr-2 delete" @click="deletePublications" :disabled="selectPublications.length == 0">Видалити</button>
+                <div class="step-button-group" v-if="access == 'open'">
+                    <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
+                    <button class="ml-2 delete" @click="deletePublications" :disabled="selectPublications.length == 0">Видалити</button>
                 </div>
             </div>
         </div>

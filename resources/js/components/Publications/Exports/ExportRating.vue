@@ -1,9 +1,6 @@
 <template>
 <div>
-
-
-
-        <button class="export-button" @click="openFiltersPopup"><img src="/img/download.png" alt=""> Експорт рейтингових показників</button>
+        <button class="export-button" @click="openFiltersPopup"><img src="/img/download.png"> Експорт рейтингових показників</button>
 
         <div class="other-author" v-if="showFilters">
             <div class="popup-layout">
@@ -40,20 +37,6 @@
                                 </select>
                             </div>
                         </div>
-
-                        <!-- <div class="form-group col-lg-6">
-                            <label >Університет</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.university">
-                                    <option value=""></option>
-                                    <option value="1">Scopus</option>
-                                    <option value="2">WoS</option>
-                                    <option value="3">Scopus та WoS</option>
-                                </select>
-
-                            </div>
-                        </div> -->
-
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
@@ -245,10 +228,10 @@
                 </form>
                 <div class="step-button-group">
                     <button class="prev" @click="showFilters = false">Назад</button>
-                    <button class="next active" @click="getExportData">Експортувати дані </button>
-
+                    <button class="next active" @click="getExportData">
+                        <span class="spinner-border spinner-border-sm" v-show="loading" role="status" aria-hidden="true"></span> Експортувати дані
+                    </button>
                 </div>
-
             </div>
         </div>
 
@@ -584,37 +567,37 @@
                 <th>Мова</th>
                 <th>DOI</th>
             </tr>
-            <template v-for="(item, ind) in publicationsData" >
-            <tr v-for="(a, i) in item.authors" :key="i">
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ind+1}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.title}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.publication_type.title}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{(item.science_type_id && item.science_type_id != 2) ? 'Так' : 'Ні' }}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ (item.science_type_id && item.science_type_id != 1) ? 'Так' : 'Ні' }}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.country}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.out_data}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">'{{item.pages}}'</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">'{{item.number}}'</td>
+            <template v-for="(item, ind) in publicationsData">
+            <tr v-for="(a, i) in item.authors" :key="'publication_' + ind + '_author_' + i">
+                <td>{{ind + 1}}</td>
+                <td>{{item.title}}</td>
+                <td>{{ item.publication_type.title }}</td>
+                <td>{{ (item.science_type_id && item.science_type_id != 2) ? 'Так' : 'Ні' }}</td>
+                <td>{{ (item.science_type_id && item.science_type_id != 1) ? 'Так' : 'Ні' }}</td>
+                <td>{{item.country}}</td>
+                <td>{{item.out_data}}</td>
+                <td>'{{item.pages}}'</td>
+                <td>'{{item.number}}'</td>
                 <td v-if="a.author.categ_1 == 1">Студент</td>
                 <td v-else-if="a.author.categ_1 == 2">Аспірант</td>
                 <td v-else-if="a.author.categ_2 == 1">Співробітник</td>
                 <td v-else-if="a.author.categ_2 == 2">Викладач</td>
                 <td v-else></td>
-                <td >{{a.author.name}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? 'Так' : 'Ні'}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.supervisor ? item.supervisor.name : '' }}</td>
-                <td >{{a.author.faculty ? a.author.faculty : '' }}</td>
-                <td >{{a.author.department ? a.author.department : a.author.job}}</td>
-                <td >{{a.author.country == 'Україна' ? 'Ні' :  a.author.country ? 'Так' : 'Не вказано'}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.year}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_scopus}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_wos}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.snip}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.impact_factor}}</td>
-                <td v-if="i == 0 && item.sub_db_index == 1" :rowspan="item.authors.length">Science Citation Index Expanded (SCIE)</td>
-                <td v-if="i == 0 && item.sub_db_index == 2" :rowspan="item.authors.length">Social Science Citation Index</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.languages }}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.doi }}</td>
+                <td>{{a.author.name}}</td>
+                <td>{{item.supervisor ? 'Так' : 'Ні'}}</td>
+                <td>{{item.supervisor ? item.supervisor.name : '' }}</td>
+                <td>{{a.author.faculty ? a.author.faculty : '' }}</td>
+                <td>{{a.author.department ? a.author.department : a.author.job}}</td>
+                <td>{{a.author.country == 'Україна' ? 'Ні' :  a.author.country ? 'Так' : 'Не вказано'}}</td>
+                <td>{{item.year}}</td>
+                <td>{{item.quartil_scopus}}</td>
+                <td>{{item.quartil_wos}}</td>
+                <td>{{item.snip}}</td>
+                <td>{{item.impact_factor}}</td>
+                <td v-if="item.sub_db_index == 1">Science Citation Index Expanded (SCIE)</td>
+                <td v-if="item.sub_db_index == 2">Social Science Citation Index</td>
+                <td>{{ item.languages }}</td>
+                <td>{{ item.doi }}</td>
             </tr>
             </template>
         </table>
@@ -627,6 +610,7 @@
     export default {
         data() {
             return {
+                loading: false,
                 showFilters: false,
                 departments: [],
                 divisions: [],
@@ -673,6 +657,7 @@
                 })
             },
             getExportData() {
+                console.log(this.filters)
                 axios.post('/api/export', this.filters).then(response => {
                     this.publicationsData = response.data.publications;
                     this.ratingData = response.data.rating;
@@ -684,58 +669,66 @@
                 })
             },
             getDepartments() {
-                this.departments = this.divisions.find(item => {
+                if(this.filters.faculty == "") {
+                    this.filters.department = ''
+                }
+                let data = this.divisions.find(item => {
                     return this.filters.faculty == item.ID_DIV
-                }).departments;
+                });
+                this.departments = data ? data.departments : [];
             },
             openFiltersPopup() {
                 this.showFilters = true;
             },
-            exportRating(){
-                const rating = XLSX.utils.table_to_book(document.getElementById('exportRating'));
-                const publications = XLSX.utils.table_to_book(document.getElementById('exportList'));
-                const wb = XLSX.utils.book_new();
-                wb.SheetNames.push("Publications");
-                wb.SheetNames.push("Rating");
-                wb.Sheets.Publications = publications.Sheets.Sheet1;
-                wb.Sheets.Rating = rating.Sheets.Sheet1;
+            exportRating() {
+                this.loading = true;
+                setTimeout(() => {
+                    const rating = XLSX.utils.table_to_book(document.getElementById('exportRating'));
+                    const publications = XLSX.utils.table_to_book(document.getElementById('exportList'));
+                    const wb = XLSX.utils.book_new();
+                    wb.SheetNames.push("Publications");
+                    wb.SheetNames.push("Rating");
+                    wb.Sheets.Publications = publications.Sheets.Sheet1;
+                    wb.Sheets.Rating = rating.Sheets.Sheet1;
 
-                const wscols2 = [
-                    {wch:65},
-                    {wch:65},
-                    {wch:40},
-                    {wch:10}
-                ];
+                    const wscols2 = [
+                        {wch:65},
+                        {wch:65},
+                        {wch:40},
+                        {wch:10}
+                    ];
 
-                wb.Sheets.Rating['!cols'] = wscols2;
-                wb.Sheets.Publications['!cols'] = [
-                    { wch: 5 },  // id
-                    { wch: 30 }, // Назва роботи(мовою оригіналу)
-                    { wch: 35 }, // Вид публікації
-                    { wch: 10 }, // Scopus
-                    { wch: 10 }, // WoS
-                    { wch: 15 }, // Країна видання
-                    { wch: 20 }, // Вихідні дані
-                    { wch: 15 }, // К-сть сторінок
-                    { wch: 10 }, // Номер (том)
-                    { wch: 10 }, // Посада
-                    { wch: 30 }, // Прізвище, ім'я
-                    { wch: 15 }, // Під керівництвом
-                    { wch: 35 }, // Прізвище, ініціали наукового керівника
-                    { wch: 50 }, // Факультет/країна(для співавторів - громадян інших країн)
-                    { wch: 70 }, // Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ)
-                    { wch: 10 }, // Іноземець
-                    { wch: 5 },  // Рік
-                    { wch: 25 }, // Квартиль журналу Scopus
-                    { wch: 25 }, // Квартиль журналу WoS
-                    { wch: 5 },  // SNIP
-                    { wch: 20 }, // Імпакт-фактор (БД WoS)
-                    { wch: 15 }, // Підбаза WoS
-                    { wch: 30 }, // Опубліковано мовами ОЕСР та ЄС
-                    { wch: 10 }, // Мова
-                    { wch: 10 }, // DOI
-                ];
-                XLSX.writeFile(wb, 'Rating.xlsx');
+                    wb.Sheets.Rating['!cols'] = wscols2;
+                    wb.Sheets.Publications['!cols'] = [
+                        { wch: 5 },  // id
+                        { wch: 30 }, // Назва роботи(мовою оригіналу)
+                        { wch: 15 }, // Вид публікації
+                        { wch: 5 }, // Scopus
+                        { wch: 5 }, // WoS
+                        { wch: 5 }, // Країна видання
+                        { wch: 20 }, // Вихідні дані
+                        { wch: 5 }, // К-сть сторінок
+                        { wch: 5 }, // Номер (том)
+                        { wch: 10 }, // Посада
+                        { wch: 30 }, // Прізвище, ім'я
+                        { wch: 5 }, // Під керівництвом
+                        { wch: 25 }, // Прізвище, ініціали наукового керівника
+                        { wch: 50 }, // Факультет/країна(для співавторів - громадян інших країн)
+                        { wch: 50 }, // Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ)
+                        { wch: 10 }, // Іноземець
+                        { wch: 5 },  // Рік
+                        { wch: 5 }, // Квартиль журналу Scopus
+                        { wch: 25 }, // Квартиль журналу WoS
+                        { wch: 5 },  // SNIP
+                        { wch: 5 }, // Імпакт-фактор (БД WoS)
+                        { wch: 15 }, // Підбаза WoS
+                        { wch: 30 }, // Опубліковано мовами ОЕСР та ЄС
+                        { wch: 10 }, // Мова
+                        { wch: 10 }, // DOI
+                    ];
+                    XLSX.writeFile(wb, 'Rating.xlsx');
+                    this.loading = false;
+                }, 0);
             }
         },
 
@@ -743,6 +736,10 @@
 </script>
 
 <style lang="scss" scoped>
+    .spinner-border {
+        width: 25px;
+        height: 25px;
+    }
     .form-row{
         align-items: flex-end;
     }

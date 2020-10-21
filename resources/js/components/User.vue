@@ -111,9 +111,9 @@
                     </div>
                 </li>
             </ul>
-            <div class="text-center">
-                <router-link :to="'/home'" tag="button" class="btn save-btn bg-primary">Назад</router-link>
-                <button class="btn save-btn" @click="save()" v-if="user.roles_id == 4">Зберегти</button>
+            <div class="step-button-group">
+                <router-link :to="'/users'" tag="button" class="next">Назад</router-link>
+                <button class="ml-2 save-btn" @click="save()" v-if="user.roles_id == 4">Зберегти</button>
             </div>
         </div>
     </div>
@@ -182,14 +182,6 @@
 </script>
 <style lang="scss" scoped>
     .save-btn {
-        margin-top: 50px;
-        padding: 27px 85px;
-        font-family: Arial;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 30px;
-        line-height: 34px;
-        text-align: center;
         color: #FFFFFF;
         background: #7EF583;
         border-radius: 6px;

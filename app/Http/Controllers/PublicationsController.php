@@ -109,22 +109,64 @@ class PublicationsController extends ASUController
     // оновлення публікації
     function updatePublication(Request $request, $id) {
         $data = $request->all();
-        $model = Publications::with('supervisor')->find($id);
-        if($data['supervisor']) {
+        $model = Publications::with('supervisor', 'authors')->find($id);
+        $notificationText = "";
+
+        $notificationText .= "Корисувач " . $request->session()->get('person')['name'] . " оновив публікацію. " . $model->title . "\".<br>";
+
+        if($model->supervisor['id'] != $data['supervisor']['id']) {
             $data['supervisor_id'] = $data['supervisor']['id'];
-        } else {
+        } 
+        if($data['supervisor'] == null) {
             $data['supervisor_id'] = null;
         }
-        Publications::find($id)->update($data);
+
+        $oldAuthors = [];
+        foreach ($model->authors as $key => $value) {
+            array_push($oldAuthors, $value['autors_id']);
+        }
+
+        foreach ($data['authors'] as $key => $value) {
+            if(AuthorsPublications::where('autors_id', $value['id'])->where('publications_id', $id)->exists()) {
+                unset($oldAuthors[array_search($value['id'], $oldAuthors)]);
+            } else {
+                $authorsPublications = new AuthorsPublications;
+                $authorsPublications->autors_id = $value['id'];
+                $authorsPublications->publications_id = $id;
+                $authorsPublications->save();
+                $notificationText .= "Додано автора " . $value['name'] . ".<br>";
+            }
+        }
+
+        foreach ($oldAuthors as $key => $value) {
+            AuthorsPublications::where('autors_id', $value)->where('publications_id', $id)->delete();
+            $notificationText .= "Автора " . $this->test($model->authors, $value) . " видалено з публікації.<br>";
+        }
+
+        if($data['title'] != $model->title) {
+            $notificationText .= "Змінено назву " . $model->title . " на " . $data['title'] . "<br>";
+        }
+
+        $model->update($data);
+
         foreach ($data['authors'] as $k => $author) {
-            if($author['author']['id'] != $request->session()->get('person')['id']) {
+            if($author['id'] != $request->session()->get('person')['id']) {
                 Notifications::create([
-                    "autors_id" => $author['author']['id'],
-                    "text" => "Корисувач " . $request->session()->get('person')['name'] . " оновив публікацію. " . $model->name."\"."
+                    "autors_id" => $author['id'],
+                    "text" => $notificationText
                 ]);
             }
         }
+
         return response('ok', 200);
+    }
+
+    function test($data, $id) {
+        foreach ($data as $k => $author) {
+            if($author['id'] == $id) {
+                return $author['name'];
+            }
+        }
     }
 
     // видалення публікації
@@ -222,17 +264,25 @@ class PublicationsController extends ASUController
         }
 
         if($request->faculty != "") { // Інститут / факультет
-            $data->whereHas('authors', function($query) use($request) {
-                $query->whereHas('author', function($q) use($request) {
-                    $q->where('faculty_code', $request->faculty);
+            $data->where(function($query) use($request) {
+                $query->whereHas('authors', function($queryAuthors) use($request) {
+                    $queryAuthors->whereHas('author', function($queryAuthor) use($request) {
+                        $queryAuthor->where('faculty_code', $request->faculty);
+                    });
+                })->orWhereHas('supervisor', function($querySupervisor) use($request) {
+                    $querySupervisor->where('faculty_code', $request->faculty);
                 });
             });
         }
 
         if($request->department != "") { // Кафедра
-            $data->whereHas('authors', function($query) use($request) {
-                $query->whereHas('author', function($q) use($request) {
-                    $q->where('department_code', $request->department);
+            $data->where(function($query) use($request) {
+                $query->whereHas('authors', function($queryAuthors) use($request) {
+                    $queryAuthors->whereHas('author', function($queryAuthor) use($request) {
+                        $queryAuthor->where('department_code', $request->department)->orWhere('department_code', null);
+                    });
+                })->orWhereHas('supervisor', function($querySupervisor) use($request) {
+                    $querySupervisor->where('department_code', $request->department);
                 });
             });
         }

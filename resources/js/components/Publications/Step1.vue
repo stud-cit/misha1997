@@ -83,8 +83,7 @@
                     whose_publication: 'my',
                     title: '',
                     science_type_id: '',
-                    publication_type: null,
-                    publication_type_id: null
+                    publication_type: null
                 }
             }
         },
@@ -119,10 +118,12 @@
                 })
             },
             checkPublicationData() {
+                if(this.publicationData && this.$route.name == 'publications-edit'){
                     const {title, science_type_id, publication_type} = this.publicationData;
                     this.stepData.title = title;
                     this.stepData.science_type_id = science_type_id;
                     this.stepData.publication_type = publication_type;
+                }
             },
             getTypePublications() {
                 axios.get(`/api/type-publications`).then(response => {
@@ -158,12 +159,14 @@
                 }
 
                 // перевірка унікальності назви і типу публікації
-                var findPublication = this.publicationNames.find(item => item.title.toLowerCase() == this.stepData.title.toLowerCase() && item.publication_type_id == this.stepData.publication_type_id);
-                if(findPublication) {
-                    this.errorName = findPublication;
-                    return;
-                } else {
-                    this.errorName = null;
+                if(this.$route.name != 'publications-edit') {
+                    var findPublication = this.publicationNames.find(item => item.title.toLowerCase() == this.stepData.title.toLowerCase() && item.publication_type_id == this.stepData.publication_type.id);
+                    if(findPublication) {
+                        this.errorName = findPublication;
+                        return;
+                    } else {
+                        this.errorName = null;
+                    }
                 }
                 this.$emit('getData', this.stepData);
             },

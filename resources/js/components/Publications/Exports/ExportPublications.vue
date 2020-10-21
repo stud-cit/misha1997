@@ -3,7 +3,9 @@
 
 
 
-        <button class="export-button" @click="exportPublications('export')"><img src="/img/download.png" alt=""> Експорт публікацій word</button>
+        <button class="export-button" @click="exportPublications('export')">
+            <img src="/img/download.png" alt=""> Експорт публікацій word
+        </button>
         <div id="export" v-show="false">
             <template v-if="filteredData.articles[0]">
             <h2>	Статті</h2>

@@ -23,10 +23,10 @@
                     <div class="col-lg-3 list-item list-title">Місце роботи:</div>
                     <div class="col-lg-9 list-item list-text">{{data.job}}</div>
                 </li>
-                <!-- <li class="row" v-if="data.position">
-                    <div class="col-lg-3 list-item list-title">Посада:</div>
-                    <div class="col-lg-9 list-item list-text">{{data.position}}</div>
-                </li> -->
+                <li class="row" v-if="data.position">
+                    <div class="col-lg-3 list-item list-title">Входить до списків Forbes та Fortune:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.forbes_fortune ? "Так" : "Ні"}}</div>
+                </li>
                 <li class="row" v-if="data.faculty">
                     <div class="col-lg-3 list-item list-title">Інститут/факультет:</div>
                     <div class="col-lg-9 list-item list-text">{{data.faculty}}</div>
@@ -89,9 +89,9 @@
                     </div>
                 </li>
             </ul>
-            <div class="text-center">
-                <router-link :to="'/home'" tag="button" class="btn save-btn bg-primary">Назад</router-link>
-                <button class="btn save-btn" @click="save()">Зберегти</button>
+            <div class="step-button-group">
+                <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
+                <button class="ml-2 save-btn" @click="save()">Зберегти</button>
             </div>
         </div>
     </div>
@@ -118,6 +118,7 @@
                     h_index: "",
                     scopus_researcher_id: "",
                     orcid: "",
+                    forbes_fortune: "",
                     five_publications: ""
                 }
             };
@@ -150,39 +151,19 @@
     }
 </script>
 <style lang="scss" scoped>
-
-
-
-    .save-btn{
-        margin-top: 50px;
-        padding: 27px 85px;
-        font-family: Arial;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 30px;
-        line-height: 34px;
-        text-align: center;
+    .save-btn {
         color: #FFFFFF;
         background: #7EF583;
         border-radius: 6px;
-
-
-
     }
     @media (max-width: 575px) {
-
-
         .save-btn{
             margin-top: 25px;
             padding: 15px 40px;
             font-size: 20px;
             line-height: 24px;
             border-radius: 6px;
-
         }
-
     }
-
-
 </style>
 

@@ -32,7 +32,7 @@ class PublicationTypeSeeder extends Seeder
             'scopus_wos' => 1
         ]);
         DB::table('publication_type')->insert([
-            'title' => 'Посібник',
+            'title' => 'Посібник / Підручник',
             'type' => 'book',
             'scopus_wos' => 0
         ]);
