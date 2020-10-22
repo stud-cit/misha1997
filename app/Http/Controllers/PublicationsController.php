@@ -66,14 +66,16 @@ class PublicationsController extends ASUController
             }
         }
 
-        foreach($divisions->original['department']  as $k => $v) {
-            if ($data->supervisor['department_code'] == $v['ID_DIV']) {
-                $data->supervisor['department'] = $v['NAME_DIV'];
+        if($data->supervisor) {
+            foreach($divisions->original['department']  as $k => $v) {
+                if ($data->supervisor['department_code'] == $v['ID_DIV']) {
+                    $data->supervisor['department'] = $v['NAME_DIV'];
+                }
             }
-        }
-        foreach($divisions->original['institute'] as $k => $v) {
-            if ($data->supervisor['faculty_code'] == $v['ID_DIV']) {
-                $data->supervisor['faculty'] = $v['NAME_DIV'];
+            foreach($divisions->original['institute'] as $k => $v) {
+                if ($data->supervisor['faculty_code'] == $v['ID_DIV']) {
+                    $data->supervisor['faculty'] = $v['NAME_DIV'];
+                }
             }
         }
 
@@ -91,7 +93,20 @@ class PublicationsController extends ASUController
         }
         $response = $modelPublications->create($dataPublications);
 
+        $initials = [];
+
         foreach ($request->authors as $key => $value) {
+            $name = explode(" ", preg_replace('/\s+/', ' ', $value['name']));
+            $initial = "";
+            foreach($name as $k => $v) {
+                if($k == 0) {
+                    $initial .= $v . " ";
+                } else {
+                    $initial .= mb_substr($v, 0, 1) . ". ";
+                }
+            }
+            array_push($initials, trim($initial));
+
             $authorsPublications = new AuthorsPublications;
             $authorsPublications->autors_id = $value['id'];
             $authorsPublications->publications_id = $response->id;
@@ -103,6 +118,9 @@ class PublicationsController extends ASUController
                 ]);
             }
         }
+        Publications::find($response->id)->update([
+            'initials' => implode(", ", $initials)
+        ]);
         return response('ok', 200);
     }
 
@@ -110,11 +128,12 @@ class PublicationsController extends ASUController
     function updatePublication(Request $request, $id) {
         $data = $request->all();
         $model = Publications::with('supervisor', 'authors')->find($id);
+        $data['initials'] = [];
         $notificationText = "";
 
         $notificationText .= "Корисувач " . $request->session()->get('person')['name'] . " оновив публікацію. " . $model->title . "\".<br>";
 
-        if($model->supervisor['id'] != $data['supervisor']['id']) {
+        if($data['supervisor']) {
             $data['supervisor_id'] = $data['supervisor']['id'];
         } 
         if($data['supervisor'] == null) {
@@ -127,6 +146,17 @@ class PublicationsController extends ASUController
         }
 
         foreach ($data['authors'] as $key => $value) {
+            $name = explode(" ", preg_replace('/\s+/', ' ', $value['name']));
+            $initial = "";
+            foreach($name as $k => $v) {
+                if($k == 0) {
+                    $initial .= $v . " ";
+                } else {
+                    $initial .= mb_substr($v, 0, 1) . ". ";
+                }
+            }
+            array_push($data['initials'], trim($initial));
+
             if(AuthorsPublications::where('autors_id', $value['id'])->where('publications_id', $id)->exists()) {
                 unset($oldAuthors[array_search($value['id'], $oldAuthors)]);
             } else {
@@ -137,6 +167,8 @@ class PublicationsController extends ASUController
                 $notificationText .= "Додано автора " . $value['name'] . ".<br>";
             }
         }
+
+        $data['initials'] = implode(", ", $data['initials']);
 
         foreach ($oldAuthors as $key => $value) {
             AuthorsPublications::where('autors_id', $value)->where('publications_id', $id)->delete();

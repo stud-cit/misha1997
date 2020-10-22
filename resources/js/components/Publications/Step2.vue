@@ -275,7 +275,7 @@
                     </div>
                 </div>
             </transition>
-            <div class="form-group" v-show="stepData.authors.length > 0">
+            <!-- <div class="form-group" v-show="stepData.authors.length > 0">
                 <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
                 <div class="input-container hint-container">
                     <input class="item-value" type="text" v-model="stepData.initials">
@@ -284,7 +284,7 @@
                 <div class="error" v-if="$v.stepData.initials.$error">
                     Поле обов'язкове для заповнення
                 </div>
-            </div>
+            </div> -->
 
         </div>
         <div class="step-button-group">
@@ -365,7 +365,7 @@
                     useSupervisor: '0',
                     supervisor: '',
                     authors: [],
-                    initials: '',
+                    // initials: '',
                 }
             }
         },
@@ -399,9 +399,9 @@
                         }
                     }
                 },
-                initials: {
-                    required
-                },
+                // initials: {
+                //     required
+                // },
             },
             jobType: {
                 required
@@ -442,10 +442,10 @@
             },
             checkPublicationData() {
                 if(this.publicationData && this.$route.name == 'publications-edit'){
-                    const {supervisor, initials, authors} = this.publicationData;
+                    const {supervisor, authors} = this.publicationData;
                     this.stepData.useSupervisor = supervisor ? '1' : '0';
                     this.stepData.supervisor = supervisor;
-                    this.stepData.initials = initials;
+                    // this.stepData.initials = initials;
                     this.stepData.authors = authors.map((a)=>a.author);
                 }
             },
@@ -588,8 +588,6 @@
             // posts API
             // додання новго автора з СумДУ
             addNewAuthorSSU() {
-                console.log(this.newAuthorSSU)
-                return
                 axios.post('/api/author-ssu', this.newAuthorSSU)
                 .then((response) => {
                     if(response.data.status == 'ok') {

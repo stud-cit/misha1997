@@ -3,7 +3,6 @@
         <p class="step-subtitle">
             Крок 3 з 4.
         </p>
-        {{publicationData}}
         <div class=" step-content">
             <form class="form-block">
                 <div class="form-row" v-if="publicationData.science_type_id == 1 || publicationData.science_type_id == 3">

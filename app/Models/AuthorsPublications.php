@@ -11,13 +11,14 @@ class AuthorsPublications extends Model
 
     protected $fillable = [
         'autors_id',
-        'publications_id'
+        'publications_id',
+        'supervisor'
     ];
 
     function author() {
         return $this->belongsTo('App\Models\Authors', 'autors_id');
     }
-    function publications() {
+    function publication() {
         return $this->belongsTo('App\Models\Publications', 'publications_id');
     }
 }

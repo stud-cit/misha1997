@@ -125,22 +125,51 @@ class AuthorsController extends ASUController
     // getId (Користувач по id)
     function getId($id) {
         $divisions = $this->getDivisions();
-        $data = Authors::with('publications', 'role', 'notifications')->where("id", $id)->first();
-        foreach($divisions->original['institute'] as $k => $v) {
-            if ($data->faculty_code == $v['ID_DIV']) {
-                $data->faculty = $v['NAME_DIV'];
-            }
-        }
-        foreach($divisions->original['department']  as $k => $v) {
-            if ($data->department_code == $v['ID_DIV']) {
-                $data->department = $v['NAME_DIV'];
-                foreach($divisions->original['institute'] as $k2 => $v2) {
-                    if ($v['ID_PAR'] == $v2['ID_DIV']) {
-                        $data->faculty = $v2['NAME_DIV'];
-                    }
-                }
-            }
-        }
+        $data = Authors::with(
+            'publications.publication.authors.author',
+            'publications.publication.publicationType',
+            'publications.publication.scienceType',
+            'publications.publication.supervisor',
+            'role',
+            'notifications'
+        )->where("id", $id)->where(function($query) use ($id) {
+            $query->whereHas('publications.publication.supervisor', function ($subquery) use ($id) {
+                $subquery->where('id', $id);
+            });
+        })->first();
+
+        // foreach ($data->publications as $key => $value) {
+        //     if($value['publication']['supervisor']) {
+        //         $data = Authors::with(
+        //             'publications.publication.authors.author',
+        //             'publications.publication.publicationType',
+        //             'publications.publication.scienceType',
+        //             'publications.publication.supervisor',
+        //             'role',
+        //             'notifications'
+        //         )->where(function($query) use ($id) {
+        //             $query->whereHas('publications.publication.supervisor', function ($subquery) use ($id) {
+        //                 $subquery->where('id', $id);
+        //             });
+        //         })->first();
+        //     }
+        // }
+        
+        // foreach($divisions->original['institute'] as $k => $v) {
+        //     if ($data->faculty_code == $v['ID_DIV']) {
+        //         $data->faculty = $v['NAME_DIV'];
+        //     }
+        // }
+        // foreach($divisions->original['department']  as $k => $v) {
+        //     if ($data->department_code == $v['ID_DIV']) {
+        //         $data->department = $v['NAME_DIV'];
+        //         foreach($divisions->original['institute'] as $k2 => $v2) {
+        //             if ($v['ID_PAR'] == $v2['ID_DIV']) {
+        //                 $data->faculty = $v2['NAME_DIV'];
+        //             }
+        //         }
+        //     }
+        // }
         return response()->json($data);
     }
 
@@ -163,7 +192,7 @@ class AuthorsController extends ASUController
 
     // додання автора з СумДУ
     function postAuthorSSU(Request $request) {
-        if(!Authors::where("guid", $request->guid)->where("name", "like", $request->name)->where("cated_1", $request->categ_1)->where("cated_2", $request->categ_2)->exists()) {
+        if(!Authors::where("guid", $request->guid)->where("name", "like", $request->name)->exists()) {
             $divisions = $this->getDivisions();
             $model = new Authors();
             $data = $request->all();

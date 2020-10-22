@@ -49,7 +49,7 @@
                 </div>
                 <div class="form-group">
                     <label>Прізвище та ініціали автора</label>
-                    <div class="input-container hint-container">
+                    <div class="input-container">
                         <input type="text" v-model="filters.initials">
                     </div>
                 </div>
@@ -94,65 +94,11 @@
                     </div>
                 </div>
             </form>
-
-            <div class="table-responsive text-center table-list">
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">Вид пуб-ції</th>
-                        <th scope="col">Прізвище та ініціали автора\співавторів</th>
-                        <th scope="col">Назва публікації</th>
-                        <th scope="col">Рік видання</th>
-                        <th scope="col">БД Scopus\WoS</th>
-                        <th scope="col">Науковий керівник</th>
-                        <th scope="col" v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)">Редагувати</th>
-                        <th scope="col" v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)">Обрати</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(item, index) in filteredList" :key="index">
-                        <td scope="row">{{ index+1+(currentPage-1)*perPage }}</td>
-                        <td>{{ item.publication_type.title }}</td>
-                        <td>{{ item.initials }}</td>
-                        <td><router-link :to="{path: `/publications/${item.id}`}"> {{ item.title }} </router-link> </td>
-                        <td>{{ item.year}}</td>
-                        <td>{{ item.science_type ? item.science_type.type : '' }}</td>
-                        <td>{{ item.supervisor ? item.supervisor.name : '' }}</td>
-                        <td v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)">
-                            <router-link tag="i" class="fa fa-edit fa-2x" :to="{path: `/publications/edit/${item.id}`}"></router-link>
-                        </td>
-                        <td class="icons" v-if="authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1)">
-                            <input
-                                type="checkbox"
-                                :checked="selectPublications.indexOf(item) != -1 ? true : false"
-                                @click="selectItem(item)"
-                            >
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="spinner-border mt-4" role="status" v-if="loading">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <paginate
-                    v-model="currentPage"
-                    :page-count="numPage"
-
-                    :prev-text="'<'"
-                    :next-text="'>'"
-
-                    :container-class="'pagination'"
-                    page-class="page-item"
-                    page-link-class="page-link"
-                    prev-class="page-link"
-                    next-class="page-link">
-                </paginate>
-                <div class="step-button-group" v-if="access == 'open'">
-                    <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
-                    <button class="ml-2 delete" @click="deletePublications" :disabled="selectPublications.length == 0">Видалити</button>
-                </div>
-            </div>
+            <Table 
+                :publications="filteredList" 
+                :authUser="authUser" 
+                :loading="loading"
+            ></Table>
         </div>
     </div>
 </template>
@@ -160,7 +106,7 @@
 <script>
     import ExportRating from "./Exports/ExportRating";
     import ExportPublications from "./Exports/ExportPublications";
-
+    import Table from "../Tables/Publications";
     import XLSX from 'xlsx';
     export default {
         data() {
@@ -169,17 +115,12 @@
                 divisions: [],
                 names: [],
                 publicationNames: [],
-                selectPublications: [],
-                loading: true,
-                currentPage: 1,
-                perPage: 10,
-                numPage: 1,
-                fullSearch: false,
                 data: [],
                 countries: [],
                 publicationTypes: [],
                 exportData: {},
                 exportPublication: [],
+                loading: false,
                 filters: {
                     title: '',
                     initials: '',
@@ -195,8 +136,9 @@
         components: {
             ExportRating,
             ExportPublications,
+            Table
         },
-        mounted () {
+        mounted() {
             this.getData();
             this.getCountry();
             this.getTypePublications();
@@ -204,30 +146,14 @@
             this.getDivisions();
         },
         methods: {
+            // getters
+            // всі факультети, кафедри
             getDepartments() {
                 this.departments = this.divisions.find(item => {
                     return this.filters.faculty_code == item.ID_DIV
                 }).departments;
             },
-
-            getDivisions() {
-                axios.get('/api/sort-divisions').then(response => {
-                    this.divisions = response.data;
-                })
-            },
-
-            findNames() {
-                this.names = this.publicationNames.filter(item => {
-                    return item.indexOf(this.filters.title) + 1
-                })
-            },
-			selectItem(item) {
-				if(this.selectPublications.indexOf(item) == -1) {
-					this.selectPublications.push(item);
-				} else {
-					this.selectPublications.splice(this.selectPublications.indexOf(item), 1);
-				}
-			},
+            // всі публікації
             getData() {
                 axios.get('/api/publications').then(response => {
                     this.data = response.data.map(element => {
@@ -240,59 +166,52 @@
                     this.loading = false;
                 })
             },
+            // всі країни
             getCountry() {
                 axios.get('/api/country').then(response => {
                     this.countries = response.data;
                 })
             },
+            // всі типи пблікацій
             getTypePublications() {
                 axios.get(`/api/type-publications`).then(response => {
                     this.publicationTypes = response.data;
                 })
             },
+            // всі назви пцблікацій
             getNamesPublications() {
                 axios.get(`/api/publications-names`).then(response => {
                     this.publicationNames = response.data.map(n => this.parseString(n.title));
-
                 })
             },
-            deletePublications() {
-				swal({
-					title: "Бажаєте видалити?",
-					text: "Після видалення ви не зможете відновити дані!",
-					icon: "warning",
-					buttons: true,
-					dangerMode: true,
-				}).then((willDelete) => {
-					if (willDelete) {
-						axios.post('/api/delete-publications', {
-                            publications: this.selectPublications,
-                            user: this.authUser
-						})
-                        .then(() => {
-                            this.selectPublications = [];
-                            this.getData();
-                            swal("Публікації успішно видалені", {
-                                icon: "success",
-                            });
-                        });
-					}
-				});
+
+            // methods
+            // сортування кафедр по факультету
+            getDivisions() {
+                axios.get('/api/sort-divisions').then(response => {
+                    this.divisions = response.data;
+                })
             },
+            // пошук публікації по назві
+            findNames() {
+                this.names = this.publicationNames.filter(item => {
+                    return item.indexOf(this.filters.title) + 1
+                })
+            },
+            // форматування назви пулікації для фільтру
             parseString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
                 return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
             }
         },
         computed: {
+            // отримуємо авторизованого користувача із store
             authUser() {
                 return this.$store.getters.authUser
             },
-            access() {
-                return this.$store.getters.accessMode
-            },
+            // фільтр публікацій
             filteredList() {
-                let arr = this.data.filter(item => {
+                this.exportPublication = this.data.filter(item => {
                     let result = 1;
                     let keys = Object.keys(this.filters);
                     let values = Object.values(this.filters);
@@ -309,10 +228,9 @@
                     }
                     return result;
                 });
-                this.exportPublication = arr;
-                this.numPage = Math.ceil(arr.length/this.perPage);
-                return arr.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
+                return this.exportPublication;
             },
+            // список років
             years() {
                 const year = new Date().getFullYear();
                 return Array.from({length: 10}, (value, index) => year - index);

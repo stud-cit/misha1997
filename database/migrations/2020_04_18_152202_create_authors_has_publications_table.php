@@ -17,6 +17,7 @@ class CreateAuthorsHasPublicationsTable extends Migration
             $table->id();
             $table->foreignId('autors_id');
             $table->foreignId('publications_id');
+            $table->boolean('supervisor')->default(0);
         });
 
         Schema::table('authors_has_publications', function (Blueprint $table) {

@@ -14,7 +14,7 @@
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Роль:</div>
                     <div class="col-lg-9 list-item list-text">
-                        <div class="input-container" v-if="user.roles_id == 4">
+                        <div class="input-container" v-if="authUser.roles_id == 4">
                             <select v-model="data.roles_id">
                                 <option
                                     v-for="(item, index) in roles"
@@ -58,7 +58,7 @@
                     <div class="col-lg-9  list-item list-text d-flex">
                         <div class="col-lg-6 two-col pr-2">
                             <label>БД Scopus</label>
-                            <div class="input-container" v-if="user.roles_id == 4">
+                            <div class="input-container" v-if="authUser.roles_id == 4">
                                 <input class="item-value" type="text" v-model="data.scopus_autor_id">
                             </div>
                             <div v-else>
@@ -67,7 +67,7 @@
                         </div>
                         <div class="col-lg-6 two-col">
                             <label>БД WoS</label>
-                            <div class="input-container" v-if="user.roles_id == 4">
+                            <div class="input-container" v-if="authUser.roles_id == 4">
                                 <input class="item-value" type="text" v-model="data.h_index">
                             </div>
                             <div v-else>
@@ -79,7 +79,7 @@
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Research ID:</div>
                     <div class="col-lg-9 list-item list-text">
-                        <div class="input-container" v-if="user.roles_id == 4">
+                        <div class="input-container" v-if="authUser.roles_id == 4">
                             <input class="item-value" type="text" v-model="data.scopus_researcher_id">
                         </div>
                         <div v-else>
@@ -90,7 +90,7 @@
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">ORCID:</div>
                     <div class="col-lg-9 list-item list-text">
-                        <div class="input-container" v-if="user.roles_id == 4">
+                        <div class="input-container" v-if="authUser.roles_id == 4">
                             <input class="item-value" type="text" v-model="data.orcid">
                         </div>
                         <div v-else>
@@ -98,7 +98,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="row" v-if="userRole == 4">
+                <li class="row" v-if="authUser.roles_id == 4">
                     <div class="col-lg-3 list-item list-title">5 або більше публікацій в Scopus та/або WoS:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container">
@@ -111,16 +111,66 @@
                     </div>
                 </li>
             </ul>
+
+            <div class="table-responsive text-center table-list">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">№</th>
+                            <th scope="col">Вид пуб-ції</th>
+                            <th scope="col">Прізвище та ініціали автора\співавторів</th>
+                            <th scope="col">Назва публікації</th>
+                            <th scope="col">Рік видання</th>
+                            <th scope="col">БД Scopus\WoS</th>
+                            <th scope="col">Науковий керівник</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in filterList" :key="index">
+                            <td scope="row">{{ index + 1 + (pagination.currentPage - 1) * pagination.perPage }}</td>
+                            <td>{{ item.publication.publication_type.title }}</td>
+                            <td>
+                                <span class="authors" v-for="(author, index) in item.publication.authors" :key="index"><router-link :to="'/user/'+author.author.id">{{author.author.name}}{{item.publication.authors.length == index + 1 ? "" : ", "}}</router-link></span>
+                            </td>
+                            <td><router-link :to="{path: `/publications/${item.publication.id}`}"> {{ item.publication.title }} </router-link> </td>
+                            <td>{{ item.publication.year}}</td>
+                            <td>{{ item.publication.science_type ? item.publication.science_type.type : '' }}</td>
+                            <td>
+                                <router-link :to="'/user/'+item.publication.supervisor.id">{{ item.publication.supervisor.name }}</router-link>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="spinner-border my-4" role="status" v-if="loading">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="my-4" v-if="data.publications.length == 0">
+                    Піблікації відсутні
+                </div>
+            </div>
+            <paginate
+                v-model="pagination.currentPage"
+                :page-count="pagination.numPage"
+
+                :prev-text="'<'"
+                :next-text="'>'"
+
+                :container-class="'pagination'"
+                page-class="page-item"
+                page-link-class="page-link"
+                prev-class="page-link"
+                next-class="page-link">
+            </paginate>
             <div class="step-button-group">
-                <router-link :to="'/users'" tag="button" class="next">Назад</router-link>
-                <button class="ml-2 save-btn" @click="save()" v-if="user.roles_id == 4">Зберегти</button>
+                <back-button></back-button>
+                <save-button @click="save()" v-if="authUser.roles_id == 4"></save-button>
             </div>
         </div>
     </div>
 </template>
-
 <script>
-
+    import BackButton from "./Buttons/Back";
+    import SaveButton from "./Buttons/Save";
     export default {
         data() {
             return {
@@ -140,27 +190,41 @@
                     h_index: "",
                     scopus_researcher_id: "",
                     orcid: "",
-                    five_publications: ""
+                    five_publications: "",
+                    publications: []
                 },
+                pagination: {
+                    currentPage: 1,
+                    perPage: 10,
+                    numPage: 1
+                },
+                loading: false,
                 roles: []
             };
+        },
+        components: {
+            BackButton,
+            SaveButton
         },
         mounted () {
             this.getData();
             this.getRoles();
         },
         computed: {
-            user() {
+            authUser() {
                 return this.$store.getters.authUser
             },
-            userRole() {
-                return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null
+            filterList() {
+                this.pagination.numPage = Math.ceil(this.data.publications.length / this.pagination.perPage);
+                return this.data.publications.slice((this.pagination.currentPage - 1) * this.pagination.perPage, this.pagination.currentPage * this.pagination.perPage);
             }
         },
         methods: {
             getData() {
+                this.loading = true;
                 axios.get(`/api/author/${this.$route.params.id}`).then(response => {
                     this.data = response.data;
+                    this.loading = false;
                 })
             },
             getRoles() {
@@ -177,22 +241,11 @@
                 })
             }
         },
-
-    }
-</script>
-<style lang="scss" scoped>
-    .save-btn {
-        color: #FFFFFF;
-        background: #7EF583;
-        border-radius: 6px;
-    }
-    @media (max-width: 575px) {
-        .save-btn{
-            margin-top: 25px;
-            padding: 15px 40px;
-            font-size: 20px;
-            line-height: 24px;
-            border-radius: 6px;
+        watch: {
+            $route(to, from) {
+                this.data.publications = [];
+                this.getData();
+            }
         }
     }
-</style>
+</script>

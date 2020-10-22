@@ -78,26 +78,29 @@
                     </tr>
                     </tbody>
                 </table>
-                <div class="spinner-border mt-4" role="status" v-if="loading">
+                <div class="spinner-border my-4" role="status" v-if="loading">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <paginate
-                    v-model="currentPage"
-                    :page-count="numPage"
-
-                    :prev-text="'<'"
-                    :next-text="'>'"
-
-                    :container-class="'pagination'"
-                    page-class="page-item"
-                    page-link-class="page-link"
-                    prev-class="page-link"
-                    next-class="page-link">
-                </paginate>
-                <div class="step-button-group">
-                    <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
-                    <button class="ml-2 delete" @click="deleteItem" :disabled="selectUsers.length == 0">Видалити</button>
+                <div class="my-4 text-center" v-if="filteredList.length == 0">
+                    Кристувачі відсутні
                 </div>
+            </div>
+            <paginate
+                v-model="currentPage"
+                :page-count="numPage"
+
+                :prev-text="'<'"
+                :next-text="'>'"
+
+                :container-class="'pagination'"
+                page-class="page-item"
+                page-link-class="page-link"
+                prev-class="page-link"
+                next-class="page-link">
+            </paginate>
+            <div class="step-button-group">
+                <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
+                <button class="ml-2 delete" @click="deleteItem" :disabled="selectUsers.length == 0">Видалити</button>
             </div>
         </div>
         <table id="exportUsers" v-show="false">

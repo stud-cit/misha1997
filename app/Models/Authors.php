@@ -39,11 +39,6 @@ class Authors extends Model
     }
 
     function publications() {
-        return $this->hasManyThrough(
-            'App\Models\Publications',
-            'App\Models\AuthorsPublications',
-            'autors_id',
-            'id'
-        );
+        return $this->HasMany('App\Models\AuthorsPublications', 'autors_id');
     }
 }
