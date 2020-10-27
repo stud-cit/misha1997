@@ -46,8 +46,9 @@ class CreatePublicationsTable extends Migration
             $table->boolean('nature_index')->nullable(); // обліковується рейтингом Natire Index
             $table->string('nature_science')->nullable(); // обліковується рейтингом Natire Scuence
             $table->foreignId('supervisor_id')->nullable(); // керівник
-            $table->boolean('db_scopus_percent')->default(0); // до 10% за БД Scpous
-            $table->boolean('db_wos_percent')->default(0); // до 1% за БД WoS
+            $table->boolean('db_scopus_percent')->nullable(); // до 10% за БД Scpous
+            $table->boolean('db_wos_percent')->nullable(); // до 1% за БД WoS
+            $table->boolean('cited_international_patents')->nullable(); // процитовані у міжнародних патентах
             $table->timestamps();
         });
 
@@ -59,11 +60,6 @@ class CreatePublicationsTable extends Migration
         Schema::table('publications', function (Blueprint $table) {
             $table->index('publication_type_id');
             $table->foreign('publication_type_id')->references('id')->on('publication_type')->onDelete('cascade');
-        });
-
-        Schema::table('publications', function (Blueprint $table) {
-            $table->index('supervisor_id');
-            $table->foreign('supervisor_id')->references('id')->on('authors');
         });
     }
 

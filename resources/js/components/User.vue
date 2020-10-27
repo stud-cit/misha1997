@@ -33,10 +33,10 @@
                     <div class="col-lg-3 list-item list-title">Місце роботи:</div>
                     <div class="col-lg-9 list-item list-text">{{data.job}}</div>
                 </li>
-                <!-- <li class="row" v-if="data.position">
+                <li class="row" v-if="data.position">
                     <div class="col-lg-3 list-item list-title">Посада:</div>
                     <div class="col-lg-9 list-item list-text">{{data.position}}</div>
-                </li> -->
+                </li>
                 <li class="row" v-if="data.faculty">
                     <div class="col-lg-3 list-item list-title">Інститут/факультет:</div>
                     <div class="col-lg-9 list-item list-text">{{data.faculty}}</div>
@@ -130,13 +130,17 @@
                             <td scope="row">{{ index + 1 + (pagination.currentPage - 1) * pagination.perPage }}</td>
                             <td>{{ item.publication.publication_type.title }}</td>
                             <td>
-                                <span class="authors" v-for="(author, index) in item.publication.authors" :key="index"><router-link :to="'/user/'+author.author.id">{{author.author.name}}{{item.publication.authors.length == index + 1 ? "" : ", "}}</router-link></span>
+                                <span class="authors" v-for="(author, index) in item.publication.authors" :key="index">
+                                    <router-link v-if="!author.supervisor" :to="'/user/'+author.author.id">{{author.author.name}} </router-link>
+                                </span>
                             </td>
                             <td><router-link :to="{path: `/publications/${item.publication.id}`}"> {{ item.publication.title }} </router-link> </td>
                             <td>{{ item.publication.year}}</td>
                             <td>{{ item.publication.science_type ? item.publication.science_type.type : '' }}</td>
                             <td>
-                                <router-link :to="'/user/'+item.publication.supervisor.id">{{ item.publication.supervisor.name }}</router-link>
+                                <span class="authors" v-for="(author, index) in item.publication.authors" :key="index">
+                                    <router-link v-if="author.supervisor" :to="'/user/'+author.author.id">{{author.author.name}} </router-link>
+                                </span>
                             </td>
                         </tr>
                     </tbody>
@@ -163,7 +167,7 @@
             </paginate>
             <div class="step-button-group">
                 <back-button></back-button>
-                <save-button @click="save()" v-if="authUser.roles_id == 4"></save-button>
+                <save-button @click.native="save()" v-if="authUser.roles_id == 4"></save-button>
             </div>
         </div>
     </div>

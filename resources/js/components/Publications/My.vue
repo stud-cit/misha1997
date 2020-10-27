@@ -59,70 +59,25 @@
                     </div>
                 </div>
             </form>
-
-            <div class="table-responsive text-center table-list">
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">Вид публікації</th>
-                        <th scope="col">Прізвище та ініціали автора\співавторів</th>
-                        <th scope="col">Назва публікації</th>
-                        <th scope="col">Рік видання</th>
-                        <th scope="col">БД Scopus\WoS</th>
-                        <th scope="col">Науковий керівник</th>
-                        <th scope="col" v-if="access == 'open'"></th>
-                        <th scope="col" v-if="access == 'open'"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(item, index) in filteredList" :key="index">
-                        <td scope="row">{{ index+1+(currentPage-1)*perPage }}</td>
-                        <td>{{ item.publication_type.title }}</td>
-                        <td>{{ item.initials }}</td>
-                        <td><router-link :to="{path: `/publications/${item.id}`}"> {{ item.title }} </router-link></td>
-                        <td>{{ item.year}}</td>
-                        <td>{{ item.science_type ? item.science_type.type : '' }}</td>
-                        <td>{{ item.supervisor ? item.supervisor.name : '' }}</td>
-                        <td v-if="access == 'open'">
-                            <router-link tag="i" class="fa fa-edit fa-2x" :to="{path: `/publications/edit/${item.id}`}"></router-link>
-                        </td>
-                        <td class="icons" v-if="access == 'open'">
-                            <input
-                                type="checkbox"
-                                :checked="selectPublications.indexOf(item) != -1 ? true : false"
-                                @click="selectItem(item)"
-                            >
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="spinner-border mt-4" role="status" v-if="loading">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <paginate
-                    v-model="currentPage"
-                    :page-count="numPage"
-
-                    :prev-text="'<'"
-                    :next-text="'>'"
-
-                    :container-class="'pagination'"
-                    page-class="page-item"
-                    page-link-class="page-link"
-                    prev-class="page-link"
-                    next-class="page-link">
-                </paginate>
-                <div class="step-button-group" v-if="access == 'open'">
-                    <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
-                    <button class="ml-2 delete" @click="deletePublications" :disabled="selectPublications.length == 0">Видалити</button>
-                </div>
+            <Table 
+                @select="selectItem"
+                :publications="filteredList" 
+                :authUser="authUser" 
+                :loading="loading"
+                :selectPublications="selectPublications"
+            ></Table>
+            <div class="step-button-group">
+                <back-button></back-button>
+                <delete-button @click="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import Table from "../Tables/Publications";
+    import BackButton from "../Buttons/Back";
+    import DeleteButton from "../Buttons/Delete";
     export default {
         data() {
             return {
@@ -130,9 +85,6 @@
                 publicationNames: [],
                 selectPublications: [],
                 loading: true,
-                currentPage: 1,
-                perPage: 10,
-                numPage: 1,
                 data: [],
                 countries: [],
                 publicationTypes: [],
@@ -146,6 +98,11 @@
                 }
             };
         },
+        components: {
+            Table,
+            BackButton,
+            DeleteButton
+        },
         mounted () {
             this.getData();
             this.getCountry();
@@ -158,13 +115,13 @@
                     return item.indexOf(this.filters.title) + 1
                 })
             },
-			selectItem(item) {
-				if(this.selectPublications.indexOf(item) == -1) {
-					this.selectPublications.push(item);
-				} else {
-					this.selectPublications.splice(this.selectPublications.indexOf(item), 1);
-				}
-			},
+            selectItem(item) {
+                if(this.selectPublications.indexOf(item) == -1) {
+                    this.selectPublications.push(item);
+                } else {
+                    this.selectPublications.splice(this.selectPublications.indexOf(item), 1);
+                }
+            },
             getData() {
                 axios.get('/api/my-publications').then(response => {
                     this.data = response.data;
@@ -221,11 +178,8 @@
             authUser() {
                 return this.$store.getters.authUser
             },
-            access() {
-                return this.$store.getters.accessMode
-            },
             filteredList() {
-                let arr = this.data.filter(item => {
+                this.exportPublication = this.data.filter(item => {
                     let result = 1;
                     let keys = Object.keys(this.filters);
                     let values = Object.values(this.filters);
@@ -242,9 +196,7 @@
                     }
                     return result;
                 });
-                this.exportPublication = arr;
-                this.numPage = Math.ceil(arr.length/this.perPage);
-                return arr.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
+                return this.exportPublication;
             },
             years() {
                 const year = new Date().getFullYear();

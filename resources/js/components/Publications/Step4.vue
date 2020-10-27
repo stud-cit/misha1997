@@ -3,10 +3,11 @@
         <p class="step-subtitle">
             Крок 4 з 4. Вихідні дані
         </p>
-
         <articles v-if="publicationType == 'article'" :publicationData="publicationData"></articles>
 
         <book v-if="publicationType == 'book'" :publicationData="publicationData"></book>
+
+        <monograph v-if="publicationType == 'monograph'" :publicationData="publicationData"></monograph>
 
         <book-part v-if="publicationType == 'book-part'" :publicationData="publicationData"></book-part>
 
@@ -47,6 +48,9 @@
     // Електронні видання
     import Electronic from "./Step4_fields/Electronic";
 
+    // Монографія
+    import Monograph from "./Step4_fields/Monograph";
+
     export default {
         name: "Step4",
         data() {
@@ -65,7 +69,8 @@
             Patent,
             Certificate,
             Methodical,
-            Electronic
+            Electronic,
+            Monograph
         }
     }
 </script>

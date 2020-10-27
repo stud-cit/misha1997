@@ -95,10 +95,16 @@
                 </div>
             </form>
             <Table 
+                @select="selectItem"
                 :publications="filteredList" 
                 :authUser="authUser" 
                 :loading="loading"
+                :selectPublications="selectPublications"
             ></Table>
+            <div class="step-button-group">
+                <back-button></back-button>
+                <delete-button v-if="authUser.roles_id == 4" @click.native="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
+            </div>
         </div>
     </div>
 </template>
@@ -107,6 +113,8 @@
     import ExportRating from "./Exports/ExportRating";
     import ExportPublications from "./Exports/ExportPublications";
     import Table from "../Tables/Publications";
+    import BackButton from "../Buttons/Back";
+    import DeleteButton from "../Buttons/Delete";
     import XLSX from 'xlsx';
     export default {
         data() {
@@ -121,6 +129,7 @@
                 exportData: {},
                 exportPublication: [],
                 loading: false,
+                selectPublications: [],
                 filters: {
                     title: '',
                     initials: '',
@@ -136,7 +145,9 @@
         components: {
             ExportRating,
             ExportPublications,
-            Table
+            Table,
+            BackButton,
+            DeleteButton
         },
         mounted() {
             this.getData();
@@ -159,6 +170,7 @@
                     this.data = response.data.map(element => {
                         element.faculty_code = element.authors.map(item => item.author.faculty_code).join();
                         element.department_code = element.authors.map(item => item.author.department_code).join();
+                        element.initials = element.authors.map(item => item.author.name).join();
                         return element;
                     });
                     this.loading = false;
@@ -186,6 +198,38 @@
             },
 
             // methods
+            // видалити обрані публікації
+            deletePublications() {
+                swal({
+                    title: "Бажаєте видалити?",
+                    text: "Після видалення ви не зможете відновити дані!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        axios.post('/api/delete-publications', {
+                            publications: this.selectPublications,
+                            user: this.authUser
+                        })
+                        .then(() => {
+                            this.selectPublications = [];
+                            this.getData();
+                            swal("Публікації успішно видалені", {
+                                icon: "success",
+                            });
+                        });
+                    }
+                });
+            },
+            // обрані публікації
+            selectItem(item) {
+                if(this.selectPublications.indexOf(item) == -1) {
+                    this.selectPublications.push(item);
+                } else {
+                    this.selectPublications.splice(this.selectPublications.indexOf(item), 1);
+                }
+            },
             // сортування кафедр по факультету
             getDivisions() {
                 axios.get('/api/sort-divisions').then(response => {

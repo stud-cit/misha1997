@@ -76,7 +76,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="row" v-if="userRole == 4">
+                <li class="row" v-if="authUser.roles_id == 4">
                     <div class="col-lg-3 list-item list-title">5 або більше публікацій в Scopus та/або WoS:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container">
@@ -90,15 +90,16 @@
                 </li>
             </ul>
             <div class="step-button-group">
-                <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
-                <button class="ml-2 save-btn" @click="save()">Зберегти</button>
+                <back-button></back-button>
+                <save-button v-if="authUser.roles_id == 4" @click.native="save()"></save-button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-
+    import BackButton from "./Buttons/Back";
+    import SaveButton from "./Buttons/Save";
     export default {
         data() {
             return {
@@ -121,14 +122,18 @@
                     forbes_fortune: "",
                     five_publications: ""
                 }
-            };
+            }
+        },
+        components: {
+            BackButton,
+            SaveButton
         },
         mounted() {
             this.getData();
         },
         computed: {
-            userRole() {
-                return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null
+            authUser() {
+                return this.$store.getters.authUser
             }
         },
         methods: {

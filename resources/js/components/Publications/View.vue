@@ -1,34 +1,86 @@
 <template>
-
-
     <div class="container general-block">
-
         <h1 class="blue-page-title">{{data.title}}</h1>
         <transition name="component-fade" mode="out-in">
         <div class="page-content" v-if="data.publication_type">
+            <ul class="list-view">
+                <li class="row">
+                    <div class="col-lg-3 list-item list-title">Назва публікації:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.title}}</div>
+                </li>
+                <li class="row">
+                    <div class="col-lg-3 list-item list-title">Автори публікації:</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <span v-for="(author, index) in data.authors" :key="index"><router-link :to="'/user/'+author.id">{{author.name}} </router-link></span>
+                    </div>
+                </li>
+                <li class="row">
+                    <div class="col-lg-3 list-item list-title">Вид публікації:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.publication_type.title}}</div>
+                </li>
+                <template v-if="data.supervisor">
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">Під керівництвом:</div>
+                        <div class="col-lg-9 list-item list-text">Так</div>
+                    </li>
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">Керівник:</div>
+                        <div class="col-lg-9 list-item list-text"><router-link :to="'/user/'+data.supervisor.id">{{data.supervisor.name}}</router-link></div>
+                    </li>
+                </template>
+                <template v-else>
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">Під керівництвом:</div>
+                        <div class="col-lg-9 list-item list-text">Ні</div>
+                    </li>
+                </template>
+                <template v-if="data.science_type_id != null">
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">БД Scopus\WoS:</div>
+                        <div class="col-lg-9 list-item list-text">{{data.science_type.type}}</div>
+                    </li>
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">SNIP журналу (БД Scopus):</div>
+                        <div class="col-lg-9 list-item list-text">{{data.snip}}</div>
+                    </li>
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">Квартиль журналу (БД Scopus):</div>
+                        <div class="col-lg-9 list-item list-text">{{data.quartil_scopus}}</div>
+                    </li>
 
-                <articles :data="data" v-if="data.publication_type.type == 'article'"></articles>
-                <book :data="data" v-if="data.publication_type.type == 'book'"></book>
-                <book-part :data="data" v-if="data.publication_type.type == 'book-part'"></book-part>
-                <thesis :data="data" v-if="data.publication_type.type == 'thesis'"></thesis>
-                <patent :data="data" v-if="data.publication_type.type == 'patent'"></patent>
-                <certificate :data="data" v-if="data.publication_type.type == 'certificate'"></certificate>
-                <methodical :data="data" v-if="data.publication_type.type == 'methodical'"></methodical>
-                <electronic :data="data" v-if="data.publication_type.type == 'electronic'"></electronic>
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">Імпакт-фактор (БД WoS):</div>
+                        <div class="col-lg-9 list-item list-text">{{data.impact_factor}}</div>
+                    </li>
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">Квартиль журналу (БД WoS):</div>
+                        <div class="col-lg-9 list-item list-text">{{data.quartil_wos}}</div>
+                    </li>
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">Підбаза WoS:</div>
+                        <div class="col-lg-9 list-item list-text" v-if="data.sub_db_index==1">Science Citation Index Expanded (SCIE)</div>
+                        <div class="col-lg-9 list-item list-text" v-if="data.sub_db_index==2">Social Science Citation Index</div>
+                    </li>
+                </template>
+            </ul>
+            
+            <articles :data="data" v-if="data.publication_type.type == 'article'"></articles>
+            <book :data="data" v-if="data.publication_type.type == 'book'"></book>
+            <book-part :data="data" v-if="data.publication_type.type == 'book-part'"></book-part>
+            <thesis :data="data" v-if="data.publication_type.type == 'thesis'"></thesis>
+            <patent :data="data" v-if="data.publication_type.type == 'patent'"></patent>
+            <certificate :data="data" v-if="data.publication_type.type == 'certificate'"></certificate>
+            <methodical :data="data" v-if="data.publication_type.type == 'methodical'"></methodical>
+            <electronic :data="data" v-if="data.publication_type.type == 'electronic'"></electronic>
 
-            <div class="edit-block text-center">
-                <router-link :to="'/publications'" tag="button" class="mr-2">Назад</router-link>
-                <button class="mr-2 edit" @click="editPublication">Редагувати</button>
-                <button class="mr-2 delete" @click="deletePublication">Видалити</button>
+            <div class="step-button-group">
+                <back-button></back-button>
+                <edit-button v-if="authUser.roles_id == 4" @click.native="editPublication"></edit-button>
+                <delete-button v-if="authUser.roles_id == 4" @click.native="deletePublication"></delete-button>
             </div>
-
         </div>
         </transition>
-
     </div>
-
-
-
 </template>
 
 <script>
@@ -41,50 +93,62 @@
     import Methodical from "./View_fields/Methodical";
     import Electronic from "./View_fields/Electronic";
 
+    import BackButton from "../Buttons/Back";
+    import DeleteButton from "../Buttons/Delete";
+    import EditButton from "../Buttons/Edit";
+
     export default {
         data() {
             return {
-                data: {},
-            }
-        },
-
-        created () {
-            this.getPublicationData();
-        },
-        computed: {
-
-        },
-        methods: {
-
-            getPublicationData(){
-
-                axios.get(`/api/publication/${this.$route.params.id}`).then(response => {
-                    this.data = response.data;
-                }).catch(error => {
-                    console.log(error);
-                });
-            },
-            editPublication() {
-                this.$router.push({path: `/publications/edit/${this.$route.params.id}`});
-            },
-            deletePublication(){
-                let question = confirm("Ви підтверджуєте видалення публікації");
-                if(question) {
-                    axios.post(`/api/delete-publication/${this.$route.params.id}`).then(response =>{
-
-                        this.$router.push('/publications');
-
-                    }).then(()=>{
-                        swal("Публікацію успішно видалено!", {
-                            icon: "success",
-                        });
-                    });
-
-                }
-                else{
-                    return false;
-                }
-
+                data: {
+                    title: "",
+                    science_type_id: null,
+                    science_type: {
+                        type: "",
+                    },
+                    publication_type_id: null,
+                    publication_type: {
+                        scopus_wos: "",
+                        title: "",
+                        type: "",
+                    },
+                    snip: "",
+                    impact_factor: "",
+                    quartil_scopus: "",
+                    quartil_wos: "",
+                    sub_db_index: "",
+                    year: "",
+                    number: "",
+                    pages: "",
+                    initials: "",
+                    country: "",
+                    number_volumes: "",
+                    by_editing: "",
+                    city: "",
+                    editor_name: "",
+                    languages: "",
+                    number_certificate: "",
+                    applicant: "",
+                    date_application: "",
+                    date_publication: "",
+                    commerc_university: "",
+                    commerc_employees: "",
+                    access_mode: "",
+                    mpk: "",
+                    application_number: "",
+                    newsletter_number: "",
+                    name_conference: "",
+                    url: "",
+                    out_data: "",
+                    name_magazine: "",
+                    doi: "",
+                    nature_index: "",
+                    nature_science: "",
+                    db_scopus_percent: "",
+                    db_wos_percent: "",
+                    authors: [],
+                    supervisor: null
+                },
             }
         },
         components: {
@@ -95,13 +159,56 @@
             Patent,
             Certificate,
             Methodical,
-            Electronic
+            Electronic,
+            BackButton,
+            DeleteButton,
+            EditButton
+        },
+        created() {
+            this.getPublicationData();
+        },
+        computed: {
+            authUser() {
+                return this.$store.getters.authUser
+            },
+        },
+        methods: {
+            getPublicationData(){
+                axios.get(`/api/publication/${this.$route.params.id}`).then(response => {
+                    this.data = Object.assign(this.data, response.data);
+                    this.data.authors = [];
+                    response.data.authors.map(item => {
+                        if(item.supervisor == 0) {
+                            this.data.authors.push(item.author);
+                        }
+                        if(item.supervisor == 1) {
+                            this.data.supervisor = item.author;
+                        }
+                    });
+                });
+            },
+            editPublication() {
+                this.$router.push({path: `/publications/edit/${this.$route.params.id}`});
+            },
+            deletePublication() {
+                let question = confirm("Ви підтверджуєте видалення публікації");
+                if(question) {
+                    axios.post(`/api/delete-publication/${this.$route.params.id}`).then(response =>{
+                        this.$router.push('/publications');
+                    }).then(()=>{
+                        swal("Публікацію успішно видалено!", {
+                            icon: "success",
+                        });
+                    });
+                } else {
+                    return false;
+                }
+            }
         }
-
     }
 </script>
-<style scoped lang="scss">
-
-
-
+<style lang="css" scoped>
+    .list-view {
+        margin-bottom: -1px;
+    }
 </style>

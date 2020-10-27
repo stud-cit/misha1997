@@ -4,114 +4,82 @@
             <div class="form-group">
                 <label class="item-title">№ свідоцтва/рішення *</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="stepData.number_certificate">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <input class="item-value" type="text" v-model="publicationData.number_certificate">
                 </div>
-                <div class="error" v-if="$v.stepData.number_certificate.$error">
+                <div class="error" v-if="$v.publicationData.number_certificate.$error">
                     Поле обов'язкове для заповнення
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Країна, де отриманий патент *</label>
                 <div class="input-container">
-                    <select class="item-value" v-model="stepData.country">
+                    <select class="item-value" v-model="publicationData.country">
                         <option
                             v-for="(item, index) in country"
                             :key="index"
                             :value="item.name"
                         >{{item.name}}</option>
                     </select>
-
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Власник майнових прав *</label>
                 <div class="input-container">
-
                     <select class="item-value" v-model="applicant_id">
                         <option value="0">СумДУ</option>
                         <option value="1">не  СумДУ</option>
                     </select>
-                    <div class="hint" ><span></span></div>
                 </div>
-
             </div>
             <div class="form-group" v-if="applicant_id == '1'">
                 <label class="item-title">Вкажіть власника майнових прав не СумДУ *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="newApplicant">
-
-                    <div class="hint" ><span></span></div>
                 </div>
                 <div class="error" v-if="$v.newApplicant.$error">
                     Поле обов'язкове для заповнення
                 </div>
             </div>
-<!--            <div class="form-group">-->
-<!--                <label class="item-title">Дата подачі заявки *</label>-->
-<!--                <div class="input-container">-->
-<!--                    <date-picker-->
-<!--                        v-model="stepData.date_application"-->
-<!--                        value-type="YYYY-MM-DD"-->
-<!--                        :lang="datepicker.lang"-->
-<!--                        :default-value="datepicker.minDate"-->
-<!--                        :disabled-date="rangeDate"-->
-<!--                        :editable="false"-->
-<!--                        :popup-style="datepicker.styles"-->
-<!--                    ></date-picker>-->
-<!--                    <input style="display:none" class="item-value" type="text" v-model="stepData.date_application">-->
-<!--                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>-->
-<!--                </div>-->
-<!--                <div class="error" v-if="$v.stepData.date_application.$error">-->
-<!--                    Поле обов'язкове для заповнення-->
-<!--                </div>-->
-<!--            </div>-->
             <div class="form-group">
                 <label class="item-title">Дата реєстрації свідоцтва/рішення *</label>
                 <div class="input-container">
                     <date-picker
-                        v-model="stepData.date_publication"
+                        v-model="publicationData.date_publication"
                         value-type="YYYY-MM-DD"
                         :lang="datepicker.lang"
                         :editable="false"
                         :popup-style="datepicker.styles"
                     ></date-picker>
-                    <input style="display:none" class="item-value" type="text" v-model="stepData.date_publication">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                    <input style="display:none" class="item-value" type="text" v-model="publicationData.date_publication">
                 </div>
-                <div class="error" v-if="$v.stepData.date_publication.$error">
+                <div class="error" v-if="$v.publicationData.date_publication.$error">
                     Поле обов'язкове для заповнення
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Комерціалізовано університетом *</label>
                 <div class="input-container hint-container">
-                    <select class="item-value" v-model="stepData.commerc_university">
+                    <select class="item-value" v-model="publicationData.commerc_university">
                         <option value="1">Так </option>
                         <option value="0">Ні </option>
                     </select>
                     <div class="hint" ><span>"так" -у разі надходження коштів на рахунок університету</span></div>
                 </div>
-
             </div>
             <div class="form-group">
                 <label class="item-title">Комерціалізовано штатними співробітниками університету *</label>
                 <div class="input-container hint-container">
-                    <select class="item-value" v-model="stepData.commerc_employees">
+                    <select class="item-value" v-model="publicationData.commerc_employees">
                         <option value="1">Так </option>
                         <option value="0">Ні </option>
                     </select>
                     <div class="hint" ><span>"так" - при отриманні коштів автором - штатним співробітником університету</span></div>
                 </div>
-
             </div>
-
         </div>
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
             <button class="next active" @click="nextStep">Продовжити </button>
-
         </div>
     </div>
 </template>
@@ -121,22 +89,11 @@
     import DatePicker from 'vue2-datepicker';
     import 'vue2-datepicker/index.css';
     export default {
-
         data() {
             return {
                 country: [],
                 applicant_id: '0',
                 newApplicant: '',
-                stepData: {
-                    number_certificate: '',
-                    country: '',
-                    applicant: '',
-
-                    // date_application: '',
-                    date_publication: '',
-                    commerc_university: 0,
-                    commerc_employees: 0
-                },
                 datepicker: {
                     lang: {
                         formatLocale: {
@@ -159,10 +116,9 @@
         },
         created() {
             this.getCountry();
-            this.checkPublicationData();
         },
         validations: {
-            stepData: {
+            publicationData: {
                 number_certificate: {
                     required
                 },
@@ -171,26 +127,12 @@
                         return this.applicant_id == '1';
                     }),
                 },
-                // date_application: {
-                //     required
-                // },
                 date_publication: {
                     required
                 },
             },
         },
         methods:{
-            checkPublicationData() {
-
-                if(this.publicationData && this.$route.name == 'publications-edit'){
-
-                    for( let key in this.stepData){
-                        this.stepData[key] = this.publicationData[key];
-                    }
-
-                }
-
-            },
             getCountry() {
                 axios.get('/api/country').then(response => {
                     this.country = response.data;
@@ -205,10 +147,10 @@
                     return
                 }
                 if(this.applicant_id == '0'){
-                    this.stepData.applicant = 'СумДУ';
+                    this.publicationData.applicant = 'СумДУ';
                 }
-                this.stepData.applicant = this.applicant_id ? "СумДУ" : this.newApplicant;
-                this.$parent.$emit('getData', this.stepData);
+                this.publicationData.applicant = this.applicant_id ? "СумДУ" : this.newApplicant;
+                this.$parent.$emit('getData', this.publicationData);
             },
             prevStep() {
                 this.$parent.$emit('prevStep');
@@ -218,9 +160,7 @@
 </script>
 
 <style lang="scss" scoped>
-
     .mx-datepicker {
         width: 100%;
     }
-
 </style>

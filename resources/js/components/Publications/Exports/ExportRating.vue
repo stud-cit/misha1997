@@ -81,8 +81,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
-                            <label >Рік
-                                видання </label>
+                            <label >Рік видання</label>
                             <div class="input-container ">
                                 <select  v-model="filters.year">
                                     <option value=""></option>
@@ -224,6 +223,19 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <label>Рік занесення до бази даних</label>
+                            <div class="input-container">
+                                <select v-model="filters.year_db">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in years" :key="index" :value="item">{{item}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                        </div>
+                    </div>
 
                 </form>
                 <div class="step-button-group">
@@ -238,306 +250,227 @@
 
         <table id="exportRating" v-show="false" ref="exportR">
             <tr>
-                <td colspan="3">
-                    Кількість статей
-                    за авторством та
-                    співавторством студентів
+                <td colspan="4">
+                    Показники, які визначають рейтинг інститутів, факультетів та кафедр СумДУ
                 </td>
-
-                <td>{{ratingData.countStudentPublications}}</td>
-
             </tr>
-
             <tr>
-                <td rowspan="2" >
-                    Кількість публікацій у співавторстві
-                    з іноземними партнерами
+                <td colspan="3">
+                    Кількість статей за авторством та співавторством студентів
+                </td>
+                <td>{{ ratingData.countStudentPublications }}</td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Кількість публікацій статей та монографій (розділів) у співавторстві з іноземними партнерами, які мають індекс Гірша за БД Scopus або WoS не нижче 10
                 </td>
                 <td colspan="2">
                     Всього
                 </td>
-
-                <td>{{ratingData.countForeignPublications}}</td>
-
+                <td>{{ ratingData.countForeignPublications.count }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     Мають індекс Гірша за БД Scopus або WoS не нижче 10
                 </td>
-
-                <td>{{ratingData.countIndexHirsha}}</td>
+                <td>{{ ratingData.countForeignPublications.haveIndexScopusWoS }}</td>
             </tr>
-
             <tr>
                 <td colspan="3">
-                    Кількість публікацій всього
-                    у тому числі:
+                    Кількість публікацій всього у тому числі:
                 </td>
-                <td>{{ratingData.countPublications}}</td>
-
+                <td>{{ ratingData.countPublications }}</td>
             </tr>
-
             <tr>
                 <td colspan="3">
-                    - підручників
+                    -  монографії проіндексовані  БД Scopus або WoS за належності до профілю СумДУ
                 </td>
-
-                <td>{{ratingData.countBooks}}</td>
+                <td>{{ ratingData.monographsIndexedScopusOrWoSNotSSU }}</td>
             </tr>
-
-            <tr>
-                <td colspan="3">
-                    - посібників
-                </td>
-
-                <td>{{ratingData.countManuals}}</td>
-            </tr>
-
-            <tr>
-                <td colspan="3">
-                    - монографій
-                </td>
-
-                <td>{{ratingData.countMonographs}}</td>
-            </tr>
-
-
-
             <tr>
                 <td colspan="3">
                     - статей у фахових за статусом виданнях
                 </td>
 
-                <td>value</td>
+                <td>{{ ratingData.articleProfessionalPublicationsUkraine }}</td>
             </tr>
-
             <tr>
-                <td rowspan="15" >
-                    -	які опубліковані у виданнях, що індексуються БД Scopus та/або WoS:
+                <td rowspan="16">
+                    які опубліковані у виданнях, що індексуються БД Scopus та/або WoS за умови належності до профілю СумДУ
                 </td>
                 <td rowspan="2">
                     всього за звітний рік
                 </td>
-                <td >
+                <td>
                     за БД Scopus та WoS:
                 </td>
-
-                <td>{{ratingData.countScopusAndWoS}}</td>
-
+                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.countReportingYear.ScopusAndWoS }}</td>
             </tr>
             <tr>
-                <td >
+                <td>
                     за БД Scopus або WoS:
                 </td>
-
-                <td>{{ratingData.countScopusOrWoS}}</td>
+                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.countReportingYear.ScopusOrWoS }}</td>
             </tr>
             <tr>
                 <td colspan="2">
-                    -	 у тому числі у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
+                    у т. ч. у виданні, яке відноситься до квартиля Q3
                 </td>
-
-                <td>{{ratingData.countSnipScopus}}</td>
-            </tr>
-            <tr>
-                <td >
-                    -	у т.ч. статті у виданнях, які входять до SCIE
-                </td>
-                <td rowspan="3">
-                    -	за БД WoS
-                </td>
-
-                <td>{{ratingData.countSCIEWoS}}</td>
-            </tr>
-            <tr>
-                <td >
-                    -	у т.ч. статті у виданнях, які входять до SSCI
-                </td>
-
-
-                <td>{{ratingData.countSSCIWoS}}</td>
-            </tr>
-            <tr>
-                <td >
-                    -	у т.ч. у виданнях з імпакт-фактором більше ніж 0&#8218;5
-                </td>
-
-
-                <td>{{ratingData.countImpactFactorWoS}}</td>
+                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.quartile3 }}</td>
             </tr>
             <tr>
                 <td colspan="2">
-                    -	у т.ч. які обліковуються рейтингом Nature Index
+                    у т. ч. у виданні, яке відноситься до квартиля Q2
                 </td>
-
-
-                <td>value</td>
+                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.quartile2 }}</td>
             </tr>
             <tr>
                 <td colspan="2">
-                    -	у т.ч. у журналах Nature Scince
+                    у т. ч. у виданні, яке відноситься до квартиля Q1
                 </td>
-
-
-                <td>value</td>
+                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.quartile1 }}</td>
+            </tr>
+            <tr>
+                <td>
+                    - у т.ч. статті у виданнях, які входять до SCIE
+                </td>
+                <td rowspan="2">
+                    - за БД WoS
+                </td>
+                <td>{{ ratingData.articleWoS.scie }}</td>
+            </tr>
+            <tr>
+                <td>
+                    - у т.ч. статті у виданнях, які входять до SSCI
+                </td>
+                <td>{{ ratingData.articleWoS.ssci }}</td>
             </tr>
             <tr>
                 <td colspan="2">
-                    -	у т.ч. за співавторством з представниками інших організацій
+                    - у т.ч. які обліковуються рейтингом Nature Index
                 </td>
-
-
-                <td>{{ratingData.countOtherOrganization}}</td>
+                <td>{{ ratingData.accountedNatureIndex }}</td>
             </tr>
             <tr>
                 <td colspan="2">
-                    -	у т.ч., що входять до списків Forbes та Fortune
+                    - у т.ч. у журналах Nature або Scince
                 </td>
-
-
-                <td>value</td>
+                <td>{{ ratingData.journalsNatureOrScience }}</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    - у т.ч. за співавторством з представниками інших організацій
+                </td>
+                <td>{{ ratingData.authorsOtherOrganizations }}</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    - у т.ч., що входять до списків Forbes та Fortune
+                </td>
+                <td>{{ ratingData.authorsInForbesFortune }}</td>
             </tr>
             <tr>
                 <td rowspan="2">
-                    -	у т.ч. які увійшли до найбільш цитованих для своєї предметної галузі
+                    - у т.ч. які увійшли до найбільш цитованих для своєї предметної галузі
                 </td>
                 <td>
-                    -	до 10% за БД Scopus
+                    - до 10% за БД Scopus
                 </td>
-
-
-                <td>value</td>
+                <td>{{ ratingData.enteredMostCitedSubjectArea.scopus }}</td>
             </tr>
             <tr>
-
                 <td>
-                    -	До 1% за БД WoS
+                    - До 1% за БД WoS
                 </td>
-
-
-                <td>value</td>
+                <td>{{ ratingData.enteredMostCitedSubjectArea.wos }}</td>
             </tr>
             <tr>
-
                 <td colspan="2">
-                    -	у т.ч. з цифровим ідентифікатором DOI
+                    - у т.ч. з цифровим ідентифікатором DOI
                 </td>
-
-
-                <td>{{ratingData.countDOI}}</td>
+                <td>{{ ratingData.countDOI }}</td>
             </tr>
             <tr>
-
                 <td colspan="2">
-                    -	які процитовані у міжнародних патентах
+                    - які процитовані у міжнародних патентах
                 </td>
-
-
-                <td>value</td>
+                <td>{{ ratingData.citedInternationalPatents }}</td>
             </tr>
             <tr>
-
                 <td colspan="2">
-                    -	всього за 5 років за БД Scopus
+                    - всього за 5 років за БД Scopus
                 </td>
-
-
-                <td>{{ratingData.countFiveYearScopus}}</td>
+                <td>{{ ratingData.countScopusFiveYear }}</td>
             </tr>
-
-
             <tr>
-
                 <td colspan="3">
                     Показники для звітів
                 </td>
-
-
                 <td></td>
             </tr>
-
             <tr>
-
+                <td colspan="3">
+                    Кількість публікацій у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
+                </td>
+                <td>{{ ratingData.countSnipScopus }}</td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    Загальне значення індексів Гірша (за БД Scopus  або БД WoS ) штатних працівників та докторантів (динаміка змін)
+                </td>
+                <td>{{ ratingData.countHirschIndex }}</td>
+            </tr>
+            <tr>
                 <td colspan="3">
                     Кількість тез всього
                 </td>
-
-
-                <td>{{ratingData.countThese}}</td>
+                <td>{{ ratingData.these.count }}</td>
             </tr>
-
             <tr>
-
                 <td colspan="3">
                     Тез опублікованих за кордоном
                 </td>
-
-
-                <td>{{ratingData.countTheseAbroad}}</td>
+                <td>{{ ratingData.these.publishedAbroad }}</td>
             </tr>
-
             <tr>
-
                 <td colspan="3">
                     Тез опублікованих зі студентами
                 </td>
-
-
-                <td>{{ratingData.countTheseWithStudent}}</td>
+                <td>{{ ratingData.these.publishedWithStudents }}</td>
             </tr>
-
             <tr>
-
                 <td colspan="3">
                     Тез опублікованих з іноземними партнерами
                 </td>
-
-
-                <td>{{ratingData.countTheseWithForeign}}</td>
+                <td>{{ ratingData.these.publishedWithForeignPartners }}</td>
             </tr>
-
             <tr>
-
                 <td colspan="3" >
                     Кількість статей (всього), з них:
                 </td>
-                <td>{{ratingData.countArticle}}</td>
-
+                <td>{{ ratingData.articles.count }}</td>
             </tr>
             <tr>
                 <td colspan="3">
-                    -	статей опублікованих за кордоном
+                    - статей опублікованих за кордоном
                 </td>
-
-
-                <td>{{ratingData.countArticleAbroad}}</td>
+                <td>{{ ratingData.articles.publishedAbroad }}</td>
             </tr>
             <tr>
-
                 <td colspan="3">
-                    -	статей з іноземними партнерами
+                    - статей з іноземними партнерами
                 </td>
-
-
-                <td>{{ratingData.countArticleWithForeign}}</td>
+                <td>{{ ratingData.articles.publishedWithForeignPartners }}</td>
             </tr>
-
             <tr>
-
                 <td colspan="3">
                     Чисельність штатних науково та науково-педагогічних працівників, які мають не менше 5-ти публікацій у виданнях, що індексуються БД Scopus та/або WoS.
                 </td>
-
-
-                <td>{{ratingData.countEmployees}}</td>
+                <td>{{ ratingData.authorsHasfivePublications }}</td>
             </tr>
-
-
-
-
-
         </table>
-        <table id="exportList" v-show="false" >
+
+        <table id="exportList" v-show="false">
             <tr>
                 <th>№</th>
                 <th>Назва роботи(мовою оригіналу)</th>
@@ -549,13 +482,11 @@
                 <th>К-сть сторінок </th>
                 <th>Номер (том) </th>
                 <th>Посада</th>
-
                 <th>Прізвище, ім'я </th>
                 <th>Під керівництвом </th>
                 <th>Прізвище, ініціали наукового керівника </th>
                 <th>Факультет/країна(для співавторів - громадян інших країн) </th>
                 <th>Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ) </th>
-
                 <th>Іноземець</th>
                 <th>Рік</th>
                 <th>Квартиль журналу Scopus</th>
@@ -563,41 +494,41 @@
                 <th>SNIP</th>
                 <th>Імпакт-фактор (БД WoS)</th>
                 <th>Підбаза WoS</th>
-                <th>Опубліковано мовами ОЕСР та ЄС</th>
                 <th>Мова</th>
                 <th>DOI</th>
+                <th>Дата занесення до бази даних</th>
             </tr>
             <template v-for="(item, ind) in publicationsData">
             <tr v-for="(a, i) in item.authors" :key="'publication_' + ind + '_author_' + i">
-                <td>{{ind + 1}}</td>
-                <td>{{item.title}}</td>
-                <td>{{ item.publication_type.title }}</td>
-                <td>{{ (item.science_type_id && item.science_type_id != 2) ? 'Так' : 'Ні' }}</td>
-                <td>{{ (item.science_type_id && item.science_type_id != 1) ? 'Так' : 'Ні' }}</td>
-                <td>{{item.country}}</td>
-                <td>{{item.out_data}}</td>
-                <td>'{{item.pages}}'</td>
-                <td>'{{item.number}}'</td>
-                <td v-if="a.author.categ_1 == 1">Студент</td>
-                <td v-else-if="a.author.categ_1 == 2">Аспірант</td>
-                <td v-else-if="a.author.categ_2 == 1">Співробітник</td>
-                <td v-else-if="a.author.categ_2 == 2">Викладач</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ind + 1}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.title}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.publication_type.title }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ (item.science_type_id && item.science_type_id != 2) ? 'Так' : 'Ні' }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ (item.science_type_id && item.science_type_id != 1) ? 'Так' : 'Ні' }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.country}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.out_data}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">'{{item.pages}}'</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">'{{item.number}}'</td>
+                <td v-if="a.categ_1 == 1">Студент</td>
+                <td v-else-if="a.categ_1 == 2">Аспірант</td>
+                <td v-else-if="a.categ_2 == 1">Співробітник</td>
+                <td v-else-if="a.categ_2 == 2">Викладач</td>
                 <td v-else></td>
-                <td>{{a.author.name}}</td>
+                <td>{{a.name}}</td>
                 <td>{{item.supervisor ? 'Так' : 'Ні'}}</td>
                 <td>{{item.supervisor ? item.supervisor.name : '' }}</td>
-                <td>{{a.author.faculty ? a.author.faculty : '' }}</td>
-                <td>{{a.author.department ? a.author.department : a.author.job}}</td>
-                <td>{{a.author.country == 'Україна' ? 'Ні' :  a.author.country ? 'Так' : 'Не вказано'}}</td>
-                <td>{{item.year}}</td>
-                <td>{{item.quartil_scopus}}</td>
-                <td>{{item.quartil_wos}}</td>
-                <td>{{item.snip}}</td>
-                <td>{{item.impact_factor}}</td>
-                <td v-if="item.sub_db_index == 1">Science Citation Index Expanded (SCIE)</td>
-                <td v-if="item.sub_db_index == 2">Social Science Citation Index</td>
-                <td>{{ item.languages }}</td>
-                <td>{{ item.doi }}</td>
+                <td>{{a.faculty ? a.faculty : '' }}</td>
+                <td>{{a.department ? a.department : a.job}}</td>
+                <td>{{a.country == 'Україна' ? 'Ні' :  a.country ? 'Так' : 'Не вказано'}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.year}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_scopus}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_wos}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.snip}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{item.impact_factor}}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.sub_db_index ? (item.sub_db_index == 1 ? "Science Citation Index Expanded (SCIE)" : "Social Science Citation Index") : "" }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.languages }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.doi }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.date }}</td>
             </tr>
             </template>
         </table>
@@ -615,7 +546,56 @@
                 departments: [],
                 divisions: [],
                 publicationsData: [],
-                ratingData: [],
+
+                ratingData: {
+                    countStudentPublications: 0,
+                    countForeignPublications: {
+                        count: 0,
+                        haveIndexScopusWoS: 0
+                    },
+                    monographsIndexedScopusOrWoSNotSSU: 0,
+                    articleProfessionalPublicationsUkraine: 0,
+                    publicationsScopusOrAndWoSNotSSU: {
+                        countReportingYear: {
+                            ScopusAndWoS: 0,
+                            ScopusOrWoS: 0
+                        },
+                        quartile1: 0,
+                        quartile2: 0,
+                        quartile3: 0,
+                    },
+                    articleWoS: {
+                        scie: 0,
+                        ssci: 0
+                    },
+                    accountedNatureIndex: 0,
+                    journalsNatureOrScience: 0,
+                    authorsOtherOrganizations: 0,
+                    authorsInForbesFortune: 0,
+                    enteredMostCitedSubjectArea: {
+                        scopus: 0,
+                        wos: 0
+                    },
+                    countDOI: 0,
+                    citedInternationalPatents: 0,
+                    countSnipScopus: 0,
+                    countHirschIndex: 0,
+                    countEmployees: 0,
+                    these: {
+                        count: 0,
+                        publishedAbroad: 0,
+                        publishedWithStudents: 0,
+                        publishedWithForeignPartners: 0
+                    },
+                    articles: {
+                        count: 0,
+                        publishedAbroad: 0,
+                        publishedWithForeignPartners: 0
+                    },
+                    authorsHasfivePublications: 0,
+                    countScopusFiveYear: 0
+                },
+
                 filters: {
                     faculty: '',
                     university: '',
@@ -624,6 +604,7 @@
                     withForeigners: '',
                     science_type_id: '',
                     year: '',
+                    year_db: new Date().getFullYear(),
                     country: '',
                     quartil_scopus: '',
                     quartil_wos: '',
@@ -657,15 +638,25 @@
                 })
             },
             getExportData() {
-                console.log(this.filters)
                 axios.post('/api/export', this.filters).then(response => {
                     this.publicationsData = response.data.publications;
-                    this.ratingData = response.data.rating;
-
+                    this.publicationsData.map(publication => {
+                        var authors = [];
+                        var supervisor = null;
+                        publication.authors.map(author => {
+                            if(author.supervisor == 0) {
+                                authors.push(author.author);
+                            }
+                            if(author.supervisor == 1) {
+                                supervisor = author.author;
+                            }
+                        })
+                        publication.authors = authors;
+                        publication.supervisor = supervisor;
+                    });
+                    this.ratingData = Object.assign(this.ratingData, response.data.rating);
                 }).then(() => {
                     this.exportRating();
-                }).catch((error)=>{
-                    console.log(error);
                 })
             },
             getDepartments() {
@@ -692,39 +683,39 @@
                     wb.Sheets.Rating = rating.Sheets.Sheet1;
 
                     const wscols2 = [
-                        {wch:65},
-                        {wch:65},
-                        {wch:40},
-                        {wch:10}
+                        {wch:30},
+                        {wch:30},
+                        {wch:20},
+                        {wch:5}
                     ];
 
                     wb.Sheets.Rating['!cols'] = wscols2;
                     wb.Sheets.Publications['!cols'] = [
-                        { wch: 5 },  // id
-                        { wch: 30 }, // Назва роботи(мовою оригіналу)
-                        { wch: 15 }, // Вид публікації
+                        { wch: 3 },  // id
+                        { wch: 10 }, // Назва роботи(мовою оригіналу)
+                        { wch: 10 }, // Вид публікації
                         { wch: 5 }, // Scopus
                         { wch: 5 }, // WoS
                         { wch: 5 }, // Країна видання
-                        { wch: 20 }, // Вихідні дані
+                        { wch: 10 }, // Вихідні дані
                         { wch: 5 }, // К-сть сторінок
                         { wch: 5 }, // Номер (том)
                         { wch: 10 }, // Посада
-                        { wch: 30 }, // Прізвище, ім'я
+                        { wch: 15 }, // Прізвище, ім'я
                         { wch: 5 }, // Під керівництвом
-                        { wch: 25 }, // Прізвище, ініціали наукового керівника
-                        { wch: 50 }, // Факультет/країна(для співавторів - громадян інших країн)
-                        { wch: 50 }, // Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ)
-                        { wch: 10 }, // Іноземець
+                        { wch: 15 }, // Прізвище, ініціали наукового керівника
+                        { wch: 15 }, // Факультет/країна(для співавторів - громадян інших країн)
+                        { wch: 15 }, // Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ)
+                        { wch: 4 }, // Іноземець
                         { wch: 5 },  // Рік
-                        { wch: 5 }, // Квартиль журналу Scopus
-                        { wch: 25 }, // Квартиль журналу WoS
-                        { wch: 5 },  // SNIP
-                        { wch: 5 }, // Імпакт-фактор (БД WoS)
-                        { wch: 15 }, // Підбаза WoS
-                        { wch: 30 }, // Опубліковано мовами ОЕСР та ЄС
-                        { wch: 10 }, // Мова
-                        { wch: 10 }, // DOI
+                        { wch: 3 }, // Квартиль журналу Scopus
+                        { wch: 3 }, // Квартиль журналу WoS
+                        { wch: 3 },  // SNIP
+                        { wch: 3 }, // Імпакт-фактор (БД WoS)
+                        { wch: 5 }, // Підбаза WoS
+                        { wch: 5 }, // Мова
+                        { wch: 3 }, // DOI
+                        { wch: 10 }, // Дата занесення до бази даних
                     ];
                     XLSX.writeFile(wb, 'Rating.xlsx');
                     this.loading = false;

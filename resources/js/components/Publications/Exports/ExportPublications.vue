@@ -1,126 +1,91 @@
 <template>
     <div>
-
-
-
         <button class="export-button" @click="exportPublications('export')">
             <img src="/img/download.png" alt=""> Експорт публікацій word
         </button>
         <div id="export" v-show="false">
-            <template v-if="filteredData.articles[0]">
-            <h2>	Статті</h2>
+            <template v-if="filteredData.articles.length > 0">
+            <h2>Стаття у фахових виданнях України, інші статті</h2>
             <ol>
                 <li v-for="(item, index) in filteredData.articles" :key="index">
-                        {{item.out_data}}
-
-
+                    {{item.initials}}, {{ item.title }}, {{ item.name_magazine }}. - {{ item.year }} - T. №. - С. {{ item.pages }}
                 </li>
-
             </ol>
             </template>
-            <template v-if="filteredData.books[0]">
-            <h2>	Монографії, посібники, підручники</h2>
+
+            <template v-if="filteredData.monograph.length > 0">
+            <h2>Монографії</h2>
+            <ol>
+                <li v-for="(item, index) in filteredData.monograph" :key="index">
+                   {{ item.initials }},  {{ item.title }}: {{ item.publication_type.title.toLowerCase() }}; за ред. {{ item.by_editing }} - {{ item.city }}: {{ item.editor_name }}, {{ item.year }}. - {{ item.pages }} c.
+                </li>
+            </ol>
+            </template>
+
+            <template v-if="filteredData.books.length > 0">
+            <h2>Посібники, підручники</h2>
             <ol>
                 <li v-for="(item, index) in filteredData.books" :key="index">
-                    {{item.out_data}}
-<!--                    {{item.initials + ' ' + item.title + ': ' + item.publication_type.title.toLowerCase() + ' / за ред. ' + item.by_editing + '. ' + item.city + ': ' + item.editor_name + ', ' + item.year + '. С. ' + item.pages}}-->
-
-
-
-
+                   {{ item.initials }},  {{ item.title }}: - {{ item.city }}: {{ item.editor_name }}, {{ item.year }}. - {{ item.pages }} c.
                 </li>
-
             </ol>
             </template>
-            <template v-if="filteredData.booksParts[0]">
-            <h2>	Частини монографій, книг</h2>
-            <ol>
-                <li v-for="(item, index) in filteredData.booksParts" :key="index">
-                    {{item.out_data}}
 
-                </li>
-
-            </ol>
-            </template>
-            <template v-if="filteredData.thesis[0]">
-            <h2>	Тези доповіді</h2>
-            <ol>
-                <li v-for="(item, index) in filteredData.thesis" :key="index">
-                    {{item.out_data}}
-
-                </li>
-
-            </ol>
-            </template>
-            <template v-if="filteredData.patents[0]">
-            <h2>	Патенти</h2>
+            <template v-if="filteredData.patents.length > 0">
+            <h2>Патент</h2>
             <ol>
                 <li v-for="(item, index) in filteredData.patents" :key="index">
-                    {{item.out_data}}
-
+                   Пат. {{ item.number_certificate }}, {{ item.country }}, {{ item.mpk }}. {{ item.title }}; {{ item.applicant }}. - №{{ item.application_number }}; {{ item.date_publication }}, Бюл. №{{ item.newsletter_number }}.
                 </li>
-
             </ol>
             </template>
-            <template v-if="filteredData.certificates[0]">
-            <h2>	Свідоцтва про реєстрації авторських прав на твір/рішення</h2>
+
+            <template v-if="filteredData.certificates.length > 0">
+            <h2>Свідотство про реєстрації авторських прав на твір/рішення</h2>
             <ol>
                 <li v-for="(item, index) in filteredData.certificates" :key="index">
-                    {{item.out_data}}
-
+                   Свідотство про реєстрації авторських прав на твір №{{ item.application_number }}. {{ item.publication_type.title }} "{{ item.title }}" / {{ item.initials }}. ({{ item.country }}). - №{{ item.number_certificate }}; заяв. {{ item.date_publication }}.
                 </li>
-
             </ol>
             </template>
-            <template v-if="filteredData.methodicals[0]">
-            <h2>	Методичні вказівки / конспекти лекцій</h2>
+
+            <template v-if="filteredData.methodicals.length > 0">
+            <h2>Методичні вказівки</h2>
             <ol>
                 <li v-for="(item, index) in filteredData.methodicals" :key="index">
-                    {{item.out_data}}
-
+                   {{ item.initials }}. {{ item.title }}. - {{ item.city }}: {{ item.editor_name }}, {{ item.year }}. - {{ item.pages }} c.
                 </li>
-
             </ol>
             </template>
-            <template v-if="filteredData.electronics[0]">
-            <h2>	Електронні видання</h2>
+
+            <template v-if="filteredData.electronics.length > 0">
+            <h2>Електронні видання</h2>
             <ol>
                 <li v-for="(item, index) in filteredData.electronics" :key="index">
-                    {{item.out_data}}
-
+                   {{ item.initials }}, {{ item.title }}: {{ item.publication_type.title.toLowerCase() }}; [електронний ресурс] / {{ item.initials }}. - {{ item.city }}: {{ item.editor_name }}, {{ item.year }}. - {{ item.pages }} c. - Режим доступу: {{ item.access_mode ? "Відкритий" : "Закритий" }}.
                 </li>
+            </ol>
+            </template>
 
+            <template v-if="filteredData.thesis.length > 0">
+            <h2>Тези доповіді</h2>
+            <ol>
+                <li v-for="(item, index) in filteredData.thesis" :key="index">
+                   {{ item.initials }}. {{ item.title }} // {{ item.name_conference }} / за заг. ред. {{ item.initials }} - {{ item.city }}: {{ item.editor_name }}, {{ item.year }}. - {{ item.pages }} c.
+                </li>
             </ol>
             </template>
         </div>
-
     </div>
 </template>
 
 <script>
-
     export default {
-        data() {
-            return {
-
-
-            };
-        },
         props: {
             exportList: Array,
         },
-
-
-
-
-        components: {
-
-        },
-
         methods: {
-
             exportPublications(id){
-
                 var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
                     "xmlns:w='urn:schemas-microsoft-com:office:word' "+
                     "xmlns='http://www.w3.org/TR/REC-html40'>"+
@@ -136,61 +101,48 @@
                 fileDownload.click();
                 document.body.removeChild(fileDownload);
             },
-
-
         },
         computed: {
-            filteredData (){
+            filteredData() {
                 const publications = this.exportList;
                 const exportEmpty = {
                     articles: [],
+                    monograph: [],
                     books: [],
-                    booksParts: [],
-                    thesis: [],
                     patents: [],
                     certificates: [],
                     methodicals: [],
                     electronics: [],
+                    thesis: [],
                 };
-                for (let i = 0; i <publications.length; i++){
-                    if(publications[i].publication_type.type == "article"){
-
-                        exportEmpty.articles.push(publications[i]);
+                publications.map(item => {
+                    if(item.publication_type_id == 1 || item.publication_type_id == 3) {
+                        exportEmpty.articles.push(item);
                     }
-                    else if(publications[i].publication_type.type  == "book"){
-                        exportEmpty.books.push(publications[i]);
+                    if(item.publication_type_id == 6) {
+                        exportEmpty.monograph.push(item);
                     }
-                    else if(publications[i].publication_type.type  == "book-part"){
-                        exportEmpty.booksParts.push(publications[i]);
+                    if(item.publication_type_id == 5) {
+                        exportEmpty.books.push(item);
                     }
-                    else if(publications[i].publication_type.type  == "thesis"){
-                        exportEmpty.thesis.push(publications[i]);
+                    if(item.publication_type_id == 10) {
+                        exportEmpty.patents.push(item);
                     }
-                    else if(publications[i].publication_type.type  == "patent"){
-                        exportEmpty.patents.push(publications[i]);
+                    if(item.publication_type_id == 11) {
+                        exportEmpty.certificates.push(item);
                     }
-                    else if(publications[i].publication_type.type  == "certificate"){
-                        exportEmpty.certificates.push(publications[i]);
+                    if(item.publication_type_id == 12) {
+                        exportEmpty.methodicals.push(item);
                     }
-                    else if(publications[i].publication_type.type  == "methodical"){
-                        exportEmpty.methodicals.push(publications[i]);
+                    if(item.publication_type_id == 13) {
+                        exportEmpty.methodicals.push(item);
                     }
-                    else {
-                        exportEmpty.electronics.push(publications[i]);
+                    if(item.publication_type_id == 9) {
+                        exportEmpty.thesis.push(item);
                     }
-                }
-
+                })
                 return exportEmpty;
-
-
             }
-        },
-
-
+        }
     }
 </script>
-
-<style lang="scss" scoped>
-
-
-</style>

@@ -3,10 +3,10 @@
         <h1 class="page-title">Редагувати публікацію</h1>
         <transition name="component-fade" mode="out-in">
             <keep-alive>
-                <step1 v-if="currentStep==1 && publicationData" :publicationData="publicationData" @getData="getStepData($event)"></step1>
-                <step2 v-if="currentStep==2" :publicationData="publicationData" @getData="getStepData($event)" @prevStep="prevStep"></step2>
-                <step3 v-if="currentStep==3" :publicationData="publicationData" @getData="getStepData($event)" @prevStep="prevStep" ></step3>
-                <step4 v-if="currentStep==4" :publicationData="publicationData" @getData="getStepData($event)" @prevStep="prevStep" :publicationType="stepData.publication_type.type"></step4>
+                <step1 v-if="currentStep==1" :publicationData="publicationData" @getData="getStepData"></step1>
+                <step2 v-if="currentStep==2" :publicationData="publicationData" @getData="getStepData" @prevStep="prevStep"></step2>
+                <step3 v-if="currentStep==3" :publicationData="publicationData" @getData="getStepData" @prevStep="prevStep" :publicationType="publicationData.publication_type"></step3>
+                <step4 v-if="currentStep==4" :publicationData="publicationData" @getData="getStepData" @prevStep="prevStep" :publicationType="publicationData.publication_type.type"></step4>
             </keep-alive>
         </transition>
     </div>
@@ -22,15 +22,60 @@
             return {
                 isScopus: false,
                 currentStep: 1,
-                publicationData: '',
-                stepData: {
-                    publication_type:{
-                        type: ''
-                    }
+                publicationData: {
+                    whose_publication: "",
+                    title: "",
+                    science_type_id: null,
+                    science_type: {
+                        type: "",
+                    },
+                    publication_type_id: null,
+                    publication_type: {
+                        scopus_wos: "",
+                        title: "",
+                        type: "",
+                    },
+                    snip: "",
+                    impact_factor: "",
+                    quartil_scopus: "",
+                    quartil_wos: "",
+                    sub_db_index: "",
+                    year: new Date().getFullYear(),
+                    number: "",
+                    pages: "",
+                    initials: "",
+                    country: "",
+                    number_volumes: "",
+                    by_editing: "",
+                    city: "",
+                    editor_name: "",
+                    languages: "",
+                    number_certificate: "",
+                    applicant: "",
+                    date_application: "",
+                    date_publication: "",
+                    commerc_university: "",
+                    commerc_employees: "",
+                    access_mode: "",
+                    mpk: "",
+                    application_number: "",
+                    newsletter_number: "",
+                    name_conference: "",
+                    url: "",
+                    out_data: "",
+                    name_magazine: "",
+                    doi: "",
+                    nature_index: "",
+                    nature_science: "",
+                    db_scopus_percent: "",
+                    db_wos_percent: "",
+                    authors: [],
+                    useSupervisor: 0,
+                    supervisor: null
                 },
             };
         },
-        created () {
+        created() {
             this.getPublicationData();
         },
 
@@ -42,22 +87,24 @@
         },
 
         methods: {
-            getPublicationData(){
-
+            getPublicationData() {
                 axios.get(`/api/publication/${this.$route.params.id}`).then(response => {
-                    this.publicationData = response.data;
-                    this.stepData = response.data;
-                }).catch(error => {
-                    console.log(error);
+                    this.publicationData = Object.assign(this.publicationData, response.data);
+                    this.publicationData.authors = [];
+                    response.data.authors.map(item => {
+                        if(item.supervisor == 0) {
+                            this.publicationData.authors.push(item.author);
+                        }
+                        if(item.supervisor == 1) {
+                            this.publicationData.useSupervisor = 1;
+                            this.publicationData.supervisor = item.author;
+                        }
+                    });
                 });
             },
-            getStepData(event){
-                this.publicationData = Object.assign(this.publicationData, event);
-                this.stepData = Object.assign(this.stepData, event);
-
+            getStepData() {
                 if(this.currentStep !== 4) {
                     // этот код скрывает 3 шаг
-
                     if(!this.isScopus && this.currentStep == 2){
                         this.currentStep+=2;
                         const falseScinceType = {
@@ -67,27 +114,23 @@
                             quartil_wos: null,
                             sub_db_index: null
                         };
-                        this.stepData = Object.assign(this.stepData, falseScinceType);
+                        this.publicationData = Object.assign(this.publicationData, falseScinceType);
                     }
                     else {
                         this.currentStep++;
                     }
-                    //
-
-                    // this.currentStep++;
                 } else {
-                    this.stepData.out_data = this.outDataParser(this.stepData);
-                    if(this.stepData.science_type_id == 1) {
-                        this.stepData.quartil_wos = null;
-                        this.stepData.impact_factor = null;
-                        this.stepData.sub_db_index = null;
+                    this.publicationData.out_data = this.outDataParser(this.publicationData);
+                    if(this.publicationData.science_type_id == 1) {
+                        this.publicationData.quartil_wos = null;
+                        this.publicationData.impact_factor = null;
+                        this.publicationData.sub_db_index = null;
                     }
-                    if(this.stepData.science_type_id == 2) {
-                        this.stepData.snip = null;
-                        this.stepData.quartil_scopus = null;
+                    if(this.publicationData.science_type_id == 2) {
+                        this.publicationData.snip = null;
+                        this.publicationData.quartil_scopus = null;
                     }
-                    console.log(this.stepData)
-                    axios.post(`/api/update-publication/${this.$route.params.id}`, this.stepData)
+                    axios.post(`/api/update-publication/${this.$route.params.id}`, this.publicationData)
                         .then((response) => {
                             swal("Публікацію успішно змінено!", {
                                 icon: "success",
@@ -116,7 +159,7 @@
                 }
 
             },
-            outDataParser (item) {
+            outDataParser(item) {
                 let result = "";
                 switch(item.publication_type.type){
                     case "article":

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\Models\Publications;
 use App\Models\AuthorsPublications;
+use App\Models\Authors;
 use App\Models\Countries;
 use App\Models\PublicationType;
 use App\Models\Notifications;
@@ -19,7 +21,7 @@ class PublicationsController extends ASUController
 
     // всі публікації
     function getAll(Request $request) {
-        $data = Publications::with('publicationType', 'scienceType', 'supervisor', 'authors')->whereHas('authors.author', function($q) use ($request) {
+        $data = Publications::with('publicationType', 'scienceType', 'authors.author')->whereHas('authors.author', function($q) use ($request) {
             if($request->session()->get('person')['roles_id'] == 2) {
                 $q->where('department_code', $request->session()->get('person')['department_code']);
             }
@@ -28,30 +30,23 @@ class PublicationsController extends ASUController
             }
         })->get();
         foreach ($data as $key => $publication) {
-            foreach ($publication->authors as $key => $value) {
-                $value['author'] = $value->author;
-            }
+            $publication['date'] = Carbon::parse($publication['created_at'])->format('d.m.Y');
         }
         return response()->json($data);
     }
 
     // мої публікації
     function getMyPublications(Request $request) {
-        $data = Publications::with('publicationType', 'scienceType', 'supervisor', 'authors')->whereHas('authors', function($q) use ($request) {
+        $data = Publications::with('publicationType', 'scienceType', 'authors.author')->whereHas('authors.author', function($q) use ($request) {
             $q->where('autors_id', $request->session()->get('person')['id']);
         })->get();
-        foreach ($data as $key => $publication) {
-            foreach ($publication->authors as $key => $value) {
-                $value['author'] = $value->author;
-            }
-        }
         return response()->json($data);
     }
 
     // публікація по ID
     function getId($id) {
         $divisions = $this->getDivisions();
-        $data = Publications::with('publicationType', 'scienceType', 'supervisor')->find($id);
+        $data = Publications::with('publicationType', 'scienceType', 'authors.author')->find($id);
         $data->authors = AuthorsPublications::with('author')->where('publications_id', $id)->get();
         foreach ($data->authors as $key => $value) {
             foreach($divisions->original['department']  as $k => $v) {
@@ -65,20 +60,6 @@ class PublicationsController extends ASUController
                 }
             }
         }
-
-        if($data->supervisor) {
-            foreach($divisions->original['department']  as $k => $v) {
-                if ($data->supervisor['department_code'] == $v['ID_DIV']) {
-                    $data->supervisor['department'] = $v['NAME_DIV'];
-                }
-            }
-            foreach($divisions->original['institute'] as $k => $v) {
-                if ($data->supervisor['faculty_code'] == $v['ID_DIV']) {
-                    $data->supervisor['faculty'] = $v['NAME_DIV'];
-                }
-            }
-        }
-
         return response()->json($data);
     }
 
@@ -87,10 +68,6 @@ class PublicationsController extends ASUController
         $modelPublications = new Publications();
         $dataPublications = $request->all();
         $dataPublications['publication_type_id'] = $dataPublications['publication_type']['id'];
-
-        if($dataPublications['supervisor']) {
-            $dataPublications['supervisor_id'] = $dataPublications['supervisor']['id'];
-        }
         $response = $modelPublications->create($dataPublications);
 
         $initials = [];
@@ -118,6 +95,19 @@ class PublicationsController extends ASUController
                 ]);
             }
         }
+        if($dataPublications['supervisor']) {
+            $authorsPublications = new AuthorsPublications;
+            $authorsPublications->autors_id = $dataPublications['supervisor']['id'];
+            $authorsPublications->publications_id = $response->id;
+            $authorsPublications->supervisor = true;
+            $authorsPublications->save();
+            if($dataPublications['supervisor']['id'] != $request->session()->get('person')['id']) {
+                Notifications::create([
+                    "autors_id" => $dataPublications['supervisor']['id'],
+                    "text" => $request->session()->get('person')['name']." додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас керівником публікації."
+                ]);
+            }
+        }
         Publications::find($response->id)->update([
             'initials' => implode(", ", $initials)
         ]);
@@ -127,19 +117,15 @@ class PublicationsController extends ASUController
     // оновлення публікації
     function updatePublication(Request $request, $id) {
         $data = $request->all();
-        $model = Publications::with('supervisor', 'authors')->find($id);
+        $model = Publications::with('authors')->whereHas('authors', function($q) {
+            $q->where('supervisor', 0);
+        })->find($id);
         $data['initials'] = [];
         $notificationText = "";
 
         $notificationText .= "Корисувач " . $request->session()->get('person')['name'] . " оновив публікацію. " . $model->title . "\".<br>";
 
-        if($data['supervisor']) {
-            $data['supervisor_id'] = $data['supervisor']['id'];
-        } 
-        if($data['supervisor'] == null) {
-            $data['supervisor_id'] = null;
-        }
-
+        // check authors old or new
         $oldAuthors = [];
         foreach ($model->authors as $key => $value) {
             array_push($oldAuthors, $value['autors_id']);
@@ -174,6 +160,27 @@ class PublicationsController extends ASUController
             AuthorsPublications::where('autors_id', $value)->where('publications_id', $id)->delete();
             $notificationText .= "Автора " . $this->test($model->authors, $value) . " видалено з публікації.<br>";
         }
+        // end check
+
+        // check supervisor
+        if($data['supervisor']) {
+            if(AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->exists()) {
+                if(!AuthorsPublications::where('autors_id', $data['supervisor']['id'])->where('publications_id', $id)->where('supervisor', 1)->exists()) {
+                    AuthorsPublications::where('publications_id', $id)->find('supervisor', 1)->update([
+                        "autors_id" => $data['supervisor']['id']
+                    ]);
+                }
+            } else {
+                $authorsPublications = new AuthorsPublications;
+                $authorsPublications->autors_id = $data['supervisor']['id'];
+                $authorsPublications->publications_id = $id;
+                $authorsPublications->supervisor = 1;
+                $authorsPublications->save();
+            }
+        } else {
+            AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->delete();
+        }
+        // end check
 
         if($data['title'] != $model->title) {
             $notificationText .= "Змінено назву " . $model->title . " на " . $data['title'] . "<br>";
@@ -232,12 +239,22 @@ class PublicationsController extends ASUController
     // рейтингові показники
     function export(Request $request) {
         $divisions = $this->getDivisions();
-        $data = Publications::with('authors.author', 'publicationType', 'scienceType', 'supervisor')
+        $data = Publications::with('authors.author', 'publicationType', 'scienceType')
             ->where('country', 'like', "%".$request->country."%") // Країна видання
             ->where('publication_type_id', 'like', "%".$request->publication_type_id."%"); // Вид публікацій
 
+        $todayYear = Carbon::today()->year;
+        $countScopusFiveYear = Publications::where('science_type_id', 1)->whereYear('created_at', '>=', $todayYear - 5)->count();
+        $authorsHasfivePublications = Authors::where('five_publications', 1)->count();
+
+        $authorsHirschIndex = Authors::select('h_index', 'scopus_autor_id')->get();
+
         if($request->year) {
             $data->where('year', $request->year); // Рік видання
+        }
+
+        if($request->year_db) {
+            $data->where('created_at', 'like', "%".$request->year_db."%"); // Рік занесення до бази даних
         }
 
         if($request->doi != "") {
@@ -288,74 +305,50 @@ class PublicationsController extends ASUController
         }
 
         if($request->withStudents == 1) { // Публікації за авторством та співавторством студентів
-            $data->whereHas('authors', function($query) {
-                $query->whereHas('author', function($q) {
-                    $q->where('categ_1', 1);
-                });
+            $data->whereHas('authors.author', function($q) {
+                $q->where('categ_1', 1);
             });
         }
 
         if($request->faculty != "") { // Інститут / факультет
-            $data->where(function($query) use($request) {
-                $query->whereHas('authors', function($queryAuthors) use($request) {
-                    $queryAuthors->whereHas('author', function($queryAuthor) use($request) {
-                        $queryAuthor->where('faculty_code', $request->faculty);
-                    });
-                })->orWhereHas('supervisor', function($querySupervisor) use($request) {
-                    $querySupervisor->where('faculty_code', $request->faculty);
-                });
+            $data->whereHas('authors.author', function($q) use($request) {
+                $q->where('faculty_code', $request->faculty);
             });
         }
 
         if($request->department != "") { // Кафедра
-            $data->where(function($query) use($request) {
-                $query->whereHas('authors', function($queryAuthors) use($request) {
-                    $queryAuthors->whereHas('author', function($queryAuthor) use($request) {
-                        $queryAuthor->where('department_code', $request->department)->orWhere('department_code', null);
-                    });
-                })->orWhereHas('supervisor', function($querySupervisor) use($request) {
-                    $querySupervisor->where('department_code', $request->department);
-                });
+            $data->whereHas('authors.author', function($q) use($request) {
+                $q->where('department_code', $request->department);
             });
         }
 
         if($request->withForeigners != "") { // Публікації у співавторстві з іноземними партнерами
             if($request->withForeigners == 1) {
-                $data->whereHas('authors', function($query) {
-                    $query->whereHas('author', function($q) {
-                        $q->where('country', "Україна");
-                    });
+                $data->whereHas('authors.author', function($q) {
+                    $q->where('country', "Україна");
                 });
             }
             if($request->withForeigners == 2) {
-                $data->whereHas('authors', function($query) {
-                    $query->whereHas('author', function($q) {
-                        $q->where('country', '!=', "Україна");
-                    });
+                $data->whereHas('authors.author', function($q) {
+                    $q->where('country', '!=', "Україна");
                 });
             }
             if($request->withForeigners == 10) {
-                $data->whereHas('authors', function($query) {
-                    $query->whereHas('author', function($q) {
-                        $q->where('h_index', '>', 10);
-                    });
+                $data->whereHas('authors.author', function($q) {
+                    $q->where('h_index', '>', 10);
                 });
             }
         }
 
         if($request->other_organization != "") { // Публікації за співавторством з представниками інших організацій
             if($request->other_organization == 1) {
-                $data->whereHas('authors', function($query) {
-                    $query->whereHas('author', function($q) {
-                        $q->where('job', '!=', 'СумДУ');
-                    });
+                $data->whereHas('authors.author', function($q) {
+                    $q->where('job', '!=', 'СумДУ')->where('job', '!=', 'Не працює');
                 });
             }
             if($request->other_organization == 0) { // Публікації за співавторством з представниками інших організацій
-                $data->whereHas('authors', function($query) {
-                    $query->whereHas('author', function($q) {
-                        $q->where('job', 'СумДУ');
-                    });
+                $data->whereHas('authors.author', function($q) {
+                    $q->where('job', 'СумДУ');
                 });
             }
         }
@@ -380,66 +373,102 @@ class PublicationsController extends ASUController
 
         $data = $data->get();
 
-        // return response()->json($data);
+        foreach ($data as $key => $publication) {
+            $publication['date'] = Carbon::parse($publication['created_at'])->format('d.m.Y');
+        }
 
         $rating = [
-            "countPublications" => 0, // Всього
+            "countPublications" => count($data), // Всього
             "countStudentPublications" => 0, // Кількість статей за авторством та співавторством студентів
-            "countForeignPublications" => 0, // Кількість публікацій у співавторстві з іноземними партнерами
-            "countIndexHirsha" => 0, // Мають індекс Гірша за БД Scopus або WoS не нижче 10
-            "countArticle" => 0, // кількість статтей
-            "countOtherArticle" => 0, // кількість інших статтей
-            "countBooks" => 0, // кількість книг
-            "countManuals" => 0, // кількість посібників
-            "countMonographs" => 0, // Монографія
-            "countMonographSection" => 0, // Розділ монографії
-            "countBookSection" => 0, // Розділ монографії
-            "countThese" => 0, // Кількість тез всього
-            "countPatent" => 0, // Патент
-            "countCertificate" => 0, // Свідоцтво про реєстрації авторських прав на твір/рішення
-            "countMethodicalInstructions" => 0, // Методичні вказівки / конспекти лекцій
-            "countElectronic" => 0, // Електронні видання
-            "countScopusAndWoS" => 0, // за БД Scopus та WoS
-            "countScopusOrWoS" => 0, // за БД Scopus або WoS
-            "countSnipScopus" => 0, // у тому числі у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
-            "countSCIEWoS" => 0, // за БД WoS - у т.ч. статті у виданнях, які входять до SCIE
-            "countSSCIWoS" => 0, // за БД WoS - у т.ч. статті у виданнях, які входять до SSCI
-            "countImpactFactorWoS" => 0, // за БД WoS - у т.ч. у виданнях з імпакт-фактором більше ніж 0‚5
-            "countOtherOrganization" => 0, // у т.ч. за співавторством з представниками інших організацій
+            "countForeignPublications" => [
+                "count" => 0, // Всього
+                "haveIndexScopusWoS" => 0 // Мають індекс Гірша за БД Scopus або WoS не нижче 10
+            ], // Кількість публікацій статей та монографій (розділів) у співавторстві з іноземними партнерами, які мають індекс Гірша за БД Scopus або WoS не нижче 10
+            "monographsIndexedScopusOrWoSNotSSU" => 0, // монографії проіндексовані  БД Scopus або WoS за належності до профілю СумДУ
+            "articleProfessionalPublicationsUkraine" => 0, // статей у фахових за статусом виданнях
+            "publicationsScopusOrAndWoSNotSSU" => [
+                "countReportingYear" => [
+                    "ScopusAndWoS" => 0, // за БД Scopus та WoS:
+                    "ScopusOrWoS" => 0 // за БД Scopus або WoS:
+                ], // всього за звітний рік
+                "quartile1" => 0, // у виданні, яке відноситься до квартиля Q1
+                "quartile2" => 0, // у виданні, яке відноситься до квартиля Q2
+                "quartile3" => 0, // у виданні, яке відноситься до квартиля Q3
+            ], // які опубліковані у виданнях, що індексуються БД Scopus та/або WoS за умови належності до профілю СумДУ
+            "articleWoS" => [
+                "scie" => 0, // статті у виданнях, які входять до SCIE
+                "ssci" => 0 // статті у виданнях, які входять до SSCI
+            ],
+            "accountedNatureIndex" => 0, // які обліковуються рейтингом Nature Index
+            "journalsNatureOrScience" => 0, // у журналах Nature Scince
+            "authorsOtherOrganizations" => 0, // за співавторством з представниками інших організацій
+            "authorsInForbesFortune" => 0, // що входять до списків Forbes та Fortune
+            "enteredMostCitedSubjectArea" => [
+                "scopus" => 0, // до 10% за БД Scopus
+                "wos" => 0 // До 1% за БД WoS
+            ], // які увійшли до найбільш цитованих для своєї предметної галузі
             "countDOI" => 0, // - у т.ч. з цифровим ідентифікатором DOI
-            "countFiveYearScopus" => 0, // - всього за 5 років за БД Scopus
-            "countTheseAbroad" => 0, // Тез опублікованих за кордоном
-            "countTheseWithStudent" => 0, // Тез опублікованих зі студентами
-            "countTheseWithForeign" => 0, // Тез опублікованих з іноземними партнерами
-            "countArticleAbroad" => 0, // - статей опублікованих за кордоном
-            "countArticleWithForeign" => 0, // - статей з іноземними партнерами
-            "countEmployees" => 0, // Чисельність штатних науково та науково-педагогічних працівників, які мають не менше 5-ти публікацій у виданнях, що індексуються БД Scopus та/або WoS.
+            "citedInternationalPatents" => 0, // які процитовані у міжнародних патентах
+            "countScopusFiveYear" => $countScopusFiveYear, // всього за 5 років за БД Scopus
+            "countSnipScopus" => 0, // Кількість публікацій у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
+            "countHirschIndex" => 0, //Загальне значення індексів Гірша (за БД Scopus  або БД WoS ) штатних працівників та докторантів (динаміка змін)
+            "these" => [
+                "count" => 0, // Кількість тез всього
+                "publishedAbroad" => 0, // Тез опублікованих за кордоном
+                "publishedWithStudents" => 0, // Тез опублікованих зі студентами
+                "publishedWithForeignPartners" => 0 // Тез опублікованих з іноземними партнерами
+            ],
+            "articles" => [
+                "count" => 0, // Кількість статей (всього)
+                "publishedAbroad" => 0, // статей опублікованих за кордоном
+                "publishedWithForeignPartners" => 0 // статей з іноземними партнерами
+            ],
+            "authorsHasfivePublications" => $authorsHasfivePublications // Чисельність штатних працівників, які мають не менше 5-ти публікацій у виданнях, що  індексуються БД Scopus та/або WoS (динаміка змін)
         ];
 
         foreach ($data as $key => $value) {
-            if($value['supervisor']) {
-                // Кафедра - керівника
-                foreach($divisions->original['department'] as $keyDepartment => $department) {
-                    if ($value['supervisor']['department_code'] == $department['ID_DIV']) {
-                        $value['supervisor']['department'] = $department['NAME_DIV'];
-                    }
-                }
-                // Інcтитут / факультет - керівника
-                foreach($divisions->original['institute'] as $keyInstitute => $institute) {
-                    if ($value['supervisor']['faculty_code'] == $institute['ID_DIV']) {
-                        $value['supervisor']['faculty'] = $institute['NAME_DIV'];
-                    }
-                }
-            }
-
             $withStudent = 0;
-            $theseWithStudent = 0;
-            $withForeign = 0;
-            $theseWithForeign = 0;
-            $articleWithForeign = 0;
-            $hasIndexHirsha = 0;
-            $hasOtherOrganization = 0;
-            $hasEmployees = 0;
+            $countForeignPublications = [
+                "count" => 0,
+                "haveIndexScopusWoS" => 0
+            ];
+            $monographsIndexedScopusOrWoSNotSSU = 0;
+            $articleProfessionalPublicationsUkraine = 0;
+            $publicationsScopusOrAndWoSNotSSU = [
+                "countReportingYear" => [
+                    "ScopusAndWoS" => 0,
+                    "ScopusOrWoS" => 0
+                ],
+                "quartile1" => 0,
+                "quartile2" => 0,
+                "quartile3" => 0,
+            ];
+            $articleWoS = [
+                "scie" => 0,
+                "ssci" => 0
+            ];
+            $accountedNatureIndex = 0;
+            $journalsNatureOrScience = 0;
+            $authorsOtherOrganizations = 0;
+            $authorsInForbesFortune = 0;
+            $enteredMostCitedSubjectArea = [
+                "scopus" => 0,
+                "wos" => 0
+            ];
+            $countDOI = 0;
+            $citedInternationalPatents = 0;
+            $countSnipScopus = 0;
+            $these = [
+                "count" => 0,
+                "publishedAbroad" => 0,
+                "publishedWithStudents" => 0,
+                "publishedWithForeignPartners" => 0
+            ];
+            $articles = [
+                "count" => 0,
+                "publishedAbroad" => 0,
+                "publishedWithForeignPartners" => 0
+            ];
             
             foreach ($value['authors'] as $k => $v) {
                 // Кафедра - автора
@@ -456,160 +485,163 @@ class PublicationsController extends ASUController
                     }
                 }
 
-                // Кількість статей за авторством та співавторством студентів
-                if($v['author']['categ_1'] == 1) {
+                if(($value->publication_type_id == 1 || $value->publication_type_id == 2 || $value->publication_type_id == 3) && $v['author']['categ_1'] == 1) {
                     $withStudent = 1;
                 }
 
-                // Тез опублікованих зі студентами
-                if($value->publication_type_id == 9 && $v['author']['categ_1'] == 1) {
-                    $theseWithStudent = 1;
+                if(($value->publication_type_id == 1 || $value->publication_type_id == 2 || $value->publication_type_id == 3 || $value->publication_type_id == 6 || $value->publication_type_id == 7) && $v['author']['country'] != "Україна") {
+                    $countForeignPublications['count'] = 1;
+                    if($v['author']['h_index'] >= 10 || $v['author']['scopus_autor_id'] >= 10) {
+                        $countForeignPublications['haveIndexScopusWoS'] = 1;
+                    }
+                }
+                if($value->publication_type_id == 6 && ($value->science_type_id == 1 || $value->science_type_id == 2)) {
+                    $monographsIndexedScopusOrWoSNotSSU = 1;
+                }
+                if($value->publication_type_id == 1) {
+                    $articleProfessionalPublicationsUkraine = 1;
                 }
 
-                // Кількість публікацій у співавторстві з іноземними партнерами
-                if($v['author']['country'] != "Україна") {
-                    $withForeign = 1;
+                if($value->science_type_id) {
+                    if($value->science_type_id == 1 || $value->science_type_id == 2) {
+                        $publicationsScopusOrAndWoSNotSSU['countReportingYear']['ScopusOrWoS'] = 1;
+                    }
+                    if($value->science_type_id == 3) {
+                        $publicationsScopusOrAndWoSNotSSU['countReportingYear']['ScopusAndWoS'] = 1;
+                    }
+
+                    if($value->quartil_scopus == 3 || $value->quartil_wos == 3) {
+                        $publicationsScopusOrAndWoSNotSSU['quartile3'] = 1;
+                    }
+                    if($value->quartil_scopus == 2 || $value->quartil_wos == 2) {
+                        $publicationsScopusOrAndWoSNotSSU['quartile2'] = 1;
+                    }
+                    if($value->quartil_scopus == 1 || $value->quartil_wos == 1) {
+                        $publicationsScopusOrAndWoSNotSSU['quartile1'] = 1;
+                    }
                 }
 
-                // Тез опублікованих з іноземними партнерами
-                if($value->publication_type_id == 9 && $v['author']['country'] != "Україна") {
-                    $theseWithForeign = 1;
+                if(($value->publication_type_id == 1 || $value->publication_type_id == 3) && $value->science_type_id == 2) {
+                    if($value->sub_db_index == 1) {
+                        $articleWoS['scie'] = 1;
+                    }
+                    if($value->sub_db_index == 2) {
+                        $articleWoS['ssci'] = 1;
+                    }
                 }
 
-                // - статей з іноземними партнерами
-                if(($value->publication_type_id == 1 || $value->publication_type_id == 2) && $v['author']['country'] != "Україна") {
-                    $articleWithForeign = 1;
+                if($value->nature_index) {
+                    $accountedNatureIndex = 1;
                 }
 
-                // Мають індекс Гірша за БД Scopus або WoS не нижче 10
-                if($v['author']['h_index'] >= 10) {
-                    $hasIndexHirsha = 1;
+                if($value->nature_science == 'Nature' || $value->nature_science == 'Science') {
+                    $journalsNatureOrScience = 1;
                 }
 
-                // у т.ч. за співавторством з представниками інших організацій
-                if($v['author']['job'] != "СумДУ") {
-                    $hasOtherOrganization = 1;
+                if($v['author']['job'] != "СумДУ" && $v['author']['job'] != "Не працює" && $v['author']['job'] != null) {
+                    $authorsOtherOrganizations = 1;
                 }
 
-                // Чисельність штатних науково та науково-педагогічних працівників, які мають не менше 5-ти публікацій у виданнях, що індексуються БД Scopus та/або WoS.
-                if($value->index_scopus_wos && ($v['author']['categ_2'] == 1 || $v['author']['categ_2'] == 2) && (AuthorsPublications::where('autors_id', $v['author']['id'])->count() >= 5)) {
-                    $hasEmployees = 1;
+                if($v['author']['forbes_fortune']) {
+                    $authorsInForbesFortune = 1;
                 }
-            }
 
-            $rating["countPublications"] = count($data); // Всього
-            $rating["countStudentPublications"] += $withStudent; // Кількість сдудентів
-            $rating["countForeignPublications"] += $withForeign; // Кількість закордонних авторів
-            $rating["countIndexHirsha"] += $hasIndexHirsha; // Кількість авторів з індексом Гірша не нижче 10
-            $rating["countOtherOrganization"] += $hasOtherOrganization; // за співавторством з представниками інших організацій
-            $rating["countTheseWithStudent"] += $theseWithStudent; // Тез опублікованих зі студентами
-            $rating["countTheseWithForeign"] += $theseWithForeign; // Тез опублікованих з іноземними партнерами
-            $rating["countArticleWithForeign"] += $articleWithForeign; // статей з іноземними партнерами
-            $rating["countEmployees"] += $hasEmployees; // Чисельність штатних науково та науково-педагогічних працівників
-
-            // статті
-            if($value->publication_type_id == 1 || $value->publication_type_id == 2) {
-                $rating["countArticle"] += 1;
-                // - статей опублікованих за кордоном
-                if($value->country != "Україна") {
-                    $rating["countArticleAbroad"] += 1;
+                if($value->db_scopus_percent) {
+                    $enteredMostCitedSubjectArea['scopus'] = 1;
                 }
-            }
-            // інші статті
-            if($value->publication_type_id == 3) {
-                $rating["countOtherArticle"] += 1;
-            }
-            // книги
-            if($value->publication_type_id == 4) {
-                $rating["countBooks"] += 1;
-            }
-            // Посібник
-            if($value->publication_type_id == 5) {
-                $rating["countManuals"] += 1;
-            }
-            // Монографія
-            if($value->publication_type_id == 6) {
-                $rating["countMonographs"] += 1;
-            }
-            // Розділ монографії
-            if($value->publication_type_id == 7) {
-                $rating["countMonographSection"] += 1;
-            }
-            // Розділ книги
-            if($value->publication_type_id == 8) {
-                $rating["countBookSection"] += 1;
-            }
-            // Тези доповіді
-            if($value->publication_type_id == 9) {
-                $rating["countThese"] += 1;
-                // Тез опублікованих за кордоном
-                if($value->country != "Україна") {
-                    $rating["countTheseAbroad"] += 1;
+
+                if($value->db_wos_percent) {
+                    $enteredMostCitedSubjectArea['wos'] = 1;
+                }
+
+                // - у т.ч. з цифровим ідентифікатором DOI
+                if($value->doi) {
+                    $rating["countDOI"] = 1;
+                }
+
+                if($value->cited_international_patents) {
+                    $rating["citedInternationalPatents"] = 1;
+                }
+
+                if($value->science_type_id == 1 && ($value->snip > 1)) {
+                    $rating["countSnipScopus"] = 1;
+                }
+
+                if($value->publication_type_id == 9) {
+                    $these['count'] = 1;
+                    // Тез опублікованих за кордоном
+                    if($value->country != "Україна") {
+                        $these['publishedAbroad'] = 1;
+                    }
+                    // Тез опублікованих з іноземними партнерами
+                    if($v['author']['country'] != "Україна") {
+                        $these['publishedWithForeignPartners'] = 1;
+                    }
+                    // Тез опублікованих зі студентами
+                    if($v['author']['categ_1'] == 1) {
+                        $these['publishedWithStudents'] = 1;
+                    }
+                }
+
+                if($value->publication_type_id == 1 || $value->publication_type_id == 2 || $value->publication_type_id == 3) {
+                    $articles['count'] = 1;
+                    // Статті опубліковані за кордоном
+                    if($value->country != "Україна") {
+                        $articles['publishedAbroad'] = 1;
+                    }
+                    // Статті опубліковані з іноземними партнерами
+                    if($v['author']['country'] != "Україна") {
+                        $articles['publishedWithForeignPartners'] = 1;
+                    }
                 }
             }
 
-            // Патент
-            if($value->publication_type_id == 10) {
-                $rating["countPatent"] += 1;
-            }
-            // Свідоцтво про реєстрації авторських прав на твір/рішення
-            if($value->publication_type_id == 11) {
-                $rating["countCertificate"] += 1;
-            }
-            // Методичні вказівки / конспекти лекцій
-            if($value->publication_type_id == 12) {
-                $rating["countMethodicalInstructions"] += 1;
-            }
-            // Електронні видання
-            if($value->publication_type_id == 13) {
-                $rating["countElectronic"] += 1;
-            }
+            $rating["countStudentPublications"] += $withStudent; // Кількість статей за авторством та співавторством студентів
 
-            // за БД Scopus та WoS
-            if($value->science_type_id == 3) {
-                $rating["countScopusAndWoS"] += 1;
-            }
+            $rating["countForeignPublications"]['count'] += $countForeignPublications['count'];
+            $rating["countForeignPublications"]['haveIndexScopusWoS'] += $countForeignPublications['haveIndexScopusWoS'];
+            $rating["monographsIndexedScopusOrWoSNotSSU"] += $monographsIndexedScopusOrWoSNotSSU;
+            $rating["articleProfessionalPublicationsUkraine"] += $articleProfessionalPublicationsUkraine;
 
-            // за БД Scopus або WoS
-            if($value->science_type_id == 1 || $value->science_type_id == 2) {
-                $rating["countScopusOrWoS"] += 1;
-            }
+            $rating["publicationsScopusOrAndWoSNotSSU"]['quartile3'] += $publicationsScopusOrAndWoSNotSSU['quartile3'];
+            $rating["publicationsScopusOrAndWoSNotSSU"]['quartile2'] += $publicationsScopusOrAndWoSNotSSU['quartile2'];
+            $rating["publicationsScopusOrAndWoSNotSSU"]['quartile1'] += $publicationsScopusOrAndWoSNotSSU['quartile1'];
 
-            // у тому числі у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
-            if($value->science_type_id == 1 && ($value->snip > 1)) {
-                $rating["countSnipScopus"] += 1;
-            }
+            $rating["publicationsScopusOrAndWoSNotSSU"]['countReportingYear']['ScopusOrWoS'] += $publicationsScopusOrAndWoSNotSSU['countReportingYear']['ScopusOrWoS'];
+            $rating["publicationsScopusOrAndWoSNotSSU"]['countReportingYear']['ScopusAndWoS'] += $publicationsScopusOrAndWoSNotSSU['countReportingYear']['ScopusAndWoS'];
 
-            // за БД WoS - у т.ч. статті у виданнях, які входять до SCIE
-            if($value->science_type_id == 2 && ($value->sub_db_index == 1)) {
-                $rating["countSCIEWoS"] += 1;
-            }
+            $rating["articleWoS"]['scie'] += $articleWoS['scie'];
+            $rating["articleWoS"]['ssci'] += $articleWoS['ssci'];
 
-            // за БД WoS - у т.ч. статті у виданнях, які входять до SSCI
-            if($value->science_type_id == 2 && ($value->sub_db_index == 2)) {
-                $rating["countSSCIWoS"] += 1;
-            }
+            $rating["accountedNatureIndex"] += $accountedNatureIndex;
+            $rating["journalsNatureOrScience"] += $journalsNatureOrScience;
+            $rating["authorsOtherOrganizations"] += $authorsOtherOrganizations;
+            $rating["authorsInForbesFortune"] += $authorsInForbesFortune;
 
-            // за БД WoS - у т.ч. у виданнях з імпакт-фактором більше ніж 0‚5
-            if($value->science_type_id == 2 && ($value->impact_factor > 0.5)) {
-                $rating["countImpactFactorWoS"] += 1;
-            }
+            $rating["enteredMostCitedSubjectArea"]['scopus'] += $enteredMostCitedSubjectArea['scopus'];
+            $rating["enteredMostCitedSubjectArea"]['wos'] += $enteredMostCitedSubjectArea['wos'];
 
-            // - у т.ч. з цифровим ідентифікатором DOI
-            if($value->doi) {
-                $rating["countDOI"] += 1;
-            }
+            $rating["countDOI"] += $countDOI;
+            $rating["citedInternationalPatents"] += $citedInternationalPatents;
+            $rating["countSnipScopus"] += $countSnipScopus;
 
-            // - всього за 5 років за БД Scopus
-            if($value->science_type_id == 1 && (date('Y') - $value->year) <= 5) {
-                $rating["countFiveYearScopus"] += 1;
-            }
+            $rating["these"]['count'] += $these['count'];
+            $rating["these"]['publishedAbroad'] += $these['publishedAbroad'];
+            $rating["these"]['publishedWithStudents'] += $these['publishedWithStudents'];
+            $rating["these"]['publishedWithForeignPartners'] += $these['publishedWithForeignPartners'];
+
+            $rating["articles"]['count'] += $articles['count'];
+            $rating["articles"]['publishedAbroad'] += $articles['publishedAbroad'];
+            $rating["articles"]['publishedWithForeignPartners'] += $articles['publishedWithForeignPartners'];
         }
 
+        foreach ($authorsHirschIndex as $key => $value) {
+            $rating['countHirschIndex'] += max($value['h_index'], $value['scopus_autor_id']);
+        }
+        
         return response()->json([
             "rating" => $rating,
             "publications" => $data
         ]);
     }
-
 }

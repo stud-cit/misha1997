@@ -106,13 +106,10 @@
                                 <div class="col-lg-3 list-item list-title">Входить до списків Forbes та Fortune *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
-                                        <select v-model="stepData.forbes_fortune">
+                                        <select v-model="newAuthor.forbes_fortune">
                                             <option value="1">Так</option>
-                                            <option value="2">Ні</option>
+                                            <option value="0">Ні</option>
                                         </select>
-                                    </div>
-                                    <div class="error" v-if="$v.newAuthor.forbes_fortune.$error">
-                                        Поле обов'язкове для заповнення
                                     </div>
                                 </div>
                             </li>
@@ -182,20 +179,20 @@
             <div class="form-group">
                 <label class="item-title">Під керівництвом</label>
                 <div class="input-container hint-container">
-                    <select class="item-value" v-model="stepData.useSupervisor" @change="changeSupervisor">
-                        <option value="1">Так </option>
-                        <option value="0">Ні </option>
+                    <select class="item-value" v-model="publicationData.useSupervisor" @change="changeSupervisor">
+                        <option value="1">Так</option>
+                        <option value="0">Ні</option>
                     </select>
                     <div class="hint" ><span>Зазначити "Так" у випадку одноосібної публікації студента</span></div>
                 </div>
 
             </div>
 
-            <div class="form-group" v-if="stepData.useSupervisor == '1'">
+            <div class="form-group" v-if="publicationData.useSupervisor == '1'">
                 <label class="item-title">Керівник *</label>
                 <div class="input-container authors">
                     <multiselect
-                        v-model="stepData.supervisor"
+                        v-model="publicationData.supervisor"
                         :options="authors"
                         label="name"
                         :searchable="true"
@@ -210,7 +207,7 @@
                     <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
 
-                <div class="error" v-if="$v.stepData.supervisor.$error">
+                <div class="error" v-if="$v.publicationData.supervisor.$error">
                     Поле обов'язкове для заповнення
                 </div>
 
@@ -218,44 +215,42 @@
 
 
             <div class="form-group">
-                <label class="item-title" >Автори:</label>
+                <label class="item-title">Автори:</label>
+                <div v-for="(item, i) in publicationData.authors" :key="'author-'+i" class="form-group">
+                    <label for="">Прізвище, ім’я, по-батькові автора *</label>
+                    <div class="input-container authors">
+                        <multiselect
+                            v-model="publicationData.authors[i]"
+                            :searchable="true"
+                            :options="authors"
+                            selectLabel="Натисніть для вибору"
+                            selectedLabel="Вибрано"
+                            deselectLabel='Натисніть для видалення'
+                            placeholder="Пошук в базі данних сайту"
+                            :custom-label="nameWithInfo"
+                        >
+                            <span slot="noResult">По даному запиту немає результатів</span>
+                        </multiselect>
+                        <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
+                        <button class="remove-author" @click="removeAuthor(i)">&times;</button>
+                    </div>
+                    <div class="error" v-if="$v.publicationData.authors.$each.$iter[i].$error">
+                        Поле обов'язкове для заповнення
+                    </div>
+                </div>
                 <div class="add-group">
                     <div class="input-container hint-container">
                         <button class="add-button btn-blue" @click="addAuthor">
                             Додати автора
                         </button>
-                        <div class="hint white-hint" ><span>Додати авторів з бази даних сайту, якщо їх більше одного</span></div>
+                        <label class="item-title find-author" v-if="!findAuthor">
+                            <a href="#" @click.prevent="findAuthor=!findAuthor">Не знайшли потрібного вам автора?</a>
+                        </label>
+                        <div class="hint white-hint"><span>Додати авторів з бази даних сайту, якщо їх більше одного</span></div>
                     </div>
                 </div>
             </div>
 
-            <div v-for="(item, i) in $v.stepData.authors.$each.$iter" :key="'author-'+i" class="form-group">
-                <label for="">Прізвище, ім’я, по-батькові автора *</label>
-                <div class="input-container authors">
-                    <multiselect
-                        v-model="stepData.authors[i]"
-                        :searchable="true"
-                        :options="authors"
-                        selectLabel="Натисніть для вибору"
-                        selectedLabel="Вибрано"
-                        deselectLabel='Натисніть для видалення'
-                        placeholder="Пошук в базі данних сайту"
-                        :custom-label="nameWithInfo"
-                    >
-                        <span slot="noResult">По даному запиту немає результатів</span>
-                    </multiselect>
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                    <button class="remove-author" @click="removeAuthor(i)">&times;</button>
-                </div>
-                <div class="error" v-if="$v.stepData.authors.$each.$iter[i].$error">
-                    Поле обов'язкове для заповнення
-                </div>
-            </div>
-
-
-            <div class="form-group find-author" v-if="!findAuthor">
-                <label class="item-title"><a href="#" @click.prevent="findAuthor=!findAuthor" >Не знайшли потрібного вам автора?</a></label>
-            </div>
             <transition name="component-fade" mode="out-in">
                 <div class="form-group " v-if="findAuthor">
                     <label class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) </label>
@@ -275,22 +270,10 @@
                     </div>
                 </div>
             </transition>
-            <!-- <div class="form-group" v-show="stepData.authors.length > 0">
-                <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
-                <div class="input-container hint-container">
-                    <input class="item-value" type="text" v-model="stepData.initials">
-                    <div class="hint" ><span>Ввести через кому прізвише та ініціали авторів мовою оригіналу публікації</span></div>
-                </div>
-                <div class="error" v-if="$v.stepData.initials.$error">
-                    Поле обов'язкове для заповнення
-                </div>
-            </div> -->
-
         </div>
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
             <button class="next active" @click="nextStep">Продовжити </button>
-
         </div>
     </div>
 </template>
@@ -306,9 +289,7 @@
                 departments: [],
                 divisions: [],
                 jobType: null,
-                modalAlias: false,
                 findAuthor: false,
-
                 categ: [
                     {
                         name: "Категорії",
@@ -359,13 +340,7 @@
                     scopus_autor_id: '',
                     scopus_researcher_id: '',
                     orcid: '',
-                    forbes_fortune: null
-                },
-                stepData: {
-                    useSupervisor: '0',
-                    supervisor: '',
-                    authors: [],
-                    // initials: '',
+                    forbes_fortune: 0
                 }
             }
         },
@@ -378,17 +353,16 @@
         mounted() {
             this.defaultNewAuthorSSU = Object.assign(this.defaultNewAuthorSSU, this.newAuthorSSU);
             if(this.publicationData.whose_publication == 'my') {
-                this.stepData.authors.push(this.$store.getters.authUser);
+                this.publicationData.authors.push(this.$store.getters.authUser);
             }
             this.getAuthors();
-            this.checkPublicationData();
         },
 
         validations: {
-            stepData: {
+            publicationData: {
                 supervisor: {
                     required: requiredIf ( function() {
-                        return this.stepData.useSupervisor == '1';
+                        return this.publicationData.useSupervisor == '1';
                     })
                 },
                 authors: {
@@ -398,10 +372,7 @@
                             required,
                         }
                     }
-                },
-                // initials: {
-                //     required
-                // },
+                }
             },
             jobType: {
                 required
@@ -415,11 +386,6 @@
                         return this.jobType > 0;
                     })
                 },
-                forbes_fortune: {
-                    required: requiredIf(function() {
-                        return this.jobType == 2;
-                    })
-                },
                 name: {
                     required
                 },
@@ -430,6 +396,7 @@
             setJobType() {
                 if(this.jobType == 0) {
                     this.newAuthor.job = "Не працює";
+                    this.newAuthor.forbes_fortune = 0;
                 } else {
                     this.newAuthor.job = null;
                 }
@@ -439,15 +406,6 @@
                 this.names = this.otherAuthorNames.filter(item => {
                     return item.name.toLowerCase().indexOf(this.newAuthor.name.toLowerCase()) + 1
                 })
-            },
-            checkPublicationData() {
-                if(this.publicationData && this.$route.name == 'publications-edit'){
-                    const {supervisor, authors} = this.publicationData;
-                    this.stepData.useSupervisor = supervisor ? '1' : '0';
-                    this.stepData.supervisor = supervisor;
-                    // this.stepData.initials = initials;
-                    this.stepData.authors = authors.map((a)=>a.author);
-                }
             },
             // форматування відображення списку авторів зареєстрованих на сайті (новий автор, керівник)
             nameWithInfo({name, faculty, department, academic_code, job, categ_1, categ_2}) {
@@ -480,43 +438,45 @@
                 }
             },
 
-            nextStep () {
-                this.$v.stepData.$touch();
-                if (this.$v.stepData.$invalid) {
+            nextStep() {
+                this.$v.publicationData.$touch();
+                if (this.$v.publicationData.$invalid) {
                     swal("Не всі поля заповнено!", {
                         icon: "error",
                     });
                     return
                 }
-                this.$emit('getData', this.stepData);
+                this.$emit('getData');
             },
-            prevStep () {
+            prevStep() {
                 this.$emit('prevStep');
             },
             changeSupervisor() {
-                if(this.stepData.useSupervisor == '0') {
-                    this.stepData.supervisor = null;
+                if(this.publicationData.useSupervisor == '0') {
+                    this.publicationData.supervisor = null;
                     if(this.publicationData.whose_publication == 'my') {
-                        this.stepData.authors.push(this.$store.getters.authUser);
+                        this.publicationData.authors.push(this.$store.getters.authUser);
                     }
                 } else {
                     if(this.$route.name != 'publications-edit') {
-                        this.stepData.authors.splice(this.stepData.authors.indexOf(this.$store.getters.authUser), 1);
+                        this.publicationData.authors.splice(this.publicationData.authors.indexOf(this.$store.getters.authUser), 1);
                     }
                 }
             },
             // додання автора в список авторів публікації
             addAuthor() {
-                this.stepData.authors.push({
-                    name: '',
-                    faculty: "",
-                    academic_code: ""
-                })
+                if(!this.publicationData.authors.find(item => item.name == "")) {
+                    this.publicationData.authors.push({
+                        name: '',
+                        faculty: "",
+                        academic_code: ""
+                    })
+                }
             },
             // видалення автора із списку авторів публікації
             removeAuthor(i) {
-                if(this.stepData.authors.length>1) {
-                    this.stepData.authors.splice(i, 1);
+                if(this.publicationData.authors.length>1) {
+                    this.publicationData.authors.splice(i, 1);
                 }
                 else{
                     swal("Повинен бути хоча б один автор!", {
@@ -592,9 +552,11 @@
                 .then((response) => {
                     if(response.data.status == 'ok') {
                         this.otherAuthor = false;
+                        this.selectCateg = null;
                         this.persons = [];
                         this.getAuthors();
                         this.newAuthorSSU = this.defaultNewAuthorSSU;
+                        this.publicationData.authors.push(response.data.user);
                         swal("Автора успішно додано!", {
                             icon: "success",
                         });
@@ -638,6 +600,7 @@
                         orcid: '',
                         forbes_fortune: ''
                     };
+                    this.publicationData.authors.push(response.data.user);
                     this.$v.$reset();
                     swal("Автора успішно додано!", {
                         icon: "success",
@@ -655,7 +618,8 @@
 </script>
 
 <style lang="scss" scoped>
-    .find-author{
+    .find-author {
+        margin-left: 20px;
         margin-bottom: 20px;
     }
     .other-author{

@@ -38,7 +38,7 @@ class PublicationTypeSeeder extends Seeder
         ]);
         DB::table('publication_type')->insert([
             'title' => 'Монографія',
-            'type' => 'book',
+            'type' => 'monograph',
             'scopus_wos' => 1
         ]);
         DB::table('publication_type')->insert([

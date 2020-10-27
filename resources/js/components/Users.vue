@@ -44,38 +44,50 @@
             <div class="table-responsive text-center table-list">
                 <table class="table table-bordered ">
                     <thead>
-                    <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">ПІБ користувача</th>
-                        <th scope="col">Посада</th>
-                        <th scope="col">Кафедра</th>
-                        <th scope="col">Інститут/факультет</th>
-                        <th scope="col">Вік</th>
-                        <th scope="col">Індекс Гірша Scopus</th>
-                        <th scope="col">Індекс Гірша WoS</th>
-                        <th scope="col">5 або більше публікацій в Scopus та/або WoS</th>
-                        <th scope="col" v-if="authUser.roles_id == 4">Обрати</th>
-                    </tr>
+                        <tr>
+                            <th scope="col">№</th>
+                            <th scope="col">ПІБ користувача</th>
+                            <th scope="col">Посада</th>
+                            <th scope="col">Кафедра</th>
+                            <th scope="col">Інститут/факультет</th>
+                            <th scope="col">Вік</th>
+                            <th scope="col">Індекс Гірша Scopus</th>
+                            <th scope="col">Індекс Гірша WoS</th>
+                            <th scope="col">5 або більше публікацій в Scopus та/або WoS</th>
+                            <th scope="col" v-if="authUser.roles_id == 4">Обрати</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(item, index) in filteredList" :key="item.id">
-                        <td scope="row">{{ index+1+(currentPage-1)*perPage}}</td>
-                        <td><router-link :to="{path: `/user/${item.id}`}">{{ item.name }}</router-link></td>
-                        <td>{{ item.position }}</td>
-                        <td>{{ item.department }}</td>
-                        <td>{{ item.faculty }}</td>
-                        <td>{{ item.age }}</td>
-                        <td>{{ item.scopus_autor_id }}</td>
-                        <td>{{ item.h_index }}</td>
-                        <td>{{item.five_publications ? "Так" : "Ні"}}</td>
-                        <td class="icons" v-if="authUser.roles_id == 4">
-                            <input
-                                type="checkbox"
-                                :checked="selectUsers.indexOf(item) != -1 ? true : false"
-                                @click="selectItem(item)"
-                            >
-                        </td>
-                    </tr>
+                        <tr v-for="(item, index) in filteredList" :key="item.id">
+                            <td scope="row">{{ index+1+(currentPage-1)*perPage}}</td>
+                            <td><router-link :to="{path: `/user/${item.id}`}">{{ item.name }}</router-link></td>
+                            <td>{{ item.position }}</td>
+                            <td>{{ item.department }}</td>
+                            <td>{{ item.faculty }}</td>
+                            <td>{{ item.age }}</td>
+                            <td>{{ item.scopus_autor_id }}</td>
+                            <td>{{ item.h_index }}</td>
+                            <td>{{item.five_publications ? "Так" : "Ні"}}</td>
+                            <td class="icons" v-if="authUser.roles_id == 4">
+                                <input
+                                    type="checkbox"
+                                    :checked="selectUsers.indexOf(item) != -1 ? true : false"
+                                    @click="selectItem(item)"
+                                >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Всього: {{ count_scopus_autor_id }}</td>
+                            <td>Всього: {{ count_h_index }}</td>
+                            <td>Кількість (Так): {{ count_five_publications }}</td>
+                            <td v-if="authUser.roles_id == 4"></td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="spinner-border my-4" role="status" v-if="loading">
@@ -144,6 +156,9 @@
     export default {
         data() {
             return {
+                count_five_publications: 0,
+                count_h_index: 0,
+                count_scopus_autor_id: 0,
                 loading: true,
                 departments: [],
                 divisions: [],
@@ -182,6 +197,20 @@
 
                 });
                 this.numPage = Math.ceil(list.length/this.perPage);
+                this.count_five_publications = 0;
+                this.count_h_index = 0;
+                this.count_scopus_autor_id = 0;
+                list.map(item => {
+                    if(item.h_index) {
+                        this.count_h_index += +item.h_index;
+                    }
+                    if(item.h_index) {
+                        this.count_scopus_autor_id += +item.scopus_autor_id;
+                    }
+                    if(item.five_publications) {
+                        this.count_five_publications++;
+                    }
+                })
                 return list.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
             }
         },

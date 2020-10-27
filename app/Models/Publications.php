@@ -44,14 +44,10 @@ class Publications extends Model
         'doi',
         'nature_index',
         'nature_science',
-        'supervisor_id',
         'db_scopus_percent',
-        'db_wos_percent'
+        'db_wos_percent',
+        'cited_international_patents'
     ];
-
-    function supervisor() {
-        return $this->belongsTo('App\Models\Authors', 'supervisor_id');
-    }
 
     function authors() {
         return $this->HasMany('App\Models\AuthorsPublications', 'publications_id');

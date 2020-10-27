@@ -7,7 +7,7 @@
             <div class="form-group" v-show="userRole != 1 && $route.name != 'publications-edit'">
                 <label>Додати власну публікацію або співробітника кафедри *</label>
                 <div class="input-container">
-                    <select  v-model="stepData.whose_publication">
+                    <select  v-model="publicationData.whose_publication">
                         <option value="my">Власна публікація</option>
                         <option value="another">Публікація співробітника кафедри</option>
                     </select>
@@ -16,12 +16,12 @@
             <div class="form-group">
                 <label >Назва публікації *</label>
                 <div class="input-container">
-                    <input v-model="stepData.title" type="text" list="names" @input="findNames">
+                    <input v-model="publicationData.title" type="text" list="names" @input="findNames">
                     <datalist id="names">
                         <option v-for="(item, index) in names" :key="index" :value="item.title">{{item.publication_type.title}}</option>
                     </datalist>
                 </div>
-                <div class="error" v-if="$v.stepData.title.$error">
+                <div class="error" v-if="$v.publicationData.title.$error">
                     Поле обов'язкове для заповнення
                 </div>
                 <div class="error" v-if="errorName">
@@ -32,7 +32,7 @@
                 <div class="form-group col-lg-4">
                     <label >БД Scopus\WoS</label>
                     <div class="input-container">
-                        <select  v-model="stepData.science_type_id" @change="changeScienceType">
+                        <select  v-model="publicationData.science_type_id" @change="changeScienceType">
                             <option value=""></option>
                             <option value="1">Scopus</option>
                             <option value="2">WoS</option>
@@ -43,22 +43,22 @@
                 <div class="form-group col-lg-8">
                     <label >Вид публікації *</label>
                     <div class="input-container">
-                        <select  v-model.trim="stepData.publication_type" v-if="stepData.science_type_id">
+                        <select  v-model.trim="publicationData.publication_type" v-if="publicationData.science_type_id">
                             <option v-for="(item, i) in publicationTypes" :key="i" v-show="item.scopus_wos" :value="item">{{item.title }}</option>
                         </select>
-                        <select  v-model.trim="stepData.publication_type" v-else>
+                        <select  v-model.trim="publicationData.publication_type" v-else>
                             <option v-for="(item, i) in publicationTypes" :key="i" :value="item">{{item.title  }}</option>
                         </select>
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
                     </div>
-                    <div class="error" v-if="$v.stepData.publication_type.$error">
+                    <div class="error" v-if="$v.publicationData.publication_type.$error">
                         Поле обов'язкове для заповнення
                     </div>
                 </div>
             </div>
         </div>
         <div class="step-button-group">
-            <router-link :to="this.$route.name == 'publications-edit' ? '/publications' : '/home'" tag="button" class="prev">Назад</router-link>
+            <button @click="$router.go(-1)" class="prev">Назад</button>
             <button class="next" @click="nextStep" >Продовжити </button>
         </div>
     </div>
@@ -77,14 +77,7 @@
                 names: [],
                 publicationTypes: [],
                 publicationNames: [],
-                errorName: null,
-                prevVal: '',
-                stepData: {
-                    whose_publication: 'my',
-                    title: '',
-                    science_type_id: '',
-                    publication_type: null
-                }
+                errorName: null
             }
         },
         props: {
@@ -96,7 +89,7 @@
             this.checkPublicationData();
         },
         validations: {
-            stepData: {
+            publicationData: {
                 title: {
                     required,
                 },
@@ -114,15 +107,15 @@
             // пошук схожих назв публікацій
             findNames() {
                 this.names = this.publicationNames.filter(item => {
-                    return item.title.indexOf(this.stepData.title) + 1
+                    return item.title.indexOf(this.publicationData.title) + 1
                 })
             },
             checkPublicationData() {
                 if(this.publicationData && this.$route.name == 'publications-edit'){
                     const {title, science_type_id, publication_type} = this.publicationData;
-                    this.stepData.title = title;
-                    this.stepData.science_type_id = science_type_id;
-                    this.stepData.publication_type = publication_type;
+                    this.publicationData.title = title;
+                    this.publicationData.science_type_id = science_type_id;
+                    this.publicationData.publication_type = publication_type;
                 }
             },
             getTypePublications() {
@@ -136,7 +129,7 @@
                 })
             },
             changeScienceType(){
-              this.stepData.publication_type = "";
+              this.publicationData.publication_type = "";
             },
             // перехід на наступний крок
             nextStep() {
@@ -148,19 +141,19 @@
                     return
                 }
                 // check scopus
-                if(this.stepData.science_type_id) {
+                if(this.publicationData.science_type_id) {
                     this.$parent.isScopus = true;
                 } else {
                     this.$parent.isScopus = false;
                 }
                 let editTitle = false;
                 if(this.$route.name == 'publications-edit') {
-                    editTitle = this.parseString(this.stepData.title) == this.parseString(this.publicationData.title);
+                    editTitle = this.parseString(this.publicationData.title) == this.parseString(this.publicationData.title);
                 }
 
                 // перевірка унікальності назви і типу публікації
                 if(this.$route.name != 'publications-edit') {
-                    var findPublication = this.publicationNames.find(item => item.title.toLowerCase() == this.stepData.title.toLowerCase() && item.publication_type_id == this.stepData.publication_type.id);
+                    var findPublication = this.publicationNames.find(item => item.title.toLowerCase() == this.publicationData.title.toLowerCase() && item.publication_type_id == this.publicationData.publication_type.id);
                     if(findPublication) {
                         this.errorName = findPublication;
                         return;
@@ -168,7 +161,7 @@
                         this.errorName = null;
                     }
                 }
-                this.$emit('getData', this.stepData);
+                this.$emit('getData');
             },
             parseString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");

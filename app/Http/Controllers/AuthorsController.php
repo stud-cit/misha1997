@@ -53,7 +53,9 @@ class AuthorsController extends ASUController
         $data = Authors::with('role')->get();
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
-            $value['age'] = $this->calculateAge($value['date_bth']);
+            if($value['date_bth']) {
+                $value['age'] = $this->calculateAge($value['date_bth']);
+            }
             foreach($divisions->original['department']  as $k => $v) {
                 if ($value['department_code'] == $v['ID_DIV']) {
                     $value['department'] = $v['NAME_DIV'];
@@ -129,47 +131,25 @@ class AuthorsController extends ASUController
             'publications.publication.authors.author',
             'publications.publication.publicationType',
             'publications.publication.scienceType',
-            'publications.publication.supervisor',
             'role',
             'notifications'
-        )->where("id", $id)->where(function($query) use ($id) {
-            $query->whereHas('publications.publication.supervisor', function ($subquery) use ($id) {
-                $subquery->where('id', $id);
-            });
-        })->first();
-
-        // foreach ($data->publications as $key => $value) {
-        //     if($value['publication']['supervisor']) {
-        //         $data = Authors::with(
-        //             'publications.publication.authors.author',
-        //             'publications.publication.publicationType',
-        //             'publications.publication.scienceType',
-        //             'publications.publication.supervisor',
-        //             'role',
-        //             'notifications'
-        //         )->where(function($query) use ($id) {
-        //             $query->whereHas('publications.publication.supervisor', function ($subquery) use ($id) {
-        //                 $subquery->where('id', $id);
-        //             });
-        //         })->first();
-        //     }
-        // }
-        
-        // foreach($divisions->original['institute'] as $k => $v) {
-        //     if ($data->faculty_code == $v['ID_DIV']) {
-        //         $data->faculty = $v['NAME_DIV'];
-        //     }
-        // }
-        // foreach($divisions->original['department']  as $k => $v) {
-        //     if ($data->department_code == $v['ID_DIV']) {
-        //         $data->department = $v['NAME_DIV'];
-        //         foreach($divisions->original['institute'] as $k2 => $v2) {
-        //             if ($v['ID_PAR'] == $v2['ID_DIV']) {
-        //                 $data->faculty = $v2['NAME_DIV'];
-        //             }
-        //         }
-        //     }
-        // }
+        )->find($id);
+        $data->position = $this->getPosition($data);
+        foreach($divisions->original['institute'] as $k => $v) {
+            if ($data->faculty_code == $v['ID_DIV']) {
+                $data->faculty = $v['NAME_DIV'];
+            }
+        }
+        foreach($divisions->original['department']  as $k => $v) {
+            if ($data->department_code == $v['ID_DIV']) {
+                $data->department = $v['NAME_DIV'];
+                foreach($divisions->original['institute'] as $k2 => $v2) {
+                    if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                        $data->faculty = $v2['NAME_DIV'];
+                    }
+                }
+            }
+        }
         return response()->json($data);
     }
 
@@ -184,7 +164,10 @@ class AuthorsController extends ASUController
             $model = new Authors();
             $data = $request->all();
             $response = $model->create($data);
-            return response()->json(["status" => "ok"]);
+            return response()->json([
+                "status" => "ok",
+                "user" => $response
+            ]);
         } else {
             return response()->json(["status" => "error"]);
         }
@@ -223,9 +206,23 @@ class AuthorsController extends ASUController
                 }
             }
 
-            $model->create($data);
+            $response = $model->create($data);
 
-            return response()->json(["status" => "ok"]);
+            foreach($divisions->original['department']  as $k => $v) {
+                if ($response['department_code'] == $v['ID_DIV']) {
+                    $response['department'] = $v['NAME_DIV'];
+                }
+            }
+            foreach($divisions->original['institute'] as $k => $v) {
+                if ($response['faculty_code'] == $v['ID_DIV']) {
+                    $response['faculty'] = $v['NAME_DIV'];
+                }
+            }
+
+            return response()->json([
+                "status" => "ok",
+                "user" => $response
+            ]);
         } else {
             return response()->json(["status" => "error"]);
         }

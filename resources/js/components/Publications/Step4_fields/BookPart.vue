@@ -4,84 +4,54 @@
             <div class="form-group">
                 <label class="item-title">Рік видання *</label>
                 <div class="input-container">
-                    <select class="item-value" v-model="stepData.year">
+                    <select class="item-value" v-model="publicationData.year">
                         <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                     </select>
-
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">За редакцією </label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="stepData.by_editing">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                </div>
-                <div class="error" v-if="$v.stepData.by_editing.$error">
-                    Поле обов'язкове для заповнення
+                    <input class="item-value" type="text" v-model="publicationData.by_editing">
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Країна видання *</label>
                 <div class="input-container">
-                    <select class="item-value" v-model="stepData.country">
+                    <select class="item-value" v-model="publicationData.country">
                         <option
                             v-for="(item, index) in country"
                             :key="index"
                             :value="item.name"
                         >{{item.name}}</option>
                     </select>
-
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Місто видання </label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="stepData.city">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                </div>
-                <div class="error" v-if="$v.stepData.city.$error">
-                    Поле обов'язкове для заповнення
+                    <input class="item-value" type="text" v-model="publicationData.city">
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Видавництво </label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="stepData.editor_name">
-                    <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                </div>
-                <div class="error" v-if="$v.stepData.editor_name.$error">
-                    Поле обов'язкове для заповнення
+                    <input class="item-value" type="text" v-model="publicationData.editor_name">
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Сторінки *</label>
-                <div class="input-container hint-container">
-                    <input class="item-value" type="text" v-model="stepData.pages">
-                    <div class="hint" ><span>Вказати номера сторінок вашого розділу</span></div>
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="publicationData.pages">
                 </div>
-                <div class="error" v-if="$v.stepData.pages.$error">
+                <div class="error" v-if="$v.publicationData.pages.$error">
                     Поле обов'язкове для заповнення
                 </div>
             </div>
-<!--            <div class="form-group">-->
-<!--                <label class="item-title">Опубліковано мовами ОЕСР *</label>-->
-<!--                <div class="input-container hint-container">-->
-<!--                    <select class="item-value" v-model="stepData.languages">-->
-<!--                        <option value="1">Так </option>-->
-<!--                        <option value="0">Ні </option>-->
-<!--                    </select>-->
-<!--                    <div class="hint" ><span>Опубліковано мовою країн організації економічного співробітництва та розвитку</span></div>-->
-<!--                </div>-->
-
-<!--            </div>-->
-
         </div>
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
             <button class="next active" @click="nextStep">Продовжити </button>
-
         </div>
     </div>
 </template>
@@ -92,17 +62,7 @@
     export default {
         data() {
             return {
-                country: [],
-                stepData: {
-                    year: new Date().getFullYear(),
-                    // number: '',
-                    by_editing: '',
-                    country: '',
-                    city: '',
-                    editor_name: '',
-                    pages: '',
-                    // languages: 0
-                }
+                country: []
             }
         },
         props: {
@@ -110,44 +70,15 @@
         },
         created() {
             this.getCountry();
-            this.checkPublicationData();
         },
         validations: {
-
-            stepData: {
-
-                by_editing: {
-                    // required
-                },
-                city: {
-                    // required
-                },
-                editor_name: {
-                    // required
-                },
+            publicationData: {
                 pages: {
                     required
                 },
-
-
-
             },
-
-
-
         },
         methods: {
-            checkPublicationData() {
-
-                if(this.publicationData && this.$route.name == 'publications-edit'){
-
-                    for( let key in this.stepData){
-                        this.stepData[key] = this.publicationData[key];
-                    }
-
-                }
-
-            },
             getCountry() {
                 axios.get('/api/country').then(response => {
                     this.country = response.data;
@@ -161,7 +92,7 @@
                     });
                     return
                 }
-                this.$parent.$emit('getData', this.stepData);
+                this.$parent.$emit('getData', this.publicationData);
             },
             prevStep(){
                 this.$parent.$emit('prevStep');
