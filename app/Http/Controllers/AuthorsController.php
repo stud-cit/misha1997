@@ -251,7 +251,7 @@ class AuthorsController extends ASUController
 
     //notifications
     function getNotifications($autors_id) {
-        $data = Notifications::where('autors_id', $autors_id)->get();
+        $data = Notifications::where('autors_id', $autors_id)->orderBy('created_at', 'DESC')->get();
         foreach ($data as $key => $value) {
             $value['date'] = Carbon::parse($value->created_at)->format('d.m.Y H:i');
         }

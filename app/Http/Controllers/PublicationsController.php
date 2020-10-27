@@ -117,18 +117,46 @@ class PublicationsController extends ASUController
     // оновлення публікації
     function updatePublication(Request $request, $id) {
         $data = $request->all();
-        $model = Publications::with('authors')->whereHas('authors', function($q) {
-            $q->where('supervisor', 0);
-        })->find($id);
+        $model = Publications::with('authors', 'publicationType')->find($id);
+
+        // return response()->json($model);
+
         $data['initials'] = [];
         $notificationText = "";
 
-        $notificationText .= "Корисувач " . $request->session()->get('person')['name'] . " оновив публікацію. " . $model->title . "\".<br>";
+        // check supervisor
+
+        // return response()->json($data['supervisor']);
+        if($data['supervisor']) {
+            if(AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->exists()) {
+                if(!AuthorsPublications::where('autors_id', $data['supervisor']['id'])->where('publications_id', $id)->where('supervisor', 1)->exists()) {
+                    AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->update([
+                        "autors_id" => $data['supervisor']['id']
+                    ]);
+                    $notificationText .= "змінено керівника: " . $data['old_supervisor']['name'] . " на " . $data['supervisor']['name'] . ";<br>";
+                }
+            } else {
+                $authorsPublications = new AuthorsPublications;
+                $authorsPublications->autors_id = $data['supervisor']['id'];
+                $authorsPublications->publications_id = $id;
+                $authorsPublications->supervisor = 1;
+                $authorsPublications->save();
+                $notificationText .= "додано керівника: " . $data['supervisor']['name'] . ";<br>";
+            }
+        } else {
+            if($data['old_supervisor']) {
+                AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->delete();
+                $notificationText .= "видалено керівника: " . $data['old_supervisor']['name'] . ";<br>";
+            }
+        }
+        // end check
 
         // check authors old or new
         $oldAuthors = [];
         foreach ($model->authors as $key => $value) {
-            array_push($oldAuthors, $value['autors_id']);
+            if($value['supervisor'] == 0) {
+                array_push($oldAuthors, $value['autors_id']);
+            }
         }
 
         foreach ($data['authors'] as $key => $value) {
@@ -150,7 +178,7 @@ class PublicationsController extends ASUController
                 $authorsPublications->autors_id = $value['id'];
                 $authorsPublications->publications_id = $id;
                 $authorsPublications->save();
-                $notificationText .= "Додано автора " . $value['name'] . ".<br>";
+                $notificationText .= "додано автора: " . $value['name'] . ";<br>";
             }
         }
 
@@ -158,55 +186,124 @@ class PublicationsController extends ASUController
 
         foreach ($oldAuthors as $key => $value) {
             AuthorsPublications::where('autors_id', $value)->where('publications_id', $id)->delete();
-            $notificationText .= "Автора " . $this->test($model->authors, $value) . " видалено з публікації.<br>";
+            $notificationText .= "видалено автора: " . $this->test($value) . ";<br>";
         }
         // end check
 
-        // check supervisor
-        if($data['supervisor']) {
-            if(AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->exists()) {
-                if(!AuthorsPublications::where('autors_id', $data['supervisor']['id'])->where('publications_id', $id)->where('supervisor', 1)->exists()) {
-                    AuthorsPublications::where('publications_id', $id)->find('supervisor', 1)->update([
-                        "autors_id" => $data['supervisor']['id']
+        // перевірка полів
+        // Назва
+        $notificationText .= $this->notification($data, $model, "title", "назву");
+
+        // БД Scopus\WoS
+        $science_type = [
+            "1" => "Scopus",
+            "2" => "WoS",
+            "3" => "Scopus та WoS"
+        ];
+        $notificationText .= $this->notification($data, $model, "science_type_id", "базу даних", $science_type);
+
+        // тип пцблікації
+        if($data['publication_type']['id'] != $model->publication_type_id) {
+            $data['publication_type_id'] = $data['publication_type']['id'];
+            $notificationText .= "змінено тип публікації: " . $model->publicationType['title'] . " на " . $data['publication_type']['title'] . ";<br>";
+        }
+
+        $notificationText .= $this->notification($data, $model, "snip", "SNIP");
+        $notificationText .= $this->notification($data, $model, "quartil_scopus", "квартиль Scopus");
+        $notificationText .= $this->notification($data, $model, "quartil_wos", "квартиль WoS");
+        $notificationText .= $this->notification($data, $model, "impact_factor", "Impact Factor");
+        $notificationText .= $this->notification($data, $model, "year", "рік видання");
+        $notificationText .= $this->notification($data, $model, "number", "номер (том)");
+        $notificationText .= $this->notification($data, $model, "pages", "сторінки");
+        $notificationText .= $this->notification($data, $model, "country", "країна");
+        $notificationText .= $this->notification($data, $model, "number_volumes", "кількість томів");
+        $notificationText .= $this->notification($data, $model, "by_editing", "за редакцією");
+        $notificationText .= $this->notification($data, $model, "city", "місто");
+        $notificationText .= $this->notification($data, $model, "editor_name", "назву редакції");
+        $notificationText .= $this->notification($data, $model, "number_certificate", "номер");
+        $notificationText .= $this->notification($data, $model, "applicant", "заявника");
+        $notificationText .= $this->notification($data, $model, "date_application", "дата подачі");
+        $notificationText .= $this->notification($data, $model, "date_publication", "дата публікації");
+        $commerc_university = [
+            "1" => "Так",
+            "0" => "Ні"
+        ];
+        $notificationText .= $this->notification($data, $model, "commerc_university", "комерціалізовано університетом", $commerc_university);
+        $commerc_employees = [
+            "1" => "Так",
+            "0" => "Ні"
+        ];
+        $notificationText .= $this->notification($data, $model, "commerc_employees", "Комерціалізовано штатними співробітниками університету", $commerc_employees);
+        $access_mode = [
+            "1" => "Відкритий",
+            "0" => "Закрити"
+        ];
+        $notificationText .= $this->notification($data, $model, "access_mode", "Режим доступу", $access_mode);
+        $notificationText .= $this->notification($data, $model, "application_number", "№ заявки");
+        $notificationText .= $this->notification($data, $model, "newsletter_number", "№ бюлетеня");
+        $notificationText .= $this->notification($data, $model, "name_conference", "Назва конференції");
+        $notificationText .= $this->notification($data, $model, "url", "Посилання");
+        $notificationText .= $this->notification($data, $model, "name_magazine", "Назва журналу");
+        $notificationText .= $this->notification($data, $model, "doi", "DOI");
+        $nature_index = [
+            "1" => "Так",
+            "2" => "Ні"
+        ];
+        $notificationText .= $this->notification($data, $model, "nature_index", "Natire Index", $nature_index);
+        $notificationText .= $this->notification($data, $model, "nature_science", "журнал");
+
+        // Підбаза WoS
+        $sub_db_index = [
+            "1" => "Science Citation Index Expanded (SCIE)",
+            "2" => "Social Science Citation Index (SSCI)",
+        ];
+        $notificationText .= $this->notification($data, $model, "sub_db_index", "підбазу WoS", $sub_db_index);
+
+        if($notificationText != "") {
+            $notificationText = "Користувач " . $request->session()->get('person')['name'] . " вніс наступні зміни в публікацію <a href=\"/publications/". $id ."\">" . $model->title . "</a>:<br>" . $notificationText;
+            foreach ($data['authors'] as $k => $author) {
+                if($author['id'] != $request->session()->get('person')['id']) {
+                    Notifications::create([
+                        "autors_id" => $author['id'],
+                        "text" => $notificationText
                     ]);
                 }
-            } else {
-                $authorsPublications = new AuthorsPublications;
-                $authorsPublications->autors_id = $data['supervisor']['id'];
-                $authorsPublications->publications_id = $id;
-                $authorsPublications->supervisor = 1;
-                $authorsPublications->save();
             }
-        } else {
-            AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->delete();
-        }
-        // end check
-
-        if($data['title'] != $model->title) {
-            $notificationText .= "Змінено назву " . $model->title . " на " . $data['title'] . "<br>";
         }
 
         $model->update($data);
 
-        foreach ($data['authors'] as $k => $author) {
-            if($author['id'] != $request->session()->get('person')['id']) {
-                Notifications::create([
-                    "autors_id" => $author['id'],
-                    "text" => $notificationText
-                ]);
-            }
-        }
-
         return response('ok', 200);
     }
 
-    function test($data, $id) {
-        foreach ($data as $k => $author) {
-            if($author['id'] == $id) {
-                return $author['name'];
+    function test($id) {
+        $result = Authors::select('name')->find($id);
+        return $result['name'];
+    }
+
+    function notification($data, $model, $key, $text, $arr = null) {
+        if($arr) {
+            if($data[$key] && !$model->$key) {
+                return "додано ".$text.": " . $arr[$data[$key]] . ";<br>";
+            }
+            if(($data[$key] != $model->$key) && $data[$key] && $model->$key) {
+                return "змінено ".$text.": " . $arr[$model->$key] . " на " . $arr[$data[$key]] . ";<br>";
+            }
+            if(!$data[$key] && $model->$key) {
+                return "видалено ".$text.";<br>";
+            }
+        } else {
+            if($data[$key] && !$model->$key) {
+                return "додано ".$text.": " . $data[$key] . ";<br>";
+            }
+            if(($data[$key] != $model->$key) && $data[$key] && $model->$key) {
+                return "змінено ".$text.": " . $model->$key . " на " . $data[$key] . ";<br>";
+            }
+            if(!$data[$key] && $model->$key) {
+                return "видалено ".$text.";<br>";
             }
         }
-    }
+    }    
 
     // видалення публікації
     function deletePublications(Request $request) {

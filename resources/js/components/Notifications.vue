@@ -7,18 +7,18 @@
                 <h2 class="subtitle new" >Нові повідомлення</h2>
                 <hr>
                 <ul class=" notifications-list mb-75">
-                    <li class="notifications-item cursor" v-for="item in notifications" :key="item.id" @click="watchedNotification(item)">
-                        <p class="date">{{ item.date }}</p>
+                    <li class="notifications-item" v-for="item in notifications" :key="item.id">
+                        <p class="date">{{ item.date }} <i class="fa fa-envelope cursor fa-1x" @click="watchedNotification(item)"></i></p>
                         <p class="text" v-html="item.text"></p>
                     </li>
                 </ul>
             </template>
 
-            <h2 class="subtitle" >Попередні повідомлення</h2>
+            <h2 class="subtitle">Попередні повідомлення</h2>
             <hr>
             <ul class=" notifications-list before" v-if="viewedNotifications.length > 0">
                 <li class="notifications-item" v-for="item in viewedNotifications" :key="item.id">
-                    <p class="date">{{ item.date }}</p>
+                    <p class="date">{{ item.date }} <i class="fa fa-envelope-o fa-1x"></i></p>
                     <p class="text" v-html="item.text"></p>
                 </li>
             </ul>
@@ -94,7 +94,7 @@
 
     .notifications-list{
         margin-top: 35px;
-        .notifications-item{
+        .notifications-item {
             margin-bottom: 35px;
             .date{
                 margin-bottom: 5px;
@@ -111,7 +111,7 @@
                 font-style: normal;
                 font-weight: normal;
                 font-size: 22px;
-                line-height: 25px;
+                line-height: 30px;
                 color: #212529;
 
 

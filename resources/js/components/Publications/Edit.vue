@@ -71,7 +71,8 @@
                     db_wos_percent: "",
                     authors: [],
                     useSupervisor: 0,
-                    supervisor: null
+                    supervisor: null,
+                    old_supervisor: null
                 },
             };
         },
@@ -98,6 +99,7 @@
                         if(item.supervisor == 1) {
                             this.publicationData.useSupervisor = 1;
                             this.publicationData.supervisor = item.author;
+                            this.publicationData.old_supervisor = item.author;
                         }
                     });
                 });
