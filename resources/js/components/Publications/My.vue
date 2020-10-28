@@ -1,6 +1,9 @@
 <template>
     <div class="container page-content general-block">
         <h1 class="page-title">Мої публікації</h1>
+        <div class="exports">
+            <export-publications class="export-block" :exportList="exportPublication"></export-publications>
+        </div>
         <div class="main-content">
             <form class="search-block">
                 <div class="form-group">
@@ -20,7 +23,7 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-lg-4">
-                        <label>БД Scopus\WoS</label>
+                        <label>БД Scopus/WoS</label>
                         <div class="input-container">
                             <select  v-model="filters.science_type_id">
                                 <option value=""></option>
@@ -44,7 +47,7 @@
                         <div class="input-container">
                             <select v-model="filters.country">
                                 <option value=""></option>
-                                <option v-for="(item, index) in countries" :value="item.name" :key="index">{{item.name}}</option>
+                                <option v-for="(item, index) in country" :value="item.name" :key="index">{{item.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -68,25 +71,30 @@
             ></Table>
             <div class="step-button-group">
                 <back-button></back-button>
-                <delete-button @click="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
+                <delete-button v-if="access == 'open'" @click.native="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import years from '../mixins/years';
+    import country from '../mixins/country';
+
+    import ExportPublications from "./Exports/ExportPublications";
     import Table from "../Tables/Publications";
     import BackButton from "../Buttons/Back";
     import DeleteButton from "../Buttons/Delete";
     export default {
+        mixins: [years, country],
         data() {
             return {
                 names: [],
                 publicationNames: [],
                 selectPublications: [],
+                exportPublication: [],
                 loading: true,
                 data: [],
-                countries: [],
                 publicationTypes: [],
                 filters: {
                     title: '',
@@ -99,13 +107,13 @@
             };
         },
         components: {
+            ExportPublications,
             Table,
             BackButton,
             DeleteButton
         },
         mounted () {
             this.getData();
-            this.getCountry();
             this.getTypePublications();
             this.getNamesPublications();
         },
@@ -128,11 +136,6 @@
                     this.loading = false;
                 }).catch(() => {
                     this.loading = false;
-                })
-            },
-            getCountry() {
-                axios.get('/api/country').then(response => {
-                    this.countries = response.data;
                 })
             },
             getTypePublications() {
@@ -178,6 +181,9 @@
             authUser() {
                 return this.$store.getters.authUser
             },
+            access() {
+                return this.$store.getters.accessMode
+            },
             filteredList() {
                 this.exportPublication = this.data.filter(item => {
                     let result = 1;
@@ -197,10 +203,6 @@
                     return result;
                 });
                 return this.exportPublication;
-            },
-            years() {
-                const year = new Date().getFullYear();
-                return Array.from({length: 10}, (value, index) => year - index);
             }
         }
     }

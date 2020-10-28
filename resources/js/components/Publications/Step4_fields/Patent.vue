@@ -21,6 +21,9 @@
                         >{{item.name}}</option>
                     </select>
                 </div>
+                <div class="error" v-if="$v.publicationData.country.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
             <div class="form-group">
                 <label class="item-title">МПК *</label>
@@ -129,17 +132,18 @@
 </template>
 
 <script>
+    import country from '../../mixins/country';
     import DatePicker from 'vue2-datepicker';
     import 'vue2-datepicker/index.css';
     import {required, requiredIf} from "vuelidate/lib/validators";
 
     export default {
+        mixins: [country],
         components: {
             DatePicker
         },
         data() {
             return {
-                country: [],
                 applicant_id: '0',
                 newApplicant: '',
                 datepicker: {
@@ -155,9 +159,6 @@
                     styles: { left: '30%' }
                 },
             }
-        },
-        created() {
-            this.getCountry();
         },
         props: {
             publicationData: Object
@@ -190,14 +191,12 @@
                     required,
                     validFormat: val => /^\d{1,}$/.test(val),
                 },
+                country: {
+                    required
+                },
             }
         },
         methods: {
-            getCountry() {
-                axios.get('/api/country').then(response => {
-                    this.country = response.data;
-                })
-            },
             nextStep() {
                 this.$v.$touch();
                 if (this.$v.$invalid) {

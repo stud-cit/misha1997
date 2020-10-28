@@ -118,11 +118,12 @@
                         <tr>
                             <th scope="col">№</th>
                             <th scope="col">Вид пуб-ції</th>
-                            <th scope="col">Прізвище та ініціали автора\співавторів</th>
+                            <th scope="col">Прізвище та ініціали автора/співавторів</th>
                             <th scope="col">Назва публікації</th>
                             <th scope="col">Рік видання</th>
-                            <th scope="col">БД Scopus\WoS</th>
+                            <th scope="col">БД Scopus/WoS</th>
                             <th scope="col">Науковий керівник</th>
+                            <th scope="col">Дата занесення</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -142,6 +143,7 @@
                                     <router-link v-if="author.supervisor" :to="'/user/'+author.author.id">{{author.author.name}} </router-link>
                                 </span>
                             </td>
+                            <td>{{ item.date }}</td>
                         </tr>
                     </tbody>
                 </table>

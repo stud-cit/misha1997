@@ -21,6 +21,9 @@
                         >{{item.name}}</option>
                     </select>
                 </div>
+                <div class="error" v-if="$v.publicationData.country.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Власник майнових прав *</label>
@@ -85,13 +88,14 @@
 </template>
 
 <script>
+    import country from '../../mixins/country';
     import {required, requiredIf} from "vuelidate/lib/validators";
     import DatePicker from 'vue2-datepicker';
     import 'vue2-datepicker/index.css';
     export default {
+        mixins: [country],
         data() {
             return {
-                country: [],
                 applicant_id: '0',
                 newApplicant: '',
                 datepicker: {
@@ -114,9 +118,6 @@
         props: {
             publicationData: Object
         },
-        created() {
-            this.getCountry();
-        },
         validations: {
             publicationData: {
                 number_certificate: {
@@ -131,14 +132,12 @@
                 date_publication: {
                     required
                 },
+                country: {
+                    required
+                },
             },
         },
         methods:{
-            getCountry() {
-                axios.get('/api/country').then(response => {
-                    this.country = response.data;
-                })
-            },
             nextStep() {
                 this.$v.$touch();
                 if (this.$v.$invalid) {

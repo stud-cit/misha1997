@@ -232,7 +232,7 @@
                             <span slot="noResult">По даному запиту немає результатів</span>
                         </multiselect>
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                        <button class="remove-author" @click="removeAuthor(i)">&times;</button>
+                        <button class="remove-author" @click="removeAuthor(i)" v-if="(publicationData.whose_publication == 'my' && item.id != $store.getters.authUser.id) || publicationData.whose_publication != 'my'">&times;</button>
                     </div>
                     <div class="error" v-if="$v.publicationData.authors.$each.$iter[i].$error">
                         Поле обов'язкове для заповнення
@@ -270,6 +270,18 @@
                     </div>
                 </div>
             </transition>
+
+            <div class="form-group" v-show="publicationData.authors.length > 0">
+                <label class="item-title">Прізвища та ініціали авторів мовою оригіналу * </label>
+                <div class="input-container hint-container">
+                    <input class="item-value" type="text" v-model="publicationData.initials">
+                    <div class="hint" ><span>Ввести через кому прізвише та ініціали авторів мовою оригіналу публікації</span></div>
+                </div>
+                <div class="error" v-if="$v.publicationData.initials.$error">
+                    Поле обов'язкове для заповнення
+                </div>
+            </div>
+
         </div>
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
@@ -372,7 +384,10 @@
                             required,
                         }
                     }
-                }
+                },
+                initials: {
+                    required
+                },
             },
             jobType: {
                 required
@@ -454,13 +469,6 @@
             changeSupervisor() {
                 if(this.publicationData.useSupervisor == '0') {
                     this.publicationData.supervisor = null;
-                    if(this.publicationData.whose_publication == 'my') {
-                        this.publicationData.authors.push(this.$store.getters.authUser);
-                    }
-                } else {
-                    if(this.$route.name != 'publications-edit') {
-                        this.publicationData.authors.splice(this.publicationData.authors.indexOf(this.$store.getters.authUser), 1);
-                    }
                 }
             },
             // додання автора в список авторів публікації

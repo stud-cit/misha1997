@@ -6,13 +6,14 @@
                     <tr>
                         <th scope="col">№</th>
                         <th scope="col">Вид пуб-ції</th>
-                        <th scope="col">Прізвище та ініціали автора\співавторів</th>
+                        <th scope="col">Прізвище та ініціали автора/співавторів</th>
                         <th scope="col">Назва публікації</th>
                         <th scope="col">Рік видання</th>
-                        <th scope="col">БД Scopus\WoS</th>
+                        <th scope="col">БД Scopus/WoS</th>
                         <th scope="col">Науковий керівник</th>
-                        <th scope="col" v-if="(authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1))">Редагувати</th>
-                        <th scope="col" v-if="(authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1))">Обрати</th>
+                        <th scope="col">Дата занесення</th>
+                        <th scope="col" v-if="checkAccess">Редагувати</th>
+                        <th scope="col" v-if="checkAccess">Обрати</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,10 +33,11 @@
                                 <router-link v-if="author.supervisor" :to="'/user/'+author.author.id">{{author.author.name}}</router-link>
                             </span>
                         </td>
-                        <td v-if="(authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1))">
+                        <td>{{ item.date }}</td>
+                        <td v-if="checkAccess">
                             <router-link :to="`/publications/edit/${item.id}`"><i class="fa fa-edit fa-2x"></i></router-link>
                         </td>
-                        <td class="icons" v-if="(authUser.roles_id == 4 || (access == 'open' && authUser.roles_id != 1))">
+                        <td class="icons" v-if="checkAccess">
                             <input
                                 type="checkbox"
                                 :checked="selectPublications.indexOf(item) != -1 ? true : false"
@@ -93,8 +95,14 @@ export default {
         }
     },
     computed: {
-        access() {
-            return this.$store.getters.accessMode
+        checkAccess() {
+            if(this.$store.getters.accessMode == 'open' && this.$route.name == 'my-publications') {
+                return true;
+            } else if(this.authUser.roles_id == 4 || (this.$store.getters.accessMode == 'open' && this.authUser.roles_id != 1)) {
+                return true;
+            } else {
+                return false;
+            }
         },
         filterList() {
             this.pagination.numPage = Math.ceil(this.publications.length / this.pagination.perPage);

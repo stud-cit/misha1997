@@ -85,7 +85,7 @@
                             <td></td>
                             <td>Всього: {{ count_scopus_autor_id }}</td>
                             <td>Всього: {{ count_h_index }}</td>
-                            <td>Кількість (Так): {{ count_five_publications }}</td>
+                            <td>Кількість: {{ count_five_publications }}</td>
                             <td v-if="authUser.roles_id == 4"></td>
                         </tr>
                     </tbody>

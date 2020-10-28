@@ -93,9 +93,9 @@ let router = new Router({
             path: '/publications/add',
             name: 'publications-add',
             component: PublicationsAdd,
-            // meta: {
-            //     middleware: auth
-            // }
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '/publications/:id',
@@ -132,6 +132,9 @@ let router = new Router({
             path: '*',
             name: 'error',
             component: Error404,
+            meta: {
+                middleware: auth
+            }
         }
 
     ]

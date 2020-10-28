@@ -16,18 +16,15 @@ class AuthorsController extends ASUController
     function get(Request $request) {
         $divisions = $this->getDivisions();
         $data = [];
-        switch ($request->session()->get('person')['roles_id']) {
-            case 2:
-                $data = Authors::with('role')->where('faculty_code', $request->session()->get('person')['faculty_code'])->get();
-            break;
-            case 3:
-                $data = Authors::with('role')->where('department_code', $request->session()->get('person')['department_code'])->get();
-            break;
-            case 4:
-                $data = Authors::with('role')->where('roles_id', '!=', 4)->get();
-            break;
+        if($request->session()->get('person')['roles_id'] == 3) {
+            $data = Authors::with('role')->where('faculty_code', $request->session()->get('person')['faculty_code'])->where('roles_id', '!=', 4)->get();
         }
-        // $data = Authors::with('role')->get();
+        if($request->session()->get('person')['roles_id'] == 2) {
+            $data = Authors::with('role')->where('department_code', $request->session()->get('person')['department_code'])->where('roles_id', '!=', 4)->get();
+        }
+        if($request->session()->get('person')['roles_id'] == 4) {
+            $data = Authors::with('role')->where('roles_id', '!=', 4)->get();   
+        }
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
             if($value['date_bth']) {
@@ -149,6 +146,9 @@ class AuthorsController extends ASUController
                     }
                 }
             }
+        }
+        foreach ($data['publications'] as $key => $publication) {
+            $publication['publication']['date'] = Carbon::parse($publication['publication']['created_at'])->format('d.m.Y');
         }
         return response()->json($data);
     }

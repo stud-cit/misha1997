@@ -8,6 +8,9 @@
                         <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                     </select>
                 </div>
+                <div class="error" v-if="$v.publicationData.year.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Країна видання *</label>
@@ -19,6 +22,9 @@
                             :value="item.name"
                         >{{item.name}}</option>
                     </select>
+                </div>
+                <div class="error" v-if="$v.publicationData.country.$error">
+                    Поле обов'язкове для заповнення
                 </div>
             </div>
             <div class="form-group">
@@ -51,18 +57,12 @@
 </template>
 
 <script>
+    import years from '../../mixins/years';
+    import country from '../../mixins/country';
     import {required} from "vuelidate/lib/validators";
 
     export default {
-
-        data() {
-            return {
-                country: []
-            }
-        },
-        created() {
-            this.getCountry();
-        },
+        mixins: [years, country],
         props: {
             publicationData: Object
         },
@@ -70,16 +70,17 @@
             publicationData: {
                 pages: {
                     required,
-                    validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val), 
-                }
+                    validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val)
+                },
+                year: {
+                    required
+                },
+                country: {
+                    required
+                },
             }
         },
         methods: {
-            getCountry() {
-                axios.get('/api/country').then(response => {
-                    this.country = response.data;
-                })
-            },
             nextStep() {
                 this.$v.$touch();
                 if (this.$v.$invalid) {
@@ -88,17 +89,11 @@
                     });
                     return
                 }
-                this.$parent.$emit('getData', this.publicationData);
+                this.$parent.$emit('getData');
             },
             prevStep(){
                 this.$parent.$emit('prevStep');
             }
-        },
-        computed: {
-            years() {
-                const year = new Date().getFullYear();
-                return Array.from({length: year - 2000}, (value, index) => 2001 + index);
-            },
         }
     }
 </script>

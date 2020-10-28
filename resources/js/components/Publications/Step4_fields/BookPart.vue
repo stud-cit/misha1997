@@ -8,13 +8,18 @@
                         <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                     </select>
                 </div>
+                <div class="error" v-if="$v.publicationData.year.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
+
             <div class="form-group">
                 <label class="item-title">За редакцією </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.by_editing">
                 </div>
             </div>
+
             <div class="form-group">
                 <label class="item-title">Країна видання *</label>
                 <div class="input-container">
@@ -26,19 +31,25 @@
                         >{{item.name}}</option>
                     </select>
                 </div>
+                <div class="error" v-if="$v.publicationData.country.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
+
             <div class="form-group">
                 <label class="item-title">Місто видання </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.city">
                 </div>
             </div>
+
             <div class="form-group">
                 <label class="item-title">Видавництво </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.editor_name">
                 </div>
             </div>
+
             <div class="form-group">
                 <label class="item-title">Сторінки *</label>
                 <div class="input-container">
@@ -48,6 +59,7 @@
                     Неправильно введені дані
                 </div>
             </div>
+
         </div>
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
@@ -57,19 +69,14 @@
 </template>
 
 <script>
+    import years from '../../mixins/years';
+    import country from '../../mixins/country';
     import {required} from "vuelidate/lib/validators";
 
     export default {
-        data() {
-            return {
-                country: []
-            }
-        },
+        mixins: [years, country],
         props: {
             publicationData: Object
-        },
-        created() {
-            this.getCountry();
         },
         validations: {
             publicationData: {
@@ -77,39 +84,28 @@
                     required,
                     validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val), 
                 },
+                year: {
+                    required
+                },
+                country: {
+                    required
+                },
             },
         },
         methods: {
-            getCountry() {
-                axios.get('/api/country').then(response => {
-                    this.country = response.data;
-                })
-            },
             nextStep() {
                 this.$v.$touch();
                 if (this.$v.$invalid) {
                     swal("Не всі поля заповнено!", {
                         icon: "error",
                     });
-                    return
+                    return;
                 }
-                this.$parent.$emit('getData', this.publicationData);
+                this.$parent.$emit('getData');
             },
-            prevStep(){
+            prevStep() {
                 this.$parent.$emit('prevStep');
             }
-        },
-        computed: {
-            years() {
-                const year = new Date().getFullYear();
-                return Array.from({length: year - 2000}, (value, index) => 2001 + index);
-            },
-        },
+        }
     }
 </script>
-
-<style lang="scss" scoped>
-
-
-
-</style>

@@ -19,11 +19,11 @@
                     <div class="col-lg-3 list-item list-title">Роль:</div>
                     <div class="col-lg-9 list-item list-text">{{data.role.name}}</div>
                 </li>
-                <li class="row">
+                <li class="row" v-if="data.job && data.job != 'СумДУ'">
                     <div class="col-lg-3 list-item list-title">Місце роботи:</div>
                     <div class="col-lg-9 list-item list-text">{{data.job}}</div>
                 </li>
-                <li class="row" v-if="data.position">
+                <li class="row" v-if="data.position && data.job != 'СумДУ'">
                     <div class="col-lg-3 list-item list-title">Входить до списків Forbes та Fortune:</div>
                     <div class="col-lg-9 list-item list-text">{{data.forbes_fortune ? "Так" : "Ні"}}</div>
                 </li>
@@ -39,9 +39,13 @@
                     <div class="col-lg-3 list-item list-title">Академічна група:</div>
                     <div class="col-lg-9 list-item list-text">{{data.academic_code}}</div>
                 </li>
-                <li class="row">
+                <li class="row" v-if="data.job != 'СумДУ'">
                     <div class="col-lg-3 list-item list-title">Країна:</div>
                     <div class="col-lg-9 list-item list-text">{{data.country}}</div>
+                </li>
+                <li class="row">
+                    <div class="col-lg-3 list-item list-title">5 або більше публікацій в Scopus та/або WoS:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.five_publications ? "Так" : "Ні"}}</div>
                 </li>
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Індекс Гірша:</div>

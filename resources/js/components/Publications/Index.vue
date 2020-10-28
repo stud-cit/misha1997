@@ -4,7 +4,7 @@
 
         <!-- exports-->
         <div class="exports">
-            <export-rating v-if="authUser.roles_id == 4" :publicationTypes="publicationTypes" :years="years" :countries="countries" class="export-block"></export-rating>
+            <export-rating v-if="authUser.roles_id == 4" :publicationTypes="publicationTypes" :years="years" :countries="country" class="export-block"></export-rating>
             <export-publications class="export-block" :exportList="exportPublication"></export-publications>
         </div>
         <!---->
@@ -55,7 +55,7 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-lg-4">
-                        <label>БД Scopus\WoS</label>
+                        <label>БД Scopus/WoS</label>
                         <div class="input-container">
                             <select v-model="filters.science_type_id">
                                 <option value=""></option>
@@ -79,7 +79,7 @@
                         <div class="input-container">
                             <select  v-model="filters.country">
                                 <option value=""></option>
-                                <option v-for="(item, index) in countries" :value="item.name" :key="index">{{item.name}}</option>
+                                <option v-for="(item, index) in country" :value="item.name" :key="index">{{item.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -110,6 +110,9 @@
 </template>
 
 <script>
+    import years from '../mixins/years';
+    import country from '../mixins/country';
+
     import ExportRating from "./Exports/ExportRating";
     import ExportPublications from "./Exports/ExportPublications";
     import Table from "../Tables/Publications";
@@ -117,6 +120,7 @@
     import DeleteButton from "../Buttons/Delete";
     import XLSX from 'xlsx';
     export default {
+        mixins: [years, country],
         data() {
             return {
                 departments: [],
@@ -124,11 +128,10 @@
                 names: [],
                 publicationNames: [],
                 data: [],
-                countries: [],
                 publicationTypes: [],
                 exportData: {},
                 exportPublication: [],
-                loading: false,
+                loading: true,
                 selectPublications: [],
                 filters: {
                     title: '',
@@ -151,7 +154,6 @@
         },
         mounted() {
             this.getData();
-            this.getCountry();
             this.getTypePublications();
             this.getNamesPublications();
             this.getDivisions();
@@ -176,12 +178,6 @@
                     this.loading = false;
                 }).catch(() => {
                     this.loading = false;
-                })
-            },
-            // всі країни
-            getCountry() {
-                axios.get('/api/country').then(response => {
-                    this.countries = response.data;
                 })
             },
             // всі типи пблікацій
@@ -273,11 +269,6 @@
                     return result;
                 });
                 return this.exportPublication;
-            },
-            // список років
-            years() {
-                const year = new Date().getFullYear();
-                return Array.from({length: 10}, (value, index) => year - index);
             }
         }
     }

@@ -36,7 +36,7 @@
                 </template>
                 <template v-if="data.science_type_id != null">
                     <li class="row">
-                        <div class="col-lg-3 list-item list-title">БД Scopus\WoS:</div>
+                        <div class="col-lg-3 list-item list-title">БД Scopus/WoS:</div>
                         <div class="col-lg-9 list-item list-text">{{data.science_type.type}}</div>
                     </li>
                     <li class="row">
@@ -75,8 +75,8 @@
 
             <div class="step-button-group">
                 <back-button></back-button>
-                <edit-button v-if="authUser.roles_id == 4" @click.native="editPublication"></edit-button>
-                <delete-button v-if="authUser.roles_id == 4" @click.native="deletePublication"></delete-button>
+                <edit-button v-if="checkAccess" @click.native="editPublication"></edit-button>
+                <delete-button v-if="checkAccess" @click.native="deletePublication"></delete-button>
             </div>
         </div>
         </transition>
@@ -171,6 +171,15 @@
             authUser() {
                 return this.$store.getters.authUser
             },
+            checkAccess() {
+                if(this.authUser.roles_id == 4) {
+                    return true;
+                } else if(this.$store.getters.accessMode == 'open' && (this.data.authors.find(item => item.id == this.authUser.id) || (this.data.supervisor && this.data.supervisor.id == this.authUser.id))) {
+                    return true;
+                } else {
+                    return true;
+                }
+            }
         },
         methods: {
             getPublicationData(){

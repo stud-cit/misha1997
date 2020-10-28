@@ -7,7 +7,7 @@
             <div class="form-group" v-show="userRole != 1 && $route.name != 'publications-edit'">
                 <label>Додати власну публікацію або співробітника кафедри *</label>
                 <div class="input-container">
-                    <select  v-model="publicationData.whose_publication">
+                    <select  v-model="publicationData.whose_publication" @change="whosePublication">
                         <option value="my">Власна публікація</option>
                         <option value="another">Публікація співробітника кафедри</option>
                     </select>
@@ -30,7 +30,7 @@
             </div>
             <div class="form-row">
                 <div class="form-group col-lg-4">
-                    <label >БД Scopus\WoS</label>
+                    <label >БД Scopus/WoS</label>
                     <div class="input-container">
                         <select  v-model="publicationData.science_type_id" @change="changeScienceType">
                             <option value=""></option>
@@ -43,10 +43,10 @@
                 <div class="form-group col-lg-8">
                     <label >Вид публікації *</label>
                     <div class="input-container">
-                        <select  v-model.trim="publicationData.publication_type" v-if="publicationData.science_type_id">
+                        <select  v-model="publicationData.publication_type" v-if="publicationData.science_type_id">
                             <option v-for="(item, i) in publicationTypes" :key="i" v-show="item.scopus_wos" :value="item">{{item.title }}</option>
                         </select>
-                        <select  v-model.trim="publicationData.publication_type" v-else>
+                        <select  v-model="publicationData.publication_type" v-else>
                             <option v-for="(item, i) in publicationTypes" :key="i" :value="item">{{item.title  }}</option>
                         </select>
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
@@ -95,6 +95,9 @@
                 },
                 publication_type: {
                     required,
+                    isRequired(value) {
+                        return value.title != '' ? true : false
+                    }
                 },
             },
         },
@@ -104,6 +107,15 @@
             }
         },
         methods: {
+            whosePublication() {
+                if(this.$route.name == 'publications-add') {
+                    if(this.publicationData.whose_publication == 'my') {
+                        this.publicationData.authors.push(this.$store.getters.authUser);
+                    } else {
+                        this.publicationData.authors.splice(this.publicationData.authors.indexOf(this.$store.getters.authUser), 1);
+                    }
+                }
+            },
             // пошук схожих назв публікацій
             findNames() {
                 this.names = this.publicationNames.filter(item => {

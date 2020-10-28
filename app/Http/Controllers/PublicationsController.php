@@ -28,7 +28,7 @@ class PublicationsController extends ASUController
             if($request->session()->get('person')['roles_id'] == 3) {
                 $q->where('faculty_code', $request->session()->get('person')['faculty_code']);
             }
-        })->get();
+        })->orderBy('created_at', 'DESC')->get();
         foreach ($data as $key => $publication) {
             $publication['date'] = Carbon::parse($publication['created_at'])->format('d.m.Y');
         }
@@ -39,7 +39,10 @@ class PublicationsController extends ASUController
     function getMyPublications(Request $request) {
         $data = Publications::with('publicationType', 'scienceType', 'authors.author')->whereHas('authors.author', function($q) use ($request) {
             $q->where('autors_id', $request->session()->get('person')['id']);
-        })->get();
+        })->orderBy('created_at', 'DESC')->get();
+        foreach ($data as $key => $publication) {
+            $publication['date'] = Carbon::parse($publication['created_at'])->format('d.m.Y');
+        }
         return response()->json($data);
     }
 
@@ -70,19 +73,19 @@ class PublicationsController extends ASUController
         $dataPublications['publication_type_id'] = $dataPublications['publication_type']['id'];
         $response = $modelPublications->create($dataPublications);
 
-        $initials = [];
+        // $initials = [];
 
         foreach ($request->authors as $key => $value) {
-            $name = explode(" ", preg_replace('/\s+/', ' ', $value['name']));
-            $initial = "";
-            foreach($name as $k => $v) {
-                if($k == 0) {
-                    $initial .= $v . " ";
-                } else {
-                    $initial .= mb_substr($v, 0, 1) . ". ";
-                }
-            }
-            array_push($initials, trim($initial));
+            // $name = explode(" ", preg_replace('/\s+/', ' ', $value['name']));
+            // $initial = "";
+            // foreach($name as $k => $v) {
+            //     if($k == 0) {
+            //         $initial .= $v . " ";
+            //     } else {
+            //         $initial .= mb_substr($v, 0, 1) . ". ";
+            //     }
+            // }
+            // array_push($initials, trim($initial));
 
             $authorsPublications = new AuthorsPublications;
             $authorsPublications->autors_id = $value['id'];
@@ -108,9 +111,9 @@ class PublicationsController extends ASUController
                 ]);
             }
         }
-        Publications::find($response->id)->update([
-            'initials' => implode(", ", $initials)
-        ]);
+        // Publications::find($response->id)->update([
+        //     'initials' => implode(", ", $initials)
+        // ]);
         return response('ok', 200);
     }
 
@@ -121,7 +124,7 @@ class PublicationsController extends ASUController
 
         // return response()->json($model);
 
-        $data['initials'] = [];
+        // $data['initials'] = [];
         $notificationText = "";
 
         // check supervisor
@@ -160,16 +163,16 @@ class PublicationsController extends ASUController
         }
 
         foreach ($data['authors'] as $key => $value) {
-            $name = explode(" ", preg_replace('/\s+/', ' ', $value['name']));
-            $initial = "";
-            foreach($name as $k => $v) {
-                if($k == 0) {
-                    $initial .= $v . " ";
-                } else {
-                    $initial .= mb_substr($v, 0, 1) . ". ";
-                }
-            }
-            array_push($data['initials'], trim($initial));
+            // $name = explode(" ", preg_replace('/\s+/', ' ', $value['name']));
+            // $initial = "";
+            // foreach($name as $k => $v) {
+            //     if($k == 0) {
+            //         $initial .= $v . " ";
+            //     } else {
+            //         $initial .= mb_substr($v, 0, 1) . ". ";
+            //     }
+            // }
+            // array_push($data['initials'], trim($initial));
 
             if(AuthorsPublications::where('autors_id', $value['id'])->where('publications_id', $id)->exists()) {
                 unset($oldAuthors[array_search($value['id'], $oldAuthors)]);
@@ -182,7 +185,7 @@ class PublicationsController extends ASUController
             }
         }
 
-        $data['initials'] = implode(", ", $data['initials']);
+        // $data['initials'] = implode(", ", $data['initials']);
 
         foreach ($oldAuthors as $key => $value) {
             AuthorsPublications::where('autors_id', $value)->where('publications_id', $id)->delete();

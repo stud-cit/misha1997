@@ -124,9 +124,6 @@
 
 <script>
     import {required, requiredIf} from "vuelidate/lib/validators";
-
-    const greaterThanZero = (value) => value > 0;
-
     export default {
         
         name: "Step4",
