@@ -45,7 +45,7 @@
                     <input class="item-value" type="text" v-model="publicationData.pages">
                 </div>
                 <div class="error" v-if="$v.publicationData.pages.$error">
-                    Неправильно введені дані
+                    Поле обов'язкове для заповнення
                 </div>
             </div>
             <div class="form-group">
@@ -92,8 +92,7 @@
         validations: {
             publicationData: {
                 pages: {
-                    required,
-                    validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val), 
+                    required
                 },
             },
         },
