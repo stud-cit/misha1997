@@ -93,9 +93,9 @@ let router = new Router({
             path: '/publications/add',
             name: 'publications-add',
             component: PublicationsAdd,
-            meta: {
-                middleware: auth
-            }
+            // meta: {
+            //     middleware: auth
+            // }
         },
         {
             path: '/publications/:id',

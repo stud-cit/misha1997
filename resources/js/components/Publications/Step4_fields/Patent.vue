@@ -7,7 +7,7 @@
                     <input class="item-value" type="text" v-model="publicationData.number_certificate">
                 </div>
                 <div class="error" v-if="$v.publicationData.number_certificate.$error">
-                    Поле обов'язкове для заповнення
+                    Введіть лише цифри
                 </div>
             </div>
             <div class="form-group">
@@ -55,7 +55,7 @@
                     <input class="item-value" type="text" v-model="publicationData.application_number">
                 </div>
                 <div class="error" v-if="$v.publicationData.application_number.$error">
-                    Поле обов'язкове для заповнення
+                    Введіть лише цифри
                 </div>
             </div>
             <div class="form-group">
@@ -96,7 +96,7 @@
                     <input class="item-value" type="text" v-model="publicationData.newsletter_number">
                 </div>
                 <div class="error" v-if="$v.publicationData.newsletter_number.$error">
-                    Поле обов'язкове для заповнення
+                    Введіть лише цифри
                 </div>
             </div>
             <div class="form-group">
@@ -165,7 +165,8 @@
         validations: {
             publicationData: {
                 number_certificate: {
-                    required
+                    required,
+                    validFormat: val => /^\d{1,}$/.test(val),
                 },
                 mpk: {
                     required
@@ -176,7 +177,8 @@
                     }),
                 },
                 application_number: {
-                    required
+                    required,
+                    validFormat: val => /^\d{1,}$/.test(val),
                 },
                 date_publication: {
                     required
@@ -185,7 +187,8 @@
                     required
                 },
                 newsletter_number: {
-                    required
+                    required,
+                    validFormat: val => /^\d{1,}$/.test(val),
                 },
             }
         },

@@ -9,7 +9,10 @@
                     <div class="form-group col-lg-6">
                         <label >SNIP журналу (БД Scopus)</label>
                         <div class="input-container">
-                            <input type="number" v-model="publicationData.snip">
+                            <input type="text" v-model="publicationData.snip">
+                        </div>
+                        <div class="error" v-if="$v.publicationData.snip.$error">
+                            Вводити лише числа не менше 0 (дроби через крапку)
                         </div>
                     </div>
                     <div class="form-group col-lg-6">
@@ -26,7 +29,10 @@
                     <div class="form-group col-lg-8">
                         <label >Імпакт-фактор (БД WoS)</label>
                         <div class="input-container">
-                            <input type="number" v-model="publicationData.impact_factor">
+                            <input type="text" v-model="publicationData.impact_factor">
+                        </div>
+                        <div class="error" v-if="$v.publicationData.impact_factor.$error">
+                            Вводити лише числа не менше 0 (дроби через крапку)
                         </div>
                     </div>
                     <div class="form-group col-lg-4">
@@ -117,7 +123,12 @@
 </template>
 
 <script>
+    import {required, requiredIf} from "vuelidate/lib/validators";
+
+    const greaterThanZero = (value) => value > 0;
+
     export default {
+        
         name: "Step4",
         props: {
             publicationType: Object,
@@ -137,8 +148,35 @@
                 return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null
             }
         },
+        validations: {
+            publicationData: {
+                snip: {
+                    test(value) {
+                        if(value) {
+                            return value > 0 ? true : false;
+                        } else {
+                            return true;
+                        }
+                    },
+                },
+
+                impact_factor: {
+                    test(value) {
+                        if(value) {
+                            return value > 0 ? true : false;
+                        } else {
+                            return true;
+                        }
+                    },
+                }
+            }
+        },
         methods:{
             nextStep() {
+               this.$v.publicationData.$touch();
+                if (this.$v.publicationData.$invalid) {
+                    return
+                }
                 this.$emit('getData');
             },
             prevStep(){

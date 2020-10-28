@@ -89,7 +89,8 @@
         validations: {
             publicationData: {
                 pages: {
-                    required
+                    // required,
+                    // validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val), 
                 },
             },
         },
