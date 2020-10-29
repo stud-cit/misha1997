@@ -17,13 +17,26 @@ class AuthorsController extends ASUController
         $divisions = $this->getDivisions();
         $data = [];
         if($request->session()->get('person')['roles_id'] == 3) {
-            $data = Authors::with('role')->where('faculty_code', $request->session()->get('person')['faculty_code'])->where('roles_id', '!=', 4)->get();
+            $data = Authors::with('role')
+                    ->where('faculty_code', $request->session()->get('person')['faculty_code'])
+                    ->where('roles_id', '!=', 4)
+                    ->where('categ_1', "!=", 1)
+                    ->where('guid', "!=", null)
+                    ->get();
         }
         if($request->session()->get('person')['roles_id'] == 2) {
-            $data = Authors::with('role')->where('department_code', $request->session()->get('person')['department_code'])->where('roles_id', '!=', 4)->get();
+            $data = Authors::with('role')
+                    ->where('department_code', $request->session()->get('person')['department_code'])
+                    ->where('categ_1', "!=", 1)
+                    ->where('guid', "!=", null)
+                    ->where('roles_id', '!=', 4)
+                    ->get();
         }
         if($request->session()->get('person')['roles_id'] == 4) {
-            $data = Authors::with('role')->where('roles_id', '!=', 4)->get();   
+            $data = Authors::with('role')->where('roles_id', '!=', 4)
+                    ->where('categ_1', "!=", 1)
+                    ->where('guid', "!=", null)
+                    ->get();   
         }
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);

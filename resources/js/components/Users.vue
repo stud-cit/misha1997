@@ -1,6 +1,9 @@
 <template>
     <div class="container page-content general-block">
-        <h1 class="page-title">Список працівників</h1>
+        <h1 class="page-title">Список авторизованих користувачів
+            <span v-if="authUser.roles_id == 3 && divisions.find(item => item.ID_DIV == authUser.faculty_code)"> - {{ divisions.find(item => item.ID_DIV == authUser.faculty_code).NAME_DIV }}</span>
+            <span v-if="authUser.roles_id == 2 && divisions.find(item => item.ID_DIV == authUser.department_code)"> - {{ divisions.find(item => item.ID_DIV == authUser.department_code).NAME_DIV }}</span>
+        </h1>
         <div class="exports">
             <button class="export-button" @click="exportUsers"><img src="/img/download.png" alt=""> Експорт списку користувачів</button>
         </div>
@@ -12,8 +15,8 @@
                         <input type="text" v-model="filters.name">
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-lg-6">
+                <div class="form-row" v-if="authUser.roles_id != 2">
+                    <div class="form-group col" v-if="authUser.roles_id != 3">
                         <label >Інститут / факультет</label>
                         <div class="input-container">
                             <select v-model="filters.faculty_code" @change="getDepartments">
@@ -26,7 +29,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group col-lg-6">
+                    <div class="form-group col">
                         <label >Кафедра</label>
                         <div class="input-container">
                             <select v-model="filters.department_code">
@@ -228,6 +231,11 @@
             getDivisions() {
                 axios.get('/api/sort-divisions').then(response => {
                     this.divisions = response.data;
+                    if(this.authUser.roles_id == 3 && this.authUser.faculty_code) {
+                        this.departments = this.divisions.find(item => {
+                            return this.authUser.faculty_code == item.ID_DIV;
+                        }).departments;
+                    }
                 })
             },
             getData() {

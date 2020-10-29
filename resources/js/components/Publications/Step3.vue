@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="form-row" v-if="publicationData.science_type_id == 2 || publicationData.science_type_id == 3">
-                    <div class="form-group col-lg-8">
+                    <div class="form-group col-lg-6">
                         <label >Імпакт-фактор (БД WoS)</label>
                         <div class="input-container">
                             <input type="text" v-model="publicationData.impact_factor">
@@ -35,7 +35,7 @@
                             Вводити лише числа не менше 0 (дроби через крапку)
                         </div>
                     </div>
-                    <div class="form-group col-lg-4">
+                    <div class="form-group col-lg-6">
                         <label >Квартиль журналу (БД WoS)</label>
                         <div class="input-container">
                             <select  v-model="publicationData.quartil_wos" >

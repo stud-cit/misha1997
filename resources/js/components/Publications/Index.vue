@@ -1,17 +1,20 @@
 <template>
     <div class="container page-content general-block">
-        <h1 class="page-title">Перегляд публікацій</h1>
+        <h1 class="page-title">Перегляд публікацій 
+            <span v-if="authUser.roles_id == 3 && divisions.find(item => item.ID_DIV == authUser.faculty_code)"> - {{ divisions.find(item => item.ID_DIV == authUser.faculty_code).NAME_DIV }}</span>
+            <span v-if="authUser.roles_id == 2 && divisions.find(item => item.ID_DIV == authUser.department_code)"> - {{ divisions.find(item => item.ID_DIV == authUser.department_code).NAME_DIV }}</span>
+        </h1>
 
         <!-- exports-->
         <div class="exports">
-            <export-rating v-if="authUser.roles_id == 4" :publicationTypes="publicationTypes" :years="years" :countries="country" class="export-block"></export-rating>
+            <export-rating v-if="authUser.roles_id != 1" :publicationTypes="publicationTypes" :years="years" :countries="country" class="export-block"></export-rating>
             <export-publications class="export-block" :exportList="exportPublication"></export-publications>
         </div>
         <!---->
         <div class="main-content">
             <form class="search-block">
-                <div class="form-row">
-                    <div class="form-group col">
+                <div class="form-row" v-if="authUser.roles_id != 2">
+                    <div class="form-group col" v-if="authUser.roles_id != 3">
                         <label>Інститут / факультет</label>
                         <div class="input-container">
                             <select v-model="filters.faculty_code" @change="getDepartments">
@@ -162,9 +165,11 @@
             // getters
             // всі факультети, кафедри
             getDepartments() {
-                this.departments = this.divisions.find(item => {
-                    return this.filters.faculty_code == item.ID_DIV
-                }).departments;
+                if(this.filters.faculty_code) {
+                    this.departments = this.divisions.find(item => {
+                        return this.filters.faculty_code == item.ID_DIV
+                    }).departments;
+                }
             },
             // всі публікації
             getData() {
@@ -230,6 +235,11 @@
             getDivisions() {
                 axios.get('/api/sort-divisions').then(response => {
                     this.divisions = response.data;
+                    if(this.authUser.roles_id == 3 && this.authUser.faculty_code) {
+                        this.departments = this.divisions.find(item => {
+                            return this.authUser.faculty_code == item.ID_DIV;
+                        }).departments;
+                    }
                 })
             },
             // пошук публікації по назві

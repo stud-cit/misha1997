@@ -5,7 +5,7 @@
                 <thead>
                     <tr>
                         <th scope="col">№</th>
-                        <th scope="col">Вид пуб-ції</th>
+                        <th scope="col">Вид публікації</th>
                         <th scope="col">Прізвище та ініціали автора/співавторів</th>
                         <th scope="col">Назва публікації</th>
                         <th scope="col">Рік видання</th>

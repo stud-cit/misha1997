@@ -339,9 +339,17 @@ class PublicationsController extends ASUController
     // рейтингові показники
     function export(Request $request) {
         $divisions = $this->getDivisions();
-        $data = Publications::with('authors.author', 'publicationType', 'scienceType')
+        $data = Publications::with('authors.author', 'publicationType', 'scienceType')->whereHas('authors.author', function($q) use ($request) {
+            if($request->session()->get('person')['roles_id'] == 2) {
+                $q->where('department_code', $request->session()->get('person')['department_code']);
+            }
+            if($request->session()->get('person')['roles_id'] == 3) {
+                $q->where('faculty_code', $request->session()->get('person')['faculty_code']);
+            }
+            })
             ->where('country', 'like', "%".$request->country."%") // Країна видання
-            ->where('publication_type_id', 'like', "%".$request->publication_type_id."%"); // Вид публікацій
+            ->where('publication_type_id', 'like', "%".$request->publication_type_id."%") // Вид публікацій
+            ->orderBy('created_at', 'DESC');
 
         $todayYear = Carbon::today()->year;
         $countScopusFiveYear = Publications::where('science_type_id', 1)->whereYear('created_at', '>=', $todayYear - 5)->count();

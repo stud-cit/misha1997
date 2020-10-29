@@ -5,11 +5,11 @@
         </p>
         <div  class="step-content">
             <div class="form-group" v-show="userRole != 1 && $route.name != 'publications-edit'">
-                <label>Додати власну публікацію або співробітника кафедри *</label>
+                <label>Додати власну публікацію або кафедри *</label>
                 <div class="input-container">
                     <select  v-model="publicationData.whose_publication" @change="whosePublication">
                         <option value="my">Власна публікація</option>
-                        <option value="another">Публікація співробітника кафедри</option>
+                        <option value="another">Публікація кафедри</option>
                     </select>
                 </div>
             </div>
