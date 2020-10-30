@@ -1,9 +1,6 @@
 <template>
-
-    <header :class="{header: true, shadow: $route.name != 'auth'}">
-
+    <header :class="{header: true, shadow: $route.name != 'auth'}" v-if="$route.name != 'register'">
         <div class="container">
-
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <a class="navbar-brand" href="/home"><img src="/img/logo.svg" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="$route.name != 'auth'">
@@ -38,30 +35,28 @@
                                     @click="setAccess('close')"
                                 >Перевести сервіс в режим  з обмеженим доступом</button>
                             </div>
-
                         </li>
-
                         <li class="nav-item">
                             <router-link class="nav-link" :to="{path: '/profile'}" >Профіль</router-link>
                         </li>
                         <li class="nav-item">
-
 <!--                            <a class="nav-link note" exist :to="{name: 'notifications'}" active-class="active">Повідомлення&nbsp;<span class="number">2</span></a>-->
                             <router-link class="nav-link" :to="{path: '/notifications'}" >Повідомлення</router-link>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" @click="exit" style="cursor:pointer">Вихід</a>
                         </li>
+                        <li>
+                            <div id="cabinet_service"></div>
+                        </li>
                     </ul>
                 </div>
             </nav>
         </div>
     </header>
-
 </template>
 
 <script>
-
     export default {
         data() {
             return {};
@@ -98,7 +93,6 @@
                 $('.navbar-collapse').collapse('hide');
             }
         }
-
     }
 </script>
 <style scoped lang="scss">

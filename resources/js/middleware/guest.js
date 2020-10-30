@@ -6,6 +6,11 @@ export default function guest ({ next, to }) {
                 path: '/home',
                 params: { nextUrl: to.fullPath }
             });
+        } else if(response.data.status == 'login') {
+            return next({
+                path: '/register',
+                params: { nextUrl: to.fullPath }
+            });
         } else {
             return next();
         }

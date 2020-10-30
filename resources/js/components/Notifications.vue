@@ -1,36 +1,33 @@
 <template>
-
     <div class="container general-block">
         <h1 class="blue-page-title">Перегляд повідомлень</h1>
         <div class="page-content">
-            <template v-if="notifications.length > 0">
+            <template>
                 <h2 class="subtitle new" >Нові повідомлення</h2>
                 <hr>
-                <ul class=" notifications-list mb-75">
+                <ul class="notifications-list mb-50">
                     <li class="notifications-item" v-for="item in notifications" :key="item.id">
-                        <p class="date">{{ item.date }} <i class="fa fa-envelope cursor fa-1x" @click="watchedNotification(item)"></i></p>
+                        <p class="date">{{ item.date }}</p>
                         <p class="text" v-html="item.text"></p>
                     </li>
                 </ul>
+                <div v-if="notifications.length == 0" class="text-center no-notifications">Повідомлення відсутні</div>
             </template>
-
-            <h2 class="subtitle">Попередні повідомлення</h2>
-            <hr>
-            <ul class=" notifications-list before" v-if="viewedNotifications.length > 0">
-                <li class="notifications-item" v-for="item in viewedNotifications" :key="item.id">
-                    <p class="date">{{ item.date }} <i class="fa fa-envelope-o fa-1x"></i></p>
-                    <p class="text" v-html="item.text"></p>
-                </li>
-            </ul>
+            <!-- <template v-if="viewedNotifications.length > 0">
+                <h2 class="subtitle">Попередні повідомлення</h2>
+                <hr>
+                <ul class="notifications-list before">
+                    <li class="notifications-item" v-for="item in viewedNotifications" :key="item.id">
+                        <p class="date">{{ item.date }} <i class="fa fa-envelope-o fa-1x"></i></p>
+                        <p class="text" v-html="item.text"></p>
+                    </li>
+                </ul>
+            </template> -->
             <div class="step-button-group">
                 <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
             </div>
-            
         </div>
     </div>
-
-
-
 </template>
 
 <script>
@@ -38,41 +35,44 @@
         data() {
             return {
                 notifications: [],
-                viewedNotifications: []
+                // viewedNotifications: []
             };
         },
-
         created () {
             this.getData();
         },
         methods: {
             getData() {
                 this.notifications = [];
-                this.viewedNotifications = [];
+                // this.viewedNotifications = [];
                 axios.get('/api/notifications/'+this.$store.getters.authUser.id).then(response => {
-                    response.data.map(item => {
-                        if (item.status) {
-                            this.viewedNotifications.push(item)
-                        } else {
-                            this.notifications.push(item)
-                        }
-                    });
+                    this.notifications = response.data;
+                    // response.data.map(item => {
+                    //     if (item.status) {
+                    //         this.viewedNotifications.push(item)
+                    //     } else {
+                    //         this.notifications.push(item)
+                    //     }
+                    // });
                 });
             },
-            watchedNotification(item) {
-                axios.post('/api/notifications/'+item.id+'/'+this.$store.getters.authUser.id, {
-                    status: 1
-                }).then(() => {
-                    this.getData();
-                });
-            }
+            // watchedNotification(item) {
+            //     axios.post('/api/notifications/'+item.id+'/'+this.$store.getters.authUser.id, {
+            //         status: 1
+            //     }).then(() => {
+            //         this.getData();
+            //     });
+            // }
         },
     }
 </script>
 <style scoped lang="scss">
-    .cursor {
-        cursor: pointer;
+    .no-notifications {
+        font-size: 20px;
     }
+    // .cursor {
+    //     cursor: pointer;
+    // }
     .subtitle{
         font-family: Arial;
         font-style: normal;

@@ -141,8 +141,7 @@ class AuthorsController extends ASUController
             'publications.publication.authors.author',
             'publications.publication.publicationType',
             'publications.publication.scienceType',
-            'role',
-            'notifications'
+            'role'
         )->find($id);
         $data->position = $this->getPosition($data);
         foreach($divisions->original['institute'] as $k => $v) {
@@ -264,7 +263,7 @@ class AuthorsController extends ASUController
 
     //notifications
     function getNotifications($autors_id) {
-        $data = Notifications::where('autors_id', $autors_id)->orderBy('created_at', 'DESC')->get();
+        $data = Notifications::where('autors_id', $autors_id)->orWhere('autors_id', null)->orderBy('created_at', 'DESC')->get();
         foreach ($data as $key => $value) {
             $value['date'] = Carbon::parse($value->created_at)->format('d.m.Y H:i');
         }

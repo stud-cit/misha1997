@@ -34,14 +34,6 @@ let router = new Router({
             }
         },
         {
-            path: '/cabinet*',
-            name: 'cabinet',
-            component: Home,
-            meta: {
-                middleware: auth
-            }
-        },
-        {
             path: '/home',
             name: 'home',
             component: Home,

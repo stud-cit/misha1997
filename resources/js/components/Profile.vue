@@ -8,14 +8,6 @@
                     <div class="col-lg-9 list-item list-text">{{data.name}}</div>
                 </li>
                 <li class="row">
-                    <div class="col-lg-3 list-item list-title">Дата народження:</div>
-                    <div class="col-lg-9 list-item list-text">
-                        <div class="input-container">
-                            <input class="item-value" type="date" v-model="data.date_bth">
-                        </div>
-                    </div>
-                </li>
-                <li class="row">
                     <div class="col-lg-3 list-item list-title">Роль:</div>
                     <div class="col-lg-9 list-item list-text">{{data.role.name}}</div>
                 </li>
@@ -112,7 +104,6 @@
                     role: {
                         name: ""
                     },
-                    date_bth: "",
                     job: "",
                     position: "",
                     faculty: "",

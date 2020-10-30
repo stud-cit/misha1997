@@ -1,42 +1,39 @@
 <template>
     <div class="container page-content general-block">
-        <h1 class="page-title">Реєстрація</h1>
+        <h1 class="page-title">{{ name }}</h1>
+        <h2 class="subtitle">Вітаємо на сервісі наукові публікації. Прохання, за наявності, ввести дані, або натиснути кнопку "Пропустити" без введення даних.</h2>
         <form class="search-block">
-            <div class="form-group">
-                <label >Індекс Гірша Scopus</label>
-                <div class="input-container">
-                    <input class="item-value" type="text" v-model="data.scopus_autor_id">
-
-                    <div class="hint" ><span>Індекс Гірша Scopus:</span></div>
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label>Індекс Гірша Scopus</label>
+                    <div class="input-container">
+                        <input class="item-value" type="text" v-model="data.scopus_autor_id">
+                    </div>
+                </div>
+                <div class="form-group col-6">
+                    <label>Індекс Гірша WoS</label>
+                    <div class="input-container">
+                        <input class="item-value" type="text" v-model="data.h_index">
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label >Індекс Гірша WoS</label>
-                <div class="input-container">
-                    <input class="item-value" type="text" v-model="data.h_index">
-
-                    <div class="hint" ><span>Індекс Гірша WoS:</span></div>
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label>Research ID</label>
+                    <div class="input-container">
+                        <input class="item-value" type="text" v-model="data.scopus_researcher_id">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label >Research ID</label>
-                <div class="input-container">
-                    <input class="item-value" type="text" v-model="data.scopus_researcher_id">
-
-                    <div class="hint" ><span>Research ID:</span></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>ORCID</label>
-                <div class="input-container">
-                    <input class="item-value" type="text" v-model="data.orcid">
-
-                    <div class="hint" ><span>ORCID:</span></div>
+                <div class="form-group col-6">
+                    <label>ORCID</label>
+                    <div class="input-container">
+                        <input class="item-value" type="text" v-model="data.orcid">
+                    </div>
                 </div>
             </div>
         </form>
-        <div class="text-center">
-            <button class="btn save-btn" @click="save()">Зберегти</button>
+        <div class="step-button-group">
+            <button @click="save()" class="next">Пропустити</button>
         </div>
     </div>
 </template>
@@ -45,6 +42,7 @@
     export default {
         data() {
             return {
+                name: "",
                 data: {
                     country: "Україна",
                     h_index: "",
@@ -54,7 +52,13 @@
                 }
             };
         },
+        created() {
+            this.getName();
+        },
         methods: {
+            getName() {
+                this.name = this.$store.getters.authUser.surname + " " + this.$store.getters.authUser.name + " " + this.$store.getters.authUser.patronymic
+            },
             save() {
                 axios.post('/api/register', this.data)
                     .then((response) => {
@@ -66,6 +70,15 @@
     }
 </script>
 <style lang="scss" scoped>
+        .search-block {
+            margin-top: 30px;
+        }
+        h2.subtitle {
+            font-size: 22px;
+            text-align: center;
+            margin-top: 20px;
+            border-bottom: 0px;
+        }
         form{
             margin-top: 60px;
         }

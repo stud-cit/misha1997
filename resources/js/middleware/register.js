@@ -1,4 +1,4 @@
-export default function register ({ next, to }) {
+export default function register ({ next, store, to }) {
     axios.get('/api/check-user')
     .then((response) => {
         if(response.data.status == 'register') {
@@ -7,6 +7,7 @@ export default function register ({ next, to }) {
                 params: { nextUrl: to.fullPath }
             });
         } else if(response.data.status == 'login') {
+            store.dispatch('setUser', response.data.user)
             return next();
         } else {
             return next({
