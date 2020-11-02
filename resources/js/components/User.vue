@@ -8,10 +8,6 @@
                     <div class="col-lg-9 list-item list-text">{{data.name}}</div>
                 </li>
                 <li class="row">
-                    <div class="col-lg-3 list-item list-title">Дата народження:</div>
-                    <div class="col-lg-9 list-item list-text">{{data.date_bth}}</div>
-                </li>
-                <li class="row">
                     <div class="col-lg-3 list-item list-title">Роль:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4">
@@ -22,7 +18,6 @@
                                     :value="item.id"
                                 >{{item.name}}</option>
                             </select>
-                            <div class="hint"><span>title</span></div>
                         </div>
                         <template v-else>
                             {{data.role.name}}
@@ -143,7 +138,7 @@
                                     <router-link v-if="author.supervisor" :to="'/user/'+author.author.id">{{author.author.name}} </router-link>
                                 </span>
                             </td>
-                            <td>{{ item.date }}</td>
+                            <td>{{ item.publication.date }}</td>
                         </tr>
                     </tbody>
                 </table>

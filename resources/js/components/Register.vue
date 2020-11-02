@@ -1,7 +1,7 @@
 <template>
     <div class="container page-content general-block">
         <h1 class="page-title">{{ name }}</h1>
-        <h2 class="subtitle">Вітаємо на сервісі наукові публікації. Прохання, за наявності, ввести дані, або натиснути кнопку "Пропустити" без введення даних.</h2>
+        <h2 class="subtitle">Вітаємо Вас на сервісі "Наукові публікації". Заповніть наступні поля, у разі їх наявності, та натисніть кнопку "Продовжити".</h2>
         <form class="search-block">
             <div class="form-row">
                 <div class="form-group col-6">
@@ -33,7 +33,7 @@
             </div>
         </form>
         <div class="step-button-group">
-            <button @click="save()" class="next">Пропустити</button>
+            <button @click="save()" class="next">Продовжити</button>
         </div>
     </div>
 </template>
