@@ -24,6 +24,7 @@ class CreatePublicationsTable extends Migration
             $table->string('initials')->nullable(); // Прізвище та ініціали
             $table->string('country')->nullable(); // Країна
             $table->string('name_magazine')->nullable(); // Назва журналу
+            $table->string('name_monograph')->nullable(); // Назва монографії
             $table->integer('number_volumes')->nullable(); // Кількість томів
             $table->string('by_editing')->nullable(); // За редакцією
             $table->string('city')->nullable(); // Місто видання

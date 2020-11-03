@@ -46,7 +46,8 @@ class Publications extends Model
         'nature_science',
         'db_scopus_percent',
         'db_wos_percent',
-        'cited_international_patents'
+        'cited_international_patents',
+        'name_monograph'
     ];
 
     function authors() {

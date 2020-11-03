@@ -322,6 +322,10 @@
                     {
                         name: "Викладач",
                         value: "categ2/4"
+                    },
+                    {
+                        name: "Менеджер",
+                        value: "categ2/8"
                     }
                 ],
                 selectCateg: null,
@@ -427,7 +431,7 @@
                 if(name) {
                     if(categ_1 == 1) {
                         return `${name} - ${academic_code}`
-                    } else if(categ_1 == 2 || categ_2 == 1 || categ_2 == 2) {
+                    } else if(categ_1 == 2 || categ_2 == 1 || categ_2 == 2 || categ_2 == 3) {
                         if(department) {
                             return `${name} - ${department}`
                         } else {

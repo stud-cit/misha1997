@@ -9,7 +9,7 @@
                 <div class="input-container">
                     <select  v-model="publicationData.whose_publication" @change="whosePublication">
                         <option value="my">Власна публікація</option>
-                        <option value="another">Публікація кафедри</option>
+                        <option value="another">Публікація <span v-if="userRole == 2">кафедри</span><span v-if="userRole == 3">факультету</span><span v-if="userRole == 4">університету</span></option>
                     </select>
                 </div>
             </div>
@@ -165,7 +165,7 @@
 
                 // перевірка унікальності назви і типу публікації
                 if(this.$route.name != 'publications-edit') {
-                    var findPublication = this.publicationNames.find(item => item.title.toLowerCase() == this.publicationData.title.toLowerCase() && item.publication_type_id == this.publicationData.publication_type.id);
+                    var findPublication = this.publicationNames.find(item => this.parseString(this.publicationData.title) == this.parseString(this.publicationData.title) && item.publication_type_id == this.publicationData.publication_type.id);
                     if(findPublication) {
                         this.errorName = findPublication;
                         return;

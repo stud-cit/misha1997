@@ -68,26 +68,49 @@ class AuthController extends ASUController
             $data['country'] = "Україна";
             $data['guid'] = $personCabinet['result']['guid'];
             $data['token'] = $personCabinet['result']['token'];
-            $data['academic_code'] = $personCabinet['result']['info1'] ? $personCabinet['result']['info1'][0]['NAME_GROUP'] : "";
-
-            if($personCabinet['result']['categ1'] == 10) {
-                $data['categ_1'] = 1;
-            } elseif($personCabinet['result']['categ1'] == 12) {
-                $data['categ_1'] = 2;
-            } else {
-                $data['categ_1'] = 0;
+            if(isset($personCabinet['result']['info1'])) {
+                $data['academic_code'] = $personCabinet['result']['info1'][0]['NAME_GROUP'];
+                $data['categ_1'] = $personCabinet['result']['info1'][0]['CATEG'];
             }
-            if($personCabinet['result']['categ2'] == 10) {
-                $data['categ_2'] = 1;
-            } elseif($personCabinet['result']['categ2'] == 12) {
-                $data['categ_2'] = 2;
-            } else {
-                $data['categ_2'] = 0;
+            if(isset($personCabinet['result']['info2'])) {
+                $data['categ_2'] = $personCabinet['result']['info2'][0]['CATEG'];
             }
 
             foreach($divisions->original['department'] as $k2 => $v2) {
-                if ($personCabinet['result']['info1'][0] && $personCabinet['result']['info1'][0]['KOD_DIV'] == $v2['ID_DIV']) {
-                    $data['department_code'] = $v2['ID_DIV'];
+                if (isset($personCabinet['result']['info1'])) {
+                    if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                        $data['department_code'] = $v2['ID_DIV'];
+                    }
+                }
+                if (isset($personCabinet['result']['info2'])) {
+                    if ($personCabinet['result']['info2'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                        $data['department_code'] = $v2['ID_DIV'];
+                    }
+                }
+            }
+
+            foreach($divisions->original['institute'] as $k2 => $v2) {
+                if (isset($personCabinet['result']['info1'])) {
+                    if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                        $data['faculty_code'] = $v2['ID_DIV'];
+                    }
+                }
+                if (isset($personCabinet['result']['info2'])) {
+                    if ($personCabinet['result']['info2'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                        $data['faculty_code'] = $v2['ID_DIV'];
+                    }
+                }
+            }
+
+            if($data['department_code']) {
+                foreach($divisions->original['department']  as $k => $v) {
+                    if ($data['department_code'] == $v['ID_DIV']) {
+                        foreach($divisions->original['institute'] as $k2 => $v2) {
+                            if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                                $data['faculty_code'] = $v2['ID_DIV'];
+                            }
+                        }
+                    }
                 }
             }
 
@@ -128,11 +151,6 @@ class AuthController extends ASUController
             ]);
         }
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->key . '&token=' . $this->cabinet_service_token), true);
-        // if($personCabinet['result']['categ1'] == 10) {
-        //     return view('app', [
-        //         "status" => "unauthorized"
-        //     ]);
-        // }
         if ($personCabinet['status'] == 'OK') {
             $request->session()->put('key', $request->key);
             $userModel = Authors::where("guid", $personCabinet['result']['guid']);
@@ -141,29 +159,27 @@ class AuthController extends ASUController
                 $person = $userModel->first();
                 $person->name = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
                 $person->job = "СумДУ";
-                $person->academic_code = $personCabinet['result']['info1'] ? $personCabinet['result']['info1'][0]['NAME_GROUP'] : "";
-
-                if($personCabinet['result']['categ1'] == 10) {
-                    $person->categ_1 = 1;
-                } elseif($personCabinet['result']['categ1'] == 12) {
-                    $person->categ_1 = 2;
-                } else {
-                    $person->categ_1 = 0;
+                if(isset($personCabinet['result']['info1'])) {
+                    $person->academic_code = $personCabinet['result']['info1'][0]['NAME_GROUP'];
+                    $person->categ_1 = $personCabinet['result']['info1'][0]['CATEG'];
                 }
-                if($personCabinet['result']['categ2'] == 10) {
-                    $person->categ_2 = 1;
-                } elseif($personCabinet['result']['categ2'] == 12) {
-                    $person->categ_2 = 2;
-                } else {
-                    $person->categ_2 = 0;
+                if (isset($personCabinet['result']['info2'])) {
+                    $person->categ_2 = $personCabinet['result']['info2'][0]['CATEG'];
                 }
 
                 $person->department_code = null;
                 $person->faculty_code = null;
 
                 foreach($divisions->original['department'] as $k2 => $v2) {
-                    if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v2['ID_DIV']) {
-                        $person->department_code = $v2['ID_DIV'];
+                    if (isset($personCabinet['result']['info1'])) {
+                        if($personCabinet['result']['info1'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                            $person->department_code = $v2['ID_DIV'];
+                        }
+                    }
+                    if (isset($personCabinet['result']['info2'])) {
+                        if($personCabinet['result']['info2'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                            $person->department_code = $v2['ID_DIV'];
+                        }
                     }
                 }
 
@@ -180,8 +196,15 @@ class AuthController extends ASUController
                 }
 
                 foreach($divisions->original['institute'] as $k2 => $v2) {
-                    if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v2['ID_DIV']) {
-                        $person->faculty_code = $v2['ID_DIV'];
+                    if (isset($personCabinet['result']['info1'])) {
+                        if ($personCabinet['result']['info1'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                            $person->faculty_code = $v2['ID_DIV'];
+                        }
+                    }
+                    if (isset($personCabinet['result']['info2'])) {
+                        if($personCabinet['result']['info2'][0]['KOD_DIV'] == $v2['ID_DIV']) {
+                            $person->department_code = $v2['ID_DIV'];
+                        }
                     }
                 }
 
@@ -205,7 +228,7 @@ class AuthController extends ASUController
     }
 
     function mode($request) {
-        $info = 'Web-серіс "Наукові публікації СумДУ" дозволить зручно вести облік Ваших наукових та науково-методичних публікацій'; // Service description
+        $info = 'Інформаційний сервіс «Наукові публікації» дозволить Вам зручно вести облік Ваших наукових та науково-методичних публікацій'; // Service description
         $icon = public_path() . "/service.png"; // Service icon (48x48)
         $mask = 13; // Service modes 3,2,0 (1101 bits)
 

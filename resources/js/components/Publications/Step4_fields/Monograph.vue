@@ -13,6 +13,12 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="item-title">Назва монографії </label>
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="publicationData.name_monograph">
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="item-title">Кількість томів</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.number_volumes">
@@ -25,7 +31,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">За редакцією </label>
+                <label class="item-title">За редакцією (у родовому відмінку)</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.by_editing">
                 </div>

@@ -49,6 +49,21 @@
                     <div class="col-lg-9 list-item list-text">{{data.country}}</div>
                 </li>
                 <li class="row">
+                    <div class="col-lg-3 list-item list-title">5 або більше публікацій в Scopus та/або WoS:</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4">
+                            <select v-model="data.five_publications">
+                                <option value=""></option>
+                                <option value="1">Так</option>
+                                <option value="0">Ні</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-9 list-item list-text" v-else>
+                            {{data.five_publications ? "Так" : "Ні"}}
+                        </div>
+                    </div>
+                </li>
+                <li class="row">
                     <div class="col-lg-3 list-item list-title">Індекс Гірша:</div>
                     <div class="col-lg-9  list-item list-text d-flex">
                         <div class="col-lg-6 two-col pr-2">
@@ -90,18 +105,6 @@
                         </div>
                         <div v-else>
                             {{data.scopus_researcher_id}}
-                        </div>
-                    </div>
-                </li>
-                <li class="row" v-if="authUser.roles_id == 4">
-                    <div class="col-lg-3 list-item list-title">5 або більше публікацій в Scopus та/або WoS:</div>
-                    <div class="col-lg-9 list-item list-text">
-                        <div class="input-container">
-                            <select v-model="data.five_publications">
-                                <option value=""></option>
-                                <option value="1">Так</option>
-                                <option value="0">Ні</option>
-                            </select>
                         </div>
                     </div>
                 </li>
@@ -239,6 +242,7 @@
                         swal("Інформацію оновлено", {
                             icon: "success",
                         });
+                        this.$router.go(-1);
                 })
             }
         },

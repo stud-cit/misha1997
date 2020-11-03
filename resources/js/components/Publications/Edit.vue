@@ -69,6 +69,7 @@
                     nature_science: "",
                     db_scopus_percent: "",
                     db_wos_percent: "",
+                    name_monograph: "",
                     authors: [],
                     useSupervisor: 0,
                     supervisor: null,

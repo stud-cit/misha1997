@@ -25,7 +25,8 @@ class Authors extends Model
         'categ_1',
         'categ_2',
         'five_publications',
-        'forbes_fortune'
+        'forbes_fortune',
+        'token'
     ];
 
     protected $hidden = ['created_at', 'updated_at'];
