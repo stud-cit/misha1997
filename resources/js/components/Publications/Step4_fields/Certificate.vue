@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Країна, де отриманий патент *</label>
+                <label class="item-title">Країна, де отримане свідоцтво *</label>
                 <div class="input-container">
                     <select class="item-value" v-model="publicationData.country">
                         <option
@@ -44,7 +44,23 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Дата реєстрації свідоцтва/рішення *</label>
+                <label class="item-title">Дата подачі заявки *</label>
+                <div class="input-container">
+                    <date-picker
+                        v-model="publicationData.date_application"
+                        value-type="YYYY-MM-DD"
+                        :lang="datepicker.lang"
+                        :editable="false"
+                        :popup-style="datepicker.styles"
+                    ></date-picker>
+                    <input style="display:none" class="item-value" type="text" v-model="publicationData.date_application" required>
+                </div>
+                <div class="error" v-if="$v.publicationData.date_application.$error">
+                    Поле обов'язкове для заповнення
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="item-title">Дата публікації про видачу свідоцтва/рішення *</label>
                 <div class="input-container">
                     <date-picker
                         v-model="publicationData.date_publication"
@@ -53,7 +69,7 @@
                         :editable="false"
                         :popup-style="datepicker.styles"
                     ></date-picker>
-                    <input style="display:none" class="item-value" type="text" v-model="publicationData.date_publication">
+                    <input style="display:none" class="item-value" type="text" v-model="publicationData.date_publication" required>
                 </div>
                 <div class="error" v-if="$v.publicationData.date_publication.$error">
                     Поле обов'язкове для заповнення
@@ -130,6 +146,9 @@
                     }),
                 },
                 date_publication: {
+                    required
+                },
+                date_application: {
                     required
                 },
                 country: {

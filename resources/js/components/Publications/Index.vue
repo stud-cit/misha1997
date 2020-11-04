@@ -53,7 +53,7 @@
                 <div class="form-group">
                     <label>Прізвище та ініціали автора</label>
                     <div class="input-container">
-                        <input type="text" v-model="filters.initials">
+                        <input type="text" v-model="filters.authors_f">
                     </div>
                 </div>
                 <div class="form-row">
@@ -113,6 +113,7 @@
 </template>
 
 <script>
+    import divisions from '../mixins/divisions';
     import years from '../mixins/years';
     import country from '../mixins/country';
 
@@ -123,11 +124,9 @@
     import DeleteButton from "../Buttons/Delete";
     import XLSX from 'xlsx';
     export default {
-        mixins: [years, country],
+        mixins: [years, country, divisions],
         data() {
             return {
-                departments: [],
-                divisions: [],
                 names: [],
                 publicationNames: [],
                 data: [],
@@ -138,7 +137,7 @@
                 selectPublications: [],
                 filters: {
                     title: '',
-                    initials: '',
+                    authors_f: '',
                     science_type_id: '',
                     year: '',
                     country: '',
@@ -159,25 +158,16 @@
             this.getData();
             this.getTypePublications();
             this.getNamesPublications();
-            this.getDivisions();
         },
         methods: {
             // getters
-            // всі факультети, кафедри
-            getDepartments() {
-                if(this.filters.faculty_code) {
-                    this.departments = this.divisions.find(item => {
-                        return this.filters.faculty_code == item.ID_DIV
-                    }).departments;
-                }
-            },
             // всі публікації
             getData() {
                 axios.get('/api/publications').then(response => {
                     this.data = response.data.map(element => {
                         element.faculty_code = element.authors.map(item => item.author.faculty_code).join();
                         element.department_code = element.authors.map(item => item.author.department_code).join();
-                        element.initials = element.authors.map(item => item.author.name).join();
+                        element.authors_f = element.authors.map(item => item.author.name).join();
                         return element;
                     });
                     this.loading = false;
@@ -230,17 +220,6 @@
                 } else {
                     this.selectPublications.splice(this.selectPublications.indexOf(item), 1);
                 }
-            },
-            // сортування кафедр по факультету
-            getDivisions() {
-                axios.get('/api/sort-divisions').then(response => {
-                    this.divisions = response.data;
-                    if(this.authUser.roles_id == 3 && this.authUser.faculty_code) {
-                        this.departments = this.divisions.find(item => {
-                            return this.authUser.faculty_code == item.ID_DIV;
-                        }).departments;
-                    }
-                })
             },
             // пошук публікації по назві
             findNames() {

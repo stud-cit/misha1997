@@ -9,6 +9,8 @@
 
         <monograph v-if="publicationType == 'monograph'" :publicationData="publicationData"></monograph>
 
+        <monograph-part v-if="publicationType == 'monograph-part'" :publicationData="publicationData"></monograph-part>
+
         <book-part v-if="publicationType == 'book-part'" :publicationData="publicationData"></book-part>
 
         <thesis v-if="publicationType == 'thesis'" :publicationData="publicationData"></thesis>
@@ -51,6 +53,9 @@
     // Монографія
     import Monograph from "./Step4_fields/Monograph";
 
+        // Розділ монографії
+    import MonographPart from "./Step4_fields/MonographPart";
+
     export default {
         name: "Step4",
         data() {
@@ -70,7 +75,8 @@
             Certificate,
             Methodical,
             Electronic,
-            Monograph
+            Monograph,
+            MonographPart
         }
     }
 </script>

@@ -38,9 +38,9 @@ class AuthorsController extends ASUController
         }
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
-            if($value['date_bth']) {
-                $value['age'] = $this->calculateAge($value['date_bth']);
-            }
+            // if($value['date_bth']) {
+            //     $value['age'] = $this->calculateAge($value['date_bth']);
+            // }
             foreach($divisions->original['department']  as $k => $v) {
                 if ($value['department_code'] == $v['ID_DIV']) {
                     $value['department'] = $v['NAME_DIV'];

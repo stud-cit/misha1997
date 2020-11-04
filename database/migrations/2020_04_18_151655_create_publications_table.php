@@ -38,7 +38,7 @@ class CreatePublicationsTable extends Migration
             $table->boolean('commerc_employees')->nullable(); // Комерціалізовано штатними співробітниками університету
             $table->boolean('access_mode')->nullable(); // Режим доступу
             $table->string('mpk')->nullable(); // МПК
-            $table->integer('application_number')->nullable(); // № заявки
+            $table->string('application_number')->nullable(); // № заявки
             $table->integer('newsletter_number')->nullable(); // № бюлетеня
             $table->string('name_conference')->nullable(); // Назва конференції
             $table->string('url')->nullable(); // url електронне видання

@@ -13,12 +13,6 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Назва монографії </label>
-                <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.name_monograph">
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="item-title">Кількість томів</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.number_volumes">

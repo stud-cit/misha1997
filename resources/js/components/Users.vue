@@ -53,7 +53,7 @@
                             <th scope="col">Посада</th>
                             <th scope="col">Кафедра</th>
                             <th scope="col">Інститут/факультет</th>
-                            <th scope="col">Вік</th>
+                            <!-- <th scope="col">Вік</th> -->
                             <th scope="col">Індекс Гірша Scopus</th>
                             <th scope="col">Індекс Гірша WoS</th>
                             <th scope="col">5 або більше публікацій в Scopus та/або WoS</th>
@@ -67,7 +67,7 @@
                             <td>{{ item.position }}</td>
                             <td>{{ item.department }}</td>
                             <td>{{ item.faculty }}</td>
-                            <td>{{ item.age }}</td>
+                            <!-- <td>{{ item.age }}</td> -->
                             <td>{{ item.scopus_autor_id }}</td>
                             <td>{{ item.h_index }}</td>
                             <td>{{item.five_publications ? "Так" : "Ні"}}</td>
@@ -85,7 +85,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>
+                            <!-- <td></td> -->
                             <td>Всього: {{ count_scopus_autor_id }}</td>
                             <td>Всього: {{ count_h_index }}</td>
                             <td>Кількість: {{ count_five_publications }}</td>
@@ -154,17 +154,17 @@
 </template>
 
 <script>
+    import divisions from './mixins/divisions';
     import XLSX from 'xlsx';
     import {required, requiredIf} from "vuelidate/lib/validators";
     export default {
+        mixins: [divisions],
         data() {
             return {
                 count_five_publications: 0,
                 count_h_index: 0,
                 count_scopus_autor_id: 0,
                 loading: true,
-                departments: [],
-                divisions: [],
                 data: [],
                 selectUsers: [],
                 filters: {
@@ -219,25 +219,8 @@
         },
         created() {
             this.getData();
-            this.getDivisions();
         },
         methods: {
-            getDepartments() {
-                this.departments = this.divisions.find(item => {
-                    return this.filters.faculty_code == item.ID_DIV
-                }).departments;
-            },
-
-            getDivisions() {
-                axios.get('/api/sort-divisions').then(response => {
-                    this.divisions = response.data;
-                    if(this.authUser.roles_id == 3 && this.authUser.faculty_code) {
-                        this.departments = this.divisions.find(item => {
-                            return this.authUser.faculty_code == item.ID_DIV;
-                        }).departments;
-                    }
-                })
-            },
             getData() {
                 axios.get('/api/authors').then(response => {
                     this.data = response.data;

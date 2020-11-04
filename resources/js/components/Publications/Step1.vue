@@ -165,7 +165,7 @@
 
                 // перевірка унікальності назви і типу публікації
                 if(this.$route.name != 'publications-edit') {
-                    var findPublication = this.publicationNames.find(item => this.parseString(this.publicationData.title) == this.parseString(this.publicationData.title) && item.publication_type_id == this.publicationData.publication_type.id);
+                    var findPublication = this.publicationNames.find(item => this.parseString(item.title) == this.parseString(this.publicationData.title) && item.publication_type_id == this.publicationData.publication_type.id);
                     if(findPublication) {
                         this.errorName = findPublication;
                         return;

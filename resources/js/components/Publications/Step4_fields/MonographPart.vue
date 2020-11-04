@@ -2,16 +2,6 @@
     <div>
         <div class="step-content">
             <div class="form-group">
-                <label class="item-title">Назва конференції *</label>
-                <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.name_conference">
-                    <div class="hint"><span>Вказати повну назву конференції</span></div>
-                </div>
-                <div class="error" v-if="$v.publicationData.name_conference.$error">
-                    Поле обов'язкове для заповнення
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="item-title">Рік видання *</label>
                 <div class="input-container">
                     <select class="item-value" v-model="publicationData.year">
@@ -23,21 +13,27 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Видавництво</label>
+                <label class="item-title">Назва монографії </label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.editor_name">
+                    <input class="item-value" type="text" v-model="publicationData.name_monograph">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="item-title">Кількість томів</label>
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="publicationData.number_volumes">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="item-title">Том</label>
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="publicationData.number">
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">За редакцією (у родовому відмінку)</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.by_editing">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="item-title">Сторінки</label>
-                <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.pages">
                 </div>
             </div>
             <div class="form-group">
@@ -56,13 +52,28 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Місто видання</label>
+                <label class="item-title">Місто видання </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.city">
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">DOI</label>
+                <label class="item-title">Назва редакції </label>
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="publicationData.editor_name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="item-title">Кількість сторінок * </label>
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="publicationData.pages">
+                </div>
+                <div class="error" v-if="$v.publicationData.pages.$error">
+                    Поле обов'язкове для заповнення
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="item-title">DOI </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.doi">
                 </div>
@@ -71,7 +82,6 @@
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
             <button class="next active" @click="nextStep">Продовжити </button>
-
         </div>
     </div>
 </template>
@@ -88,8 +98,9 @@
         },
         validations: {
             publicationData: {
-                name_conference: {
-                    required
+                pages: {
+                    required,
+                    validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val), 
                 },
                 year: {
                     required
@@ -97,7 +108,7 @@
                 country: {
                     required
                 },
-            }
+            },
         },
         methods: {
             nextStep() {

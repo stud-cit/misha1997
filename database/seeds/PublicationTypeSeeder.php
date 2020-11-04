@@ -43,7 +43,7 @@ class PublicationTypeSeeder extends Seeder
         ]);
         DB::table('publication_type')->insert([
             'title' => 'Розділ монографії',
-            'type' => 'book-part',
+            'type' => 'monograph-part',
             'scopus_wos' => 1
         ]);
         DB::table('publication_type')->insert([
