@@ -663,8 +663,8 @@ class PublicationsController extends ASUController
                 }
 
                 // - у т.ч. з цифровим ідентифікатором DOI
-                if($value->doi) {
-                    $rating["countDOI"] = 1;
+                if($value->doi && $value->science_type_id) {
+                    $countDOI = 1;
                 }
 
                 if($value->cited_international_patents) {
@@ -746,7 +746,6 @@ class PublicationsController extends ASUController
         foreach ($authorsHirschIndex as $key => $value) {
             $rating['countHirschIndex'] += max($value['h_index'], $value['scopus_autor_id']);
         }
-        
         return response()->json([
             "rating" => $rating,
             "publications" => $data
