@@ -34,7 +34,7 @@
         </li>
         <li class="row">
             <div class="col-lg-3 list-item list-title">Електронна адреса (url):</div>
-            <div class="col-lg-9 list-item list-text">{{data.url}}</div>
+            <div class="col-lg-9 list-item list-text"><a :href="data.url" target="_blank">{{data.url}}</a></div>
         </li>
         <li class="row">
             <div class="col-lg-3 list-item list-title">Режим доступу:</div>

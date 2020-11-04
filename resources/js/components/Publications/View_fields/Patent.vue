@@ -14,7 +14,7 @@
         </li>
         <li class="row">
             <div class="col-lg-3 list-item list-title">Власник майнових прав:</div>
-            <div class="col-lg-9 list-item list-text">{{data.applicant}}</div>
+            <div class="col-lg-9 list-item list-text">{{data.applicant ? "Не СумДУ" : "СумДУ"}}</div>
         </li>
         <li class="row">
             <div class="col-lg-3 list-item list-title">№ заявки:</div>

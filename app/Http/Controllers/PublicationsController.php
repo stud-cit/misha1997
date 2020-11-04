@@ -136,7 +136,7 @@ class PublicationsController extends ASUController
                     AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->update([
                         "autors_id" => $data['supervisor']['id']
                     ]);
-                    $notificationText .= "змінено керівника: " . $data['old_supervisor']['name'] . " на " . $data['supervisor']['name'] . ";<br>";
+                    $notificationText .= "змінено керівника: <a href=\"/user/". $data['old_supervisor']['id'] ."\">" . $data['old_supervisor']['name'] . "</a> на <a href=\"/user/". $data['supervisor']['id'] ."\">" . $data['supervisor']['name'] . "</a>;<br>";
                 }
             } else {
                 $authorsPublications = new AuthorsPublications;
@@ -144,12 +144,12 @@ class PublicationsController extends ASUController
                 $authorsPublications->publications_id = $id;
                 $authorsPublications->supervisor = 1;
                 $authorsPublications->save();
-                $notificationText .= "додано керівника: " . $data['supervisor']['name'] . ";<br>";
+                $notificationText .= "додано керівника: <a href=\"/user/". $data['supervisor']['id'] ."\">" . $data['supervisor']['name'] . "</a>;<br>";
             }
         } else {
             if($data['old_supervisor']) {
                 AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->delete();
-                $notificationText .= "видалено керівника: " . $data['old_supervisor']['name'] . ";<br>";
+                $notificationText .= "видалено керівника: <a href=\"/user/". $data['old_supervisor']['id'] ."\">" . $data['old_supervisor']['name'] . "</a>;<br>";
             }
         }
         // end check
@@ -163,17 +163,6 @@ class PublicationsController extends ASUController
         }
 
         foreach ($data['authors'] as $key => $value) {
-            // $name = explode(" ", preg_replace('/\s+/', ' ', $value['name']));
-            // $initial = "";
-            // foreach($name as $k => $v) {
-            //     if($k == 0) {
-            //         $initial .= $v . " ";
-            //     } else {
-            //         $initial .= mb_substr($v, 0, 1) . ". ";
-            //     }
-            // }
-            // array_push($data['initials'], trim($initial));
-
             if(AuthorsPublications::where('autors_id', $value['id'])->where('publications_id', $id)->exists()) {
                 unset($oldAuthors[array_search($value['id'], $oldAuthors)]);
             } else {
@@ -181,11 +170,9 @@ class PublicationsController extends ASUController
                 $authorsPublications->autors_id = $value['id'];
                 $authorsPublications->publications_id = $id;
                 $authorsPublications->save();
-                $notificationText .= "додано автора: " . $value['name'] . ";<br>";
+                $notificationText .= "додано автора: <a href=\"/user/". $value['id'] ."\">" . $value['name'] . "</a>;<br>";
             }
         }
-
-        // $data['initials'] = implode(", ", $data['initials']);
 
         foreach ($oldAuthors as $key => $value) {
             AuthorsPublications::where('autors_id', $value)->where('publications_id', $id)->delete();
@@ -263,7 +250,7 @@ class PublicationsController extends ASUController
         $notificationText .= $this->notification($data, $model, "sub_db_index", "підбазу WoS", $sub_db_index);
 
         if($notificationText != "") {
-            $notificationText = "Користувач " . $request->session()->get('person')['name'] . " вніс наступні зміни в публікацію <a href=\"/publications/". $id ."\">" . $model->title . "</a>:<br>" . $notificationText;
+            $notificationText = "Користувач <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a> вніс наступні зміни в публікацію <a href=\"/publications/". $id ."\">" . $model->title . "</a>:<br>" . $notificationText;
             foreach ($data['authors'] as $k => $author) {
                 if($author['id'] != $request->session()->get('person')['id']) {
                     Notifications::create([
@@ -308,19 +295,33 @@ class PublicationsController extends ASUController
         }
     }    
 
-    // видалення публікації
+    // видалення публікацій
     function deletePublications(Request $request) {
         foreach ($request->publications as $key => $publication) {
             foreach ($publication['authors'] as $k => $author) {
                 if($author['author']['id'] != $request->session()->get('person')['id']) {
                     Notifications::create([
                         "autors_id" => $author['author']['id'],
-                        "text" => $request->user['name']." видалив публікацию \"".$publication['title']."\"."
+                        "text" => "Користувач <a href=\"/user/" . $request->user['id'] . "\">" . $request->user['name'] . "</a> видалив Вашу публікацію \"".$publication['title']."\"."
                     ]);
                 }
             }
             Publications::find($publication['id'])->delete();
         }
+        return response('ok', 200);
+    }
+
+    // видалення публікації
+    function deletePublication(Request $request, $id) {
+        foreach ($request->publication['authors'] as $k => $author) {
+            if($author['id'] != $request->session()->get('person')['id']) {
+                Notifications::create([
+                    "autors_id" => $author['id'],
+                    "text" => "Користувач <a href=\"/user/" . $request->user['id'] . "\">" . $request->user['name'] . "</a> видалив Вашу публікацію \"".$request->publication['title']."\"."
+                ]);
+            }
+        }
+        Publications::find($id)->delete();
         return response('ok', 200);
     }
 

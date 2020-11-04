@@ -71,7 +71,7 @@
             ></Table>
             <div class="step-button-group">
                 <back-button></back-button>
-                <delete-button v-if="access == 'open'" @click.native="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
+                <delete-button v-if="access == 'open' || authUser.roles_id == 4" @click.native="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
             </div>
         </div>
     </div>

@@ -285,13 +285,14 @@
         </div>
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
-            <button class="next active" @click="nextStep">Продовжити </button>
+            <button class="next active" @click="nextStep">Продовжити</button>
+            <close-edit-button v-if="$route.name == 'publications-edit'"></close-edit-button>
         </div>
     </div>
 </template>
 
 <script>
-
+    import CloseEditButton from "../Buttons/CloseEdit";
     import Multiselect from 'vue-multiselect';
     import {required, requiredIf} from "vuelidate/lib/validators";
     export default {
@@ -365,6 +366,7 @@
         },
         components: {
             Multiselect,
+            CloseEditButton
         },
         mounted() {
             this.defaultNewAuthorSSU = Object.assign(this.defaultNewAuthorSSU, this.newAuthorSSU);

@@ -59,18 +59,21 @@
         </div>
         <div class="step-button-group">
             <button @click="$router.go(-1)" class="prev">Назад</button>
-            <button class="next" @click="nextStep" >Продовжити </button>
+            <button class="next" @click="nextStep">Продовжити</button>
+            <close-edit-button v-if="$route.name == 'publications-edit'"></close-edit-button>
         </div>
     </div>
 </template>
 
 <script>
+    import CloseEditButton from "../Buttons/CloseEdit";
     import Multiselect from 'vue-multiselect';
     import { required, maxLength } from 'vuelidate/lib/validators';
     export default {
         name: "Step1",
         components: {
             Multiselect,
+            CloseEditButton
         },
         data() {
             return {

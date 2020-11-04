@@ -46,7 +46,6 @@ class CreatePublicationsTable extends Migration
             $table->string('doi')->nullable();
             $table->boolean('nature_index')->nullable(); // обліковується рейтингом Natire Index
             $table->string('nature_science')->nullable(); // обліковується рейтингом Natire Scuence
-            $table->foreignId('supervisor_id')->nullable(); // керівник
             $table->boolean('db_scopus_percent')->nullable(); // до 10% за БД Scpous
             $table->boolean('db_wos_percent')->nullable(); // до 1% за БД WoS
             $table->boolean('cited_international_patents')->nullable(); // процитовані у міжнародних патентах

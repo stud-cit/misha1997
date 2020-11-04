@@ -25,9 +25,9 @@ class ASUController extends Controller
             if($value['KOD_TYPE'] == 7 || $value['KOD_TYPE'] == 9) {
                 array_push($result['institute'], $value);
             }
-            if($value['KOD_TYPE'] == 2) {
+            // if($value['KOD_TYPE'] == 2) {
                 array_push($result['department'], $value);
-            }
+            // }
         }
         return response()->json($result);
     }

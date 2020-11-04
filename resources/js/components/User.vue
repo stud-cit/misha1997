@@ -25,7 +25,7 @@
                     </div>
                 </li>
                 <li class="row">
-                    <div class="col-lg-3 list-item list-title">Місце роботи:</div>
+                    <div class="col-lg-3 list-item list-title" v-if="data.job">Місце роботи:</div>
                     <div class="col-lg-9 list-item list-text">{{data.job}}</div>
                 </li>
                 <li class="row" v-if="data.position">

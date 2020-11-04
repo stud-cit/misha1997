@@ -61,11 +61,33 @@
                         <div class="col-lg-9 list-item list-text" v-if="data.sub_db_index==1">Science Citation Index Expanded (SCIE)</div>
                         <div class="col-lg-9 list-item list-text" v-if="data.sub_db_index==2">Social Science Citation Index</div>
                     </li>
+                    <li class="row" v-if="data.nature_index">
+                        <div class="col-lg-3 list-item list-title">Обліковується рентингом Nature Index:</div>
+                        <div class="col-lg-9 list-item list-text">{{data.nature_index == 1 ? "Так" : "Ні" }}</div>
+                    </li>
+                    <li class="row" v-if="data.nature_science">
+                        <div class="col-lg-3 list-item list-title">У журналах:</div>
+                        <div class="col-lg-9 list-item list-text">{{data.nature_science}}</div>
+                    </li>
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">Увійшли до 10% за БД Scopus найбільш цитованих публікацій для своєї предметної галузі:</div>
+                        <div class="col-lg-9 list-item list-text">{{data.db_scopus_percent ? "Так" : "Ні"}}</div>
+                    </li>
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">Увійшли до 1% за БД WoS найбільш цитованих публікацій для своєї предметної галузі:</div>
+                        <div class="col-lg-9 list-item list-text">{{data.db_wos_percent ? "Так" : "Ні"}}</div>
+                    </li>
+                    <li class="row">
+                        <div class="col-lg-3 list-item list-title">Процитована у міжнародних патентах:</div>
+                        <div class="col-lg-9 list-item list-text">{{data.cited_international_patents ? "Так" : "Ні"}}</div>
+                    </li>
                 </template>
             </ul>
             
             <articles :data="data" v-if="data.publication_type.type == 'article'"></articles>
             <book :data="data" v-if="data.publication_type.type == 'book'"></book>
+            <book :data="data" v-if="data.publication_type.type == 'monograph'"></book>
+            <book :data="data" v-if="data.publication_type.type == 'monograph-part'"></book>
             <book-part :data="data" v-if="data.publication_type.type == 'book-part'"></book-part>
             <thesis :data="data" v-if="data.publication_type.type == 'thesis'"></thesis>
             <patent :data="data" v-if="data.publication_type.type == 'patent'"></patent>
@@ -86,6 +108,7 @@
 <script>
     import Articles from './View_fields/Articles';
     import Book from './View_fields/Book';
+
     import BookPart from "./View_fields/BookPart";
     import Thesis from "./View_fields/Thesis";
     import Patent from "./View_fields/Patent";
@@ -200,18 +223,26 @@
                 this.$router.push({path: `/publications/edit/${this.$route.params.id}`});
             },
             deletePublication() {
-                let question = confirm("Ви підтверджуєте видалення публікації");
-                if(question) {
-                    axios.post(`/api/delete-publication/${this.$route.params.id}`).then(response =>{
-                        this.$router.push('/publications');
-                    }).then(()=>{
-                        swal("Публікацію успішно видалено!", {
-                            icon: "success",
+                swal({
+                    title: "Бажаєте видалити?",
+                    text: "Після видалення ви не зможете відновити дані!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        axios.post(`/api/delete-publication/${this.$route.params.id}`, {
+                            publication: this.data,
+                            user: this.$store.getters.authUser
+                        })
+                        .then(() => {
+                            this.$router.push({path: `/publications`});
+                            swal("Публікацію успішно видалено", {
+                                icon: "success",
+                            });
                         });
-                    });
-                } else {
-                    return false;
-                }
+                    }
+                });
             }
         }
     }

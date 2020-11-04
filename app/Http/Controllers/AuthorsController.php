@@ -41,14 +41,19 @@ class AuthorsController extends ASUController
             // if($value['date_bth']) {
             //     $value['age'] = $this->calculateAge($value['date_bth']);
             // }
-            foreach($divisions->original['department']  as $k => $v) {
-                if ($value['department_code'] == $v['ID_DIV']) {
-                    $value['department'] = $v['NAME_DIV'];
-                }
-            }
             foreach($divisions->original['institute'] as $k => $v) {
                 if ($value['faculty_code'] == $v['ID_DIV']) {
                     $value['faculty'] = $v['NAME_DIV'];
+                }
+            }
+            foreach($divisions->original['department']  as $k => $v) {
+                if ($value['department_code'] == $v['ID_DIV']) {
+                    $value['department'] = $v['NAME_DIV'];
+                    foreach($divisions->original['institute'] as $k2 => $v2) {
+                        if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                            $value['faculty'] = $v2['NAME_DIV'];
+                        }
+                    }
                 }
             }
         }
@@ -258,7 +263,7 @@ class AuthorsController extends ASUController
         $notificationText .= $this->notification($data, $model, "orcid", "ORCID");
 
         if($notificationText != "") {
-            $notificationText = "Користувач " . $request->session()->get('person')['name'] . " вніс наступні зміни в Ваш профіль:<br>" . $notificationText;
+            $notificationText = "Користувач <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a> вніс наступні зміни в Ваш профіль:<br>" . $notificationText;
             Notifications::create([
                 "autors_id" => $id,
                 "text" => $notificationText
@@ -342,7 +347,7 @@ class AuthorsController extends ASUController
         } elseif ($data->categ_2 == 3) {
             $result = "Менеджер";
         } else {
-            $result = "Співробітник";
+            $result = "";
         }
         return $result;
     }

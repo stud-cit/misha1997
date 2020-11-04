@@ -35,15 +35,18 @@
                     <div class="col-lg-3 list-item list-title">Країна:</div>
                     <div class="col-lg-9 list-item list-text">{{data.country}}</div>
                 </li>
-                <li class="row" v-if="authUser.roles_id == 4">
+                <li class="row">
                     <div class="col-lg-3 list-item list-title">5 або більше публікацій в Scopus та/або WoS:</div>
                     <div class="col-lg-9 list-item list-text">
-                        <div class="input-container">
+                        <div class="input-container" v-if="authUser.roles_id == 4">
                             <select v-model="data.five_publications">
                                 <option value=""></option>
                                 <option value="1">Так</option>
                                 <option value="0">Ні</option>
                             </select>
+                        </div>
+                        <div v-else>
+                            {{data.five_publications ? "Так" : "Ні"}}
                         </div>
                     </div>
                 </li>

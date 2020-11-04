@@ -116,20 +116,23 @@
 
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
-            <button class="next active" @click="nextStep">Продовжити </button>
-
+            <button class="next active" @click="nextStep">Продовжити</button>
+            <close-edit-button v-if="$route.name == 'publications-edit'"></close-edit-button>
         </div>
     </div>
 </template>
 
 <script>
+    import CloseEditButton from "../Buttons/CloseEdit";
     import {required, requiredIf} from "vuelidate/lib/validators";
     export default {
-        
         name: "Step4",
         props: {
             publicationType: Object,
             publicationData: Object
+        },
+        components: {
+            CloseEditButton
         },
         watch: {
             publicationData: {  

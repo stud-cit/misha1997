@@ -9,6 +9,10 @@
             <div class="col-lg-9 list-item list-text">{{data.year}}</div>
         </li>
         <li class="row">
+            <div class="col-lg-3 list-item list-title">За редакцією:</div>
+            <div class="col-lg-9 list-item list-text">{{data.by_editing}}</div>
+        </li>
+        <li class="row">
             <div class="col-lg-3 list-item list-title">Видавництво:</div>
             <div class="col-lg-9 list-item list-text">{{data.editor_name}}</div>
         </li>

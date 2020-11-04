@@ -48,6 +48,7 @@ Route::group(['middleware' => ['web']], function() {
 
     Route::post('update-publication/{id}','PublicationsController@updatePublication');
     Route::post('delete-publications','PublicationsController@deletePublications');
+    Route::post('delete-publication/{id}','PublicationsController@deletePublication');
 
     Route::get('type-publications', 'PublicationsController@typePublications');
     Route::get('country', 'PublicationsController@getCountry');
