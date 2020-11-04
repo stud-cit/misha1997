@@ -240,10 +240,57 @@ class AuthorsController extends ASUController
 
     // updateAuthor
     function updateAuthor(Request $request, $id) {
+        $notificationText = "";
         $data = $request->all();
-        Authors::find($id)->update($data);
+        $model = Authors::with('role')->find($id);
+
+        $roles = [
+            1 => "Автор",
+            2 => "Модератор кафедрального рівня",
+            3 => "Модератор інститутського або факультетського рівня",
+            4 => "Адміністратор"
+        ];
+        $notificationText .= $this->notification($data, $model, "roles_id", "роль", $roles);
+        $notificationText .= $this->notification($data, $model, "five_publications", "5 або більше публікацій в Scopus та/або WoS");
+        $notificationText .= $this->notification($data, $model, "scopus_autor_id", "Індекс Гірша БД Scopus");
+        $notificationText .= $this->notification($data, $model, "h_index", "Індекс Гірша БД WoS");
+        $notificationText .= $this->notification($data, $model, "scopus_researcher_id", "Research ID");
+        $notificationText .= $this->notification($data, $model, "orcid", "ORCID");
+
+        if($notificationText != "") {
+            $notificationText = "Користувач " . $request->session()->get('person')['name'] . " вніс наступні зміни в Ваш профіль:<br>" . $notificationText;
+            Notifications::create([
+                "autors_id" => $id,
+                "text" => $notificationText
+            ]);
+        }
+        $model->update($data);
         return response('ok', 200);
     }
+
+    function notification($data, $model, $key, $text, $arr = null) {
+        if($arr) {
+            if($data[$key] && !$model->$key) {
+                return "додано ".$text.": " . $arr[$data[$key]] . ";<br>";
+            }
+            if(($data[$key] != $model->$key) && $data[$key] && $model->$key) {
+                return "змінено ".$text.": " . $arr[$model->$key] . " на " . $arr[$data[$key]] . ";<br>";
+            }
+            if(!$data[$key] && $model->$key) {
+                return "видалено ".$text.";<br>";
+            }
+        } else {
+            if($data[$key] && !$model->$key) {
+                return "додано ".$text.": " . $data[$key] . ";<br>";
+            }
+            if(($data[$key] != $model->$key) && $data[$key] && $model->$key) {
+                return "змінено ".$text.": " . $model->$key . " на " . $data[$key] . ";<br>";
+            }
+            if(!$data[$key] && $model->$key) {
+                return "видалено ".$text.";<br>";
+            }
+        }
+    }  
 
     // deleteAuthor
     function deleteAuthor(Request $request) {
