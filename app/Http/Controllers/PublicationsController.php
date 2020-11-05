@@ -73,20 +73,7 @@ class PublicationsController extends ASUController
         $dataPublications['publication_type_id'] = $dataPublications['publication_type']['id'];
         $response = $modelPublications->create($dataPublications);
 
-        // $initials = [];
-
         foreach ($request->authors as $key => $value) {
-            // $name = explode(" ", preg_replace('/\s+/', ' ', $value['name']));
-            // $initial = "";
-            // foreach($name as $k => $v) {
-            //     if($k == 0) {
-            //         $initial .= $v . " ";
-            //     } else {
-            //         $initial .= mb_substr($v, 0, 1) . ". ";
-            //     }
-            // }
-            // array_push($initials, trim($initial));
-
             $authorsPublications = new AuthorsPublications;
             $authorsPublications->autors_id = $value['id'];
             $authorsPublications->publications_id = $response->id;
@@ -94,7 +81,7 @@ class PublicationsController extends ASUController
             if($value['id'] != $request->session()->get('person')['id']) {
                 Notifications::create([
                     "autors_id" => $value['id'],
-                    "text" => $request->session()->get('person')['name']." додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас співавтором публікації."
+                    "text" => "Користувач <a href=\"/user/$request->session()->get('person')['id']\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас співавтором публікації."
                 ]);
             }
         }
@@ -107,13 +94,10 @@ class PublicationsController extends ASUController
             if($dataPublications['supervisor']['id'] != $request->session()->get('person')['id']) {
                 Notifications::create([
                     "autors_id" => $dataPublications['supervisor']['id'],
-                    "text" => $request->session()->get('person')['name']." додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас керівником публікації."
+                    "text" => "Користувач <a href=\"/user/$request->session()->get('person')['id']\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас керівником публікації."
                 ]);
             }
         }
-        // Publications::find($response->id)->update([
-        //     'initials' => implode(", ", $initials)
-        // ]);
         return response('ok', 200);
     }
 
@@ -121,15 +105,9 @@ class PublicationsController extends ASUController
     function updatePublication(Request $request, $id) {
         $data = $request->all();
         $model = Publications::with('authors', 'publicationType')->find($id);
-
-        // return response()->json($model);
-
-        // $data['initials'] = [];
         $notificationText = "";
 
         // check supervisor
-
-        // return response()->json($data['supervisor']);
         if($data['supervisor']) {
             if(AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->exists()) {
                 if(!AuthorsPublications::where('autors_id', $data['supervisor']['id'])->where('publications_id', $id)->where('supervisor', 1)->exists()) {
@@ -353,7 +331,7 @@ class PublicationsController extends ASUController
             ->orderBy('created_at', 'DESC');
 
         $todayYear = Carbon::today()->year;
-        $countScopusFiveYear = Publications::where('science_type_id', 1)->whereYear('created_at', '>=', $todayYear - 5)->count();
+        $countScopusFiveYear = Publications::where('science_type_id', 1)->orWhere('science_type_id', 3)->whereYear('created_at', '>=', $todayYear - 5)->count();
         $authorsHasfivePublications = Authors::where('five_publications', 1)->count();
 
         $authorsHirschIndex = Authors::select('h_index', 'scopus_autor_id')->get();

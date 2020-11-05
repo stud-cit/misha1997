@@ -253,7 +253,7 @@
 
             <transition name="component-fade" mode="out-in">
                 <div class="form-group " v-if="findAuthor">
-                    <label class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) </label>
+                    <label class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) <a href="#" @click="findAuthor = false">закрити</a></label>
                     <div class="add-group">
                         <div class="input-container">
                             <button class="add-button btn-blue" @click="showNewAuthor(1)">

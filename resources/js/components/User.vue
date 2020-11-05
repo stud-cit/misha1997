@@ -36,7 +36,7 @@
                     <div class="col-lg-3 list-item list-title">Інститут/факультет:</div>
                     <div class="col-lg-9 list-item list-text">{{data.faculty}}</div>
                 </li>
-                <li class="row" v-if="data.department">
+                <li class="row" v-if="data.department && (data.faculty != data.department)">
                     <div class="col-lg-3 list-item list-title">Кафедра:</div>
                     <div class="col-lg-9 list-item list-text">{{data.department}}</div>
                 </li>
