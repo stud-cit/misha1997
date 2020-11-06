@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">За редакцією </label>
+                <label class="item-title">За редакцією (у родовому відмінку)</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.by_editing">
                 </div>
@@ -70,24 +70,23 @@
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
             <button class="next active" @click="nextStep">Продовжити </button>
+            <close-edit-button v-if="$route.name == 'publications-edit'"></close-edit-button>
         </div>
     </div>
 </template>
 
 <script>
     import {required} from "vuelidate/lib/validators";
-
+    import CloseEditButton from "../../Buttons/CloseEdit";
+    import years from '../../mixins/years';
+    import country from '../../mixins/country';
     export default {
-        data() {
-            return {
-                country: []
-            }
-        },
+        mixins: [years, country],
         props: {
             publicationData: Object
         },
-        created() {
-            this.getCountry();
+        components: {
+            CloseEditButton
         },
         validations: {
             publicationData: {
@@ -95,6 +94,12 @@
                     required,
                     validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val), 
                 },
+                year: {
+                    required
+                },
+                country: {
+                    required
+                }
             },
         },
         methods: {
@@ -115,12 +120,6 @@
             },
             prevStep(){
                 this.$parent.$emit('prevStep');
-            }
-        },
-        computed: {
-            years() {
-                const year = new Date().getFullYear();
-                return Array.from({length: year - 2000}, (value, index) => 2001 + index);
             }
         }
     }
