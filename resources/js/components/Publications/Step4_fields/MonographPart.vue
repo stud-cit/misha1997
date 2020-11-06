@@ -19,18 +19,6 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Кількість томів</label>
-                <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.number_volumes">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="item-title">Том</label>
-                <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.number">
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="item-title">За редакцією (у родовому відмінку)</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.by_editing">
@@ -64,7 +52,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Кількість сторінок * </label>
+                <label class="item-title">Сторінки (з-по) * </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.pages">
                 </div>

@@ -256,7 +256,7 @@ class AuthorsController extends ASUController
             4 => "Адміністратор"
         ];
         $notificationText .= $this->notification($data, $model, "roles_id", "роль", $roles);
-        $notificationText .= $this->notification($data, $model, "five_publications", "5 або більше публікацій в Scopus та/або WoS");
+        $notificationText .= $this->notification($data, $model, "five_publications", "5 або більше публікацій у періодичних виданнях в Scopus та/або WoS");
         $notificationText .= $this->notification($data, $model, "scopus_autor_id", "Індекс Гірша БД Scopus");
         $notificationText .= $this->notification($data, $model, "h_index", "Індекс Гірша БД WoS");
         $notificationText .= $this->notification($data, $model, "scopus_researcher_id", "Research ID");

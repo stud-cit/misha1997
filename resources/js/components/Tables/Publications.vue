@@ -22,7 +22,7 @@
                         <td>{{ item.publication_type.title }}</td>
                         <td>
                             <span class="authors" v-for="(author, index) in item.authors" :key="index">
-                                <router-link v-if="!author.supervisor" :to="'/user/'+author.author.id">{{author.author.name}} </router-link>
+                                <a v-if="!author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}} </a>
                             </span>
                         </td>
                         <td><router-link :to="{path: `/publications/${item.id}`}"> {{ item.title }} </router-link> </td>
@@ -45,13 +45,19 @@
                             >
                         </td>
                     </tr>
+                    <tr>
+                           
+                            
+                            <td colspan="10" class="text-left">Всього публікацій: {{publications.length}} </td>
+                           
+                    </tr>
                 </tbody>
             </table>
             <div class="spinner-border my-4" role="status" v-if="loading">
                 <span class="sr-only">Loading...</span>
             </div>
             <div class="my-4" v-if="publications.length == 0">
-                Піблікації відсутні
+                Публікації відсутні
             </div>
         </div>
         <paginate
@@ -85,7 +91,8 @@ export default {
             pagination: {
                 currentPage: 1,
                 perPage: 10,
-                numPage: 1
+                numPage: 1,
+                count_public: 0
             },
         }
     },

@@ -8,12 +8,9 @@
                         <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                     </select>
                 </div>
-                <div class="error" v-if="$v.publicationData.year.$error">
-                    Поле обов'язкове для заповнення
-                </div>
             </div>
             <div class="form-group">
-                <label class="item-title">За редакцією (у родовому відмінку)</label>
+                <label class="item-title">За редакцією </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.by_editing">
                 </div>
@@ -28,9 +25,6 @@
                             :value="item.name"
                         >{{item.name}}</option>
                     </select>
-                </div>
-                <div class="error" v-if="$v.publicationData.country.$error">
-                    Поле обов'язкове для заповнення
                 </div>
             </div>
             <div class="form-group">
@@ -51,7 +45,7 @@
                     <input class="item-value" type="text" v-model="publicationData.pages">
                 </div>
                 <div class="error" v-if="$v.publicationData.pages.$error">
-                    Поле обов'язкове для заповнення
+                    Неправильно введені дані
                 </div>
             </div>
             <div class="form-group">
@@ -75,41 +69,40 @@
         </div>
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
-            <button class="next active" @click="nextStep">Продовжити</button>
-            <close-edit-button v-if="$route.name == 'publications-edit'"></close-edit-button>
+            <button class="next active" @click="nextStep">Продовжити </button>
         </div>
     </div>
 </template>
 
 <script>
-    import CloseEditButton from "../../Buttons/CloseEdit";
-    import years from '../../mixins/years';
-    import country from '../../mixins/country';
     import {required} from "vuelidate/lib/validators";
 
     export default {
-        mixins: [years, country],
+        data() {
+            return {
+                country: []
+            }
+        },
         props: {
             publicationData: Object
         },
-        components: {
-            CloseEditButton
+        created() {
+            this.getCountry();
         },
         validations: {
             publicationData: {
                 pages: {
                     required,
-                    validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val)
-                },
-                year: {
-                    required
-                },
-                country: {
-                    required
+                    validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val), 
                 },
             },
         },
         methods: {
+            getCountry() {
+                axios.get('/api/country').then(response => {
+                    this.country = response.data;
+                })
+            },
             nextStep() {
                 this.$v.$touch();
                 if (this.$v.$invalid) {
@@ -118,10 +111,16 @@
                     });
                     return
                 }
-                this.$parent.$emit('getData');
+                this.$parent.$emit('getData', this.publicationData);
             },
             prevStep(){
                 this.$parent.$emit('prevStep');
+            }
+        },
+        computed: {
+            years() {
+                const year = new Date().getFullYear();
+                return Array.from({length: year - 2000}, (value, index) => 2001 + index);
             }
         }
     }

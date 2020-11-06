@@ -141,9 +141,6 @@
 
     export default {
         mixins: [country],
-        components: {
-            DatePicker
-        },
         data() {
             return {
                 applicant_id: '0',
@@ -166,6 +163,7 @@
             publicationData: Object
         },
         components: {
+            DatePicker,
             CloseEditButton
         },
         validations: {

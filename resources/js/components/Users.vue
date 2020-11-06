@@ -56,7 +56,7 @@
                             <!-- <th scope="col">Вік</th> -->
                             <th scope="col">Індекс Гірша Scopus</th>
                             <th scope="col">Індекс Гірша WoS</th>
-                            <th scope="col">5 або більше публікацій в Scopus та/або WoS</th>
+                            <th scope="col">5 або більше публікацій у періодичних виданнях в Scopus та/або WoS</th>
                             <th scope="col" v-if="authUser.roles_id == 4">Обрати</th>
                         </tr>
                     </thead>
@@ -132,7 +132,7 @@
                 <th>Індекс Гірша БД Scopus</th>
                 <th>Research ID</th>
                 <th>ORCID</th>
-                <th>5 або більше публікацій в Scopus та/або WoS</th>
+                <th>5 або більше публікацій у періодичних виданнях в Scopus та/або WoS</th>
             </tr>
             <tr v-for="(item, i) in filteredList" :key="i">
                 <td>{{i+1}}</td>
