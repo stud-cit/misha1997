@@ -10,7 +10,7 @@
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Роль:</div>
                     <div class="col-lg-9 list-item list-text">
-                        <div class="input-container" v-if="authUser.roles_id == 4">
+                        <div class="input-container" v-if="authUser.roles_id == 4 && data.guid">
                             <select v-model="data.roles_id">
                                 <option
                                     v-for="(item, index) in roles"
@@ -48,7 +48,11 @@
                     <div class="col-lg-3 list-item list-title">Країна:</div>
                     <div class="col-lg-9 list-item list-text">{{data.country}}</div>
                 </li>
-                <li class="row">
+                <li class="row" v-if="!data.guid">
+                    <div class="col-lg-3 list-item list-title">Входить до списків Forbes та Fortune:</div>
+                    <div class="col-lg-9 list-item list-text">{{data.forbes_fortune ? "Так" : "Ні"}}</div>
+                </li>
+                <li class="row" v-if="data.guid">
                     <div class="col-lg-3 list-item list-title">5 або більше публікацій в Scopus та/або WoS:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4">
@@ -130,15 +134,15 @@
                             <td>{{ item.publication.publication_type.title }}</td>
                             <td>
                                 <span class="authors" v-for="(author, index) in item.publication.authors" :key="index">
-                                    <router-link v-if="!author.supervisor" :to="'/user/'+author.author.id">{{author.author.name}} </router-link>
+                                    <a v-if="!author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}} </a>
                                 </span>
                             </td>
-                            <td><router-link :to="{path: `/publications/${item.publication.id}`}"> {{ item.publication.title }} </router-link> </td>
+                            <td><a :href="{path: `/publications/${item.publication.id}`}"> {{ item.publication.title }} </a> </td>
                             <td>{{ item.publication.year}}</td>
                             <td>{{ item.publication.science_type ? item.publication.science_type.type : '' }}</td>
                             <td>
                                 <span class="authors" v-for="(author, index) in item.publication.authors" :key="index">
-                                    <router-link v-if="author.supervisor" :to="'/user/'+author.author.id">{{author.author.name}} </router-link>
+                                    <a v-if="author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}} </a>
                                 </span>
                             </td>
                             <td>{{ item.publication.date }}</td>
@@ -183,6 +187,7 @@
                     role: {
                         name: ""
                     },
+                    guid: null,
                     date_bth: "",
                     job: "",
                     position: "",

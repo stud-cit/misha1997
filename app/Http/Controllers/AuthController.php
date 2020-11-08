@@ -11,7 +11,7 @@ class AuthController extends ASUController
 
     protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
     protected $cabinet_service = "https://cabinet.sumdu.edu.ua/index/service/";
-    protected $cabinet_service_token = "TNWcmzpZ";
+    protected $cabinet_service_token = "7B4DIDiV";
 
     function checkUser(Request $request) {
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token), true);

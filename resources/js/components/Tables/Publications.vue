@@ -1,5 +1,18 @@
 <template>
     <div>
+        <paginate
+            v-model="pagination.currentPage"
+            :page-count="pagination.numPage"
+
+            :prev-text="'<'"
+            :next-text="'>'"
+
+            :container-class="'pagination'"
+            page-class="page-item"
+            page-link-class="page-link"
+            prev-class="page-link"
+            next-class="page-link">
+        </paginate>
         <div class="table-responsive text-center table-list">
             <table class="table table-bordered">
                 <thead>
@@ -22,20 +35,20 @@
                         <td>{{ item.publication_type.title }}</td>
                         <td>
                             <span class="authors" v-for="(author, index) in item.authors" :key="index">
-                                <router-link v-if="!author.supervisor" :to="'/user/'+author.author.id">{{author.author.name}} </router-link>
+                                <a v-if="!author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}} </a>
                             </span>
                         </td>
-                        <td><router-link :to="{path: `/publications/${item.id}`}"> {{ item.title }} </router-link> </td>
+                        <td><a :href="'/publications/'+item.id"> {{ item.title }} </a> </td>
                         <td>{{ item.year}}</td>
                         <td>{{ item.science_type ? item.science_type.type : '' }}</td>
                         <td>
                             <span class="authors" v-for="(author, index) in item.authors" :key="index">
-                                <router-link v-if="author.supervisor" :to="'/user/'+author.author.id">{{author.author.name}}</router-link>
+                                <a v-if="author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}}</a>
                             </span>
                         </td>
                         <td>{{ item.date }}</td>
                         <td v-if="checkAccess">
-                            <router-link :to="`/publications/edit/${item.id}`"><i class="fa fa-edit fa-2x"></i></router-link>
+                            <a :href="'/publications/edit/'+item.id"><i class="fa fa-edit fa-2x"></i></a>
                         </td>
                         <td class="icons" v-if="checkAccess">
                             <input

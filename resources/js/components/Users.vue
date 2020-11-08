@@ -43,6 +43,7 @@
                         </div>
                     </div>
                 </div>
+                <button type="button" class="export-button" @click="clearFilter">Очистити фільтр</button>
             </form>
             <div class="table-responsive text-center table-list">
                 <table class="table table-bordered ">
@@ -63,7 +64,7 @@
                     <tbody>
                         <tr v-for="(item, index) in filteredList" :key="item.id">
                             <td scope="row">{{ index+1+(currentPage-1)*perPage}}</td>
-                            <td><router-link :to="{path: `/user/${item.id}`}">{{ item.name }}</router-link></td>
+                            <td><a :href="'/user/'+item.id">{{ item.name }}</a></td>
                             <td>{{ item.position }}</td>
                             <td>{{ item.department }}</td>
                             <td>{{ item.faculty }}</td>
@@ -114,8 +115,8 @@
                 next-class="page-link">
             </paginate>
             <div class="step-button-group">
-                <router-link :to="'/home'" tag="button" class="next">Назад</router-link>
-                <button class="ml-2 delete" @click="deleteItem" :disabled="selectUsers.length == 0">Видалити</button>
+                <back-button></back-button>
+                <delete-button @click.native="deleteItem" :disabled="selectUsers.length == 0"></delete-button>
             </div>
         </div>
         <table id="exportUsers" v-show="false">
@@ -154,6 +155,8 @@
 </template>
 
 <script>
+    import BackButton from "./Buttons/Back";
+    import DeleteButton from "./Buttons/Delete";
     import divisions from './mixins/divisions';
     import XLSX from 'xlsx';
     import {required, requiredIf} from "vuelidate/lib/validators";
@@ -177,6 +180,10 @@
                 numPage: 1,
 
             };
+        },
+        components: {
+            BackButton,
+            DeleteButton
         },
         computed: {
             authUser() {
@@ -213,12 +220,16 @@
                     if(item.five_publications) {
                         this.count_five_publications++;
                     }
-                })
+                });
+                this.$store.dispatch('saveFilterUser', this.filters);
                 return list.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
             }
         },
         created() {
             this.getData();
+            if(this.$store.getters.getFilterUsers) {
+                this.filters = this.$store.getters.getFilterUsers;
+            }
         },
         methods: {
             getData() {
@@ -282,12 +293,21 @@
                     { wch: 40 }  // 5 або більше публікацій в Scopus та/або WoS
                 ];
                 XLSX.writeFile(wb, 'Authors.xlsx');
+            },
+            clearFilter() {
+                this.$store.dispatch('clearFilterPublications');
+                this.filters.name = '';
+                this.filters.faculty_code = '';
+                this.filters.department_code = '';
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
+    .form-group {
+        margin-bottom: 10px;
+    }
     .search-block{
         margin-top: 60px;
     }

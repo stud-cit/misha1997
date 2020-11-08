@@ -96,6 +96,7 @@
                         </select>
                     </div>
                 </div>
+                <button type="button" class="export-button" @click="clearFilter">Очистити фільтр</button>
             </form>
             <Table 
                 @select="selectItem"
@@ -158,6 +159,9 @@
             this.getData();
             this.getTypePublications();
             this.getNamesPublications();
+            if(this.$store.getters.getFilterPublications) {
+                this.filters = this.$store.getters.getFilterPublications;
+            }
         },
         methods: {
             // getters
@@ -231,6 +235,17 @@
             parseString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
                 return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
+            },
+            clearFilter() {
+                this.$store.dispatch('filterPublications');
+                this.filters.title = '';
+                this.filters.authors_f = '';
+                this.filters.science_type_id = '';
+                this.filters.year = '';
+                this.filters.country = '';
+                this.filters.publication_type_id = '';
+                this.filters.faculty_code = '';
+                this.filters.department_code = '';
             }
         },
         computed: {
@@ -257,6 +272,7 @@
                     }
                     return result;
                 });
+                this.$store.dispatch('saveFilterPublications', this.filters);
                 return this.exportPublication;
             }
         }

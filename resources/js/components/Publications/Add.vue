@@ -120,7 +120,8 @@
                         swal("Публікацію успішно додано!", {
                             icon: "success",
                         });
-                        this.$router.push({path: '/publications'});
+                        location.reload();
+                        // this.$router.push({path: '/publications'});
                     })
                     .catch(() => {
                         swal({

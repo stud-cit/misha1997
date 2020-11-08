@@ -11,7 +11,7 @@
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Автори публікації:</div>
                     <div class="col-lg-9 list-item list-text">
-                        <span v-for="(author, index) in data.authors" :key="index"><router-link :to="'/user/'+author.id">{{author.name}} </router-link></span>
+                        <span v-for="(author, index) in data.authors" :key="index"><a :href="'/user/'+author.id">{{author.name}} </a></span>
                     </div>
                 </li>
                 <li class="row">
@@ -25,7 +25,7 @@
                     </li>
                     <li class="row">
                         <div class="col-lg-3 list-item list-title">Керівник:</div>
-                        <div class="col-lg-9 list-item list-text"><router-link :to="'/user/'+data.supervisor.id">{{data.supervisor.name}}</router-link></div>
+                        <div class="col-lg-9 list-item list-text"><a :href="'/user/'+data.supervisor.id">{{data.supervisor.name}}</a></div>
                     </li>
                 </template>
                 <template v-else>
