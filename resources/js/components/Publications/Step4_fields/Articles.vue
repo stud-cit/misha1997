@@ -38,14 +38,25 @@
             </div>
             <div class="form-group">
                 <label class="item-title">Країна видання *</label>
-                <div class="input-container">
-                    <select class="item-value" v-model="publicationData.country">
+                <div class="input-container authors">
+                    <!-- <select class="item-value" v-model="publicationData.country">
                         <option
                             v-for="(item, index) in country"
                             :key="index"
                             :value="item.name"
                         >{{item.name}}</option>
-                    </select>
+                    </select> -->
+                    <multiselect
+                        v-model="publicationData.country"
+                        :searchable="true"
+                        :options="country.map(item => item.name)"
+                        selectLabel="Натисніть для вибору"
+                        selectedLabel="Вибрано"
+                        placeholder="Пошук в базі данних сайту"
+                        track-by="name"
+                    >
+                        <span slot="noResult">По даному запиту немає результатів</span>
+                    </multiselect>
                 </div>
                 <div class="error" v-if="$v.publicationData.country.$error">
                     Поле обов'язкове для заповнення
@@ -71,14 +82,15 @@
     import years from '../../mixins/years';
     import country from '../../mixins/country';
     import {required, requiredIf} from "vuelidate/lib/validators";
-
+    import Multiselect from 'vue-multiselect';
     export default {
         mixins: [years, country],
         props: {
           publicationData: Object
         },
         components: {
-            CloseEditButton
+            CloseEditButton,
+            Multiselect
         },
         validations: {
             publicationData: {
@@ -110,7 +122,10 @@
             },
             prevStep() {
                 this.$parent.$emit('prevStep');
-            }
+            },
+            nameCountry({id, name}){
+                return `${name}`
+            },
         }
     }
 </script>

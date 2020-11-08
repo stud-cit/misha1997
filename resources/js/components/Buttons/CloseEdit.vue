@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button @click="close" class="prev">Відміна</button>
+        <button @click="close" class="prev">Відмінити</button>
     </div>
 </template>
 <script>

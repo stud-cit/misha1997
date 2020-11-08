@@ -29,9 +29,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">За редакцією (у родовому відмінку)</label>
+                <label class="item-title">Том</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.by_editing">
+                    <input class="item-value" type="text" v-model="publicationData.number">
                 </div>
             </div>
             <div class="form-group">
