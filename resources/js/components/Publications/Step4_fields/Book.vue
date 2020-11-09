@@ -17,14 +17,9 @@
             </div>
             <div class="form-group">
                 <label class="item-title">Країна видання *</label>
-                <div class="input-container">
-                    <select class="item-value" v-model="publicationData.country">
-                        <option
-                            v-for="(item, index) in country"
-                            :key="index"
-                            :value="item.name"
-                        >{{item.name}}</option>
-                    </select>
+                <Country :data="publicationData"></Country>
+                <div class="error" v-if="$v.publicationData.country.$error">
+                    Поле обов'язкове для заповнення
                 </div>
             </div>
             <div class="form-group">
@@ -77,16 +72,17 @@
 
 <script>
     import {required} from "vuelidate/lib/validators";
+    import Country from "../../Forms/Country";
     import CloseEditButton from "../../Buttons/CloseEdit";
     import years from '../../mixins/years';
-    import country from '../../mixins/country';
     export default {
-        mixins: [years, country],
+        mixins: [years],
         props: {
             publicationData: Object
         },
         components: {
-            CloseEditButton
+            CloseEditButton,
+            Country
         },
         validations: {
             publicationData: {

@@ -16,31 +16,38 @@ class AuthorsController extends ASUController
     function get(Request $request) {
         $divisions = $this->getDivisions();
         $data = [];
+        $model = Authors::with('role')->orderBy('created_at', 'DESC');
         if($request->session()->get('person')['roles_id'] == 3) {
-            $data = Authors::with('role')
-                ->where('faculty_code', $request->session()->get('person')['faculty_code'])
+            $model->where('faculty_code', $request->session()->get('person')['faculty_code'])
                 ->where('categ_1', "!=", 1)
-                ->where('guid', "!=", null)
-                ->get();
+                ->where('guid', "!=", null);
         }
         if($request->session()->get('person')['roles_id'] == 2) {
-            $data = Authors::with('role')
-                ->where('department_code', $request->session()->get('person')['department_code'])
+            $model->where('department_code', $request->session()->get('person')['department_code'])
                 ->where('categ_1', "!=", 1)
-                ->where('guid', "!=", null)
-                ->get();
+                ->where('guid', "!=", null);
         }
-        if($request->session()->get('person')['roles_id'] == 4) {
-            $data = Authors::with('role')
-                ->where('categ_1', "!=", 1)
-                ->where('guid', "!=", null)
-                ->get();
+
+        if($request->name != '') {
+            $model->where('name', 'like', "%".$request->name."%");
         }
+
+        if($request->faculty_code != '') {
+            $model->where('faculty_code', $request->faculty_code);
+        }
+
+        if($request->department_code != '') {
+            $model->where('department_code', $request->department_code);
+        }
+
+        if($request->all == 'true') {
+            $data = $model->get();
+        } else {
+            $data = $model->where('categ_1', "!=", 1)->where('guid', "!=", null)->get();
+        }
+
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
-            // if($value['date_bth']) {
-            //     $value['age'] = $this->calculateAge($value['date_bth']);
-            // }
             foreach($divisions->original['institute'] as $k => $v) {
                 if ($value['faculty_code'] == $v['ID_DIV']) {
                     $value['faculty'] = $v['NAME_DIV'];
@@ -66,17 +73,19 @@ class AuthorsController extends ASUController
         $data = Authors::with('role')->get();
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
-            if($value['date_bth']) {
-                $value['age'] = $this->calculateAge($value['date_bth']);
+            foreach($divisions->original['institute'] as $k => $v) {
+                if ($value['faculty_code'] == $v['ID_DIV']) {
+                    $value['faculty'] = $v['NAME_DIV'];
+                }
             }
             foreach($divisions->original['department']  as $k => $v) {
                 if ($value['department_code'] == $v['ID_DIV']) {
                     $value['department'] = $v['NAME_DIV'];
-                }
-            }
-            foreach($divisions->original['institute'] as $k => $v) {
-                if ($value['faculty_code'] == $v['ID_DIV']) {
-                    $value['faculty'] = $v['NAME_DIV'];
+                    foreach($divisions->original['institute'] as $k2 => $v2) {
+                        if ($v['ID_PAR'] == $v2['ID_DIV']) {
+                            $value['faculty'] = $v2['NAME_DIV'];
+                        }
+                    }
                 }
             }
         }
@@ -347,7 +356,7 @@ class AuthorsController extends ASUController
         } elseif ($data->categ_2 == 3) {
             $result = "Менеджер";
         } else {
-            $result = "";
+            $result = $data->job;
         }
         return $result;
     }

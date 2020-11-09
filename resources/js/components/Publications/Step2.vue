@@ -83,6 +83,7 @@
                                         <select class="item-value" v-model="jobType" @change="setJobType">
                                             <option value="1">Учбовий заклад</option>
                                             <option value="2">Підприємство</option>
+                                            <option value="3">Студент / Випускник</option>
                                             <option value="0">Не працює</option>
                                         </select>
                                     </div>
@@ -111,21 +112,15 @@
                                             <option value="0">Ні</option>
                                         </select>
                                     </div>
+                                    <div class="error" v-if="$v.newAuthor.forbes_fortune.$error">
+                                        Поле обов'язкове для заповнення
+                                    </div>
                                 </div>
                             </li>
-                            <li class="row">
+                            <li class="row" v-show="jobType != 3">
                                 <div class="col-lg-3 list-item list-title">Країна автора *</div>
                                 <div class="col-lg-9 list-item list-text">
-                                    <div class="input-container">
-                                        <select class="item-value" v-model="newAuthor.country">
-                                            <option
-                                                v-for="(item, index) in country"
-                                                :key="'country-'+index"
-                                                :value="item.name"
-                                            >{{item.name}}</option>
-                                        </select>
-                                        <div class="hint" ><span>Країна автора</span></div>
-                                    </div>
+                                    <Country :data="newAuthor"></Country>
                                     <div class="error" v-if="$v.newAuthor.country.$error">
                                         Поле обов'язкове для заповнення
                                     </div>
@@ -293,6 +288,7 @@
 
 <script>
     import CloseEditButton from "../Buttons/CloseEdit";
+    import Country from "../Forms/Country";
     import Multiselect from 'vue-multiselect';
     import {required, requiredIf} from "vuelidate/lib/validators";
     export default {
@@ -350,7 +346,7 @@
                     country: ''
                 },
                 newAuthor: {
-                    job: null,
+                    job: '',
                     name: '',
                     country: null,
                     h_index: '',
@@ -366,7 +362,8 @@
         },
         components: {
             Multiselect,
-            CloseEditButton
+            CloseEditButton,
+            Country
         },
         mounted() {
             this.defaultNewAuthorSSU = Object.assign(this.defaultNewAuthorSSU, this.newAuthorSSU);
@@ -400,26 +397,33 @@
             },
             newAuthor: {
                 country: {
-                    required
+                    required: requiredIf(function() {
+                        return this.jobType != 3;
+                    })
                 },
                 job: {
                     required: requiredIf(function() {
-                        return this.jobType > 0;
+                        return this.jobType == 1 || this.jobType == 2;
                     })
                 },
                 name: {
                     required
                 },
+                forbes_fortune: {
+                    required: requiredIf(function() {
+                        return this.jobType == 2;
+                    })
+                }
             },
         },
         methods: {
             // задає місце роботи для новго автора не з СумДУ
             setJobType() {
-                if(this.jobType == 0) {
+                if(this.jobType == 0 || this.jobType == 3) {
                     this.newAuthor.job = "Не працює";
                     this.newAuthor.forbes_fortune = 0;
                 } else {
-                    this.newAuthor.job = null;
+                    this.newAuthor.job = '';
                 }
             },
             // пошук схожих імен авторів не з СумДУ
@@ -505,7 +509,6 @@
                 }
                 if(n == 2) {
                     this.getOtherAuthorNames();
-                    this.getCountry();
                 }
                 window.scrollTo(0,0);
                 this.otherAuthor = n;
@@ -546,12 +549,6 @@
                     })
                 }
             },
-            // всі країни
-            getCountry() {
-                axios.get('/api/country').then(response => {
-                    this.country = response.data;
-                })
-            },
             // всі факультети, кафедри
             getDivisions() {
                 axios.get('/api/sort-divisions').then(response => {
@@ -570,6 +567,12 @@
                         this.persons = [];
                         this.getAuthors();
                         this.newAuthorSSU = this.defaultNewAuthorSSU;
+                        this.publicationData.authors.map(item => {
+                            if(item.name == "") {
+                                let index = this.publicationData.authors.indexOf(item);
+                                this.publicationData.authors.splice(index, 1);
+                            }
+                        })
                         this.publicationData.authors.push(response.data.user);
                         swal("Автора успішно додано!", {
                             icon: "success",
@@ -592,12 +595,15 @@
                     });
                     return;
                 }
-                var findAuthor = this.otherAuthorNames.find(item => item.name.toLowerCase() == this.newAuthor.name.toLowerCase() && item.job.toLowerCase() == this.newAuthor.job.toLowerCase());
+                var findAuthor = this.otherAuthorNames.find(item => item.name.toLowerCase() == this.newAuthor.name.toLowerCase() && (item.job && item.job.toLowerCase() == this.newAuthor.job.toLowerCase()));
                 if(findAuthor) {
                     this.errorName = findAuthor;
                     return;
                 } else {
                     this.errorName = null;
+                }
+                if(this.jobType == 3) {
+                    this.newAuthor.country = "Україна";
                 }
                 axios.post('/api/author', this.newAuthor)
                 .then((response) => {
@@ -605,15 +611,21 @@
                     this.getAuthors();
                     this.jobType = null;
                     this.newAuthor = {
-                        job: null,
+                        job: '',
                         name: '',
                         country: null,
                         h_index: '',
                         scopus_autor_id: '',
                         scopus_researcher_id: '',
                         orcid: '',
-                        forbes_fortune: ''
+                        forbes_fortune: 0
                     };
+                    this.publicationData.authors.map(item => {
+                        if(item.name == "") {
+                            let index = this.publicationData.authors.indexOf(item);
+                            this.publicationData.authors.splice(index, 1);
+                        }
+                    })
                     this.publicationData.authors.push(response.data.user);
                     this.$v.$reset();
                     swal("Автора успішно додано!", {

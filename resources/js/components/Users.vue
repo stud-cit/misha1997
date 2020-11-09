@@ -43,7 +43,12 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="export-button" @click="clearFilter">Очистити фільтр</button>
+                <div class="form-group form-check ml-2">
+                    <input v-model="filters.all" type="checkbox" class="form-check-input" id="allUsers">
+                    <label class="form-check-label" for="allUsers">Всі користувачі</label>
+                </div>
+                <button type="button" class="export-button" style="display: inline-block" @click="getData()">Пошук</button>
+                <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">Очистити фільтр</button>
             </form>
             <div class="table-responsive text-center table-list">
                 <table class="table table-bordered ">
@@ -171,6 +176,7 @@
                 data: [],
                 selectUsers: [],
                 filters: {
+                    all: false,
                     name: '',
                     faculty_code: '',
                     department_code: ''
@@ -190,27 +196,11 @@
                 return this.$store.getters.authUser
             },
             filteredList() {
-                let list = this.data.filter(users => {
-                    let result = 1;
-                    let keys = Object.keys(this.filters);
-                    let values = Object.values(this.filters);
-                    for(let i = 0; i < keys.length; i++){
-                        if(values[i]) {
-                            if (users[keys[i]]) {
-                                result = result && users[keys[i]].toLowerCase().includes(values[i].toLowerCase());
-                            } else {
-                                result = 0;
-                            }
-                        }
-                    }
-                    return result
-
-                });
-                this.numPage = Math.ceil(list.length/this.perPage);
+                this.numPage = Math.ceil(this.data.length/this.perPage);
                 this.count_five_publications = 0;
                 this.count_h_index = 0;
                 this.count_scopus_autor_id = 0;
-                list.map(item => {
+                this.data.map(item => {
                     if(item.h_index) {
                         this.count_h_index += +item.h_index;
                     }
@@ -222,18 +212,25 @@
                     }
                 });
                 this.$store.dispatch('saveFilterUser', this.filters);
-                return list.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
+                return this.data.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
             }
         },
         created() {
-            this.getData();
             if(this.$store.getters.getFilterUsers) {
                 this.filters = this.$store.getters.getFilterUsers;
             }
+            this.getData();
         },
         methods: {
             getData() {
-                axios.get('/api/authors').then(response => {
+                axios.get('/api/authors', {
+                    params: {
+                        name: this.filters.name,
+                        faculty_code: this.filters.faculty_code,
+                        department_code: this.filters.department_code,
+                        all: this.filters.all
+                    }
+                }).then(response => {
                     this.data = response.data;
                     this.loading = false;
                 }).catch(() => {
@@ -296,20 +293,30 @@
             },
             clearFilter() {
                 this.$store.dispatch('clearFilterPublications');
+                this.filters.all = false;
                 this.filters.name = '';
                 this.filters.faculty_code = '';
                 this.filters.department_code = '';
+                this.getData();
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
+    input[type=checkbox] {
+        -ms-transform: scale(1.5); /* IE */
+        -moz-transform: scale(1.5); /* FF */
+        -webkit-transform: scale(1.5); /* Safari and Chrome */
+        -o-transform: scale(1.5); /* Opera */
+        transform: scale(1.5);
+        padding: 5px;
+    }
     .form-group {
         margin-bottom: 10px;
     }
     .search-block{
-        margin-top: 60px;
+        margin-top: 20px;
     }
     .exports{
         display: grid;

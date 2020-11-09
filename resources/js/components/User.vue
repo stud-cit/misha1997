@@ -50,7 +50,17 @@
                 </li>
                 <li class="row" v-if="!data.guid">
                     <div class="col-lg-3 list-item list-title">Входить до списків Forbes та Fortune:</div>
-                    <div class="col-lg-9 list-item list-text">{{data.forbes_fortune ? "Так" : "Ні"}}</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4">
+                            <select v-model="data.forbes_fortune">
+                                <option value="1">Так</option>
+                                <option value="0">Ні</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-9 list-item list-text" v-else>
+                            {{data.forbes_fortune ? "Так" : "Ні"}}
+                        </div>
+                    </div>
                 </li>
                 <li class="row" v-if="data.guid">
                     <div class="col-lg-3 list-item list-title">5 або більше публікацій у періодичних виданнях Scopus та/або WoS:</div>

@@ -41,12 +41,7 @@
                     <div class="form-row">
                         <div class="form-group col-lg-6">
                             <label >Країна видання </label>
-                            <div class="input-container ">
-                                <select  v-model="filters.country">
-                                    <option value=""></option>
-                                    <option v-for="(item, index) in countries" :value="item.name" :key="index">{{item.name}}</option>
-                                </select>
-                            </div>
+                            <Country :data="filters"></Country>
                         </div>
                         <div class="form-group col-lg-6">
                             <label >Квартиль журналу Scopus </label>
@@ -261,19 +256,10 @@
                 <td>{{ ratingData.countStudentPublications }}</td>
             </tr>
             <tr>
-                <td rowspan="2">
-                    Кількість публікацій статей та монографій (розділів) у співавторстві з іноземними партнерами, які мають індекс Гірша за БД Scopus або WoS не нижче 10
-                </td>
-                <td colspan="2">
-                    Всього
+                <td colspan="3">
+                    Кількість статей та монографій (розділів) у співавторстві з іноземними партнерами, які мають індекс Гірша за БД Scopus або WoS не нижче 10
                 </td>
                 <td>{{ ratingData.countForeignPublications.count }}</td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    Мають індекс Гірша за БД Scopus або WoS не нижче 10
-                </td>
-                <td>{{ ratingData.countForeignPublications.haveIndexScopusWoS }}</td>
             </tr>
             <tr>
                 <td colspan="3">
@@ -403,10 +389,55 @@
                 <td>{{ ratingData.countScopusFiveYear }}</td>
             </tr>
             <tr>
-                <td colspan="3">
+                <td rowspan="5">
+                    Кількість охоронних документів щодо об'єктів права інтелектуальної власності, які 
+                </td>
+                <td colspan="2">
+                    - отримано за звітний рік на ім'я СумДУ
+                </td>
+                <td>
+                    {{ ratingData.receivedReportingNameSSU }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    - з них за сумісним авторством з представниками бізнесу
+                </td>
+                <td>
+                    {{ ratingData.authorshipBusinessRepresentatives }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    - отримано за звітний рік штатними співробітниками не на ім'я СумДУ
+                </td>
+                <td>
+                    {{ ratingData.receivedReportingEmployeesNotSSU }}
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    - комерціалізовано у звітному році
+                </td>
+                <td>
+                    - університетом
+                </td>
+                <td>
+                    {{ ratingData.commercializedReportingYear.university }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    - штатним співробітником
+                </td>
+                <td>
+                    {{ ratingData.commercializedReportingYear.employee }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
                     Показники для звітів
                 </td>
-                <td></td>
             </tr>
             <tr>
                 <td colspan="3">
@@ -416,7 +447,7 @@
             </tr>
             <tr>
                 <td colspan="3">
-                    Загальне значення індексів Гірша (за БД Scopus  або БД WoS ) штатних працівників та докторантів (динаміка змін)
+                    Загальне значення індексів Гірша (за БД Scopus  або БД WoS) штатних працівників та докторантів
                 </td>
                 <td>{{ ratingData.countHirschIndex }}</td>
             </tr>
@@ -464,7 +495,7 @@
             </tr>
             <tr>
                 <td colspan="3">
-                    Чисельність штатних науково та науково-педагогічних працівників, які мають не менше 5-ти публікацій у виданнях, що індексуються БД Scopus та/або WoS.
+                    Чисельність штатних науково та науково-педагогічних працівників, які мають не менше 5-ти публікацій у періодичних виданнях, що індексуються БД Scopus та/або WoS.
                 </td>
                 <td>{{ ratingData.authorsHasfivePublications }}</td>
             </tr>
@@ -537,6 +568,7 @@
 </template>
 
 <script>
+    import Country from "../../Forms/Country";
     import XLSX from 'xlsx';
     export default {
         data() {
@@ -593,7 +625,14 @@
                         publishedWithForeignPartners: 0
                     },
                     authorsHasfivePublications: 0,
-                    countScopusFiveYear: 0
+                    countScopusFiveYear: 0,
+                    receivedReportingNameSSU: 0,
+                    authorshipBusinessRepresentatives: 0,
+                    receivedReportingEmployeesNotSSU: 0,
+                    commercializedReportingYear: {
+                        university: 0,
+                        employee: 0
+                    }
                 },
 
                 filters: {
@@ -622,9 +661,11 @@
                 }
             };
         },
+        components: {
+            Country
+        },
         props:{
             publicationTypes: Array,
-            countries: Array,
             years: Array,
         },
         created() {

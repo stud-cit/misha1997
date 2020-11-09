@@ -38,26 +38,7 @@
             </div>
             <div class="form-group">
                 <label class="item-title">Країна видання *</label>
-                <div class="input-container authors">
-                    <!-- <select class="item-value" v-model="publicationData.country">
-                        <option
-                            v-for="(item, index) in country"
-                            :key="index"
-                            :value="item.name"
-                        >{{item.name}}</option>
-                    </select> -->
-                    <multiselect
-                        v-model="publicationData.country"
-                        :searchable="true"
-                        :options="country.map(item => item.name)"
-                        selectLabel="Натисніть для вибору"
-                        selectedLabel="Вибрано"
-                        placeholder="Пошук в базі данних сайту"
-                        track-by="name"
-                    >
-                        <span slot="noResult">По даному запиту немає результатів</span>
-                    </multiselect>
-                </div>
+                <Country :data="publicationData"></Country>
                 <div class="error" v-if="$v.publicationData.country.$error">
                     Поле обов'язкове для заповнення
                 </div>
@@ -78,17 +59,18 @@
 </template>
 
 <script>
+    import Country from "../../Forms/Country";
     import CloseEditButton from "../../Buttons/CloseEdit";
     import years from '../../mixins/years';
-    import country from '../../mixins/country';
     import {required, requiredIf} from "vuelidate/lib/validators";
     import Multiselect from 'vue-multiselect';
     export default {
-        mixins: [years, country],
+        mixins: [years],
         props: {
           publicationData: Object
         },
         components: {
+            Country,
             CloseEditButton,
             Multiselect
         },
