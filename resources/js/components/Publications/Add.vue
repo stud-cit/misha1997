@@ -116,11 +116,13 @@
                         this.publicationData.quartil_scopus = null;
                     }
                     axios.post('/api/publication', this.publicationData)
-                    .then((response) => {
+                    .then(() => {
                         swal("Публікацію успішно додано!", {
                             icon: "success",
-                        });
-                        this.$router.push({path: '/publications'});
+                        })
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
                     })
                     .catch(() => {
                         swal({

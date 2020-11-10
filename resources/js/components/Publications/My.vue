@@ -16,9 +16,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label >Прізвище та ініціали співавтора</label>
-                    <div class="input-container hint-container">
-                        <input type="text" v-model="filters.initials">
+                    <label >ПІБ автора</label>
+                    <div class="input-container">
+                        <input type="text" v-model="filters.authors_f">
                     </div>
                 </div>
                 <div class="form-row">
@@ -44,12 +44,7 @@
                     </div>
                     <div class="form-group col-lg-4">
                         <label>Країна видання</label>
-                        <div class="input-container">
-                            <select v-model="filters.country">
-                                <option value=""></option>
-                                <option v-for="(item, index) in country" :value="item.name" :key="index">{{item.name}}</option>
-                            </select>
-                        </div>
+                        <Country :data="filters"></Country>
                     </div>
                 </div>
                 <div class="form-group">
@@ -61,10 +56,12 @@
                         </select>
                     </div>
                 </div>
+                <button type="button" class="export-button" style="display: inline-block" @click="getData()">Пошук</button>
+                <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">Очистити фільтр</button>
             </form>
             <Table 
                 @select="selectItem"
-                :publications="filteredList" 
+                :publications="data" 
                 :authUser="authUser" 
                 :loading="loading"
                 :selectPublications="selectPublications"
@@ -85,6 +82,7 @@
     import Table from "../Tables/Publications";
     import BackButton from "../Buttons/Back";
     import DeleteButton from "../Buttons/Delete";
+    import Country from "../Forms/Country";
     export default {
         mixins: [years, country],
         data() {
@@ -98,11 +96,13 @@
                 publicationTypes: [],
                 filters: {
                     title: '',
-                    initials: '',
+                    authors_f: '',
                     science_type_id: '',
                     year: '',
                     country: '',
-                    publication_type_id: ''
+                    publication_type_id: '',
+                    faculty_code: '',
+                    department_code: ''
                 }
             };
         },
@@ -110,9 +110,13 @@
             ExportPublications,
             Table,
             BackButton,
-            DeleteButton
+            DeleteButton,
+            Country
         },
-        mounted () {
+        created() {
+            if(this.$store.getters.getFilterPublications) {
+                this.filters = this.$store.getters.getFilterPublications;
+            }
             this.getData();
             this.getTypePublications();
             this.getNamesPublications();
@@ -131,7 +135,19 @@
                 }
             },
             getData() {
-                axios.get('/api/my-publications').then(response => {
+                this.$store.dispatch('saveFilterPublications', this.filters);
+                axios.get('/api/my-publications', {
+                    params: {
+                        title: this.filters.title,
+                        authors_f: this.filters.authors_f,
+                        science_type_id: this.filters.science_type_id,
+                        year: this.filters.year,
+                        country: this.filters.country,
+                        publication_type_id: this.filters.publication_type_id,
+                        faculty_code: this.filters.faculty_code,
+                        department_code: this.filters.department_code
+                    }
+                }).then(response => {
                     this.data = response.data;
                     this.loading = false;
                 }).catch(() => {
@@ -175,6 +191,18 @@
             parseString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
                 return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
+            },
+            clearFilter() {
+                this.$store.dispatch('clearFilterPublications');
+                this.filters.title = '';
+                this.filters.authors_f = '';
+                this.filters.science_type_id = '';
+                this.filters.year = '';
+                this.filters.country = '';
+                this.filters.publication_type_id = '';
+                this.filters.faculty_code = '';
+                this.filters.department_code = '';
+                this.getData();
             }
         },
         computed: {
@@ -183,37 +211,20 @@
             },
             access() {
                 return this.$store.getters.accessMode
-            },
-            filteredList() {
-                this.exportPublication = this.data.filter(item => {
-                    let result = 1;
-                    let keys = Object.keys(this.filters);
-                    let values = Object.values(this.filters);
-                    for(let i = 0; i < keys.length; i++){
-                        if(values[i]) {
-                            if (item[keys[i]] && keys[i] != 'publication_type_id') {
-                                result = result && item[keys[i]].toString().toLowerCase().includes(values[i].toString().toLowerCase());
-                            } else if(keys[i] == 'publication_type_id') {
-                                result = result && item[keys[i]].toString() == values[i].toString();
-                            } else {
-                                result = 0;
-                            }
-                        }
-                    }
-                    return result;
-                });
-                return this.exportPublication;
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
+    .form-group {
+        margin-bottom: 10px;
+    }
     .fa-edit {
         cursor: pointer;
     }
     .search-block{
-        margin-top: 60px;
+        margin-top: 20px;
     }
     .table-list{
         margin-top: 70px;

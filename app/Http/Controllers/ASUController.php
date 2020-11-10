@@ -43,7 +43,7 @@ class ASUController extends Controller
                         array_push($value['departments'], $v);
                     }
                     if($value['CODE_DIV'] == "60.00") {
-                        if($v['ID_PAR'] == "382" || $v['ID_PAR'] == "1428" || $v['ID_DIV'] == "1582") {
+                        if($v['ID_PAR'] == "382" || $v['ID_PAR'] == "1428" || $v['ID_DIV'] == "1582" || $v['ID_DIV'] == "382") {
                             array_push($value['departments'], $v);
                         }
                     }

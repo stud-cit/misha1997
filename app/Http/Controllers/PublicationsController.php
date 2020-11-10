@@ -21,14 +21,56 @@ class PublicationsController extends ASUController
 
     // всі публікації
     function getAll(Request $request) {
-        $data = Publications::with('publicationType', 'scienceType', 'authors.author')->whereHas('authors.author', function($q) use ($request) {
+        $data = [];
+        $model = Publications::with('publicationType', 'scienceType', 'authors.author')->whereHas('authors.author', function($q) use ($request) {
             if($request->session()->get('person')['roles_id'] == 2) {
                 $q->where('department_code', $request->session()->get('person')['department_code']);
             }
             if($request->session()->get('person')['roles_id'] == 3) {
                 $q->where('faculty_code', $request->session()->get('person')['faculty_code']);
             }
-        })->orderBy('created_at', 'DESC')->get();
+        })->orderBy('created_at', 'DESC');
+
+        if($request->title) {
+            $model->where('title', 'like', "%".$request->title."%");
+        }
+
+        if($request->authors_f) {
+            $model->whereHas('authors.author', function($q) use ($request) {
+                $q->where('name', 'like', "%".$request->authors_f."%");
+            });
+        }
+
+        if($request->science_type_id) {
+            $model->where('science_type_id', $request->science_type_id);
+        }
+
+        if($request->year) {
+            $model->where('year', $request->year);
+        }
+
+        if($request->country) {
+            $model->where('country', 'like', "%".$request->country."%");
+        }
+
+        if($request->publication_type_id) {
+            $model->where('publication_type_id', $request->publication_type_id);
+        }
+
+        if($request->faculty_code) {
+            $model->whereHas('authors.author', function($q) use ($request) {
+                $q->where('faculty_code', $request->faculty_code);
+            });
+        }
+
+        if($request->department_code) {
+            $model->whereHas('authors.author', function($q) use ($request) {
+                $q->where('department_code', $request->department_code);
+            });
+        }
+
+        $data = $model->get();
+
         foreach ($data as $key => $publication) {
             $publication['date'] = Carbon::parse($publication['created_at'])->format('d.m.Y');
         }
@@ -37,9 +79,51 @@ class PublicationsController extends ASUController
 
     // мої публікації
     function getMyPublications(Request $request) {
-        $data = Publications::with('publicationType', 'scienceType', 'authors.author')->whereHas('authors.author', function($q) use ($request) {
+        $data = [];
+        $model = Publications::with('publicationType', 'scienceType', 'authors.author')->whereHas('authors.author', function($q) use ($request) {
             $q->where('autors_id', $request->session()->get('person')['id']);
-        })->orderBy('created_at', 'DESC')->get();
+        })->orderBy('created_at', 'DESC');
+
+        if($request->title) {
+            $model->where('title', 'like', "%".$request->title."%");
+        }
+
+        if($request->authors_f) {
+            $model->whereHas('authors.author', function($q) use ($request) {
+                $q->where('name', 'like', "%".$request->authors_f."%");
+            });
+        }
+
+        if($request->science_type_id) {
+            $model->where('science_type_id', $request->science_type_id);
+        }
+
+        if($request->year) {
+            $model->where('year', $request->year);
+        }
+
+        if($request->country) {
+            $model->where('country', 'like', "%".$request->country."%");
+        }
+
+        if($request->publication_type_id) {
+            $model->where('publication_type_id', $request->publication_type_id);
+        }
+
+        if($request->faculty_code) {
+            $model->whereHas('authors.author', function($q) use ($request) {
+                $q->where('faculty_code', $request->faculty_code);
+            });
+        }
+
+        if($request->department_code) {
+            $model->whereHas('authors.author', function($q) use ($request) {
+                $q->where('department_code', $request->department_code);
+            });
+        }
+
+        $data = $model->get();
+
         foreach ($data as $key => $publication) {
             $publication['date'] = Carbon::parse($publication['created_at'])->format('d.m.Y');
         }
@@ -305,8 +389,8 @@ class PublicationsController extends ASUController
 
     // список країн
     function getCountry() {
-        $data = Countries::get();
-        return response()->json($data);
+        $data = Countries::select('name')->get()->toArray();
+        return response()->json(array_column($data, 'name'));
     }
 
     // список типів публікацій
@@ -333,6 +417,7 @@ class PublicationsController extends ASUController
         $todayYear = Carbon::today()->year;
         $countScopusFiveYear = Publications::where('science_type_id', 1)->orWhere('science_type_id', 3)->whereYear('created_at', '>=', $todayYear - 5)->count();
         $authorsHasfivePublications = Authors::where('five_publications', 1)->count();
+
 
         $authorsHirschIndex = Authors::select('h_index', 'scopus_autor_id')->get();
 
@@ -465,7 +550,7 @@ class PublicationsController extends ASUController
         }
 
         $rating = [
-            "countPublications" => count($data), // Всього
+            "countPublications" => 0, // Всього
             "countStudentPublications" => 0, // Кількість статей за авторством та співавторством студентів
             "countForeignPublications" => [
                 "count" => 0, // Всього
@@ -510,10 +595,49 @@ class PublicationsController extends ASUController
                 "publishedAbroad" => 0, // статей опублікованих за кордоном
                 "publishedWithForeignPartners" => 0 // статей з іноземними партнерами
             ],
-            "authorsHasfivePublications" => $authorsHasfivePublications // Чисельність штатних працівників, які мають не менше 5-ти публікацій у виданнях, що  індексуються БД Scopus та/або WoS (динаміка змін)
+            "authorsHasfivePublications" => $authorsHasfivePublications, // Чисельність штатних працівників, які мають не менше 5-ти публікацій у виданнях, що  індексуються БД Scopus та/або WoS (динаміка змін)
+            "receivedReportingNameSSU" => 0,
+            "authorshipBusinessRepresentatives" => 0,
+            "receivedReportingEmployeesNotSSU" => 0,
+            "commercializedReportingYear" => [
+                "university" => 0,
+                "employee" => 0
+            ]
         ];
 
         foreach ($data as $key => $value) {
+            if($value->publication_type_id != 10 && $value->publication_type_id != 11) {
+                $rating['countPublications'] += 1;
+            }
+            if($value->publication_type_id == 10 && $value->applicant == 'СумДУ') {
+                $rating['receivedReportingNameSSU'] += 1;
+                $authorshipBusinessRepresentatives = 0;
+                foreach ($value['authors'] as $k => $v) {
+                    if($v['author']['job'] != 'СумДУ' && $v['author']['job'] != null) {
+                        $authorshipBusinessRepresentatives = 1;
+                    }
+                }
+                $rating['authorshipBusinessRepresentatives'] += $authorshipBusinessRepresentatives;
+            }
+
+            if($value->publication_type_id == 10 && $value->applicant != 'СумДУ') {
+                $receivedReportingEmployeesNotSSU = 0;
+                foreach ($value['authors'] as $k => $v) {
+                    if($v['author']['job'] == 'СумДУ') {
+                        $receivedReportingEmployeesNotSSU = 1;
+                    }
+                }
+                $rating['receivedReportingEmployeesNotSSU'] += $receivedReportingEmployeesNotSSU;
+            }
+
+            if($value->publication_type_id == 10 && $value->commerc_university) {
+                $rating['commercializedReportingYear']['university'] += 1;
+            }
+
+            if($value->publication_type_id == 10 && $value->commerc_employees) {
+                $rating['commercializedReportingYear']['employee'] += 1;
+            }
+
             $withStudent = 0;
             $countForeignPublications = [
                 "count" => 0,
@@ -582,7 +706,7 @@ class PublicationsController extends ASUController
                         $countForeignPublications['haveIndexScopusWoS'] = 1;
                     }
                 }
-                if($value->publication_type_id == 6 && ($value->science_type_id == 1 || $value->science_type_id == 2)) {
+                if($value->publication_type_id == 6 && ($value->science_type_id == 1 || $value->science_type_id == 2) && $v['author']['guid']) {
                     $monographsIndexedScopusOrWoSNotSSU = 1;
                 }
                 if($value->publication_type_id == 1) {

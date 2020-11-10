@@ -7,7 +7,7 @@
 
         <!-- exports-->
         <div class="exports">
-            <export-rating v-if="authUser.roles_id != 1" :publicationTypes="publicationTypes" :years="years" :countries="country" class="export-block"></export-rating>
+            <export-rating v-if="authUser.roles_id != 1" :publicationTypes="publicationTypes" :years="years" class="export-block"></export-rating>
             <export-publications class="export-block" :exportList="exportPublication"></export-publications>
         </div>
         <!---->
@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Прізвище та ініціали автора</label>
+                    <label>ПІБ автора</label>
                     <div class="input-container">
                         <input type="text" v-model="filters.authors_f">
                     </div>
@@ -79,12 +79,7 @@
                     </div>
                     <div class="form-group col-lg-4">
                         <label>Країна видання</label>
-                        <div class="input-container">
-                            <select  v-model="filters.country">
-                                <option value=""></option>
-                                <option v-for="(item, index) in country" :value="item.name" :key="index">{{item.name}}</option>
-                            </select>
-                        </div>
+                        <Country :data="filters"></Country>
                     </div>
                 </div>
                 <div class="form-group">
@@ -96,10 +91,12 @@
                         </select>
                     </div>
                 </div>
+                <button type="button" class="export-button" style="display: inline-block" @click="getData()">Пошук</button>
+                <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">Очистити фільтр</button>
             </form>
             <Table 
                 @select="selectItem"
-                :publications="filteredList" 
+                :publications="data" 
                 :authUser="authUser" 
                 :loading="loading"
                 :selectPublications="selectPublications"
@@ -115,16 +112,16 @@
 <script>
     import divisions from '../mixins/divisions';
     import years from '../mixins/years';
-    import country from '../mixins/country';
 
     import ExportRating from "./Exports/ExportRating";
     import ExportPublications from "./Exports/ExportPublications";
     import Table from "../Tables/Publications";
     import BackButton from "../Buttons/Back";
     import DeleteButton from "../Buttons/Delete";
+    import Country from "../Forms/Country";
     import XLSX from 'xlsx';
     export default {
-        mixins: [years, country, divisions],
+        mixins: [years, divisions],
         data() {
             return {
                 names: [],
@@ -152,9 +149,13 @@
             ExportPublications,
             Table,
             BackButton,
-            DeleteButton
+            DeleteButton,
+            Country
         },
-        mounted() {
+        created() {
+            if(this.$store.getters.getFilterPublications) {
+                this.filters = this.$store.getters.getFilterPublications;
+            }
             this.getData();
             this.getTypePublications();
             this.getNamesPublications();
@@ -163,13 +164,20 @@
             // getters
             // всі публікації
             getData() {
-                axios.get('/api/publications').then(response => {
-                    this.data = response.data.map(element => {
-                        element.faculty_code = element.authors.map(item => item.author.faculty_code).join();
-                        element.department_code = element.authors.map(item => item.author.department_code).join();
-                        element.authors_f = element.authors.map(item => item.author.name).join();
-                        return element;
-                    });
+                this.$store.dispatch('saveFilterPublications', this.filters);
+                axios.get('/api/publications', {
+                    params: {
+                        title: this.filters.title,
+                        authors_f: this.filters.authors_f,
+                        science_type_id: this.filters.science_type_id,
+                        year: this.filters.year,
+                        country: this.filters.country,
+                        publication_type_id: this.filters.publication_type_id,
+                        faculty_code: this.filters.faculty_code,
+                        department_code: this.filters.department_code
+                    }
+                }).then(response => {
+                    this.data = response.data;
                     this.loading = false;
                 }).catch(() => {
                     this.loading = false;
@@ -231,6 +239,18 @@
             parseString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
                 return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
+            },
+            clearFilter() {
+                this.$store.dispatch('clearFilterPublications');
+                this.filters.title = '';
+                this.filters.authors_f = '';
+                this.filters.science_type_id = '';
+                this.filters.year = '';
+                this.filters.country = '';
+                this.filters.publication_type_id = '';
+                this.filters.faculty_code = '';
+                this.filters.department_code = '';
+                this.getData();
             }
         },
         computed: {
@@ -238,37 +258,19 @@
             authUser() {
                 return this.$store.getters.authUser
             },
-            // фільтр публікацій
-            filteredList() {
-                this.exportPublication = this.data.filter(item => {
-                    let result = 1;
-                    let keys = Object.keys(this.filters);
-                    let values = Object.values(this.filters);
-                    for(let i = 0; i < keys.length; i++){
-                        if(values[i]) {
-                            if (item[keys[i]] && keys[i] != 'publication_type_id') {
-                                result = result && item[keys[i]].toString().toLowerCase().includes(values[i].toString().toLowerCase());
-                            } else if(keys[i] == 'publication_type_id') {
-                                result = result && item[keys[i]].toString() == values[i].toString();
-                            } else {
-                                result = 0;
-                            }
-                        }
-                    }
-                    return result;
-                });
-                return this.exportPublication;
-            }
         }
     }
 </script>
 
 <style lang="scss" scoped>
+    .form-group {
+        margin-bottom: 10px;
+    }
     .fa-edit {
         cursor: pointer;
     }
     .search-block{
-        margin-top: 60px;
+        margin-top: 20px;
     }
     .table-list{
         margin-top: 70px;
