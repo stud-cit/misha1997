@@ -21,6 +21,7 @@ class PublicationsController extends ASUController
 
     // всі публікації
     function getAll(Request $request) {
+        $divisions = $this->getDivisions();
         $data = [];
         $model = Publications::with('publicationType', 'scienceType', 'authors.author')->whereHas('authors.author', function($q) use ($request) {
             if($request->session()->get('person')['roles_id'] == 2) {
@@ -57,16 +58,28 @@ class PublicationsController extends ASUController
             $model->where('publication_type_id', $request->publication_type_id);
         }
 
-        if($request->faculty_code) {
-            $model->whereHas('authors.author', function($q) use ($request) {
-                $q->where('faculty_code', $request->faculty_code);
+        if($request->department_code != '') {
+            $departments_id = [$request->department_code];
+            foreach($divisions->original['department'] as $k2 => $v2) {
+                if ($v2['ID_PAR'] == $request->department_code) {
+                    array_push($departments_id, $v2['ID_DIV']);
+                }
+            }
+            $model->whereHas('authors.author', function($q) use ($departments_id) {
+                $q->whereIn('department_code', $departments_id);
             });
-        }
-
-        if($request->department_code) {
-            $model->whereHas('authors.author', function($q) use ($request) {
-                $q->where('department_code', $request->department_code);
-            });
+        } else {
+            if($request->faculty_code != '') {
+                $departments_id = [$request->faculty_code];
+                foreach($divisions->original['department'] as $k2 => $v2) {
+                    if ($v2['ID_PAR'] == $request->faculty_code) {
+                        array_push($departments_id, $v2['ID_DIV']);
+                    }
+                }
+                $model->whereHas('authors.author', function($q) use ($departments_id) {
+                    $q->whereIn('faculty_code', $departments_id);
+                });
+            }
         }
 
         $data = $model->get();
@@ -418,9 +431,6 @@ class PublicationsController extends ASUController
         $countScopusFiveYear = Publications::where('science_type_id', 1)->orWhere('science_type_id', 3)->whereYear('created_at', '>=', $todayYear - 5)->count();
         $authorsHasfivePublications = Authors::where('five_publications', 1)->count();
 
-
-        $authorsHirschIndex = Authors::select('h_index', 'scopus_autor_id')->get();
-
         if($request->year) {
             $data->where('year', $request->year); // Рік видання
         }
@@ -605,6 +615,8 @@ class PublicationsController extends ASUController
             ]
         ];
 
+        $authors = [];
+
         foreach ($data as $key => $value) {
             if($value->publication_type_id != 10 && $value->publication_type_id != 11) {
                 $rating['countPublications'] += 1;
@@ -682,6 +694,9 @@ class PublicationsController extends ASUController
             ];
             
             foreach ($value['authors'] as $k => $v) {
+                if(!in_array($v['author'], $authors)) {
+                    array_push($authors, $v['author']);
+                }
                 // Кафедра - автора
                 foreach($divisions->original['department'] as $keyDepartment => $department) {
                     if ($v['author']['department_code'] == $department['ID_DIV']) {
@@ -846,7 +861,7 @@ class PublicationsController extends ASUController
             $rating["articles"]['publishedWithForeignPartners'] += $articles['publishedWithForeignPartners'];
         }
 
-        foreach ($authorsHirschIndex as $key => $value) {
+        foreach ($authors as $key => $value) {
             $rating['countHirschIndex'] += max($value['h_index'], $value['scopus_autor_id']);
         }
         return response()->json([

@@ -153,7 +153,7 @@ class AuthController extends ASUController
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->key . '&token=' . $this->cabinet_service_token), true);
         if ($personCabinet['status'] == 'OK') {
             $request->session()->put('key', $request->key);
-            $userModel = Authors::where("guid", $personCabinet['result']['guid']);
+            $userModel = Authors::where("guid", $personCabinet['result']['guid'])->where("name", $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic']);
             if($userModel->exists()) {
                 $divisions = $this->getDivisions();
                 $person = $userModel->first();

@@ -83,7 +83,7 @@
                                         <select class="item-value" v-model="jobType" @change="setJobType">
                                             <option value="1">Учбовий заклад</option>
                                             <option value="2">Підприємство</option>
-                                            <option value="3">Студент / Випускник</option>
+                                            <option value="3">Студент - випускник</option>
                                             <option value="0">Не працює</option>
                                         </select>
                                     </div>

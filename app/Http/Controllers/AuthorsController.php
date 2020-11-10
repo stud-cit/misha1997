@@ -31,20 +31,34 @@ class AuthorsController extends ASUController
         if($request->name != '') {
             $model->where('name', 'like', "%".$request->name."%");
         }
-
-        if($request->faculty_code != '') {
-            $model->where('faculty_code', $request->faculty_code);
-        }
-
-        if($request->department_code != '') {
-            $model->where('department_code', $request->department_code);
-        }
-
+        
         if($request->all == 'true') {
             $data = $model->get();
         } else {
             $data = $model->where('categ_1', "!=", 1)->where('guid', "!=", null)->get();
         }
+
+        if($request->department_code != '') {
+            $departments_id = [$request->department_code];
+            foreach($divisions->original['department'] as $k2 => $v2) {
+                if ($v2['ID_PAR'] == $request->department_code) {
+                    array_push($departments_id, $v2['ID_DIV']);
+                }
+            }
+            $model->whereIn('department_code', $departments_id);
+        } else {
+            if($request->faculty_code != '') {
+                $departments_id = [$request->faculty_code];
+                foreach($divisions->original['department'] as $k2 => $v2) {
+                    if ($v2['ID_PAR'] == $request->faculty_code) {
+                        array_push($departments_id, $v2['ID_DIV']);
+                    }
+                }
+                $model->whereIn('faculty_code', $departments_id);
+            }
+        }
+
+        $data = $model->get();
 
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);

@@ -33,7 +33,17 @@
             </div>
         </form>
         <div class="step-button-group">
-            <button @click="save()" class="next">Продовжити</button>
+            <button @click="save()" class="next" :disabled="loading">
+                <span
+                    class="spinner-border spinner-border-sm"
+                    style="width: 25px; height: 25px"
+                    role="status"
+                    aria-hidden="true"
+                    v-if="loading"
+                ></span>
+                <span class="sr-only" v-if="loading">Loading...</span>
+                Продовжити
+            </button>
         </div>
     </div>
 </template>
@@ -42,6 +52,7 @@
     export default {
         data() {
             return {
+                loading: false,
                 name: "",
                 data: {
                     country: "Україна",
@@ -60,10 +71,13 @@
                 this.name = this.$store.getters.authUser.surname + " " + this.$store.getters.authUser.name + " " + this.$store.getters.authUser.patronymic
             },
             save() {
+                this.loading = true;
                 axios.post('/api/register', this.data)
                     .then((response) => {
                         this.$store.dispatch('setUser', response.data)
                         this.$router.push('/home');
+                    }).catch(() => {
+                        this.loading = false;
                     })
             }
         },

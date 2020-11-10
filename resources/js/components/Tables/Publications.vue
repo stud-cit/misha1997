@@ -3,6 +3,7 @@
         <paginate
             v-model="pagination.currentPage"
             :page-count="pagination.numPage"
+            @click.native = "scrollHeader()"
 
             :prev-text="'<'"
             :next-text="'>'"
@@ -14,10 +15,11 @@
             next-class="page-link">
         </paginate>
         <div class="table-responsive text-center table-list">
-            <table class="table table-bordered">
-                    <tr>
-                        <td colspan="10" class="bg-white text-left">Всього публікацій: {{publications.length}}</td>
-                    </tr>
+            <table id="header-table" class="table table-bordered">
+                <tr>
+                    <td colspan="10" class="bg-white text-left">Всього публікацій: {{publications.length}}</td>
+                </tr>
+                <thead>
                     <tr>
                         <th scope="col">№</th>
                         <th scope="col">Вид публікації</th>
@@ -60,10 +62,7 @@
                         </td>
                     </tr>
                     <tr>
-                           
-                            
-                            <td colspan="10" class="text-left">Всього публікацій: {{publications.length}} </td>
-                           
+                        <td colspan="10" class="text-left">Всього публікацій: {{ publications.length }} </td>
                     </tr>
                 </tbody>
             </table>
@@ -77,6 +76,7 @@
         <paginate
             v-model="pagination.currentPage"
             :page-count="pagination.numPage"
+            @click.native = "scrollHeader()"
 
             :prev-text="'<'"
             :next-text="'>'"
@@ -105,12 +105,14 @@ export default {
             pagination: {
                 currentPage: 1,
                 perPage: 10,
-                numPage: 1,
-                count_public: 0
+                numPage: 1
             },
         }
     },
     methods: {
+        scrollHeader() {
+            document.location = '#header-table';
+        },
         selectItem(item) {
             this.$emit('select', item);
         }
@@ -126,6 +128,9 @@ export default {
             }
         },
         filterList() {
+            this.currentPage = 1;
+            this.perPage = 10;
+            this.numPage = 1;
             this.pagination.numPage = Math.ceil(this.publications.length / this.pagination.perPage);
             return this.publications.slice((this.pagination.currentPage - 1) * this.pagination.perPage, this.pagination.currentPage * this.pagination.perPage);
         }
