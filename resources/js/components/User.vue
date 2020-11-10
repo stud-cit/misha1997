@@ -5,7 +5,14 @@
             <ul class=" list-view">
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Прізвище, ім’я, по-батькові:</div>
-                    <div class="col-lg-9 list-item list-text">{{data.name}}</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
+                            <input class="item-value" type="text" v-model="data.name">
+                        </div>
+                        <div v-else>
+                            {{data.name}}
+                        </div>
+                    </div>
                 </li>
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Роль:</div>
@@ -26,27 +33,70 @@
                 </li>
                 <li class="row">
                     <div class="col-lg-3 list-item list-title" v-if="data.job">Місце роботи:</div>
-                    <div class="col-lg-9 list-item list-text">{{data.job}}</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
+                                <input class="item-value" type="text" v-model="data.job">
+                        </div>
+                        <div v-else>
+                            {{data.job}}
+                        </div>
+                    </div>
                 </li>
                 <li class="row" v-if="data.position">
                     <div class="col-lg-3 list-item list-title">Посада:</div>
-                    <div class="col-lg-9 list-item list-text">{{data.position}}</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
+                                <input class="item-value" type="text" v-model="data.position">
+                        </div>
+                        <div v-else>
+                            {{data.position}}
+                        </div>
+                    </div>
                 </li>
                 <li class="row" v-if="data.faculty">
                     <div class="col-lg-3 list-item list-title">Інститут/факультет:</div>
-                    <div class="col-lg-9 list-item list-text">{{data.faculty}}</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
+                                <input class="item-value" type="text" v-model="data.faculty">
+                        </div>
+                        <div v-else>
+                            {{data.faculty}}
+                        </div>
+                    </div>
                 </li>
                 <li class="row" v-if="data.department && (data.faculty != data.department)">
                     <div class="col-lg-3 list-item list-title">Кафедра:</div>
-                    <div class="col-lg-9 list-item list-text">{{data.department}}</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
+                                <input class="item-value" type="text" v-model="data.department">
+                        </div>
+                        <div v-else>
+                            {{data.department}}
+                        </div>
+                    </div>
                 </li>
                 <li class="row" v-if="data.academic_code">
                     <div class="col-lg-3 list-item list-title">Академічна група:</div>
-                    <div class="col-lg-9 list-item list-text">{{data.academic_code}}</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
+                                <input class="item-value" type="text" v-model="data.academic_code">
+                        </div>
+                        <div v-else>
+                            {{data.academic_code}}
+                        </div>
+                    </div>
                 </li>
                 <li class="row">
                     <div class="col-lg-3 list-item list-title">Країна:</div>
-                    <div class="col-lg-9 list-item list-text">{{data.country}}</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
+                               <Country :data="data"></Country>
+                        </div>
+                        <div v-else>
+                            {{data.country}}
+                        </div>
+                    </div>
+                    
                 </li>
                 <li class="row" v-if="!data.guid">
                     <div class="col-lg-3 list-item list-title">Входить до списків Forbes та Fortune:</div>
@@ -189,6 +239,7 @@
 <script>
     import BackButton from "./Buttons/Back";
     import SaveButton from "./Buttons/Save";
+    import Country from "./Forms/Country";
     export default {
         data() {
             return {
@@ -223,7 +274,8 @@
         },
         components: {
             BackButton,
-            SaveButton
+            SaveButton,
+            Country
         },
         mounted () {
             this.getData();

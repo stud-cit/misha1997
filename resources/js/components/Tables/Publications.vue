@@ -15,7 +15,12 @@
         </paginate>
         <div class="table-responsive text-center table-list">
             <table class="table table-bordered">
-                <thead>
+                    <tr>
+                        <td colspan="10" class="text-left">Всього публікацій: {{publications.length}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10" class="bg-white">&nbsp;</td>
+                    </tr>
                     <tr>
                         <th scope="col">№</th>
                         <th scope="col">Вид публікації</th>

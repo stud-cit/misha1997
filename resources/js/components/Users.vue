@@ -50,9 +50,21 @@
                 <button type="button" class="export-button" style="display: inline-block" @click="getData()">Пошук</button>
                 <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">Очистити фільтр</button>
             </form>
-            <div class="table-responsive text-center table-list">
+
+                
+
+            <div class="table-responsive text-center table-list">             
                 <table class="table table-bordered ">
-                    <thead>
+                    <tr>
+                    <td colspan="5"></td>
+                    <td>Всього: {{ count_scopus_autor_id }}</td>
+                    <td>Всього: {{ count_h_index }}</td>
+                    <td>Кількість: {{ count_five_publications }}</td>
+                    <td v-if="authUser.roles_id == 4"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="9" class="bg-white">&nbsp;</td>
+                    </tr>
                         <tr>
                             <th scope="col">№</th>
                             <th scope="col">ПІБ користувача</th>
@@ -65,7 +77,7 @@
                             <th scope="col">5 або більше публікацій у періодичних виданнях в Scopus та/або WoS</th>
                             <th scope="col" v-if="authUser.roles_id == 4">Обрати</th>
                         </tr>
-                    </thead>
+                   
                     <tbody>
                         <tr v-for="(item, index) in filteredList" :key="item.id">
                             <td scope="row">{{ index+1+(currentPage-1)*perPage}}</td>
