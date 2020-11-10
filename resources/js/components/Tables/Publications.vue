@@ -33,7 +33,6 @@
                         <th scope="col" v-if="checkAccess">Редагувати</th>
                         <th scope="col" v-if="checkAccess">Обрати</th>
                     </tr>
-                </thead>
                 <tbody>
                     <tr v-for="(item, index) in filterList" :key="index">
                         <td scope="row">{{ index + 1 + (pagination.currentPage - 1) * pagination.perPage }}</td>
