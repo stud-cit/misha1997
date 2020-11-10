@@ -16,10 +16,7 @@
         <div class="table-responsive text-center table-list">
             <table class="table table-bordered">
                     <tr>
-                        <td colspan="10" class="text-left">Всього публікацій: {{publications.length}}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="10" class="bg-white">&nbsp;</td>
+                        <td colspan="10" class="bg-white text-left">Всього публікацій: {{publications.length}}</td>
                     </tr>
                     <tr>
                         <th scope="col">№</th>

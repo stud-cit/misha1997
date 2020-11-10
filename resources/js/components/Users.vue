@@ -56,14 +56,11 @@
             <div class="table-responsive text-center table-list">             
                 <table class="table table-bordered ">
                     <tr>
-                    <td colspan="5"></td>
-                    <td>Всього: {{ count_scopus_autor_id }}</td>
-                    <td>Всього: {{ count_h_index }}</td>
-                    <td>Кількість: {{ count_five_publications }}</td>
-                    <td v-if="authUser.roles_id == 4"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="9" class="bg-white">&nbsp;</td>
+                    <td class="bg-white" colspan="5"></td>
+                    <td class="bg-white">Всього: {{ count_scopus_autor_id }}</td>
+                    <td class="bg-white">Всього: {{ count_h_index }}</td>
+                    <td class="bg-white">Кількість: {{ count_five_publications }}</td>
+                    <td class="bg-white" v-if="authUser.roles_id == 4"></td>
                     </tr>
                         <tr>
                             <th scope="col">№</th>
