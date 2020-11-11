@@ -167,8 +167,6 @@ class AuthorsController extends ASUController
             'publications.publication.authors.author',
             'publications.publication.publicationType',
             'publications.publication.scienceType',
-            'publications.publication.publicationAdd',
-            'publications.publication.publicationEdit',
             'role'
         )->find($id);
         $data->position = $this->getPosition($data);

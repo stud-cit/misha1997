@@ -177,7 +177,6 @@
                         department_code: this.filters.department_code
                     }
                 }).then(response => {
-                    console.log(response.data)
                     this.data = response.data;
                     this.loading = false;
                 }).catch(() => {
