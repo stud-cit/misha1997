@@ -73,7 +73,6 @@
                         <td class="bg-white">Кількість: {{ count_five_publications }}</td>
                         <td class="bg-white" v-if="authUser.roles_id == 4"></td>
                     </tr>
-                    <thead id="header-table">
                         <tr>
                             <th scope="col">№</th>
                             <th scope="col">ПІБ користувача</th>

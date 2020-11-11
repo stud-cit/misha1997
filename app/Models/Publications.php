@@ -47,7 +47,9 @@ class Publications extends Model
         'db_scopus_percent',
         'db_wos_percent',
         'cited_international_patents',
-        'name_monograph'
+        'name_monograph',
+        'add_user_id',
+        'edit_user_id'
     ];
 
     function authors() {
@@ -60,5 +62,13 @@ class Publications extends Model
 
     function publicationType() {
         return $this->belongsTo('App\Models\PublicationType', 'publication_type_id');
+    }
+
+    function publicationAdd() {
+        return $this->belongsTo('App\Models\Authors', 'add_user_id');
+    }
+
+    function publicationEdit() {
+        return $this->belongsTo('App\Models\Authors', 'edit_user_id');
     }
 }

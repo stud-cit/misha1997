@@ -81,6 +81,14 @@
                         <div class="col-lg-3 list-item list-title">Процитована у міжнародних патентах:</div>
                         <div class="col-lg-9 list-item list-text">{{data.cited_international_patents ? "Так" : "Ні"}}</div>
                     </li>
+                    <li class="row" v-if="data.publication_add!==null">
+                        <div class="col-lg-3 list-item list-title">Користувач, що створив публікацію:</div>
+                        <div class="col-lg-9 list-item list-text"><a :href="'/user/'+data.publication_add.id">{{data.publication_add.name}}</a></div>
+                    </li>
+                    <li class="row" v-if="data.publication_edit!==null">
+                        <div class="col-lg-3 list-item list-title">Редаговано:</div>
+                        <div class="col-lg-9 list-item list-text"><a :href="'/user/'+data.publication_edit.id">{{data.publication_edit.name}}</a></div>
+                    </li>
                 </template>
             </ul>
             

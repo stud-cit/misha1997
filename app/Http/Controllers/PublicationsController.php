@@ -23,7 +23,7 @@ class PublicationsController extends ASUController
     function getAll(Request $request) {
         $divisions = $this->getDivisions();
         $data = [];
-        $model = Publications::with('publicationType', 'scienceType', 'authors.author')->whereHas('authors.author', function($q) use ($request) {
+        $model = Publications::with('publicationType', 'scienceType', 'authors.author', 'publicationAdd', 'publicationEdit')->whereHas('authors.author', function($q) use ($request) {
             if($request->session()->get('person')['roles_id'] == 2) {
                 $q->where('department_code', $request->session()->get('person')['department_code']);
             }
@@ -146,7 +146,7 @@ class PublicationsController extends ASUController
     // публікація по ID
     function getId($id) {
         $divisions = $this->getDivisions();
-        $data = Publications::with('publicationType', 'scienceType', 'authors.author')->find($id);
+        $data = Publications::with('publicationType', 'scienceType', 'authors.author', 'publicationAdd', 'publicationEdit')->find($id);
         $data->authors = AuthorsPublications::with('author')->where('publications_id', $id)->get();
         foreach ($data->authors as $key => $value) {
             foreach($divisions->original['department']  as $k => $v) {
@@ -168,6 +168,7 @@ class PublicationsController extends ASUController
         $modelPublications = new Publications();
         $dataPublications = $request->all();
         $dataPublications['publication_type_id'] = $dataPublications['publication_type']['id'];
+        $dataPublications['add_user_id'] = 1;
         $response = $modelPublications->create($dataPublications);
 
         foreach ($request->authors as $key => $value) {
@@ -202,6 +203,7 @@ class PublicationsController extends ASUController
     function updatePublication(Request $request, $id) {
         $data = $request->all();
         $model = Publications::with('authors', 'publicationType')->find($id);
+        $data['edit_user_id'] = 1;
         $notificationText = "";
 
         // check supervisor
@@ -267,7 +269,7 @@ class PublicationsController extends ASUController
         ];
         $notificationText .= $this->notification($data, $model, "science_type_id", "базу даних", $science_type);
 
-        // тип пцблікації
+        // тип публікації
         if($data['publication_type']['id'] != $model->publication_type_id) {
             $data['publication_type_id'] = $data['publication_type']['id'];
             $notificationText .= "змінено тип публікації: " . $model->publicationType['title'] . " на " . $data['publication_type']['title'] . ";<br>";

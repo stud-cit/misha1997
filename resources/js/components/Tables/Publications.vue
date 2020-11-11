@@ -17,9 +17,8 @@
         <div class="table-responsive text-center table-list">
             <table id="header-table" class="table table-bordered">
                 <tr>
-                    <td colspan="10" class="bg-white text-left">Всього публікацій: {{publications.length}}</td>
+                    <td colspan="12" class="bg-white text-left">Всього публікацій: {{publications.length}}</td>
                 </tr>
-                <thead>
                     <tr>
                         <th scope="col">№</th>
                         <th scope="col">Вид публікації</th>
@@ -29,6 +28,8 @@
                         <th scope="col">БД Scopus/WoS</th>
                         <th scope="col">Науковий керівник</th>
                         <th scope="col">Дата занесення</th>
+                        <th scope="col">Створено</th>
+                        <th scope="col">Редаговано</th>
                         <th scope="col" v-if="checkAccess">Редагувати</th>
                         <th scope="col" v-if="checkAccess">Обрати</th>
                     </tr>
@@ -50,6 +51,16 @@
                             </span>
                         </td>
                         <td>{{ item.date }}</td>
+                        <td>
+                            <a v-if="item.add_user_id!=null" :href="'/user/'+item.publication_add.id"> 
+                                {{item.publication_add ? item.publication_add.name : ""}}
+                            </a>
+                        </td>
+                        <td>
+                            <a v-if="item.edit_user_id!=null" :href="'/user/'+item.publication_edit.id">
+                                {{item.publication_edit ? item.publication_edit.name : ""}}
+                            </a>
+                        </td>
                         <td v-if="checkAccess">
                             <a :href="'/publications/edit/'+item.id"><i class="fa fa-edit fa-2x"></i></a>
                         </td>
@@ -62,7 +73,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="10" class="text-left">Всього публікацій: {{ publications.length }} </td>
+                        <td colspan="12" class="text-left">Всього публікацій: {{ publications.length }} </td>
                     </tr>
                 </tbody>
             </table>
@@ -133,6 +144,7 @@ export default {
             this.numPage = 1;
             this.pagination.numPage = Math.ceil(this.publications.length / this.pagination.perPage);
             return this.publications.slice((this.pagination.currentPage - 1) * this.pagination.perPage, this.pagination.currentPage * this.pagination.perPage);
+                        
         }
     }
 }

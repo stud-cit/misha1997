@@ -49,6 +49,8 @@ class CreatePublicationsTable extends Migration
             $table->boolean('db_scopus_percent')->nullable(); // до 10% за БД Scpous
             $table->boolean('db_wos_percent')->nullable(); // до 1% за БД WoS
             $table->boolean('cited_international_patents')->nullable(); // процитовані у міжнародних патентах
+            $table->foreignId('add_user_id')->nullable(); // Користувач, що створив публікацію
+            $table->foreignId('edit_user_id')->nullable(); // Користувач, що робив останнє редагування публікації
             $table->timestamps();
         });
 
@@ -60,6 +62,13 @@ class CreatePublicationsTable extends Migration
         Schema::table('publications', function (Blueprint $table) {
             $table->index('publication_type_id');
             $table->foreign('publication_type_id')->references('id')->on('publication_type')->onDelete('cascade');
+        });
+
+        Schema::table('publications', function (Blueprint $table) {
+            $table->index('add_user_id');
+            $table->foreign('add_user_id')->references('id')->on('authors')->onDelete('cascade');
+            $table->index('edit_user_id');
+            $table->foreign('edit_user_id')->references('id')->on('authors')->onDelete('cascade');
         });
     }
 
