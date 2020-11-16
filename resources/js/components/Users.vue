@@ -66,13 +66,11 @@
             </paginate>
             <div class="table-responsive text-center table-list">
                 <table class="table table-bordered">
-                    <tr>
-                        <td class="bg-white" colspan="5"></td>
-                        <td class="bg-white">Всього: {{ count_scopus_autor_id }}</td>
-                        <td class="bg-white">Всього: {{ count_h_index }}</td>
-                        <td class="bg-white">Кількість: {{ count_five_publications }}</td>
-                        <td class="bg-white" v-if="authUser.roles_id == 4"></td>
-                    </tr>
+                    <thead id="header-table">
+                        <tr>
+                            <td colspan="8" class="bg-white text-left pr-0 pb-3 pt-0">Всього користувачів: {{ data.length }}</td>
+                            <td class="bg-white px-0 pb-3 pt-0" v-if="authUser.roles_id == 4"></td>
+                        </tr>
                         <tr>
                             <th scope="col">№</th>
                             <th scope="col">ПІБ користувача</th>
@@ -84,6 +82,7 @@
                             <th scope="col">5 або більше публікацій у періодичних виданнях в Scopus та/або WoS</th>
                             <th scope="col" v-if="authUser.roles_id == 4">Обрати</th>
                         </tr>
+                    </thead>
                     <tbody>
                         <tr v-for="(item, index) in filteredList" :key="item.id">
                             <td scope="row">{{ index+1+(currentPage-1)*perPage}}</td>

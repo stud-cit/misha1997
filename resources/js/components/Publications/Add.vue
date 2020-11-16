@@ -67,7 +67,7 @@
                     out_data: "",
                     name_magazine: "",
                     doi: "",
-                    nature_index: "",
+                    nature_index: 2,
                     nature_science: "",
                     db_scopus_percent: "",
                     db_wos_percent: "",

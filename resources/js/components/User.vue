@@ -31,8 +31,8 @@
                         </template>
                     </div>
                 </li>
-                <li class="row">
-                    <div class="col-lg-3 list-item list-title" v-if="data.job">Місце роботи:</div>
+                <li class="row" v-if="data.job">
+                    <div class="col-lg-3 list-item list-title">Місце роботи:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
                                 <input class="item-value" type="text" v-model="data.job">
@@ -46,7 +46,7 @@
                     <div class="col-lg-3 list-item list-title">Посада:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
-                                <input class="item-value" type="text" v-model="data.position">
+                            <input class="item-value" type="text" v-model="data.position">
                         </div>
                         <div v-else>
                             {{data.position}}
@@ -127,7 +127,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="row">
+                <li class="row" style="border-bottom: 0">
                     <div class="col-lg-3 list-item list-title">Індекс Гірша:</div>
                     <div class="col-lg-9  list-item list-text d-flex">
                         <div class="col-lg-6 two-col pr-2">
@@ -146,6 +146,27 @@
                             </div>
                             <div v-else>
                                 {{data.h_index}}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="row" style="border-top: 0">
+                    <div class="col-lg-3 list-item list-title">Без самоцитувань:</div>
+                    <div class="col-lg-9  list-item list-text d-flex">
+                        <div class="col-lg-6 two-col pr-2">
+                            <div class="input-container" v-if="authUser.roles_id == 4">
+                                <input class="item-value" type="text" v-model="data.without_self_citations_scopus">
+                            </div>
+                            <div v-else>
+                                {{data.without_self_citations_scopus}}
+                            </div>
+                        </div>
+                        <div class="col-lg-6 two-col">
+                            <div class="input-container" v-if="authUser.roles_id == 4">
+                                <input class="item-value" type="text" v-model="data.without_self_citations_wos">
+                            </div>
+                            <div v-else>
+                                {{data.without_self_citations_wos}}
                             </div>
                         </div>
                     </div>
@@ -261,6 +282,8 @@
                     scopus_researcher_id: "",
                     orcid: "",
                     five_publications: "",
+                    without_self_citations_wos: "",
+                    without_self_citations_scopus: "",
                     publications: []
                 },
                 pagination: {

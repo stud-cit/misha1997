@@ -16,9 +16,12 @@
         </paginate>
         <div class="table-responsive text-center table-list">
             <table id="header-table" class="table table-bordered">
-                <tr>
-                    <td colspan="12" class="bg-white text-left">Всього публікацій: {{publications.length}}</td>
-                </tr>
+                <thead id="header-table">
+                    <tr>
+                        <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{publications.length}}</td>
+                        <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
+                        <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
+                    </tr>
                     <tr>
                         <th scope="col">№</th>
                         <th scope="col">Вид публікації</th>
@@ -28,11 +31,12 @@
                         <th scope="col">БД Scopus/WoS</th>
                         <th scope="col">Науковий керівник</th>
                         <th scope="col">Дата занесення</th>
-                        <th scope="col">Створено</th>
-                        <th scope="col">Редаговано</th>
+                        <!-- <th scope="col">Створено</th>
+                        <th scope="col">Редаговано</th> -->
                         <th scope="col" v-if="checkAccess">Редагувати</th>
                         <th scope="col" v-if="checkAccess">Обрати</th>
                     </tr>
+                </thead>
                 <tbody>
                     <tr v-for="(item, index) in filterList" :key="index">
                         <td scope="row">{{ index + 1 + (pagination.currentPage - 1) * pagination.perPage }}</td>
@@ -51,7 +55,7 @@
                             </span>
                         </td>
                         <td>{{ item.date }}</td>
-                        <td>
+                        <!-- <td>
                             <a v-if="item.add_user_id!=null" :href="'/user/'+item.publication_add.id"> 
                                 {{item.publication_add ? item.publication_add.name : ""}}
                             </a>
@@ -60,7 +64,7 @@
                             <a v-if="item.edit_user_id!=null" :href="'/user/'+item.publication_edit.id">
                                 {{item.publication_edit ? item.publication_edit.name : ""}}
                             </a>
-                        </td>
+                        </td> -->
                         <td v-if="checkAccess">
                             <a :href="'/publications/edit/'+item.id"><i class="fa fa-edit fa-2x"></i></a>
                         </td>
@@ -87,7 +91,7 @@
         <paginate
             v-model="pagination.currentPage"
             :page-count="pagination.numPage"
-            @click.native = "scrollHeader()"
+            @click.native="scrollHeader()"
 
             :prev-text="'<'"
             :next-text="'>'"
@@ -128,6 +132,16 @@ export default {
             this.$emit('select', item);
         }
     },
+    watch: {
+        publications: {
+            deep: true,
+            handler() {
+                this.pagination.currentPage = 1;
+                this.pagination.perPage = 10;
+                this.pagination.numPage = 1;
+            }
+        }
+    },
     computed: {
         checkAccess() {
             if(this.$store.getters.accessMode == 'open' && this.$route.name == 'my-publications') {
@@ -139,9 +153,6 @@ export default {
             }
         },
         filterList() {
-            this.currentPage = 1;
-            this.perPage = 10;
-            this.numPage = 1;
             this.pagination.numPage = Math.ceil(this.publications.length / this.pagination.perPage);
             return this.publications.slice((this.pagination.currentPage - 1) * this.pagination.perPage, this.pagination.currentPage * this.pagination.perPage);
                         

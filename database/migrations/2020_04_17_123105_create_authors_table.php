@@ -22,7 +22,7 @@ class CreateAuthorsTable extends Migration
             $table->string('faculty_code')->nullable(); // код факультету
             $table->string('department_code')->nullable(); // код кафедри
             $table->string('country')->default("Україна"); // країна
-            $table->integer('h_index')->nullable(); // Індекс Гірша БД Scopus БД WoS
+            $table->integer('h_index')->nullable(); // Індекс Гірша БД WoS
             $table->integer('scopus_autor_id')->nullable(); // Індекс Гірша БД Scopus
             $table->integer('scopus_researcher_id')->nullable(); // Research ID
             $table->string('orcid')->nullable(); // ORCID
@@ -33,6 +33,8 @@ class CreateAuthorsTable extends Migration
             $table->string('token')->nullable(); // token кабінету
             $table->boolean('forbes_fortune')->nullable(); // Входить до списків Forbes та Fortune
             $table->boolean('five_publications')->default(0); // 5 або більше публікацій в Scopus та/або WoS
+            $table->integer('without_self_citations_wos')->nullable(); // Без самоцитувань WoS
+            $table->integer('without_self_citations_scopus')->nullable(); // Без самоцитувань Scopus
             $table->timestamps();
         });
 

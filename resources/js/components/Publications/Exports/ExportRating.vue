@@ -56,11 +56,16 @@
                     <div class="form-row">
                         <div class="form-group col-lg-6">
                             <label >Вид публікацій</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.publication_type_id">
-                                    <option value=""></option>
-                                    <option v-for="(item, index) in publicationTypes" :value="item.id" :key="index">{{item.title}}</option>
-                                </select>
+                            <div class="input-container multiselect">
+                                <multiselect
+                                    v-model="filters.publication_types"
+                                    placeholder=""
+                                    label="title"
+                                    track-by="id"
+                                    :options="publicationTypes"
+                                    :multiple="true"
+                                    :taggable="true"
+                                ></multiselect>
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
@@ -120,17 +125,9 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-lg-6">
-                            <label >Публікації
-                                за авторством та
-                                співавторством студентів</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.withStudents">
-                                    <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
-                                </select>
-                            </div>
+                        <div class="form-group checkbox col-lg-6">
+                            <input v-model="filters.withStudents" type="checkbox" class="form-check-input" id="withStudents">
+                            <label class="form-check-label" for="withStudents">Публікації за авторством та співавторством студентів</label>
                         </div>
                         <div class="form-group col-lg-6">
                             <label >Статті у виданнях, які входять до підбази WoS - SSCI </label>
@@ -158,14 +155,10 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-lg-6">
-                            <label >Публікації за співавторством з представниками інших організацій</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.other_organization ">
-                                    <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
-                                </select>
+                        <div class="form-group checkbox col-lg-6">
+                            <div class="input-container">
+                                <input v-model="filters.other_organization" type="checkbox" class="form-check-input" id="otherOrganization">
+                                <label class="form-check-label" for="otherOrganization">Публікації за співавторством з представниками інших організацій</label>
                             </div>
                         </div>
 
@@ -208,13 +201,16 @@
                         </div>
                         <div class="form-group col-lg-6">
                             <label >Індексування БД Scopus\WoS</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.science_type_id">
-                                    <option value=""></option>
-                                    <option value="1">Scopus</option>
-                                    <option value="2">WoS</option>
-                                    <option value="3">Scopus та WoS</option>
-                                </select>
+                            <div class="input-container">
+                                <multiselect
+                                    v-model="filters.science_types"
+                                    placeholder=""
+                                    label="title"
+                                    track-by="id"
+                                    :options="scienceTypes"
+                                    :multiple="true"
+                                    :taggable="true"
+                                ></multiselect>
                             </div>
                         </div>
                     </div>
@@ -499,6 +495,12 @@
                 </td>
                 <td>{{ ratingData.authorsHasfivePublications }}</td>
             </tr>
+            <tr>
+                <td colspan="3">
+                    Публікації що відноситься до квартиля Q4
+                </td>
+                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.quartile4 }}</td>
+            </tr>
         </table>
 
         <table id="exportList" v-show="false">
@@ -514,10 +516,16 @@
                 <th>Номер (том) </th>
                 <th>Посада</th>
                 <th>Прізвище, ім'я </th>
-                <th>Під керівництвом </th>
-                <th>Прізвище, ініціали наукового керівника </th>
+                <th>Керівник </th>
+                <th>Індекс Гірша WoS </th>
+                <th>Індекс Гірша Scopus </th>
+                <!-- <th>Прізвище, ініціали наукового керівника </th>
+                <th>Індекс Гірша WoS керівника </th>
+                <th>Індекс Гірша Scopus керівника </th> -->
                 <th>Факультет/країна(для співавторів - громадян інших країн) </th>
+                <th>Рейтинг</th>
                 <th>Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ) </th>
+                <th>Рейтинг</th>
                 <th>Іноземець</th>
                 <th>Рік</th>
                 <th>Квартиль журналу Scopus</th>
@@ -533,10 +541,10 @@
             <tr v-for="(a, i) in item.authors" :key="'publication_' + ind + '_author_' + i">
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ind + 1}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.title}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.publication_type.title }}</td>
+                <td>{{ item.publication_type.title }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ (item.science_type_id && item.science_type_id != 2) ? 'Так' : 'Ні' }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ (item.science_type_id && item.science_type_id != 1) ? 'Так' : 'Ні' }}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.country}}</td>
+                <td>{{item.country}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.out_data}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">'{{item.pages}}'</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">'{{item.number}}'</td>
@@ -545,11 +553,14 @@
                 <td v-else-if="a.categ_2 == 1">Співробітник</td>
                 <td v-else-if="a.categ_2 == 2">Викладач</td>
                 <td v-else></td>
-                <td>{{a.name}}</td>
-                <td>{{item.supervisor ? 'Так' : 'Ні'}}</td>
-                <td>{{item.supervisor ? item.supervisor.name : '' }}</td>
-                <td>{{a.faculty ? a.faculty : '' }}</td>
+                <td>{{ a.name }}</td>
+                <td>{{ a.supervisor ? 'Так' : 'Ні' }}</td>
+                <td>{{ a.h_index }}</td>
+                <td>{{ a.scopus_autor_id }}</td>
+                <td>{{ a.faculty ? a.faculty : '' }}</td>
+                <td>0</td>
                 <td>{{a.department ? a.department : a.job}}</td>
+                <td>0</td>
                 <td>{{a.country == 'Україна' ? 'Ні' :  a.country ? 'Так' : 'Не вказано'}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.year}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_scopus}}</td>
@@ -568,6 +579,7 @@
 </template>
 
 <script>
+    import Multiselect from 'vue-multiselect';
     import Country from "../../Forms/Country";
     import XLSX from 'xlsx';
     export default {
@@ -578,6 +590,20 @@
                 departments: [],
                 divisions: [],
                 publicationsData: [],
+                scienceTypes: [
+                    {
+                        id: 1,
+                        title: "Scopus"
+                    },
+                    {
+                        id: 2,
+                        title: "WoS"
+                    },
+                    {
+                        id: 3,
+                        title: "Scopus та WoS"
+                    }
+                ],
 
                 ratingData: {
                     countStudentPublications: 0,
@@ -595,6 +621,7 @@
                         quartile1: 0,
                         quartile2: 0,
                         quartile3: 0,
+                        quartile4: 0,
                     },
                     articleWoS: {
                         scie: 0,
@@ -639,22 +666,22 @@
                     faculty: '',
                     university: '',
                     department: '',
-                    withStudents: '',
+                    withStudents: false,
                     withForeigners: '',
-                    science_type_id: '',
+                    science_types: [],
                     year: '',
                     year_db: new Date().getFullYear(),
                     country: '',
                     quartil_scopus: '',
                     quartil_wos: '',
-                    publication_type_id: '',
+                    publication_types: [],
 
                     snip: '',
                     scie: '',
                     ssci: '',
 
                     doi: '',
-                    other_organization: '',
+                    other_organization: false,
                     abroad: '',
                     applicant: '',
                     commercial_applicant: ''
@@ -662,7 +689,8 @@
             };
         },
         components: {
-            Country
+            Country,
+            Multiselect
         },
         props:{
             publicationTypes: Array,
@@ -683,17 +711,10 @@
                     this.publicationsData = response.data.publications;
                     this.publicationsData.map(publication => {
                         var authors = [];
-                        var supervisor = null;
                         publication.authors.map(author => {
-                            if(author.supervisor == 0) {
-                                authors.push(author.author);
-                            }
-                            if(author.supervisor == 1) {
-                                supervisor = author.author;
-                            }
+                            authors.push(author.author);
                         })
                         publication.authors = authors;
-                        publication.supervisor = supervisor;
                     });
                     this.ratingData = Object.assign(this.ratingData, response.data.rating);
                 }).then(() => {
@@ -743,10 +764,13 @@
                         { wch: 5 }, // Номер (том)
                         { wch: 10 }, // Посада
                         { wch: 15 }, // Прізвище, ім'я
-                        { wch: 5 }, // Під керівництвом
-                        { wch: 15 }, // Прізвище, ініціали наукового керівника
+                        { wch: 5 }, // Керівник
+                        { wch: 5 }, // Індекс Гірша WoS
+                        { wch: 5 }, // Індекс Гірша Scopus
                         { wch: 15 }, // Факультет/країна(для співавторів - громадян інших країн)
+                        { wch: 5 },
                         { wch: 15 }, // Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ)
+                        { wch: 5 },
                         { wch: 4 }, // Іноземець
                         { wch: 5 },  // Рік
                         { wch: 3 }, // Квартиль журналу Scopus
@@ -768,6 +792,14 @@
 </script>
 
 <style lang="scss" scoped>
+    .checkbox input[type=checkbox] {
+        width: 30px; 
+        height: 30px;
+        margin: 0;
+    }
+    .checkbox label {
+        margin-left: 40px;
+    }
     .spinner-border {
         width: 25px;
         height: 25px;
