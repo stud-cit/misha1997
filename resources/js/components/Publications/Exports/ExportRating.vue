@@ -132,7 +132,7 @@
                         <div class="form-group col-lg-6">
                             <label >Статті у виданнях, які входять до підбази WoS - SSCI </label>
                             <div class="input-container ">
-                                <select  v-model="filters.ssci ">
+                                <select  v-model="filters.ssci">
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
@@ -149,8 +149,8 @@
                             <div class="input-container ">
                                 <select  v-model="filters.applicant">
                                     <option value=""></option>
-                                    <option value="СумДУ">Отромані на ім'я СумДУ</option>
-                                    <option value="не СумДУ">отримані не на ім'я СумДУ</option>
+                                    <option value="СумДУ">Отримані на ім'я СумДУ</option>
+                                    <option value="не СумДУ">Отримані не на ім'я СумДУ</option>
                                 </select>
                             </div>
                         </div>
