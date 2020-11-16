@@ -13,18 +13,18 @@ use Session;
 class AuthorsController extends ASUController
 {
     protected $asu_key = 'eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG';
-
+    
     function updateUsers() {
         $model = Authors::get();
         $mode = 1;
-        $categ = 'categ2';
-        $id = 4;
-        $categ_2 = 2;
+        $categ = 'categ1';
+        $id = 2;
+        $categ_1 = 1;
         $getPersons = file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key='.$this->asu_key.'&mode='.$mode.'&'.$categ.'='.$id);
         $getPersons = json_decode($getPersons, true);
 
         foreach ($model as $key => $value) {
-            if($value['categ_2'] == $categ_2) {
+            if($value['categ_1'] == $categ_1) {
                 $userId = array_search($value['guid'], array_column($getPersons['result'], 'ID_FIO'));
                 $division = $this->getUserDivision($getPersons['result'][$userId]['KOD_DIV'])->original;
                 $modelUser = Authors::find($value['id']);

@@ -50,16 +50,33 @@
                 <button type="button" class="export-button" style="display: inline-block" @click="getData()">Пошук</button>
                 <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">Очистити фільтр</button>
             </form>
+            <paginate
+                v-model="currentPage"
+                :page-count="numPage"
+                @click.native = "scrollHeader()"
+
+                prev-text="<"
+                next-text=">"
+
+                container-class="pagination"
+                page-class="page-item"
+                page-link-class="page-link"
+                prev-class="page-link"
+                next-class="page-link">
+            </paginate>
             <div class="table-responsive text-center table-list">
-                <table class="table table-bordered ">
-                    <thead>
+                <table class="table table-bordered">
+                    <thead id="header-table">
+                        <tr>
+                            <td colspan="8" class="bg-white text-left pr-0 pb-3 pt-0">Всього користувачів: {{ data.length }}</td>
+                            <td class="bg-white px-0 pb-3 pt-0" v-if="authUser.roles_id == 4"></td>
+                        </tr>
                         <tr>
                             <th scope="col">№</th>
                             <th scope="col">ПІБ користувача</th>
                             <th scope="col">Посада</th>
                             <th scope="col">Кафедра</th>
                             <th scope="col">Інститут/факультет</th>
-                            <!-- <th scope="col">Вік</th> -->
                             <th scope="col">Індекс Гірша Scopus</th>
                             <th scope="col">Індекс Гірша WoS</th>
                             <th scope="col">5 або більше публікацій у періодичних виданнях в Scopus та/або WoS</th>
@@ -73,7 +90,6 @@
                             <td>{{ item.position }}</td>
                             <td>{{ item.department }}</td>
                             <td>{{ item.faculty }}</td>
-                            <!-- <td>{{ item.age }}</td> -->
                             <td>{{ item.scopus_autor_id }}</td>
                             <td>{{ item.h_index }}</td>
                             <td>{{item.five_publications ? "Так" : "Ні"}}</td>
@@ -86,12 +102,10 @@
                             </td>
                         </tr>
                         <tr>
+                            <td colspan="2">Всього: {{ data.length }}</td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <!-- <td></td> -->
                             <td>Всього: {{ count_scopus_autor_id }}</td>
                             <td>Всього: {{ count_h_index }}</td>
                             <td>Кількість: {{ count_five_publications }}</td>
@@ -107,13 +121,14 @@
                 </div>
             </div>
             <paginate
+                @click.native = "scrollHeader()"
                 v-model="currentPage"
                 :page-count="numPage"
 
-                :prev-text="'<'"
-                :next-text="'>'"
+                prev-text="<"
+                next-text=">"
 
-                :container-class="'pagination'"
+                container-class="pagination"
                 page-class="page-item"
                 page-link-class="page-link"
                 prev-class="page-link"
@@ -140,7 +155,7 @@
                 <th>ORCID</th>
                 <th>5 або більше публікацій у періодичних виданнях в Scopus та/або WoS</th>
             </tr>
-            <tr v-for="(item, i) in filteredList" :key="i">
+            <tr v-for="(item, i) in data" :key="i">
                 <td>{{i+1}}</td>
                 <td>{{item.name}}</td>
                 <td>{{item.age}}</td>
@@ -169,9 +184,6 @@
         mixins: [divisions],
         data() {
             return {
-                count_five_publications: 0,
-                count_h_index: 0,
-                count_scopus_autor_id: 0,
                 loading: true,
                 data: [],
                 selectUsers: [],
@@ -192,25 +204,38 @@
             DeleteButton
         },
         computed: {
+            count_scopus_autor_id() {
+                let result = 0;
+                this.data.map(item => {
+                    if(item.scopus_autor_id) {
+                        result += +item.scopus_autor_id;
+                    }
+                });
+                return result;
+            },
+            count_h_index() {
+                let result = 0;
+                this.data.map(item => {
+                    if(item.h_index) {
+                        result += +item.h_index;
+                    }
+                });
+                return result;
+            },
+            count_five_publications() {
+                let result = 0;
+                this.data.map(item => {
+                    if(item.five_publications) {
+                        result ++;
+                    }
+                });
+                return result;
+            },
             authUser() {
                 return this.$store.getters.authUser
             },
             filteredList() {
                 this.numPage = Math.ceil(this.data.length/this.perPage);
-                this.count_five_publications = 0;
-                this.count_h_index = 0;
-                this.count_scopus_autor_id = 0;
-                this.data.map(item => {
-                    if(item.h_index) {
-                        this.count_h_index += +item.h_index;
-                    }
-                    if(item.h_index) {
-                        this.count_scopus_autor_id += +item.scopus_autor_id;
-                    }
-                    if(item.five_publications) {
-                        this.count_five_publications++;
-                    }
-                });
                 this.$store.dispatch('saveFilterUser', this.filters);
                 return this.data.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
             }
@@ -222,6 +247,9 @@
             this.getData();
         },
         methods: {
+            scrollHeader() {
+                document.location = '#header-table';
+            },
             getData() {
                 axios.get('/api/authors', {
                     params: {
@@ -232,6 +260,9 @@
                     }
                 }).then(response => {
                     this.data = response.data;
+                    this.currentPage = 1;
+                    this.perPage = 10;
+                    this.numPage = 1;
                     this.loading = false;
                 }).catch(() => {
                     this.loading = false;

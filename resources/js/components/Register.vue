@@ -36,6 +36,7 @@
             <button @click="save()" class="next" :disabled="loading">
                 <span
                     class="spinner-border spinner-border-sm"
+                    style="width: 25px; height: 25px"
                     role="status"
                     aria-hidden="true"
                     v-if="loading"
@@ -71,13 +72,12 @@
             },
             save() {
                 this.loading = true;
-                return
                 axios.post('/api/register', this.data)
                     .then((response) => {
                         this.$store.dispatch('setUser', response.data)
                         this.$router.push('/home');
                     }).catch(() => {
-                        this.loading false;
+                        this.loading = false;
                     })
             }
         },

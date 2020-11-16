@@ -3,6 +3,7 @@
         <paginate
             v-model="pagination.currentPage"
             :page-count="pagination.numPage"
+            @click.native = "scrollHeader()"
 
             :prev-text="'<'"
             :next-text="'>'"
@@ -14,8 +15,13 @@
             next-class="page-link">
         </paginate>
         <div class="table-responsive text-center table-list">
-            <table class="table table-bordered">
-                <thead>
+            <table id="header-table" class="table table-bordered">
+                <thead id="header-table">
+                    <tr>
+                        <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{publications.length}}</td>
+                        <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
+                        <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
+                    </tr>
                     <tr>
                         <th scope="col">№</th>
                         <th scope="col">Вид публікації</th>
@@ -25,6 +31,8 @@
                         <th scope="col">БД Scopus/WoS</th>
                         <th scope="col">Науковий керівник</th>
                         <th scope="col">Дата занесення</th>
+                        <!-- <th scope="col">Створено</th>
+                        <th scope="col">Редаговано</th> -->
                         <th scope="col" v-if="checkAccess">Редагувати</th>
                         <th scope="col" v-if="checkAccess">Обрати</th>
                     </tr>
@@ -47,6 +55,16 @@
                             </span>
                         </td>
                         <td>{{ item.date }}</td>
+                        <!-- <td>
+                            <a v-if="item.add_user_id!=null" :href="'/user/'+item.publication_add.id"> 
+                                {{item.publication_add ? item.publication_add.name : ""}}
+                            </a>
+                        </td>
+                        <td>
+                            <a v-if="item.edit_user_id!=null" :href="'/user/'+item.publication_edit.id">
+                                {{item.publication_edit ? item.publication_edit.name : ""}}
+                            </a>
+                        </td> -->
                         <td v-if="checkAccess">
                             <a :href="'/publications/edit/'+item.id"><i class="fa fa-edit fa-2x"></i></a>
                         </td>
@@ -59,10 +77,7 @@
                         </td>
                     </tr>
                     <tr>
-                           
-                            
-                            <td colspan="10" class="text-left">Всього публікацій: {{publications.length}} </td>
-                           
+                        <td colspan="12" class="text-left">Всього публікацій: {{ publications.length }} </td>
                     </tr>
                 </tbody>
             </table>
@@ -76,6 +91,7 @@
         <paginate
             v-model="pagination.currentPage"
             :page-count="pagination.numPage"
+            @click.native="scrollHeader()"
 
             :prev-text="'<'"
             :next-text="'>'"
@@ -104,14 +120,26 @@ export default {
             pagination: {
                 currentPage: 1,
                 perPage: 10,
-                numPage: 1,
-                count_public: 0
+                numPage: 1
             },
         }
     },
     methods: {
+        scrollHeader() {
+            document.location = '#header-table';
+        },
         selectItem(item) {
             this.$emit('select', item);
+        }
+    },
+    watch: {
+        publications: {
+            deep: true,
+            handler() {
+                this.pagination.currentPage = 1;
+                this.pagination.perPage = 10;
+                this.pagination.numPage = 1;
+            }
         }
     },
     computed: {
@@ -127,6 +155,7 @@ export default {
         filterList() {
             this.pagination.numPage = Math.ceil(this.publications.length / this.pagination.perPage);
             return this.publications.slice((this.pagination.currentPage - 1) * this.pagination.perPage, this.pagination.currentPage * this.pagination.perPage);
+                        
         }
     }
 }

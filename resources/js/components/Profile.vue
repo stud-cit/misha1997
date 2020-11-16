@@ -50,7 +50,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="row">
+                <li class="row" style="border-bottom: 0">
                     <div class="col-lg-3 list-item list-title">Індекс Гірша:</div>
                     <div class="col-lg-9  list-item list-text d-flex">
                         <div class="col-lg-6 two-col pr-2">
@@ -63,6 +63,21 @@
                             <label>БД WoS</label>
                             <div class=" input-container">
                                 <input class="item-value" type="text" v-model="data.h_index">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="row" style="border-top: 0">
+                    <div class="col-lg-3 list-item list-title">Без самоцитувань:</div>
+                    <div class="col-lg-9  list-item list-text d-flex">
+                        <div class="col-lg-6 two-col pr-2">
+                            <div class=" input-container">
+                                <input class="item-value" type="text" v-model="data.without_self_citations_scopus">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 two-col">
+                            <div class=" input-container">
+                                <input class="item-value" type="text" v-model="data.without_self_citations_wos">
                             </div>
                         </div>
                     </div>
@@ -114,7 +129,9 @@
                     scopus_researcher_id: "",
                     orcid: "",
                     forbes_fortune: "",
-                    five_publications: ""
+                    five_publications: "",
+                    without_self_citations_wos: "",
+                    without_self_citations_scopus: "",
                 }
             }
         },
