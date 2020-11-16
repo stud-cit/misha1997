@@ -15,6 +15,27 @@ class ASUController extends Controller
     // 9 - факультет
     // 2 - кафедра
 
+    function getUserDivision($department_code) {
+        $divisions = json_decode(file_get_contents($this->asu_sumdu_api . $this->asu_key), true)['result'];
+        $sectionId = array_search($department_code, array_column($divisions, 'ID_DIV'));
+        $departmentId = array_search($divisions[$sectionId]['ID_PAR'], array_column($divisions, 'ID_DIV'));
+        $facultyId = array_search($divisions[$departmentId]['ID_PAR'], array_column($divisions, 'ID_DIV'));
+        if(!$departmentId) {
+            $departmentId = $sectionId;
+            $sectionId = null;
+        }
+        if(!$facultyId) {
+            $facultyId = $departmentId;
+            $departmentId = $sectionId;
+            $sectionId = null;
+        }
+        return response([
+            "section" => $sectionId ? $divisions[$sectionId] : null,
+            "department" => $departmentId ? $divisions[$departmentId] : null,
+            "institute" => $facultyId ? $divisions[$facultyId] : null,
+        ]);
+    }
+
     function getDivisions() {
         $result = [
             "institute" => [], // iнститут, факультет

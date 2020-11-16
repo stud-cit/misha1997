@@ -12,9 +12,33 @@ use Session;
 
 class AuthorsController extends ASUController
 {
+    protected $asu_key = 'eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG';
+
+    function updateUsers() {
+        $model = Authors::get();
+        $mode = 1;
+        $categ = 'categ2';
+        $id = 4;
+        $categ_2 = 2;
+        $getPersons = file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key='.$this->asu_key.'&mode='.$mode.'&'.$categ.'='.$id);
+        $getPersons = json_decode($getPersons, true);
+
+        foreach ($model as $key => $value) {
+            if($value['categ_2'] == $categ_2) {
+                $userId = array_search($value['guid'], array_column($getPersons['result'], 'ID_FIO'));
+                $division = $this->getUserDivision($getPersons['result'][$userId]['KOD_DIV'])->original;
+                $modelUser = Authors::find($value['id']);
+                $modelUser->update([
+                    "department_code" => $division['department'] ? $division['department']['ID_DIV'] : null,
+                    "faculty_code" => $division['institute'] ? $division['institute']['ID_DIV'] : null
+                ]);
+            }
+        }
+        return response('ok', 200);
+    }
+
     // authors
     function get(Request $request) {
-        $divisions = $this->getDivisions();
         $data = [];
         $model = Authors::with('role')->orderBy('created_at', 'DESC');
         if($request->session()->get('person')['roles_id'] == 3) {
@@ -48,55 +72,32 @@ class AuthorsController extends ASUController
 
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
-            foreach($divisions->original['institute'] as $k => $v) {
-                if ($value['faculty_code'] == $v['ID_DIV']) {
-                    $value['faculty'] = $v['NAME_DIV'];
-                }
-            }
-            foreach($divisions->original['department']  as $k => $v) {
-                if ($value['department_code'] == $v['ID_DIV']) {
-                    $value['department'] = $v['NAME_DIV'];
-                    foreach($divisions->original['institute'] as $k2 => $v2) {
-                        if ($v['ID_PAR'] == $v2['ID_DIV']) {
-                            $value['faculty'] = $v2['NAME_DIV'];
-                        }
-                    }
-                }
-            }
+            $kod_div = $value['department_code'] ? $value['department_code'] : $value['faculty_code'];
+            $division = $this->getUserDivision($kod_div)->original;
+            $value['department'] = $division['department'] ? $division['department']['NAME_DIV'] : null;
+            $value['faculty'] = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
         }
         return response()->json($data);
     }
 
     // authors All (admin)
     function getAll(Request $request) {
-        $divisions = $this->getDivisions();
         $data = Authors::with('role')->get();
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
-            foreach($divisions->original['institute'] as $k => $v) {
-                if ($value['faculty_code'] == $v['ID_DIV']) {
-                    $value['faculty'] = $v['NAME_DIV'];
-                }
-            }
-            foreach($divisions->original['department']  as $k => $v) {
-                if ($value['department_code'] == $v['ID_DIV']) {
-                    $value['department'] = $v['NAME_DIV'];
-                    foreach($divisions->original['institute'] as $k2 => $v2) {
-                        if ($v['ID_PAR'] == $v2['ID_DIV']) {
-                            $value['faculty'] = $v2['NAME_DIV'];
-                        }
-                    }
-                }
-            }
+            $kod_div = $value['department_code'] ? $value['department_code'] : $value['faculty_code'];
+            $division = $this->getUserDivision($kod_div)->original;
+            $value['department'] = $division['department'] ? $division['department']['NAME_DIV'] : null;
+            $value['faculty'] = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
         }
         return response()->json($data);
     }
 
     // cabinet users (add publication page)
     function getPersons($categ, $id) {
-        $asu_key = 'eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG';
+        
         $mode = 1;
-        $getPersons = file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key='.$asu_key.'&mode='.$mode.'&'.$categ.'='.$id);
+        $getPersons = file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key='.$this->asu_key.'&mode='.$mode.'&'.$categ.'='.$id);
         $getPersons = json_decode($getPersons, true);
         $result = [];
         foreach ($getPersons['result'] as $key => $value) {
@@ -117,24 +118,15 @@ class AuthorsController extends ASUController
 
     // profile (Сторінка профілю)
     function profile(Request $request) {
-        $divisions = $this->getDivisions();
         $data = Authors::with('role')->find($request->session()->get('person')['id']);
         $data->position = $this->getPosition($data);
-        foreach($divisions->original['institute'] as $k => $v) {
-            if ($data->faculty_code == $v['ID_DIV']) {
-                $data->faculty = $v['NAME_DIV'];
-            }
-        }
-        foreach($divisions->original['department']  as $k => $v) {
-            if ($data->department_code == $v['ID_DIV']) {
-                $data->department = $v['NAME_DIV'];
-                foreach($divisions->original['institute'] as $k2 => $v2) {
-                    if ($v['ID_PAR'] == $v2['ID_DIV']) {
-                        $data->faculty = $v2['NAME_DIV'];
-                    }
-                }
-            }
-        }
+
+        $kod_div = $data->department_code ? $data->department_code : $data->faculty_code;
+
+        $division = $this->getUserDivision($kod_div)->original;
+        $data->department = $division['department'] ? $division['department']['NAME_DIV'] : null;
+        $data->faculty = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
+
         return response()->json($data);
     }
 
@@ -148,7 +140,6 @@ class AuthorsController extends ASUController
 
     // getId (Користувач по id)
     function getId($id) {
-        $divisions = $this->getDivisions();
         $data = Authors::with(
             'publications.publication.authors.author',
             'publications.publication.publicationType',
@@ -156,21 +147,13 @@ class AuthorsController extends ASUController
             'role'
         )->find($id);
         $data->position = $this->getPosition($data);
-        foreach($divisions->original['institute'] as $k => $v) {
-            if ($data->faculty_code == $v['ID_DIV']) {
-                $data->faculty = $v['NAME_DIV'];
-            }
-        }
-        foreach($divisions->original['department']  as $k => $v) {
-            if ($data->department_code == $v['ID_DIV']) {
-                $data->department = $v['NAME_DIV'];
-                foreach($divisions->original['institute'] as $k2 => $v2) {
-                    if ($v['ID_PAR'] == $v2['ID_DIV']) {
-                        $data->faculty = $v2['NAME_DIV'];
-                    }
-                }
-            }
-        }
+
+        $kod_div = $data->department_code ? $data->department_code : $data->faculty_code;
+
+        $division = $this->getUserDivision($kod_div)->original;
+        $data->department = $division['department'] ? $division['department']['NAME_DIV'] : null;
+        $data->faculty = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
+
         foreach ($data['publications'] as $key => $publication) {
             $publication['publication']['date'] = Carbon::parse($publication['publication']['created_at'])->format('d.m.Y');
         }
@@ -200,48 +183,17 @@ class AuthorsController extends ASUController
     // додання автора з СумДУ
     function postAuthorSSU(Request $request) {
         if(!Authors::where("guid", $request->guid)->where("name", "like", $request->name)->exists()) {
-            $divisions = $this->getDivisions();
             $model = new Authors();
             $data = $request->all();
-            $data['department_code'] = null;
-            $data['faculty_code'] = null;
 
-            foreach($divisions->original['department'] as $k2 => $v2) {
-                if ($request->kod_div == $v2['ID_DIV']) {
-                    $data['department_code'] = $v2['ID_DIV'];
-                }
-            }
-
-            if($data['department_code']) {
-                foreach($divisions->original['department']  as $k => $v) {
-                    if ($data['department_code'] == $v['ID_DIV']) {
-                        foreach($divisions->original['institute'] as $k2 => $v2) {
-                            if ($v['ID_PAR'] == $v2['ID_DIV']) {
-                                $data['faculty_code'] = $v2['ID_DIV'];
-                            }
-                        }
-                    }
-                }
-            }
-
-            foreach($divisions->original['institute'] as $k2 => $v2) {
-                if ($request->kod_div == $v2['ID_DIV']) {
-                    $data['faculty_code'] = $v2['ID_DIV'];
-                }
-            }
-
+            $division = $this->getUserDivision($request->kod_div)->original;
+            $data['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
+            $data['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+            
             $response = $model->create($data);
 
-            foreach($divisions->original['department']  as $k => $v) {
-                if ($response['department_code'] == $v['ID_DIV']) {
-                    $response['department'] = $v['NAME_DIV'];
-                }
-            }
-            foreach($divisions->original['institute'] as $k => $v) {
-                if ($response['faculty_code'] == $v['ID_DIV']) {
-                    $response['faculty'] = $v['NAME_DIV'];
-                }
-            }
+            $response['department'] = $division['department'] ? $division['department']['NAME_DIV'] : null;
+            $response['faculty'] = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
 
             return response()->json([
                 "status" => "ok",
