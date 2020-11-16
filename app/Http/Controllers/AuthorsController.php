@@ -31,7 +31,44 @@ class AuthorsController extends ASUController
         if($request->name != '') {
             $model->where('name', 'like', "%".$request->name."%");
         }
+
+        if($request->country == 'true') {
+            $data = $model->where('country', '!=','Україна')->get();
+        }
         
+        if($request->five_publications  == 'true') {
+            $data= $model->where('five_publications', '1')->get();
+        }
+        
+        if($request->h_index == '1') {
+            $data = $model->where('h_index', '!=', null)->orWhere('scopus_autor_id', '!=', null)->get();
+        }
+
+        if($request->h_index == '0') {
+            $data = $model->where('h_index', null)->where('scopus_autor_id', null)->get();
+        }
+
+        if($request->h_index == '10') {
+            $data = $model->where('h_index','>=', 10)->orWhere('scopus_autor_id', '>=', 10)->get();
+        }
+
+        // if(count($request->science_types) > 0) {
+        //     $data->whereIn('science_type_id', array_column($request->science_types, 'id')); // Індексування БД Scopus/WoS
+        // }
+
+        if($request->categ_users[0]) {
+            $data = $model->where('job', 'СумДУ')->get();
+        }
+
+        if($request->categ_users[1]) {
+            $data = $model->where('guid', null)->get();
+        }
+
+        if($request->categ_users == '3') {
+            $data = $model->where('categ_1', 1)->get();
+        }
+        
+
         if($request->all == 'true') {
             $data = $model->get();
         } else {

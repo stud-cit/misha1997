@@ -63,7 +63,7 @@
     import CloseEditButton from "../../Buttons/CloseEdit";
     import years from '../../mixins/years';
     import {required, requiredIf} from "vuelidate/lib/validators";
-    import Multiselect from 'vue-multiselect';
+
     export default {
         mixins: [years],
         props: {
@@ -71,8 +71,7 @@
         },
         components: {
             Country,
-            CloseEditButton,
-            Multiselect
+            CloseEditButton
         },
         validations: {
             publicationData: {
