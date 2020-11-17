@@ -28,7 +28,8 @@ class Authors extends Model
         'forbes_fortune',
         'token',
         'without_self_citations_wos',
-        'without_self_citations_scopus'
+        'without_self_citations_scopus',
+        'test_data'
     ];
 
     protected $hidden = ['created_at', 'updated_at'];

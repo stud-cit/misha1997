@@ -56,6 +56,8 @@ class AuthController extends ASUController {
             $data['guid'] = $personCabinet['result']['guid'];
             $data['token'] = $personCabinet['result']['token'];
 
+            $data['test_data'] = json_encode($personCabinet['result']);
+
             $kod_div = null;
 
             if(isset($personCabinet['result']['info1'])) {
@@ -103,6 +105,8 @@ class AuthController extends ASUController {
                 $person->name = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
                 $person->job = "СумДУ";
                 $person->token = $personCabinet['result']['token'];
+
+                $person->test_data = json_encode($personCabinet['result']);
 
                 $kod_div = null;
 

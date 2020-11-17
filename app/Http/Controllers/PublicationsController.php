@@ -528,9 +528,12 @@ class PublicationsController extends ASUController
                 });
             }
             if($request->withForeigners == 0) {
-                $data->whereHas('authors.author', function($q) {
-                    $q->where('country', "Україна");
+                $query2 = clone $data;
+                $query2->whereHas('authors.author', function($q) {
+                    $q->where('country', '!=', "Україна");
                 });
+                $ids = $query2->pluck('id')->toArray();
+                $data->whereNotIn('id', $ids);
             }
             if($request->withForeigners == 10) {
                 $data->whereHas('authors.author', function($q) {
@@ -712,14 +715,14 @@ class PublicationsController extends ASUController
                 // Кафедра - автора
                 foreach($divisions->original['department'] as $keyDepartment => $department) {
                     if ($v['author']['department_code'] == $department['ID_DIV']) {
-                        $v['author']['department'] = $department['NAME_DIV'];
+                        $v['author']['department'] = $department['ABBR_DIV'];
                     }
                 }
 
                 // Інcтитут / факультет - автора
                 foreach($divisions->original['institute'] as $keyInstitute => $institute) {
                     if ($v['author']['faculty_code'] == $institute['ID_DIV']) {
-                        $v['author']['faculty'] = $institute['NAME_DIV'];
+                        $v['author']['faculty'] = $institute['ABBR_DIV'];
                     }
                 }
 

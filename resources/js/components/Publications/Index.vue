@@ -8,7 +8,7 @@
         <!-- exports-->
         <div class="exports">
             <export-rating v-if="authUser.roles_id != 1" :publicationTypes="publicationTypes" :years="years" class="export-block"></export-rating>
-            <export-publications class="export-block" :exportList="exportPublication"></export-publications>
+            <export-publications class="export-block" :exportList="data"></export-publications>
         </div>
         <!---->
         <div class="main-content">
