@@ -5,13 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        user: {
-            id: 1,
-            guid: '22e6106c-c580-e711-8194-001a4be6d04a',
-            job: 'СумДУ',
-            name: 'Admin',
-            roles_id: 4
-        },
+        user: null,
         access: 'open',
     },
     mutations: {

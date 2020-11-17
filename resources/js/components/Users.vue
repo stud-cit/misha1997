@@ -308,7 +308,6 @@
                         categ_users: this.filters.categ_users
                     }
                 }).then(response => {
-                    console.log(response.data)
                     this.data = response.data;
                     this.currentPage = 1;
                     this.perPage = 10;

@@ -29,96 +29,96 @@ let router = new Router({
             path: '/',
             name: 'auth',
             component: Auth,
-            // meta: {
-            //     middleware: guest
-            // }
+            meta: {
+                middleware: guest
+            }
         },
         {
             path: '/home',
             name: 'home',
             component: Home,
-            // meta: {
-            //     middleware: auth
-            // }
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '/register',
             name: 'register',
             component: Register,
-            // meta: {
-            //     middleware: register
-            // }
+            meta: {
+                middleware: register
+            }
         },
         {
             path: '/profile',
             name: 'profile',
             component: Profile,
-            // meta: {
-            //     middleware: auth
-            // }
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '/user/:id',
             name: 'user',
             component: User,
-            // meta: {
-            //     middleware: auth
-            // }
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '/publications',
             name: 'publications',
             component: Publications,
-            // meta: {
-            //     middleware: auth
-            // }
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '/my-publications',
             name: 'my-publications',
             component: MyPublications,
-            // meta: {
-            //     middleware: auth
-            // }
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '/publications/add',
             name: 'publications-add',
             component: PublicationsAdd,
-            // meta: {
-            //     middleware: auth
-            // }
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '/publications/:id',
             component: PublicationsView,
-            // meta: {
-            //     middleware: auth
-            // }
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '/publications/edit/:id',
             name: 'publications-edit',
             component: PublicationsEdit,
-            // meta: {
-            //     middleware: auth
-            // }
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '/notifications',
             name: 'notifications',
             component: Notifications,
-            // meta: {
-            //     middleware: auth
-            // }
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '/users',
             name: 'users',
             component: Users,
-            // meta: {
-            //     middleware: auth
-            // }
+            meta: {
+                middleware: auth
+            }
         },
         {
             path: '*',
