@@ -80,27 +80,18 @@ class AuthorsController extends ASUController
             $data = $model->where('h_index','>=', 10)->orWhere('scopus_autor_id', '>=', 10)->get();
         }
 
-        // if(count($request->science_types) > 0) {
-        //     $data->whereIn('science_type_id', array_column($request->science_types, 'id')); // Індексування БД Scopus/WoS
-        // }
-
-        if($request->categ_users[0]) {
-            $data = $model->where('job', 'СумДУ')->get();
-        }
-
-        if($request->categ_users[1]) {
-            $data = $model->where('guid', null)->get();
-        }
-
-        if($request->categ_users == '3') {
-            $data = $model->where('categ_1', 1)->get();
-        }
-        
-
-        if($request->all == 'true') {
-            $data = $model->get();
-        } else {
-            $data = $model->where('categ_1', "!=", 1)->where('guid', "!=", null)->get();
+        if(isset($request->categ_users)) {
+            foreach($request->categ_users as $key => $value) {
+                if($value == "Користувачі СумДУ") {
+                    $model->orWhere('job', 'СумДУ');
+                }
+                if($value == "Зовнішні співавтори") {
+                    $model->orWhere('guid', null);
+                }
+                if($value == "Студенти") {
+                    $model->orWhere('categ_1', 1);
+                }
+            }
         }
 
         if($request->department_code != '') {

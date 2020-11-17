@@ -50,8 +50,6 @@
                             <multiselect
                                 v-model="filters.categ_users"
                                 placeholder=""
-                                label="title"
-                                track-by="id"
                                 :options="categUsers"
                                 :multiple="true"
                                 :taggable="true"
@@ -65,7 +63,7 @@
                                 <option value=""></option>
                                 <option value="1">Так</option>
                                 <option value="0">Ні</option>
-                                <option value="10">В тому числі мають індекс гірша за Scopus та WoS не нижче 10</option>
+                                <option value="10">В тому числі мають індекс Гірша за Scopus та WoS не нижче 10</option>
                             </select>
                         </div>
                     </div>
@@ -78,8 +76,7 @@
                     <div class="form-group col form-check ml-4">
                         <input v-model="filters.country" type="checkbox" class="form-check-input" id="allForeign">
                         <label class="form-check-label" for="allForeign">Іноземці</label>
-                    </div>
-                    
+                    </div>                    
                 </div>
                 <div class="form-row">
                     <div class="form-group form-check ml-2">
@@ -239,20 +236,7 @@
                     categ_users: []
 
                 },
-                categUsers:[
-                    {
-                        id: 1,
-                        title: "Користувачі СумДУ"
-                    },
-                    {
-                        id: 2,
-                        title: "Зовнішні співавтори"
-                    },
-                    {
-                        id: 3,
-                        title: "Студенти"
-                    }
-                ],
+                categUsers: ["Користувачі СумДУ", "Зовнішні співавтори", "Студенти"],
                 currentPage: 1,
                 perPage: 10,
                 numPage: 1,
@@ -324,6 +308,7 @@
                         categ_users: this.filters.categ_users
                     }
                 }).then(response => {
+                    console.log(response.data)
                     this.data = response.data;
                     this.currentPage = 1;
                     this.perPage = 10;
