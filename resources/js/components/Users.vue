@@ -43,9 +43,46 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group form-check ml-2">
-                    <input v-model="filters.all" type="checkbox" class="form-check-input" id="allUsers">
-                    <label class="form-check-label" for="allUsers">Всі користувачі</label>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label>Користувачі</label>
+                        <div class="input-container multiselect">
+                            <multiselect
+                                v-model="filters.categ_users"
+                                placeholder=""
+                                :options="categUsers"
+                                :multiple="true"
+                                :taggable="true"
+                            ></multiselect>
+                            </div>
+                    </div>
+                    <div class="form-group col">
+                        <label>Індекс Гірша</label>
+                        <div class="input-container">
+                            <select v-model="filters.h_index">
+                                <option value=""></option>
+                                <option value="1">Так</option>
+                                <option value="0">Ні</option>
+                                <option value="10">В тому числі мають індекс Гірша за Scopus та WoS не нижче 10</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group form-check col ml-4">
+                        <input v-model="filters.five_publications" type="checkbox" class="form-check-input" id="FiveOrMore">
+                        <label class="form-check-label" for="FiveOrMore">5 або більше публікацій у періодичних виданнях Scopus та/або WoS</label>
+                    </div>
+                    <div class="form-group col form-check ml-4">
+                        <input v-model="filters.country" type="checkbox" class="form-check-input" id="allForeign">
+                        <label class="form-check-label" for="allForeign">Іноземці</label>
+                    </div>                    
+                </div>
+                <div class="form-row">
+                    <div class="form-group form-check ml-2">
+                        <input v-model="filters.all" type="checkbox" class="form-check-input" id="allUsers">
+                        <label class="form-check-label" for="allUsers">Всі користувачі</label>
+                    </div>
                 </div>
                 <button type="button" class="export-button" style="display: inline-block" @click="getData()">Пошук</button>
                 <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">Очистити фільтр</button>
@@ -117,7 +154,7 @@
                     <span class="sr-only">Loading...</span>
                 </div>
                 <div class="my-4 text-center" v-if="filteredList.length == 0">
-                    Кристувачі відсутні
+                    Користувачі відсутні
                 </div>
             </div>
             <paginate
@@ -175,6 +212,7 @@
 </template>
 
 <script>
+    import Multiselect from 'vue-multiselect';
     import BackButton from "./Buttons/Back";
     import DeleteButton from "./Buttons/Delete";
     import divisions from './mixins/divisions';
@@ -191,8 +229,14 @@
                     all: false,
                     name: '',
                     faculty_code: '',
-                    department_code: ''
+                    department_code: '',
+                    country: false,
+                    five_publications: false,
+                    h_index: '',
+                    categ_users: []
+
                 },
+                categUsers: ["Користувачі СумДУ", "Зовнішні співавтори", "Студенти"],
                 currentPage: 1,
                 perPage: 10,
                 numPage: 1,
@@ -201,7 +245,8 @@
         },
         components: {
             BackButton,
-            DeleteButton
+            DeleteButton,
+            Multiselect
         },
         computed: {
             count_scopus_autor_id() {
@@ -256,9 +301,14 @@
                         name: this.filters.name,
                         faculty_code: this.filters.faculty_code,
                         department_code: this.filters.department_code,
-                        all: this.filters.all
+                        all: this.filters.all,
+                        country: this.filters.country,
+                        five_publications: this.filters.five_publications,
+                        h_index: this.filters.h_index,
+                        categ_users: this.filters.categ_users
                     }
                 }).then(response => {
+                    console.log(response.data)
                     this.data = response.data;
                     this.currentPage = 1;
                     this.perPage = 10;
@@ -328,6 +378,10 @@
                 this.filters.name = '';
                 this.filters.faculty_code = '';
                 this.filters.department_code = '';
+                this.filters.country = false;
+                this.filters.five_publications = false;
+                this.filters.h_index = '';
+                this.filters.categ_users = '';
                 this.getData();
             }
         }

@@ -59,6 +59,40 @@ class AuthorsController extends ASUController
             $model->where('faculty_code', $request->faculty_code);
         }
 
+        if($request->country == 'true') {
+            $data = $model->where('country', '!=','Україна')->get();
+        }
+        
+        if($request->five_publications  == 'true') {
+            $data= $model->where('five_publications', '1')->get();
+        }
+        
+        if($request->h_index == '1') {
+            $data = $model->where('h_index', '!=', null)->orWhere('scopus_autor_id', '!=', null)->get();
+        }
+
+        if($request->h_index == '0') {
+            $data = $model->where('h_index', null)->where('scopus_autor_id', null)->get();
+        }
+
+        if($request->h_index == '10') {
+            $data = $model->where('h_index','>=', 10)->orWhere('scopus_autor_id', '>=', 10)->get();
+        }
+
+        if(isset($request->categ_users)) {
+            foreach($request->categ_users as $key => $value) {
+                if($value == "Користувачі СумДУ") {
+                    $model->orWhere('job', 'СумДУ');
+                }
+                if($value == "Зовнішні співавтори") {
+                    $model->orWhere('guid', null);
+                }
+                if($value == "Студенти") {
+                    $model->orWhere('categ_1', 1);
+                }
+            }
+        }
+
         if($request->department_code != '') {
             $model->where('department_code', $request->department_code);
         }
