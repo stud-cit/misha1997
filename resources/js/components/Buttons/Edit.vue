@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button class="ml-2 delete">Редагувати</button>
+        <button class="ml-2 btn-success delete">Редагувати</button>
     </div>
 </template>
 <script>

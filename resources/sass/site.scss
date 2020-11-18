@@ -3,7 +3,10 @@
 @import 'tables-lists';
 @import 'buttons';
 @import url("https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css");
-
+#cabinet_service img{
+    top: 0;
+    left: 0;
+}
 body {
     line-height: 1;
     min-height: 100vh;
@@ -45,9 +48,9 @@ body {
             overflow: hidden;
         }
     }
-    .general-block {
-        max-width: 80%;
-    }
+    //.general-block {
+    //    max-width: 80%;
+    //}
 }
 
 ////titles

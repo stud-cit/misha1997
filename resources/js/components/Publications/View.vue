@@ -91,7 +91,7 @@
                     </li>
                 </template>
             </ul>
-            
+
             <articles :data="data" v-if="data.publication_type.type == 'article'"></articles>
             <book :data="data" v-if="data.publication_type.type == 'book'"></book>
             <book :data="data" v-if="data.publication_type.type == 'monograph'"></book>
@@ -106,7 +106,7 @@
             <div class="step-button-group">
                 <back-button></back-button>
                 <edit-button v-if="checkAccess" @click.native="editPublication"></edit-button>
-                <delete-button v-if="checkAccess" @click.native="deletePublication"></delete-button>
+                <delete-button class="mt-2" v-if="checkAccess" @click.native="deletePublication"></delete-button>
             </div>
         </div>
         </transition>

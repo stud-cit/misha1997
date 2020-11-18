@@ -147,7 +147,7 @@
                 font-size: 20px;
                 text-align: center;
                 color: #465E82;
-                margin: 0 50px;
+                margin: 0 45px;
                 a{
                     color: #465E82;
                 }
@@ -210,7 +210,7 @@
             padding-left: 125px;
             .navbar-nav {
                 li {
-                    margin: 0 30px;
+                    margin: 0 20px;
                 }
             }
         }
@@ -267,4 +267,5 @@
             font-size: 16px;
         }
     }
+
 </style>

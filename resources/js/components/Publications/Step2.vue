@@ -645,8 +645,9 @@
 
 <style lang="scss" scoped>
     .find-author {
-        margin-left: 20px;
+        margin-left: 10px;
         margin-bottom: 20px;
+        font-size: 20px;
     }
     .other-author{
         position: absolute;
@@ -716,7 +717,13 @@
         font-weight: bold;
         margin: 30px 0;
     }
+    @media (max-width: 767px){
+        .find-author {
+            margin: 20px 0;
+        }
+    }
     @media  (max-width: 575px) {
+
         .other-author{
             padding: 10% 10px;
             .popup-layout{
