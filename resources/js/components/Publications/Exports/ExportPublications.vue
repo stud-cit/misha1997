@@ -113,7 +113,6 @@
         },
         computed: {
             filteredData() {
-                console.log(this.exportList)
                 const publications = this.exportList;
                 const exportEmpty = {
                     articles: [],

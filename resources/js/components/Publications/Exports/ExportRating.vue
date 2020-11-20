@@ -527,6 +527,7 @@
                 <th>Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ) </th>
                 <th>Рейтинг</th>
                 <th>Іноземець</th>
+                <th>Іноземець</th>
                 <th>Рік</th>
                 <th>Квартиль журналу Scopus</th>
                 <th>Квартиль журналу WoS</th>
@@ -548,20 +549,21 @@
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.out_data}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">'{{item.pages}}'</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">'{{item.number}}'</td>
-                <td v-if="a.categ_1 == 1">Студент</td>
-                <td v-else-if="a.categ_1 == 2">Аспірант</td>
-                <td v-else-if="a.categ_2 == 1">Співробітник</td>
-                <td v-else-if="a.categ_2 == 2">Викладач</td>
+                <td v-if="a.author.categ_1 == 1">Студент</td>
+                <td v-else-if="a.author.categ_1 == 2">Аспірант</td>
+                <td v-else-if="a.author.categ_2 == 1">Співробітник</td>
+                <td v-else-if="a.author.categ_2 == 2">Викладач</td>
                 <td v-else></td>
-                <td>{{ a.name }}</td>
+                <td>{{ a.author.name }}</td>
                 <td>{{ a.supervisor ? 'Так' : 'Ні' }}</td>
-                <td>{{ a.h_index }}</td>
-                <td>{{ a.scopus_autor_id }}</td>
-                <td>{{ a.faculty ? a.faculty : '' }}</td>
-                <td>0</td>
-                <td>{{a.department ? a.department : a.job}}</td>
-                <td>0</td>
-                <td>{{a.country == 'Україна' ? 'Ні' :  a.country ? 'Так' : 'Не вказано'}}</td>
+                <td>{{ a.author.h_index }}</td>
+                <td>{{ a.author.scopus_autor_id }}</td>
+                <td>{{ a.author.faculty ? a.author.faculty : (a.author.categ_1 != 1 ? a.author.country : "") }}</td>
+                <td>{{ a.rating_faculty }}</td>
+                <td>{{a.author.department ? a.author.department : a.author.job}}</td>
+                <td>{{ a.rating_department }}</td>
+                <td>{{a.author.country == 'Україна' ? 'Ні' : a.author.country ? 'Так' : 'Не вказано'}}</td>
+                <td>{{ item.authors.find(user => user.author.country != 'Україна') ? "Так" : "Ні" }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.year}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_scopus}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_wos}}</td>
@@ -701,6 +703,11 @@
         },
 
         methods: {
+            openTable() {
+                var newWin = window.open("about:blank", "exportRating", "left=300,width=600,height=500");
+                var rating = document.getElementById('exportRating');
+                newWin.document.write(rating.toString());
+            },
             getDivisions() {
                 axios.get('/api/sort-divisions').then(response => {
                     this.divisions = response.data;
@@ -709,13 +716,6 @@
             getExportData() {
                 axios.post('/api/export', this.filters).then(response => {
                     this.publicationsData = response.data.publications;
-                    this.publicationsData.map(publication => {
-                        var authors = [];
-                        publication.authors.map(author => {
-                            authors.push(author.author);
-                        })
-                        publication.authors = authors;
-                    });
                     this.ratingData = Object.assign(this.ratingData, response.data.rating);
                 }).then(() => {
                     this.exportRating();
@@ -771,6 +771,7 @@
                         { wch: 5 },
                         { wch: 15 }, // Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ)
                         { wch: 5 },
+                        { wch: 4 }, // Іноземець
                         { wch: 4 }, // Іноземець
                         { wch: 5 },  // Рік
                         { wch: 3 }, // Квартиль журналу Scopus

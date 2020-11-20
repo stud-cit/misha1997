@@ -218,7 +218,7 @@
                                     <a v-if="!author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}} </a>
                                 </span>
                             </td>
-                            <td><a :href="{path: `/publications/${item.publication.id}`}"> {{ item.publication.title }} </a> </td>
+                            <td><a :href="'/publications/'+item.publication.id"> {{ item.publication.title }} </a> </td>
                             <td>{{ item.publication.year}}</td>
                             <td>{{ item.publication.science_type ? item.publication.science_type.type : '' }}</td>
                             <td>

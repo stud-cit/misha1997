@@ -132,12 +132,29 @@ class AuthorsController extends ASUController
     // authors All (admin)
     function getAll(Request $request) {
         $data = Authors::with('role')->get();
+
+        $divisions = $this->getAllDivision()->original;
+
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
+
             $kod_div = $value['department_code'] ? $value['department_code'] : $value['faculty_code'];
-            $division = $this->getUserDivision($kod_div)->original;
-            $value['department'] = $division['department'] ? $division['department']['NAME_DIV'] : null;
-            $value['faculty'] = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
+
+            $sectionId = array_search($kod_div, array_column($divisions, 'ID_DIV'));
+            $departmentId = array_search($divisions[$sectionId]['ID_PAR'], array_column($divisions, 'ID_DIV'));
+            $facultyId = array_search($divisions[$departmentId]['ID_PAR'], array_column($divisions, 'ID_DIV'));
+            if(!$departmentId) {
+                $departmentId = $sectionId;
+                $sectionId = null;
+            }
+            if(!$facultyId) {
+                $facultyId = $departmentId;
+                $departmentId = $sectionId;
+                $sectionId = null;
+            }
+
+            $value['department'] = $departmentId ? $divisions[$departmentId]['NAME_DIV'] : null;
+            $value['faculty'] = $facultyId ? $divisions[$facultyId]['NAME_DIV'] : null;
         }
         return response()->json($data);
     }

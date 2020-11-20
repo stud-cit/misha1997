@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         user: null,
-        access: 'open',
+        access: 'open'
     },
     mutations: {
         user_data(state, user) {
@@ -17,6 +17,18 @@ export default new Vuex.Store({
         },
     },
     actions: {
+        saveFilterUser: ({commit}, filter) => {
+            localStorage.setItem('filterUsers', JSON.stringify(filter));
+        },
+        clearFilterUser: ({commit}) => {
+            localStorage.removeItem('filterUsers');
+        },
+        saveFilterPublications: ({commit}, filter) => {
+            localStorage.setItem('filterPublications', JSON.stringify(filter));
+        },
+        clearFilterPublications: ({commit}) => {
+            localStorage.removeItem('filterPublications');
+        },
         setUser({commit}, user) {
             commit('user_data', user)
         },
@@ -36,6 +48,16 @@ export default new Vuex.Store({
     },
     getters: {
         authUser: state => state.user,
-        accessMode: state => state.access
+        accessMode: state => state.access,
+        getFilterUsers() {
+            if(localStorage.getItem('filterUsers')) {
+                return JSON.parse(localStorage.getItem('filterUsers'));
+            }
+        },
+        getFilterPublications() {
+            if(localStorage.getItem('filterPublications')) {
+                return JSON.parse(localStorage.getItem('filterPublications'));
+            }
+        },
     }
 })

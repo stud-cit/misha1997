@@ -65,8 +65,8 @@ class AuthController extends ASUController {
                 $data['categ_1'] = $personCabinet['result']['info1'][0]['CATEG'];
                 $kod_div = $personCabinet['result']['info1'][0]['KOD_DIV'];
             } elseif(isset($personCabinet['result']['info2'])) {
-                $data['categ_2'] = $personCabinet['result']['info2'][0]['CATEG'];
-                $kod_div = $personCabinet['result']['info2'][0]['KOD_DIV'];
+                $data['categ_2'] = end($personCabinet['result']['info2'])['CATEG'];
+                $kod_div = end($personCabinet['result']['info2'])['KOD_DIV'];
             }
 
             $division = $this->getUserDivision($kod_div)->original;
@@ -115,8 +115,8 @@ class AuthController extends ASUController {
                     $person->categ_1 = $personCabinet['result']['info1'][0]['CATEG'];
                     $kod_div = $personCabinet['result']['info1'][0]['KOD_DIV'];
                 } elseif (isset($personCabinet['result']['info2'])) {
-                    $person->categ_2 = $personCabinet['result']['info2'][0]['CATEG'];
-                    $kod_div = $personCabinet['result']['info2'][0]['KOD_DIV'];
+                    $person->categ_2 = end($personCabinet['result']['info2'])['CATEG'];
+                    $kod_div = end($personCabinet['result']['info2'])['KOD_DIV'];
                 }
 
                 $division = $this->getUserDivision($kod_div)->original;

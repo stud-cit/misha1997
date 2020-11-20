@@ -139,7 +139,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2">Всього: {{ data.length }}</td>
+                            <td colspan="2">Всього користувачів: {{ data.length }}</td>
                             <td></td>
                             <td></td>
                             <td></td>

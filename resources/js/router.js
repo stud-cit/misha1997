@@ -16,6 +16,7 @@ import PublicationsAdd from "./components/Publications/Add";
 import PublicationsView from "./components/Publications/View";
 import PublicationsEdit from "./components/Publications/Edit";
 import Notifications from "./components/Notifications";
+import ExportTable from "./components/Publications/ExportTable";
 import Users from "./components/Users";
 import Register from "./components/Register";
 import Error404 from './components/Error404';
@@ -69,6 +70,18 @@ let router = new Router({
             path: '/publications',
             name: 'publications',
             component: Publications,
+            meta: {
+                middleware: auth
+            }
+        },
+        {
+            path: '/publications/table',
+            name: 'export-table',
+            component: ExportTable,
+            props: (route) => ({
+                filters: filters,
+                ...route.params
+            }),
             meta: {
                 middleware: auth
             }
