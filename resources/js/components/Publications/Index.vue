@@ -1,6 +1,6 @@
 <template>
     <div class="container page-content general-block">
-        <h1 class="page-title">Перегляд публікацій 
+        <h1 class="page-title">Перегляд публікацій
             <span v-if="authUser.roles_id == 3 && divisions.find(item => item.ID_DIV == authUser.faculty_code)"> - {{ divisions.find(item => item.ID_DIV == authUser.faculty_code).NAME_DIV }}</span>
             <span v-if="authUser.roles_id == 2 && divisions.find(item => item.ID_DIV == authUser.department_code)"> - {{ divisions.find(item => item.ID_DIV == authUser.department_code).NAME_DIV }}</span>
         </h1>
@@ -14,7 +14,7 @@
         <div class="main-content">
             <form class="search-block">
                 <div class="form-row" v-if="authUser.roles_id != 2">
-                    <div class="form-group col" v-if="authUser.roles_id != 3">
+                    <div class="form-group col-lg-6" v-if="authUser.roles_id != 3">
                         <label>Інститут / факультет</label>
                         <div class="input-container">
                             <select v-model="filters.faculty_code" @change="getDepartments">
@@ -27,7 +27,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group col">
+                    <div class="form-group col-lg-6">
                         <label>Кафедра</label>
                         <div class="input-container">
                             <select v-model="filters.department_code">
@@ -94,16 +94,16 @@
                 <button type="button" class="export-button" style="display: inline-block" @click="getData()">Пошук</button>
                 <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">Очистити фільтр</button>
             </form>
-            <Table 
+            <Table
                 @select="selectItem"
-                :publications="data" 
-                :authUser="authUser" 
+                :publications="data"
+                :authUser="authUser"
                 :loading="loading"
                 :selectPublications="selectPublications"
             ></Table>
             <div class="step-button-group">
                 <back-button></back-button>
-                <delete-button v-if="authUser.roles_id == 4" @click.native="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
+                <delete-button  v-if="authUser.roles_id == 4" @click.native="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
             </div>
         </div>
     </div>

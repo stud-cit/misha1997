@@ -25,7 +25,7 @@
                     <tr>
                         <th scope="col">№</th>
                         <th scope="col">Вид публікації</th>
-                        <th scope="col">Прізвище та ініціали автора/співавторів</th>
+                        <th scope="col">ПІБ автора/співавторів</th>
                         <th scope="col">Назва публікації</th>
                         <th scope="col">Рік видання</th>
                         <th scope="col">БД Scopus/WoS</th>
@@ -56,7 +56,7 @@
                         </td>
                         <td>{{ item.date }}</td>
                         <!-- <td>
-                            <a v-if="item.add_user_id!=null" :href="'/user/'+item.publication_add.id"> 
+                            <a v-if="item.add_user_id!=null" :href="'/user/'+item.publication_add.id">
                                 {{item.publication_add ? item.publication_add.name : ""}}
                             </a>
                         </td>
@@ -155,7 +155,7 @@ export default {
         filterList() {
             this.pagination.numPage = Math.ceil(this.publications.length / this.pagination.perPage);
             return this.publications.slice((this.pagination.currentPage - 1) * this.pagination.perPage, this.pagination.currentPage * this.pagination.perPage);
-                        
+
         }
     }
 }

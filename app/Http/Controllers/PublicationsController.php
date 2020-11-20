@@ -754,9 +754,11 @@ class PublicationsController extends ASUController
 
                 for($j = 0; $j < count($value['authors']); $j++) {
                     if($value['authors'][$j]['author']['faculty_code'] == $v['author']['faculty_code']) {
-                        $v['rating_faculty'] += $value['authors'][$j]['rating_department'];
+                        $value['authors'][array_search($v['author']['faculty_code'], $testFacultys)]['rating_faculty'] += $value['authors'][$j]['rating_department'];
                     }
                 }
+
+                // $value['authors'][array_search($v['author']['faculty_code'], $testFacultys)]['rating_faculty'] = array_filter()
 
                 if(!in_array($v['author'], $authors) && $v['author']['categ_1'] != 2) {
                     array_push($authors, $v['author']);

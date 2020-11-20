@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div class="form-row" v-if="authUser.roles_id != 2">
-                    <div class="form-group col" v-if="authUser.roles_id != 3">
+                    <div class="form-group col-lg-6" v-if="authUser.roles_id != 3">
                         <label >Інститут / факультет</label>
                         <div class="input-container">
                             <select v-model="filters.faculty_code" @change="getDepartments">
@@ -29,7 +29,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group col">
+                    <div class="form-group col-lg-6">
                         <label >Кафедра</label>
                         <div class="input-container">
                             <select v-model="filters.department_code">
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col">
+                    <div class="form-group col-lg-6">
                         <label>Користувачі</label>
                         <div class="input-container multiselect">
                             <multiselect
@@ -56,7 +56,7 @@
                             ></multiselect>
                             </div>
                     </div>
-                    <div class="form-group col">
+                    <div class="form-group col-lg-6">
                         <label>Індекс Гірша</label>
                         <div class="input-container">
                             <select v-model="filters.h_index">
@@ -69,14 +69,14 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group form-check col ml-4">
+                    <div class="form-group form-check col-lg-6 ml-4">
                         <input v-model="filters.five_publications" type="checkbox" class="form-check-input" id="FiveOrMore">
                         <label class="form-check-label" for="FiveOrMore">5 або більше публікацій у періодичних виданнях Scopus та/або WoS</label>
                     </div>
-                    <div class="form-group col form-check ml-4">
+                    <div class="form-group col-lg-6 form-check ml-4">
                         <input v-model="filters.country" type="checkbox" class="form-check-input" id="allForeign">
                         <label class="form-check-label" for="allForeign">Іноземці</label>
-                    </div>                    
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group form-check ml-2">
