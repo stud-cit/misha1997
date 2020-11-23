@@ -329,8 +329,9 @@
             save() {
                 axios.post(`/api/update-author/${this.$route.params.id}`, this.data)
                     .then((response) => {
-                        swal("Інформацію оновлено", {
-                            icon: "success",
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Інформацію оновлено'
                         });
                         this.$router.go(-1);
                 })

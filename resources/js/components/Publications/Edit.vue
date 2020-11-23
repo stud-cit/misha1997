@@ -135,16 +135,23 @@
                     }
                     axios.post(`/api/update-publication/${this.$route.params.id}`, this.publicationData)
                         .then((response) => {
-                            swal("Публікацію успішно змінено!", {
-                                icon: "success",
-                            });
-                            this.$router.push({path: '/publications'});
+                            swal.fire({
+                                icon: 'success',
+                                title: 'Публікацію успішно змінено!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            setTimeout(() => {
+                                this.$router.push({path: '/publications'});
+                            }, 1500);
                         })
                         .catch(() => {
-                            swal({
-                                icon: "error",
-                                title: 'Помилка'
-                            });
+                            swal.fire({
+                                icon: 'error',
+                                title: 'Помилка',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
                         });
                 }
             },

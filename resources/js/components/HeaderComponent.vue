@@ -40,8 +40,7 @@
                             <router-link class="nav-link" :to="{path: '/profile'}" >Профіль</router-link>
                         </li>
                         <li class="nav-item">
-<!--                            <a class="nav-link note" exist :to="{name: 'notifications'}" active-class="active">Повідомлення&nbsp;<span class="number">2</span></a>-->
-                            <router-link class="nav-link" :to="{path: '/notifications'}" >Повідомлення</router-link>
+                            <router-link class="nav-link" :to="{path: '/notifications'}" >Повідомлення&nbsp;<span v-if="userNotifications > 0" class="number">{{ userNotifications }}</span></router-link>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" @click="exit" style="cursor:pointer">Вихід</a>
@@ -62,6 +61,9 @@
             return {};
         },
         computed: {
+            userNotifications() {
+                return this.$store.getters.getNotifications
+            },
             userRole() {
                 return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null
             },
@@ -147,7 +149,7 @@
                 font-size: 20px;
                 text-align: center;
                 color: #465E82;
-                margin: 0 45px;
+                margin: 0 35px;
                 a{
                     color: #465E82;
                 }
@@ -165,20 +167,16 @@
                         opacity: 0.85;
                     }
                 }
-            /*    .number{*/
-            /*        border-radius: 50%;*/
-            /*        background: #6293DB;*/
-            /*        padding: 2px 7px;*/
-            /*        font-family: Montserrat;*/
-            /*        color: #fff;*/
-            /*        font-style: normal;*/
-            /*        font-weight: normal;*/
-            /*        font-size: 18px;*/
-            /*    }*/
+                .number{
+                    border-radius: 50%;
+                    background: #6293DB;
+                    padding: 2px 7px;
+                    color: #fff;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 16px;
+                }
             }
-            /*.note{*/
-            /*    color: #6293DB;*/
-            /*}*/
         }
     }
     .dropdown-menu{

@@ -117,18 +117,23 @@
                     }
                     axios.post('/api/publication', this.publicationData)
                     .then(() => {
-                        swal("Публікацію успішно додано!", {
-                            icon: "success",
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Публікацію успішно додано!',
+                            showConfirmButton: false,
+                            timer: 1500
                         })
                         setTimeout(() => {
                             location.reload();
-                        }, 1000);
+                        }, 1500);
                     })
                     .catch(() => {
-                        swal({
-                            icon: "error",
-                            title: 'Помилка'
-                        });
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Помилка',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
                     });
                 }
             },

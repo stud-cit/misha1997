@@ -91,8 +91,28 @@
                         </select>
                     </div>
                 </div>
-                <button type="button" class="export-button" style="display: inline-block" @click="getData()">Пошук</button>
-                <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">Очистити фільтр</button>
+                <button type="button" class="export-button" style="display: inline-block" @click="getData(); loadingSearch = true">
+                    <span
+                        class="spinner-border spinner-border-sm"
+                        style="width: 19px; height: 19px;"
+                        role="status"
+                        aria-hidden="true"
+                        v-if="loadingSearch"
+                    ></span>
+                    <span class="sr-only" v-if="loading">Loading...</span>
+                    Пошук
+                </button>
+                <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">
+                    <span
+                        class="spinner-border spinner-border-sm"
+                        style="width: 19px; height: 19px"
+                        role="status"
+                        aria-hidden="true"
+                        v-if="loadingClear"
+                    ></span>
+                    <span class="sr-only" v-if="loading">Loading...</span>
+                    Очистити фільтр
+                </button>
             </form>
             <Table
                 @select="selectItem"
@@ -131,6 +151,8 @@
                 exportData: {},
                 exportPublication: [],
                 loading: true,
+                loadingSearch: false,
+                loadingClear: false,
                 selectPublications: [],
                 filters: {
                     title: '',
@@ -179,8 +201,12 @@
                 }).then(response => {
                     this.data = response.data;
                     this.loading = false;
+                    this.loadingSearch = false;
+                    this.loadingClear = false;
                 }).catch(() => {
                     this.loading = false;
+                    this.loadingSearch = false;
+                    this.loadingClear = false;
                 })
             },
             // всі типи пблікацій
@@ -199,14 +225,17 @@
             // methods
             // видалити обрані публікації
             deletePublications() {
-                swal({
-                    title: "Бажаєте видалити?",
+                swal.fire({
+                    title: 'Бажаєте видалити?',
                     text: "Після видалення ви не зможете відновити дані!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                }).then((willDelete) => {
-                    if (willDelete) {
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Видалити',
+                    cancelButtonText: 'Відміна',
+                }).then((result) => {
+                    if (result.isConfirmed) {
                         axios.post('/api/delete-publications', {
                             publications: this.selectPublications,
                             user: this.authUser
@@ -214,12 +243,10 @@
                         .then(() => {
                             this.selectPublications = [];
                             this.getData();
-                            swal("Публікації успішно видалені", {
-                                icon: "success",
-                            });
+                            swal.fire("Публікації успішно видалено");
                         });
                     }
-                });
+                })
             },
             // обрані публікації
             selectItem(item) {
@@ -241,6 +268,7 @@
                 return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
             },
             clearFilter() {
+                this.loadingClear = true;
                 this.$store.dispatch('clearFilterPublications');
                 this.filters.title = '';
                 this.filters.authors_f = '';

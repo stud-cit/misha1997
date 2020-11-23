@@ -66,7 +66,7 @@ class PublicationsController extends ASUController
                 }
             }
             $model->whereHas('authors.author', function($q) use ($departments_id) {
-                $q->whereIn('department_code', $departments_id);
+                $q->whereIn('department_code', $departments_id)->where('categ_1', "!=", 1);
             });
         } else {
             if($request->faculty_code != '') {
@@ -77,7 +77,7 @@ class PublicationsController extends ASUController
                     }
                 }
                 $model->whereHas('authors.author', function($q) use ($departments_id) {
-                    $q->whereIn('faculty_code', $departments_id);
+                    $q->whereIn('faculty_code', $departments_id)->where('categ_1', "!=", 1);
                 });
             }
         }
@@ -712,53 +712,39 @@ class PublicationsController extends ASUController
             $testFaculty = [];
             $testDepartment = [];
             $testDepartments = [];
-            $supervisor = false;
-
-            for($i = 0; $i < count($value['authors']); $i++) {
-                if($value['authors'][$i]['supervisor'] == 1) {
-                    $supervisor = true;
-                }
-            }
 
             for($i = 0; $i < count($value['authors']); $i++) {
 
                 array_push($testFacultys, $value['authors'][$i]['author']['faculty_code']);
-
-                if((!$supervisor && $value['authors'][$i]['author']['faculty_code']) || ($value['authors'][$i]['author']['categ_1'] != 1 && $value['authors'][$i]['author']['faculty_code'])) {
+                if($value['authors'][$i]['author']['faculty_code'] && $value['authors'][$i]['author']['categ_1'] != 1) {
                     array_push($testFaculty, $value['authors'][$i]['author']['faculty_code']);
                 }
 
                 array_push($testDepartments, $value['authors'][$i]['author']['department_code']);
-                if((!$supervisor && $value['authors'][$i]['author']['department_code']) || ($value['authors'][$i]['author']['categ_1'] != 1 && $value['authors'][$i]['author']['department_code'])) {
+                if($value['authors'][$i]['author']['department_code'] && $value['authors'][$i]['author']['categ_1'] != 1) {
                     array_push($testDepartment, $value['authors'][$i]['author']['department_code']);
                 }
             }
 
             foreach ($value['authors'] as $k => $v) {
                 
-                // if((!$supervisor && $v['author']['faculty_code']) || ($v['author']['categ_1'] != 1 && $v['author']['faculty_code'])) {
-                //     $res = array_filter($testFaculty, function($value) use ($v) {
-                //         return $value == $v['author']['faculty_code'];
-                //     });
-                //     $result = 1 / count($testFaculty) * count($res);
-                //     $value['authors'][array_search($v['author']['faculty_code'], $testFacultys)]['rating_faculty'] = $result;
-                // }
+                if($v['author']['faculty_code'] && $v['author']['categ_1'] != 1) {
+                    $res = array_filter($testFaculty, function($value) use ($v) {
+                        return $value == $v['author']['faculty_code'];
+                    });
+                    $result = 1 / count($testFaculty) * count($res);
+                    $v['test_faculty'] = $res;
+                    $value['authors'][array_search($v['author']['faculty_code'], $testFacultys)]['rating_faculty'] = $result;
+                }
 
-                if((!$supervisor && $v['author']['department_code']) || ($v['author']['categ_1'] != 1 && $v['author']['department_code'])) {
+                if($v['author']['department_code'] && $v['author']['categ_1'] != 1) {
                     $res = array_filter($testDepartment, function($value) use ($v) {
                         return $value == $v['author']['department_code'];
                     });
                     $result = 1 / count($testDepartment) * count($res);
+                    $v['test_department'] = $res;
                     $value['authors'][array_search($v['author']['department_code'], $testDepartments)]['rating_department'] = $result;
                 }
-
-                for($j = 0; $j < count($value['authors']); $j++) {
-                    if($value['authors'][$j]['author']['faculty_code'] == $v['author']['faculty_code']) {
-                        $value['authors'][array_search($v['author']['faculty_code'], $testFacultys)]['rating_faculty'] += $value['authors'][$j]['rating_department'];
-                    }
-                }
-
-                // $value['authors'][array_search($v['author']['faculty_code'], $testFacultys)]['rating_faculty'] = array_filter()
 
                 if(!in_array($v['author'], $authors) && $v['author']['categ_1'] != 2) {
                     array_push($authors, $v['author']);

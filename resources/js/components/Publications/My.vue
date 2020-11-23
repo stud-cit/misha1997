@@ -166,14 +166,17 @@
                 })
             },
             deletePublications() {
-				swal({
-					title: "Бажаєте видалити?",
-					text: "Після видалення ви не зможете відновити дані!",
-					icon: "warning",
-					buttons: true,
-					dangerMode: true,
-				}).then((willDelete) => {
-					if (willDelete) {
+                swal.fire({
+                    title: 'Бажаєте видалити?',
+                    text: "Після видалення ви не зможете відновити дані!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Видалити',
+                    cancelButtonText: 'Відміна',
+                }).then((result) => {
+                    if (result.isConfirmed) {
 						axios.post('/api/delete-publications', {
                             publications: this.selectPublications,
                             user: this.authUser
@@ -181,12 +184,10 @@
                         .then(() => {
                             this.selectPublications = [];
                             this.getData();
-                            swal("Публікація успішно видалена", {
-                                icon: "success",
-                            });
+                            swal.fire("Публікації успішно видалено");
                         });
-					}
-				});
+                    }
+                })
             },
             parseString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");

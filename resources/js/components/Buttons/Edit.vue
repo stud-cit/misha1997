@@ -8,3 +8,8 @@ export default {
 
 }
 </script>
+<style lang="css" scoped>
+    .delete {
+        border-radius: 6px;
+    }
+</style>

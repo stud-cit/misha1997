@@ -328,26 +328,27 @@
 				}
 			},
             deleteItem() {
-				swal({
-					title: "Бажаєте видалити?",
-					text: "Після видалення ви не зможете відновити дані!",
-					icon: "warning",
-					buttons: true,
-					dangerMode: true,
-				}).then((willDelete) => {
-					if (willDelete) {
+                swal.fire({
+                    title: 'Бажаєте видалити?',
+                    text: "Після видалення ви не зможете відновити дані!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Видалити',
+                    cancelButtonText: 'Відміна',
+                }).then((result) => {
+                    if (result.isConfirmed) {
 						axios.post('/api/delete-users', {
                             users: this.selectUsers
 						})
                         .then(() => {
                             this.selectUsers = [];
                             this.getData();
-                            swal("Користувачі успішно видалені", {
-                                icon: "success",
-                            });
+                            swal.fire("Користувачі успішно видалені");
                         });
-					}
-				});
+                    }
+                })
             },
             exportUsers() {
                 const authors = XLSX.utils.table_to_book(document.getElementById('exportUsers'));

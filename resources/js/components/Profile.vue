@@ -157,8 +157,9 @@
                 axios.post(`/api/profile`, this.data)
                     .then((response) => {
                         this.$store.dispatch('setUser', response.data)
-                        swal("Інформацію оновлено", {
-                            icon: "success",
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Інформацію оновлено'
                         });
                 })
             }

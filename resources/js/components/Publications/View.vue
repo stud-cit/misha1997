@@ -81,14 +81,6 @@
                         <div class="col-lg-3 list-item list-title">Процитована у міжнародних патентах:</div>
                         <div class="col-lg-9 list-item list-text">{{data.cited_international_patents ? "Так" : "Ні"}}</div>
                     </li>
-                    <li class="row" v-if="data.publication_add!==null">
-                        <div class="col-lg-3 list-item list-title">Користувач, що створив публікацію:</div>
-                        <div class="col-lg-9 list-item list-text"><a :href="'/user/'+data.publication_add.id">{{data.publication_add.name}}</a></div>
-                    </li>
-                    <li class="row" v-if="data.publication_edit!==null">
-                        <div class="col-lg-3 list-item list-title">Редаговано:</div>
-                        <div class="col-lg-9 list-item list-text"><a :href="'/user/'+data.publication_edit.id">{{data.publication_edit.name}}</a></div>
-                    </li>
                 </template>
             </ul>
 
@@ -103,10 +95,21 @@
             <methodical :data="data" v-if="data.publication_type.type == 'methodical'"></methodical>
             <electronic :data="data" v-if="data.publication_type.type == 'electronic'"></electronic>
 
+            <ul class="list-view">
+                <li class="row" v-if="data.publication_add">
+                    <div class="col-lg-3 list-item list-title">Додано:</div>
+                    <div class="col-lg-9 list-item list-text"><a :href="'/user/'+data.publication_add.id">{{data.publication_add.name}}</a></div>
+                </li>
+                <li class="row" v-if="data.publication_edit">
+                    <div class="col-lg-3 list-item list-title">Редаговано:</div>
+                    <div class="col-lg-9 list-item list-text"><a :href="'/user/'+data.publication_edit.id">{{data.publication_edit.name}}</a></div>
+                </li>
+            </ul>
+
             <div class="step-button-group">
                 <back-button></back-button>
                 <edit-button v-if="checkAccess" @click.native="editPublication"></edit-button>
-                <delete-button class="mt-2" v-if="checkAccess" @click.native="deletePublication"></delete-button>
+                <delete-button v-if="checkAccess" @click.native="deletePublication"></delete-button>
             </div>
         </div>
         </transition>
@@ -231,26 +234,27 @@
                 this.$router.push({path: `/publications/edit/${this.$route.params.id}`});
             },
             deletePublication() {
-                swal({
-                    title: "Бажаєте видалити?",
+                swal.fire({
+                    title: 'Бажаєте видалити?',
                     text: "Після видалення ви не зможете відновити дані!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                }).then((willDelete) => {
-                    if (willDelete) {
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Видалити',
+                    cancelButtonText: 'Відміна',
+                }).then((result) => {
+                    if (result.isConfirmed) {
                         axios.post(`/api/delete-publication/${this.$route.params.id}`, {
                             publication: this.data,
                             user: this.$store.getters.authUser
                         })
                         .then(() => {
+                            swal.fire("Публікацію успішно видалено");
                             this.$router.push({path: `/publications`});
-                            swal("Публікацію успішно видалено", {
-                                icon: "success",
-                            });
                         });
                     }
-                });
+                })
             }
         }
     }
