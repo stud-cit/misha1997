@@ -41,7 +41,8 @@
                     impact_factor: "",
                     quartil_scopus: "",
                     quartil_wos: "",
-                    sub_db_index: "",
+                    sub_db_scie: 0,
+                    sub_db_ssci: 0,
                     year: new Date().getFullYear(),
                     number: "",
                     pages: "",
@@ -98,7 +99,8 @@
                             impact_factor: null,
                             quartil_scopus: null,
                             quartil_wos: null,
-                            sub_db_index: null
+                            sub_db_scie: 0,
+                            sub_db_ssci: 0
                         };
                         this.publicationData = Object.assign(this.publicationData, falseScinceType);
                     } else {
@@ -109,7 +111,8 @@
                     if(this.publicationData.science_type_id == 1) {
                         this.publicationData.quartil_wos = null;
                         this.publicationData.impact_factor = null;
-                        this.publicationData.sub_db_index = null;
+                        this.publicationData.sub_db_scie = 0;
+                        this.publicationData.sub_db_ssci = 0;
                     }
                     if(this.publicationData.science_type_id == 2) {
                         this.publicationData.snip = null;

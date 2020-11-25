@@ -17,7 +17,8 @@ class CreatePublicationsTable extends Migration
             $table->string('impact_factor')->nullable(); // Коефіцієнт впливовості імпакт-фактор журналу WoS
             $table->string('quartil_scopus')->nullable(); // Квартиль журналу БД Scopus
             $table->string('quartil_wos')->nullable(); // Квартиль журналу БД WoS
-            $table->integer('sub_db_index')->nullable(); // Підбаза WoS
+            $table->boolean('sub_db_scie')->nullable(); // Підбаза WoS - SCIE
+            $table->boolean('sub_db_ssci')->nullable(); // Підбаза WoS - SSCI
             $table->integer('year')->nullable(); // Рік
             $table->string('number')->nullable(); // Номер (том)
             $table->string('pages')->nullable(); // Кількість сторінок

@@ -46,14 +46,24 @@
                     </div>
                 </div>
 
-                <div class="form-group" v-if="(publicationData.science_type_id == 2 || publicationData.science_type_id == 3) && (publicationType.id == 1 || publicationType.id == 3)">
-                    <label >Підбаза WoS</label>
-                    <div class="input-container">
-                        <select v-model="publicationData.sub_db_index">
-                            <option value=""></option>
-                            <option value="1">Science Citation Index Expanded (SCIE)</option>
-                            <option value="2">Social Science Citation Index (SSCI)</option>
-                        </select>
+                <div class="form-row" v-if="(publicationData.science_type_id == 2 || publicationData.science_type_id == 3) && (publicationType.id == 1 || publicationType.id == 3)">
+                    <div class="form-group col-lg-6">
+                        <label >Підбаза SCIE (Science Citation Index Expanded)</label>
+                        <div class="input-container">
+                            <select v-model="publicationData.sub_db_scie">
+                                <option value="1">Так</option>
+                                <option value="0">Ні</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label >Підбаза SSCI (Social Science Citation Index)</label>
+                        <div class="input-container">
+                            <select v-model="publicationData.sub_db_ssci">
+                                <option value="1">Так</option>
+                                <option value="0">Ні</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 

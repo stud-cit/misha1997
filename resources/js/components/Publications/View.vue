@@ -58,8 +58,11 @@
                     </li>
                     <li class="row">
                         <div class="col-lg-3 list-item list-title">Підбаза WoS:</div>
-                        <div class="col-lg-9 list-item list-text" v-if="data.sub_db_index==1">Science Citation Index Expanded (SCIE)</div>
-                        <div class="col-lg-9 list-item list-text" v-if="data.sub_db_index==2">Social Science Citation Index</div>
+                        <div class="col-lg-9 list-item list-text">
+                            <span v-if="data.sub_db_scie==1 && data.sub_db_ssci==0">Science Citation Index Expanded (SCIE)</span>
+                            <span v-if="data.sub_db_ssci==1 && data.sub_db_scie==0">Social Science Citation Index (SSCI)</span>
+                            <span v-if="data.sub_db_scie==1 && data.sub_db_ssci==1">Science Citation Index Expanded (SCIE), Social Science Citation Index (SSCI)</span>
+                        </div>
                     </li>
                     <li class="row" v-if="data.nature_index">
                         <div class="col-lg-3 list-item list-title">Обліковується рентингом Nature Index:</div>
@@ -150,7 +153,8 @@
                     impact_factor: "",
                     quartil_scopus: "",
                     quartil_wos: "",
-                    sub_db_index: "",
+                    sub_db_scie: "",
+                    sub_db_ssci: "",
                     year: "",
                     number: "",
                     pages: "",

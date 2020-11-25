@@ -17,7 +17,8 @@ class PublicationsSeeder extends Seeder
             'science_type_id' => 1,
             'publication_type_id' => 1,
             'impact_factor' => 'test',
-            'sub_db_index' => 1,
+            'sub_db_scie' => 0,
+            'sub_db_ssci' => 0,
             'snip' => 'test'
         ]);
     }
