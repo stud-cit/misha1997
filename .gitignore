@@ -4,8 +4,6 @@
 /public/js/*
 /public/css/*
 /public/storage
-/resources/js/router.js
-/resources/js/store.js
 /storage/*.key
 /vendor
 .env
