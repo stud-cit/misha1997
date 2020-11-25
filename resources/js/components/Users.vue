@@ -84,8 +84,28 @@
                         <label class="form-check-label" for="allUsers">Всі користувачі</label>
                     </div>
                 </div>
-                <button type="button" class="export-button" style="display: inline-block" @click="getData()">Пошук</button>
-                <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">Очистити фільтр</button>
+                <button type="button" class="export-button" style="display: inline-block" @click="getData(); loadingSearch = true">
+                    <span
+                        class="spinner-border spinner-border-sm"
+                        style="width: 19px; height: 19px"
+                        role="status"
+                        aria-hidden="true"
+                        v-if="loadingSearch"
+                    ></span>
+                    <span class="sr-only" v-if="loading">Loading...</span>
+                    Пошук
+                </button>
+                <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">
+                    <span
+                        class="spinner-border spinner-border-sm"
+                        style="width: 19px; height: 19px"
+                        role="status"
+                        aria-hidden="true"
+                        v-if="loadingClear"
+                    ></span>
+                    <span class="sr-only" v-if="loading">Loading...</span>
+                    Очистити фільтр
+                </button>
             </form>
             <paginate
                 v-model="currentPage"
@@ -223,6 +243,8 @@
         data() {
             return {
                 loading: true,
+                loadingSearch: false,
+                loadingClear: false,
                 data: [],
                 selectUsers: [],
                 filters: {
@@ -313,8 +335,12 @@
                     this.perPage = 10;
                     this.numPage = 1;
                     this.loading = false;
+                    this.loadingSearch = false;
+                    this.loadingClear = false;
                 }).catch(() => {
                     this.loading = false;
+                    this.loadingSearch = false;
+                    this.loadingClear = false;
                 })
             },
             clean() {
@@ -373,6 +399,7 @@
                 XLSX.writeFile(wb, 'Authors.xlsx');
             },
             clearFilter() {
+                this.loadingClear = true;
                 this.$store.dispatch('clearFilterPublications');
                 this.filters.all = false;
                 this.filters.name = '';

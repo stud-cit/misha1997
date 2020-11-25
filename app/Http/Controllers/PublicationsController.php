@@ -85,7 +85,7 @@ class PublicationsController extends ASUController
         $data = $model->get();
 
         foreach ($data as $key => $publication) {
-            $publication['date'] = Carbon::parse($publication['created_at'])->format('m.d.Y');
+            $publication['date'] = Carbon::parse($publication['created_at'])->format('d.m.Y');
         }
         return response()->json($data);
     }
@@ -179,7 +179,7 @@ class PublicationsController extends ASUController
             if($value['id'] != $request->session()->get('person')['id']) {
                 Notifications::create([
                     "autors_id" => $value['id'],
-                    "text" => "Користувач <a href=\"/user/$request->session()->get('person')['id']\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас співавтором публікації."
+                    "text" => "Користувач <a href=\"/user/" . $request->session()->get('person')['id'] . "\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас співавтором публікації."
                 ]);
             }
         }
@@ -192,7 +192,7 @@ class PublicationsController extends ASUController
             if($dataPublications['supervisor']['id'] != $request->session()->get('person')['id']) {
                 Notifications::create([
                     "autors_id" => $dataPublications['supervisor']['id'],
-                    "text" => "Користувач <a href=\"/user/$request->session()->get('person')['id']\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас керівником публікації."
+                    "text" => "Користувач <a href=\"/user/" . $request->session()->get('person')['id'] . "\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас керівником публікації."
                 ]);
             }
         }
@@ -535,9 +535,10 @@ class PublicationsController extends ASUController
                 $ids = $query2->pluck('id')->toArray();
                 $data->whereNotIn('id', $ids);
             }
+
             if($request->withForeigners == 10) {
                 $data->whereHas('authors.author', function($q) {
-                    $q->where('h_index', '>', 10);
+                    $q->where('country', '!=', "Україна")->where('h_index', '>', 10)->where('scopus_autor_id', '>', 10);
                 });
             }
         }
@@ -883,6 +884,7 @@ class PublicationsController extends ASUController
             $rating["monographsIndexedScopusOrWoSNotSSU"] += $monographsIndexedScopusOrWoSNotSSU;
             $rating["articleProfessionalPublicationsUkraine"] += $articleProfessionalPublicationsUkraine;
 
+            $rating["publicationsScopusOrAndWoSNotSSU"]['quartile4'] += $publicationsScopusOrAndWoSNotSSU['quartile4'];
             $rating["publicationsScopusOrAndWoSNotSSU"]['quartile3'] += $publicationsScopusOrAndWoSNotSSU['quartile3'];
             $rating["publicationsScopusOrAndWoSNotSSU"]['quartile2'] += $publicationsScopusOrAndWoSNotSSU['quartile2'];
             $rating["publicationsScopusOrAndWoSNotSSU"]['quartile1'] += $publicationsScopusOrAndWoSNotSSU['quartile1'];

@@ -543,8 +543,8 @@
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ind + 1}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.title}}</td>
                 <td>{{ item.publication_type.title }}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ (item.science_type_id && item.science_type_id != 2) ? 'Так' : 'Ні' }}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ (item.science_type_id && item.science_type_id != 1) ? 'Так' : 'Ні' }}</td>
+                <td>{{ (item.science_type_id && item.science_type_id != 2) ? 'Так' : 'Ні' }}</td>
+                <td>{{ (item.science_type_id && item.science_type_id != 1) ? 'Так' : 'Ні' }}</td>
                 <td>{{item.country}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.out_data}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">'{{item.pages}}'</td>
