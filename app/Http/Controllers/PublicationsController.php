@@ -66,7 +66,7 @@ class PublicationsController extends ASUController
                 }
             }
             $model->whereHas('authors.author', function($q) use ($departments_id) {
-                $q->whereIn('department_code', $departments_id);
+                $q->whereIn('department_code', $departments_id)->where('categ_1', "!=", 1);;
             });
         } else {
             if($request->faculty_code != '') {
@@ -85,7 +85,7 @@ class PublicationsController extends ASUController
         $data = $model->get();
 
         foreach ($data as $key => $publication) {
-            $publication['date'] = Carbon::parse($publication['created_at'])->format('m.d.Y');
+            $publication['date'] = Carbon::parse($publication['created_at'])->format('d.m.Y');
         }
         return response()->json($data);
     }
@@ -179,7 +179,7 @@ class PublicationsController extends ASUController
             if($value['id'] != $request->session()->get('person')['id']) {
                 Notifications::create([
                     "autors_id" => $value['id'],
-                    "text" => "Користувач <a href=\"/user/$request->session()->get('person')['id']\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас співавтором публікації."
+                    "text" => "Користувач <a href=\"/user/" . $request->session()->get('person')['id'] . "\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас співавтором публікації."
                 ]);
             }
         }
@@ -192,7 +192,7 @@ class PublicationsController extends ASUController
             if($dataPublications['supervisor']['id'] != $request->session()->get('person')['id']) {
                 Notifications::create([
                     "autors_id" => $dataPublications['supervisor']['id'],
-                    "text" => "Користувач <a href=\"/user/$request->session()->get('person')['id']\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас керівником публікації."
+                    "text" => "Користувач <a href=\"/user/" . $request->session()->get('person')['id'] . "\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас співавтором публікації."
                 ]);
             }
         }
@@ -543,7 +543,7 @@ class PublicationsController extends ASUController
             }
             if($request->withForeigners == 10) {
                 $data->whereHas('authors.author', function($q) {
-                    $q->where('h_index', '>', 10);
+                    $q->where('country', '!=', "Україна")->where('h_index', '>', 10)->where('scopus_autor_id', '>', 10);
                 });
             }
         }
@@ -714,11 +714,43 @@ class PublicationsController extends ASUController
                 "publishedWithForeignPartners" => 0
             ];
 
-            
+            $testFacultys = [];
+            $testFaculty = [];
+            $testDepartment = [];
+            $testDepartments = [];
+
+            for($i = 0; $i < count($value['authors']); $i++) {
+
+                array_push($testFacultys, $value['authors'][$i]['author']['faculty_code']);
+                if($value['authors'][$i]['author']['faculty_code'] && $value['authors'][$i]['author']['categ_1'] != 1) {
+                    array_push($testFaculty, $value['authors'][$i]['author']['faculty_code']);
+                }
+
+                array_push($testDepartments, $value['authors'][$i]['author']['department_code']);
+                if($value['authors'][$i]['author']['department_code'] && $value['authors'][$i]['author']['categ_1'] != 1) {
+                    array_push($testDepartment, $value['authors'][$i]['author']['department_code']);
+                }
+            }
           
             foreach ($value['authors'] as $k => $v) {
 
-                
+                if($v['author']['faculty_code'] && $v['author']['categ_1'] != 1) {
+                    $res = array_filter($testFaculty, function($value) use ($v) {
+                        return $value == $v['author']['faculty_code'];
+                    });
+                    $result = 1 / count($testFaculty) * count($res);
+                    $v['test_faculty'] = $res;
+                    $value['authors'][array_search($v['author']['faculty_code'], $testFacultys)]['rating_faculty'] = $result;
+                }
+
+                if($v['author']['department_code'] && $v['author']['categ_1'] != 1) {
+                    $res = array_filter($testDepartment, function($value) use ($v) {
+                        return $value == $v['author']['department_code'];
+                    });
+                    $result = 1 / count($testDepartment) * count($res);
+                    $v['test_department'] = $res;
+                    $value['authors'][array_search($v['author']['department_code'], $testDepartments)]['rating_department'] = $result;
+                }
                 
                 if(!in_array($v['author'], $authors) && $v['author']['categ_1'] != 2) {
                     array_push($authors, $v['author']);
@@ -864,6 +896,7 @@ class PublicationsController extends ASUController
             $rating["monographsIndexedScopusOrWoSNotSSU"] += $monographsIndexedScopusOrWoSNotSSU;
             $rating["articleProfessionalPublicationsUkraine"] += $articleProfessionalPublicationsUkraine;
 
+            $rating["publicationsScopusOrAndWoSNotSSU"]['quartile4'] += $publicationsScopusOrAndWoSNotSSU['quartile4'];
             $rating["publicationsScopusOrAndWoSNotSSU"]['quartile3'] += $publicationsScopusOrAndWoSNotSSU['quartile3'];
             $rating["publicationsScopusOrAndWoSNotSSU"]['quartile2'] += $publicationsScopusOrAndWoSNotSSU['quartile2'];
             $rating["publicationsScopusOrAndWoSNotSSU"]['quartile1'] += $publicationsScopusOrAndWoSNotSSU['quartile1'];
