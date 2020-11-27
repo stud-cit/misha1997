@@ -569,7 +569,10 @@
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_wos}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.snip}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.impact_factor}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.sub_db_index ? (item.sub_db_index == 1 ? "Science Citation Index Expanded (SCIE)" : "Social Science Citation Index") : "" }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ 
+                    item.sub_db_scie == 1 && item.sub_db_ssci == 0 ? "Science Citation Index Expanded (SCIE)" : "" ||
+                     item.sub_db_scie == 0 && item.sub_db_ssci == 1 ? "Social Science Citation Index (SSCI)" : "" ||
+                     item.sub_db_scie == 1 && item.sub_db_ssci == 1 ? "SCIE, SSCI" : "" }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.languages }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.doi }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.date }}</td>

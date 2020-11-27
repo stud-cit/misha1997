@@ -66,7 +66,7 @@ class PublicationsController extends ASUController
                 }
             }
             $model->whereHas('authors.author', function($q) use ($departments_id) {
-                $q->whereIn('department_code', $departments_id)->where('categ_1', "!=", 1);
+                $q->whereIn('department_code', $departments_id)->where('categ_1', "!=", 1);;
             });
         } else {
             if($request->faculty_code != '') {
@@ -77,7 +77,7 @@ class PublicationsController extends ASUController
                     }
                 }
                 $model->whereHas('authors.author', function($q) use ($departments_id) {
-                    $q->whereIn('faculty_code', $departments_id)->where('categ_1', "!=", 1);
+                    $q->whereIn('faculty_code', $departments_id);
                 });
             }
         }
@@ -192,7 +192,7 @@ class PublicationsController extends ASUController
             if($dataPublications['supervisor']['id'] != $request->session()->get('person')['id']) {
                 Notifications::create([
                     "autors_id" => $dataPublications['supervisor']['id'],
-                    "text" => "Користувач <a href=\"/user/" . $request->session()->get('person')['id'] . "\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас керівником публікації."
+                    "text" => "Користувач <a href=\"/user/" . $request->session()->get('person')['id'] . "\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a> і відзначив Вас співавтором публікації."
                 ]);
             }
         }
@@ -320,11 +320,17 @@ class PublicationsController extends ASUController
         $notificationText .= $this->notification($data, $model, "nature_science", "журнал");
 
         // Підбаза WoS
-        $sub_db_index = [
-            "1" => "Science Citation Index Expanded (SCIE)",
-            "2" => "Social Science Citation Index (SSCI)",
+        $sub_db_scie = [
+            "1" => "Так",
+            "0" => "Ні",
         ];
-        $notificationText .= $this->notification($data, $model, "sub_db_index", "підбазу WoS", $sub_db_index);
+
+        $sub_db_ssci = [
+            "1" => "Так",
+            "0" => "Ні",
+        ];
+        $notificationText .= $this->notification($data, $model, "sub_db_scie", "Підбаза WoS - SCIE", $sub_db_scie);
+        $notificationText .= $this->notification($data, $model, "sub_db_ssci", "підбазу WoS - SSCI", $sub_db_ssci);
 
         if($notificationText != "") {
             $notificationText = "Користувач <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a> вніс наступні зміни в публікацію <a href=\"/publications/". $id ."\">" . $model->title . "</a>:<br>" . $notificationText;
@@ -538,7 +544,6 @@ class PublicationsController extends ASUController
                 $ids = $query2->pluck('id')->toArray();
                 $data->whereNotIn('id', $ids);
             }
-
             if($request->withForeigners == 10) {
                 $data->whereHas('authors.author', function($q) {
                     $q->where('country', '!=', "Україна")->where('h_index', '>', 10)->where('scopus_autor_id', '>', 10);
@@ -554,19 +559,19 @@ class PublicationsController extends ASUController
 
         if($request->scie != "") { // Статті у виданнях, які входять до підбази WOS - SCIE
             if($request->scie == 1) {
-                $data->where('sub_db_index', 1);
+                $data->where('sub_db_scie', 1);
             }
             if($request->scie == 0) {
-                $data->where('sub_db_index', '!=', 1);
+                $data->where('sub_db_scie', 0);
             }
         }
 
         if($request->ssci != "") { // Статті у виданнях, які входять до підбази WOS - SSCI
             if($request->ssci == 1) {
-                $data->where('sub_db_index', 2);
+                $data->where('sub_db_ssci', 1);
             }
             if($request->ssci == 0) {
-                $data->where('sub_db_index', '!=', 2);
+                $data->where('sub_db_ssci',  0);
             }
         }
 
@@ -729,9 +734,9 @@ class PublicationsController extends ASUController
                     array_push($testDepartment, $value['authors'][$i]['author']['department_code']);
                 }
             }
-
+          
             foreach ($value['authors'] as $k => $v) {
-                
+
                 if($v['author']['faculty_code'] && $v['author']['categ_1'] != 1) {
                     $res = array_filter($testFaculty, function($value) use ($v) {
                         return $value == $v['author']['faculty_code'];
@@ -749,7 +754,7 @@ class PublicationsController extends ASUController
                     $v['test_department'] = $res;
                     $value['authors'][array_search($v['author']['department_code'], $testDepartments)]['rating_department'] = $result;
                 }
-
+                
                 if(!in_array($v['author'], $authors) && $v['author']['categ_1'] != 2) {
                     array_push($authors, $v['author']);
                 }
@@ -763,9 +768,14 @@ class PublicationsController extends ASUController
                 // Інcтитут / факультет - автора
                 foreach($divisions->original['institute'] as $keyInstitute => $institute) {
                     if ($v['author']['faculty_code'] == $institute['ID_DIV']) {
+
                         $v['author']['faculty'] = $institute['ABBR_DIV'];
+                        
                     }
                 }
+
+                
+                
 
                 if(($value->publication_type_id == 1 || $value->publication_type_id == 2 || $value->publication_type_id == 3) && $v['author']['categ_1'] == 1) {
                     $withStudent = 1;
@@ -806,10 +816,10 @@ class PublicationsController extends ASUController
                 }
 
                 if(($value->publication_type_id == 1 || $value->publication_type_id == 3) && $value->science_type_id == 2) {
-                    if($value->sub_db_index == 1) {
+                    if($value->sub_db_scie == 1) {
                         $articleWoS['scie'] = 1;
                     }
-                    if($value->sub_db_index == 2) {
+                    if($value->sub_db_ssci == 1) {
                         $articleWoS['ssci'] = 1;
                     }
                 }
@@ -880,6 +890,8 @@ class PublicationsController extends ASUController
                 }
             }
 
+            
+
             $rating["countStudentPublications"] += $withStudent; // Кількість статей за авторством та співавторством студентів
 
             $rating["countForeignPublications"]['count'] += $countForeignPublications['count'];
@@ -923,6 +935,7 @@ class PublicationsController extends ASUController
         foreach ($authors as $key => $value) {
             $rating['countHirschIndex'] += max($value['h_index'], $value['scopus_autor_id']);
         }
+
         return response()->json([
             "rating" => $rating,
             "publications" => $data
