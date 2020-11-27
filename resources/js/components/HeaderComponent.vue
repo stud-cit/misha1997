@@ -86,8 +86,6 @@
                     // this.$router.push({path: '/'});
                     this.$store.dispatch('setUser', null);
                     window.location.href = "https://cabinet.sumdu.edu.ua/";
-                }).catch(() => {
-                    console.log("error")
                 })
             }
         },

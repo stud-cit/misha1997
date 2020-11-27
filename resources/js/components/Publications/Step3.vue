@@ -144,11 +144,11 @@
             CloseEditButton
         },
         watch: {
-            publicationData: {  
+            publicationData: {
                 // the callback will be called immediately after the start of the observation
-                immediate: true, 
+                immediate: true,
                 handler (val, oldVal) {
-                    console.log(val)
+                    //console.log(val)
                 }
             }
         },
