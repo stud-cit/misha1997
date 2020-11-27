@@ -1,7 +1,7 @@
 <template>
     <div>
         <button class="export-button" @click="exportPublications('export')">
-            <img src="/img/download.png" alt=""> Експорт публікацій word
+            <img src="/img/download.png" alt=""> Експорт публікацій Word
         </button>
         <div id="export" v-show="false">
             <template v-if="filteredData.articles.length > 0">
@@ -18,6 +18,15 @@
                 <ol>
                     <li v-for="(item, index) in filteredData.monograph" :key="index">
                     {{ item.initials }} {{ item.title }} : {{ item.publication_type.title.toLowerCase() }}<span v-if="item.by_editing"> / за ред. {{ item.by_editing }}</span>. {{ item.city }} : ПФ «Видавництво «{{ item.editor_name }}», {{ item.year }}. {{ item.pages }} c. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
+                    </li>
+                </ol>
+            </template>
+
+            <template v-if="filteredData.parts.length > 0">
+                <h2>Розділ монографії / розділ книги</h2>
+                <ol>
+                    <li v-for="(item, index) in filteredData.parts" :key="index">
+                    {{ item.initials }} {{ item.title }}. <i>{{ item.name_monograph }}</i> : кол. моногр. / <span v-if="item.by_editing"> / за ред. {{ item.by_editing }}.</span> {{ item.city }} : {{ item.editor_name }}, {{ item.year }}. C. {{ item.pages }}.
                     </li>
                 </ol>
             </template>
@@ -72,15 +81,6 @@
                 <ol>
                     <li v-for="(item, index) in filteredData.thesis" :key="index">
                     {{ item.initials }} {{ item.title }}. <i>{{ item.name_conference }}</i> : тези доповідей <span v-if="item.by_editing"> / за ред. {{ item.by_editing }}</span>. {{ item.city }} : {{ item.editor_name }}, {{ item.year }}. C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
-                    </li>
-                </ol>
-            </template>
-
-            <template v-if="filteredData.parts.length > 0">
-                <h2>Розділ монографії / розділ книги</h2>
-                <ol>
-                    <li v-for="(item, index) in filteredData.thesis" :key="index">
-                    {{ item.initials }} {{ item.title }}. <i>{{ item.name_monograph }}</i> : кол. моногр. / <span v-if="item.by_editing"> / за ред. {{ item.by_editing }}.</span> {{ item.city }} : {{ item.editor_name }}, {{ item.year }}. C. {{ item.pages }}.
                     </li>
                 </ol>
             </template>

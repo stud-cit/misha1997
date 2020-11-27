@@ -8,8 +8,6 @@ Route::get('check-user', 'AuthController@checkUser');
 Route::post('register', 'AuthController@register');
 Route::post('logout', 'AuthController@logout');
 
-Route::get('test', 'ASUController@test');
-
 Route::group(['middleware' => ['web']], function() {
 
     // Режим доступа

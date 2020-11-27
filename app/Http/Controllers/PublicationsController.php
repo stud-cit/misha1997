@@ -481,9 +481,7 @@ class PublicationsController extends ASUController
             $data->whereIn('science_type_id', array_column($request->science_types, 'id')); // Індексування БД Scopus/WoS
         }
 
-        if($request->quartil_scopus && $request->quartil_wos && ($request->quartil_scopus == $request->quartil_wos)) {
-            $data->where('quartil_scopus', $request->quartil_scopus)->orWhere('quartil_wos', $request->quartil_scopus);
-        } else {
+        if($request->quartil_scopus || $request->quartil_wos && ($request->quartil_scopus != $request->quartil_wos)) {
             if($request->quartil_scopus) {
                 $data->where('quartil_scopus', $request->quartil_scopus); // Квартиль журналу SCOPUS
             }
@@ -575,7 +573,7 @@ class PublicationsController extends ASUController
             }
         }
 
-        $data = $data->get();
+        $data = $data->get()->toArray();
 
         foreach ($data as $key => $publication) {
             $publication['date'] = Carbon::parse($publication['created_at'])->format('m.d.Y');
@@ -640,11 +638,17 @@ class PublicationsController extends ASUController
 
         $authors = [];
 
+        if($request->quartil_scopus && $request->quartil_wos && ($request->quartil_scopus == $request->quartil_wos)) {
+            $data = array_filter($data, function($value) use ($request) {
+                return $request->quartil_scopus == min($value['quartil_scopus'], $value['quartil_wos']);
+            });
+        }
+
         foreach ($data as $key => $value) {
-            if($value->publication_type_id != 10 && $value->publication_type_id != 11) {
+            if($value['publication_type_id'] != 10 && $value['publication_type_id'] != 11) {
                 $rating['countPublications'] += 1;
             }
-            if(($value->publication_type_id == 10 || $value->publication_type_id == 11) && $value->applicant == 'СумДУ') {
+            if(($value['publication_type_id'] == 10 || $value['publication_type_id'] == 11) && $value['applicant'] == 'СумДУ') {
                 $rating['receivedReportingNameSSU'] += 1;
                 $authorshipBusinessRepresentatives = 0;
                 foreach ($value['authors'] as $k => $v) {
@@ -655,7 +659,7 @@ class PublicationsController extends ASUController
                 $rating['authorshipBusinessRepresentatives'] += $authorshipBusinessRepresentatives;
             }
 
-            if($value->publication_type_id == 10 && $value->applicant != 'СумДУ') {
+            if($value['publication_type_id'] == 10 && $value['applicant'] != 'СумДУ') {
                 $receivedReportingEmployeesNotSSU = 0;
                 foreach ($value['authors'] as $k => $v) {
                     if($v['author']['job'] == 'СумДУ') {
@@ -665,11 +669,11 @@ class PublicationsController extends ASUController
                 $rating['receivedReportingEmployeesNotSSU'] += $receivedReportingEmployeesNotSSU;
             }
 
-            if($value->publication_type_id == 10 && $value->commerc_university) {
+            if($value['publication_type_id'] == 10 && $value['commerc_university']) {
                 $rating['commercializedReportingYear']['university'] += 1;
             }
 
-            if($value->publication_type_id == 10 && $value->commerc_employees) {
+            if($value['publication_type_id'] == 10 && $value['commerc_employees']) {
                 $rating['commercializedReportingYear']['employee'] += 1;
             }
 
@@ -777,62 +781,62 @@ class PublicationsController extends ASUController
                 
                 
 
-                if(($value->publication_type_id == 1 || $value->publication_type_id == 2 || $value->publication_type_id == 3) && $v['author']['categ_1'] == 1) {
+                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3) && $v['author']['categ_1'] == 1) {
                     $withStudent = 1;
                 }
 
-                if(($value->publication_type_id == 1 || $value->publication_type_id == 2 || $value->publication_type_id == 3 || $value->publication_type_id == 6 || $value->publication_type_id == 7) && $v['author']['country'] != "Україна") {
+                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3 || $value['publication_type_id'] == 6 || $value['publication_type_id'] == 7) && $v['author']['country'] != "Україна") {
                     $countForeignPublications['count'] = 1;
                     if($v['author']['h_index'] >= 10 || $v['author']['scopus_autor_id'] >= 10) {
                         $countForeignPublications['haveIndexScopusWoS'] = 1;
                     }
                 }
-                if($value->publication_type_id == 6 && ($value->science_type_id == 1 || $value->science_type_id == 2) && $v['author']['guid']) {
+                if($value['publication_type_id'] == 6 && ($value['science_type_id'] == 1 || $value['science_type_id'] == 2) && $v['author']['guid']) {
                     $monographsIndexedScopusOrWoSNotSSU = 1;
                 }
-                if($value->publication_type_id == 1) {
+                if($value['publication_type_id'] == 1) {
                     $articleProfessionalPublicationsUkraine = 1;
                 }
 
-                if($value->science_type_id) {
-                    if($value->science_type_id == 1 || $value->science_type_id == 2) {
+                if($value['science_type_id']) {
+                    if($value['science_type_id'] == 1 || $value['science_type_id'] == 2) {
                         $publicationsScopusOrAndWoSNotSSU['countReportingYear']['ScopusOrWoS'] = 1;
                     }
-                    if($value->science_type_id == 3) {
+                    if($value['science_type_id'] == 3) {
                         $publicationsScopusOrAndWoSNotSSU['countReportingYear']['ScopusAndWoS'] = 1;
                     }
-                    if($value->quartil_scopus == 4 || $value->quartil_wos == 4) {
+                    if($value['quartil_scopus'] == 4 || $value['quartil_wos'] == 4) {
                         $publicationsScopusOrAndWoSNotSSU['quartile4'] = 1;
                     }
-                    if($value->quartil_scopus == 3 || $value->quartil_wos == 3) {
+                    if($value['quartil_scopus'] == 3 || $value['quartil_wos'] == 3) {
                         $publicationsScopusOrAndWoSNotSSU['quartile3'] = 1;
                     }
-                    if($value->quartil_scopus == 2 || $value->quartil_wos == 2) {
+                    if($value['quartil_scopus'] == 2 || $value['quartil_wos'] == 2) {
                         $publicationsScopusOrAndWoSNotSSU['quartile2'] = 1;
                     }
-                    if($value->quartil_scopus == 1 || $value->quartil_wos == 1) {
+                    if($value['quartil_scopus'] == 1 || $value['quartil_wos'] == 1) {
                         $publicationsScopusOrAndWoSNotSSU['quartile1'] = 1;
                     }
                 }
 
-                if(($value->publication_type_id == 1 || $value->publication_type_id == 3) && $value->science_type_id == 2) {
-                    if($value->sub_db_scie == 1) {
+                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 3) && $value['science_type_id'] == 2) {
+                    if($value['sub_db_scie'] == 1) {
                         $articleWoS['scie'] = 1;
                     }
-                    if($value->sub_db_ssci == 1) {
+                    if($value['sub_db_ssci'] == 1) {
                         $articleWoS['ssci'] = 1;
                     }
                 }
 
-                if($value->nature_index) {
+                if($value['nature_index']) {
                     $accountedNatureIndex = 1;
                 }
 
-                if($value->nature_science == 'Nature' || $value->nature_science == 'Science') {
+                if($value['nature_science'] == 'Nature' || $value['nature_science'] == 'Science') {
                     $journalsNatureOrScience = 1;
                 }
 
-                if($v['author']['job'] != "СумДУ" && $v['author']['job'] != "Не працює" && $v['author']['job'] != null) {
+                if($value['publication_type_id'] != null && $v['author']['job'] != "СумДУ" && $v['author']['job'] != "Не працює" && $v['author']['job'] != null) {
                     $authorsOtherOrganizations = 1;
                 }
 
@@ -840,31 +844,31 @@ class PublicationsController extends ASUController
                     $authorsInForbesFortune = 1;
                 }
 
-                if($value->db_scopus_percent) {
+                if($value['db_scopus_percent']) {
                     $enteredMostCitedSubjectArea['scopus'] = 1;
                 }
 
-                if($value->db_wos_percent) {
+                if($value['db_wos_percent']) {
                     $enteredMostCitedSubjectArea['wos'] = 1;
                 }
 
                 // - у т.ч. з цифровим ідентифікатором DOI
-                if($value->doi && $value->science_type_id) {
+                if($value['doi'] && $value['science_type_id']) {
                     $countDOI = 1;
                 }
 
-                if($value->cited_international_patents) {
+                if($value['cited_international_patents']) {
                     $rating["citedInternationalPatents"] = 1;
                 }
 
-                if($value->science_type_id == 1 && ($value->snip > 1)) {
+                if($value['science_type_id'] == 1 && ($value['snip'] > 1)) {
                     $rating["countSnipScopus"] = 1;
                 }
 
-                if($value->publication_type_id == 9) {
+                if($value['publication_type_id'] == 9) {
                     $these['count'] = 1;
                     // Тез опублікованих за кордоном
-                    if($value->country != "Україна") {
+                    if($value['country'] != "Україна") {
                         $these['publishedAbroad'] = 1;
                     }
                     // Тез опублікованих з іноземними партнерами
@@ -877,10 +881,10 @@ class PublicationsController extends ASUController
                     }
                 }
 
-                if($value->publication_type_id == 1 || $value->publication_type_id == 2 || $value->publication_type_id == 3 || $value->publication_type_id == 7) {
+                if($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3 || $value['publication_type_id'] == 7) {
                     $articles['count'] = 1;
                     // Статті опубліковані за кордоном
-                    if($value->country != "Україна") {
+                    if($value['country'] != "Україна") {
                         $articles['publishedAbroad'] = 1;
                     }
                     // Статті опубліковані з іноземними партнерами

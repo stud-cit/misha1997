@@ -14,28 +14,6 @@ class AuthorsController extends ASUController
 {
     protected $asu_key = 'eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG';
     
-    function updateUsers() {
-        $model = Authors::get();
-        $mode = 1;
-        $categ = 'categ2';
-        $id = 4;
-        $getPersons = file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key='.$this->asu_key.'&mode='.$mode.'&'.$categ.'='.$id);
-        $getPersons = json_decode($getPersons, true);
-
-        foreach ($model as $key => $value) {
-            if($value['categ_2'] == 2) {
-                $userId = array_search($value['guid'], array_column($getPersons['result'], 'ID_FIO'));
-                $division = $this->getUserDivision($getPersons['result'][$userId]['KOD_DIV'])->original;
-                $modelUser = Authors::find($value['id']);
-                $modelUser->update([
-                    "department_code" => $division['department'] ? $division['department']['ID_DIV'] : null,
-                    "faculty_code" => $division['institute'] ? $division['institute']['ID_DIV'] : null
-                ]);
-            }
-        }
-        return response('ok', 200);
-    }
-
     // authors
     function get(Request $request) {
         $data = [];
@@ -251,6 +229,7 @@ class AuthorsController extends ASUController
         if(!Authors::where("guid", $request->guid)->where("name", "like", $request->name)->exists()) {
             $model = new Authors();
             $data = $request->all();
+
 
             $division = $this->getUserDivision($request->kod_div)->original;
             $data['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;

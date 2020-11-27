@@ -19,6 +19,20 @@
             </div>
             <div class="form-row">
                 <div class="form-group col-6">
+                    <label>Без самоцитувань Scopus</label>
+                    <div class="input-container">
+                        <input class="item-value" type="text" v-model="data.without_self_citations_scopus">
+                    </div>
+                </div>
+                <div class="form-group col-6">
+                    <label>Без самоцитувань WoS</label>
+                    <div class="input-container">
+                        <input class="item-value" type="text" v-model="data.without_self_citations_wos">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6">
                     <label>Research ID</label>
                     <div class="input-container">
                         <input class="item-value" type="text" v-model="data.scopus_researcher_id">
@@ -55,11 +69,12 @@
                 loading: false,
                 name: "",
                 data: {
-                    country: "Україна",
                     h_index: "",
                     scopus_autor_id: "",
                     scopus_researcher_id: "",
                     orcid: "",
+                    without_self_citations_scopus: "",
+                    without_self_citations_wos: ""
                 }
             };
         },

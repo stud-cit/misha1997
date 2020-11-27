@@ -11,6 +11,8 @@ class AuthController extends ASUController {
     protected $cabinet_service = "https://cabinet.sumdu.edu.ua/index/service/";
     protected $cabinet_service_token = "TNWcmzpZ";
 
+    protected $asu_key = "eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG";
+
     function checkUser(Request $request) {
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token), true);
         if ($personCabinet['status'] == 'OK') {
@@ -64,6 +66,11 @@ class AuthController extends ASUController {
                 $data['academic_code'] = $personCabinet['result']['info1'][0]['NAME_GROUP'];
                 $data['categ_1'] = $personCabinet['result']['info1'][0]['CATEG'];
                 $kod_div = $personCabinet['result']['info1'][0]['KOD_DIV'];
+
+                if($personCabinet['result']['info1'][0]['CATEG'] == 2) {
+                    $kod_div = $this->getAspirantDepartment($personCabinet['result']['guid']);
+                }
+
             } elseif(isset($personCabinet['result']['info2'])) {
                 foreach ($personCabinet['result']['info2'] as $key => $value) {
                     if($value['KOD_SYMP'] == 1 && $value['KOD_STATE'] == 1) {
@@ -118,6 +125,9 @@ class AuthController extends ASUController {
                     $person->academic_code = $personCabinet['result']['info1'][0]['NAME_GROUP'];
                     $person->categ_1 = $personCabinet['result']['info1'][0]['CATEG'];
                     $kod_div = $personCabinet['result']['info1'][0]['KOD_DIV'];
+                    if($personCabinet['result']['info1'][0]['CATEG'] == 2) {
+                        $kod_div = $this->getAspirantDepartment($personCabinet['result']['guid']);
+                    }
                 } elseif (isset($personCabinet['result']['info2'])) {
                     foreach ($personCabinet['result']['info2'] as $key => $value) {
                         if($value['KOD_SYMP'] == 1 && $value['KOD_STATE'] == 1) {

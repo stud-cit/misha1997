@@ -194,7 +194,7 @@
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
-                                    <option value="10">В тому числі мають індекс гірша за Scopus та WoS не нижче 10</option>
+                                    <option value="10">В тому числі мають індекс Гірша за Scopus та WoS не нижче 10</option>
                                 </select>
 
                             </div>
@@ -515,26 +515,28 @@
                 <th>К-сть сторінок </th>
                 <th>Номер (том) </th>
                 <th>Посада</th>
+                <th>Студент</th>
                 <th>Прізвище, ім'я </th>
                 <th>Керівник </th>
                 <th>Індекс Гірша WoS </th>
-                <th>Індекс Гірша Scopus </th>
-                <!-- <th>Прізвище, ініціали наукового керівника </th>
-                <th>Індекс Гірша WoS керівника </th>
-                <th>Індекс Гірша Scopus керівника </th> -->
+                <th>Індекс Гірша WoS більше 10</th>
+                <th>Індекс Гірша Scopus</th>
+                <th>Індекс Гірша Scopus більше 10</th>
                 <th>Факультет/країна(для співавторів - громадян інших країн) </th>
                 <th>Рейтинг</th>
                 <th>Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ) </th>
+                <th>Інші організацій</th>
                 <th>Рейтинг</th>
                 <th>Іноземець</th>
                 <th>Іноземець</th>
                 <th>Рік</th>
-                <th>Квартиль журналу Scopus</th>
-                <th>Квартиль журналу WoS</th>
+                <th>Квартиль Scopus</th>
+                <th>Квартиль WoS</th>
+                <th>Квартиль</th>
                 <th>SNIP</th>
                 <th>Імпакт-фактор (БД WoS)</th>
                 <th>Підбаза WoS</th>
-                <th>Мова</th>
+                <!-- <th>Мова</th> -->
                 <th>DOI</th>
                 <th>Дата занесення до бази даних</th>
             </tr>
@@ -554,26 +556,39 @@
                 <td v-else-if="a.author.categ_2 == 1">Співробітник</td>
                 <td v-else-if="a.author.categ_2 == 2">Викладач</td>
                 <td v-else></td>
+                <td>{{ item.authors.find(user => user.author.categ_1 == 1) ? "Студент" : "" }}</td>
                 <td>{{ a.author.name }}</td>
                 <td>{{ a.supervisor ? 'Так' : 'Ні' }}</td>
+                
                 <td>{{ a.author.h_index }}</td>
+                <td>{{ item.authors.map(user => (user.author.h_index > 10) ? +user.author.h_index : '').reduce((a, b) => a > b ? a : b) }}</td>
+
                 <td>{{ a.author.scopus_autor_id }}</td>
+                <td>{{ item.authors.map(user => (user.author.scopus_autor_id > 10) ? +user.author.scopus_autor_id : '').reduce((a, b) => a > b ? a : b) }}</td>
+
                 <td>{{ a.author.faculty ? a.author.faculty : (a.author.categ_1 != 1 ? a.author.country : "") }}</td>
                 <td>{{ a.rating_faculty }}</td>
                 <td>{{a.author.department ? a.author.department : a.author.job}}</td>
+
+                <td>{{ item.authors.find(user => user.author.job != 'СумДУ') ? "Так" : "Ні" }}</td>
+
                 <td>{{ a.rating_department }}</td>
                 <td>{{a.author.country == 'Україна' ? 'Ні' : a.author.country ? 'Так' : 'Не вказано'}}</td>
                 <td>{{ item.authors.find(user => user.author.country != 'Україна') ? "Так" : "Ні" }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.year}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_scopus}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_wos}}</td>
+
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ Math.min(item.quartil_scopus, item.quartil_wos) }}</td>
+
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.snip}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.impact_factor}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ 
-                    item.sub_db_scie == 1 && item.sub_db_ssci == 0 ? "Science Citation Index Expanded (SCIE)" : "" ||
-                     item.sub_db_scie == 0 && item.sub_db_ssci == 1 ? "Social Science Citation Index (SSCI)" : "" ||
-                     item.sub_db_scie == 1 && item.sub_db_ssci == 1 ? "SCIE, SSCI" : "" }}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.languages }}</td>
+                    item.sub_db_scie == 1 && item.sub_db_ssci == 0 ? "SCIE" : "" ||
+                    item.sub_db_scie == 0 && item.sub_db_ssci == 1 ? "SSCI" : "" ||
+                    item.sub_db_scie == 1 && item.sub_db_ssci == 1 ? "SCIE, SSCI" : "" }}
+                </td>
+                <!-- <td v-if="i == 0" :rowspan="item.authors.length">{{ item.languages }}</td> -->
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.doi }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.date }}</td>
             </tr>
@@ -766,23 +781,28 @@
                         { wch: 5 }, // К-сть сторінок
                         { wch: 5 }, // Номер (том)
                         { wch: 10 }, // Посада
+                        { wch: 10 }, // Студент
                         { wch: 15 }, // Прізвище, ім'я
                         { wch: 5 }, // Керівник
                         { wch: 5 }, // Індекс Гірша WoS
+                        { wch: 5 }, // Індекс Гірша WoS
+                        { wch: 5 }, // Індекс Гірша Scopus
                         { wch: 5 }, // Індекс Гірша Scopus
                         { wch: 15 }, // Факультет/країна(для співавторів - громадян інших країн)
                         { wch: 5 },
                         { wch: 15 }, // Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ)
                         { wch: 5 },
+                        { wch: 5 },
                         { wch: 4 }, // Іноземець
                         { wch: 4 }, // Іноземець
                         { wch: 5 },  // Рік
-                        { wch: 3 }, // Квартиль журналу Scopus
-                        { wch: 3 }, // Квартиль журналу WoS
+                        { wch: 3 }, // Квартиль Scopus
+                        { wch: 3 }, // Квартиль WoS
+                        { wch: 3 }, // Квартиль
                         { wch: 3 },  // SNIP
                         { wch: 3 }, // Імпакт-фактор (БД WoS)
                         { wch: 5 }, // Підбаза WoS
-                        { wch: 5 }, // Мова
+                        // { wch: 5 }, // Мова
                         { wch: 3 }, // DOI
                         { wch: 10 }, // Дата занесення до бази даних
                     ];
