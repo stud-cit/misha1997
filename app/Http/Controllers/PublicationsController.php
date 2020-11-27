@@ -475,12 +475,15 @@ class PublicationsController extends ASUController
             $data->whereIn('science_type_id', array_column($request->science_types, 'id')); // Індексування БД Scopus/WoS
         }
 
-        if($request->quartil_scopus) {
-            $data->where('quartil_scopus', $request->quartil_scopus); // Квартиль журналу SCOPUS
-        }
-
-        if($request->quartil_wos) {
-            $data->where('quartil_wos', $request->quartil_wos); // Квартиль журналу WOS
+        if($request->quartil_scopus && $request->quartil_wos && ($request->quartil_scopus == $request->quartil_wos)) {
+            $data->where('quartil_scopus', $request->quartil_scopus)->orWhere('quartil_wos', $request->quartil_scopus);
+        } else {
+            if($request->quartil_scopus) {
+                $data->where('quartil_scopus', $request->quartil_scopus); // Квартиль журналу SCOPUS
+            }
+            if($request->quartil_wos) {
+                $data->where('quartil_wos', $request->quartil_wos); // Квартиль журналу WOS
+            }
         }
 
         if($request->snip) {

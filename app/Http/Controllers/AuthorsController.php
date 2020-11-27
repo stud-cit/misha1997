@@ -367,6 +367,8 @@ class AuthorsController extends ASUController
             $result = "Студент";
         } elseif ($data->categ_1 == 2) {
             $result = "Аспірант";
+        } elseif ($data->categ_1 == 3) {
+            $result = "Випускник";
         } elseif ($data->categ_2 == 1) {
             $result = "Співробітник";
         } elseif ($data->categ_2 == 2) {

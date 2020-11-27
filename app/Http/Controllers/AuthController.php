@@ -65,9 +65,12 @@ class AuthController extends ASUController {
                 $data['categ_1'] = $personCabinet['result']['info1'][0]['CATEG'];
                 $kod_div = $personCabinet['result']['info1'][0]['KOD_DIV'];
             } elseif(isset($personCabinet['result']['info2'])) {
-                $index = array_search(1, array_column($personCabinet['result']['info2'], "KOD_SYMP"));
-                $data['categ_2'] = $personCabinet['result']['info2'][$index]['CATEG'];
-                $kod_div = $personCabinet['result']['info2'][$index]['KOD_DIV'];
+                foreach ($personCabinet['result']['info2'] as $key => $value) {
+                    if($value['KOD_SYMP'] == 1 && $value['KOD_STATE'] == 1) {
+                        $data['categ_2'] = $value['CATEG'];
+                        $kod_div = $value['KOD_DIV'];
+                    }
+                }
             }
 
             $division = $this->getUserDivision($kod_div)->original;
@@ -116,9 +119,12 @@ class AuthController extends ASUController {
                     $person->categ_1 = $personCabinet['result']['info1'][0]['CATEG'];
                     $kod_div = $personCabinet['result']['info1'][0]['KOD_DIV'];
                 } elseif (isset($personCabinet['result']['info2'])) {
-                    $index = array_search(1, array_column($personCabinet['result']['info2'], "KOD_SYMP"));
-                    $data['categ_2'] = $personCabinet['result']['info2'][$index]['CATEG'];
-                    $kod_div = $personCabinet['result']['info2'][$index]['KOD_DIV'];
+                    foreach ($personCabinet['result']['info2'] as $key => $value) {
+                        if($value['KOD_SYMP'] == 1 && $value['KOD_STATE'] == 1) {
+                            $data['categ_2'] = $value['CATEG'];
+                            $kod_div = $value['KOD_DIV'];
+                        }
+                    }
                 }
 
                 $division = $this->getUserDivision($kod_div)->original;
