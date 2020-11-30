@@ -12,23 +12,35 @@
                             <a class="nav-link dropdown-toggle"  href="#" data-toggle="dropdown" >Меню публікацій
                                 <img class="ml-1 pb2" src="/img/arrow-down.svg" alt=""></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <router-link :to="{name: 'my-publications'}" class="dropdown-item">Мої публікації</router-link>
-                                <router-link :to="{name: 'publications'}" class="dropdown-item">Cписок усіх публікацій</router-link>
                                 <router-link
                                     v-if="userRole == 4 || access == 'open'"
                                     :to="{name: 'publications-add'}"
                                     class="dropdown-item"
                                 >Додати нову публікацію</router-link>
+
+                                <router-link 
+                                    :to="{name: 'my-publications'}" 
+                                    class="dropdown-item"
+                                    >Мої публікації</router-link>
+
+                                <router-link 
+                                    :to="{name: 'publications'}" 
+                                    class="dropdown-item" 
+                                    v-if="userRole != 1"
+                                >Cписок усіх публікацій</router-link>
+
                                 <router-link
                                     v-if="userRole == 4 || (access == 'open' && (userRole == 3 || userRole == 2))"
                                     :to="{name: 'users'}"
                                     class="dropdown-item"
                                 >Список усіх користувачів</router-link>
+
                                 <button
                                     v-if="userRole == 4 && access == 'close'"
                                     class="dropdown-item success"
                                     @click="setAccess('open')"
                                 >Перевести сервіс в звичайний режим</button>
+                                
                                 <button
                                     v-if="userRole == 4 && access == 'open'"
                                     class="dropdown-item danger"

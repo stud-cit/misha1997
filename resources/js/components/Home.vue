@@ -1,23 +1,35 @@
 <template>
     <div class="container page-content general-block">
         <div class="page-list">
-            <router-link :to="{name: 'my-publications'}" class="page-link">Мої публікації</router-link>
-            <router-link :to="{name: 'publications'}" class="page-link">Cписок усіх публікацій</router-link>
             <router-link
                 v-if="userRole == 4 || access == 'open'"
                 :to="{name: 'publications-add'}"
                 class="page-link"
             >Додати нову публікацію</router-link>
+
+            <router-link 
+                :to="{name: 'my-publications'}" 
+                class="page-link"
+                >Мої публікації</router-link>
+
+            <router-link 
+                :to="{name: 'publications'}" 
+                class="page-link"
+                v-if="userRole != 1"
+            >Cписок усіх публікацій</router-link>
+
             <router-link
                 v-if="userRole == 4 || (access == 'open' && (userRole == 3 || userRole == 2))"
                 :to="{name: 'users'}"
                 class="page-link"
             >Список усіх користувачів</router-link>
+
             <button
                 v-if="userRole == 4 && access == 'close'"
                 class="page-link success"
                 @click="setAccess('open')"
             >Перевести сервіс в звичайний режим</button>
+            
             <button
                 v-if="userRole == 4 && access == 'open'"
                 class="page-link danger"
