@@ -38,7 +38,7 @@
                                     label="name"
                                     :options="persons"
                                     :preserve-search="true"
-                                    :placeholder="'Пошук в базі данних СумДУ'"
+                                    :placeholder="'Пошук в базі даних СумДУ'"
                                     :selectLabel="'Натисніть для вибору'"
                                     :selectedLabel="'Вибрано'"
                                     :deselectLabel="'Натисніть для видалення'"
@@ -191,7 +191,7 @@
                         :options="authors"
                         label="name"
                         :searchable="true"
-                        placeholder="Пошук в базі данних сайту"
+                        placeholder="Пошук в базі даних сайту"
                         selectLabel="Натисніть для вибору"
                         selectedLabel="Вибрано"
                         deselectLabel="Натисніть для видалення"
@@ -221,7 +221,7 @@
                             selectLabel="Натисніть для вибору"
                             selectedLabel="Вибрано"
                             deselectLabel='Натисніть для видалення'
-                            placeholder="Пошук в базі данних сайту"
+                            placeholder="Пошук в базі даних сайту"
                             :custom-label="nameWithInfo"
                         >
                             <span slot="noResult">По даному запиту немає результатів</span>
@@ -248,7 +248,7 @@
 
             <transition name="component-fade" mode="out-in">
                 <div class="form-group " v-if="findAuthor">
-                    <label class="item-title">Додати автора в базу данних сайту (якщо ви не знайшли потрібного вам автора) <a href="#" @click="findAuthor = false">закрити</a></label>
+                    <label class="item-title">Додати автора в базу даних сайту (якщо ви не знайшли потрібного вам автора) <a href="#" @click="findAuthor = false">закрити</a></label>
                     <div class="add-group">
                         <div class="input-container">
                             <button class="add-button btn-blue" @click="showNewAuthor(1)">
@@ -447,7 +447,7 @@
                         return `${name} - ${job}`
                     }
                 } else {
-                    return "Пошук в базі данних сайту"
+                    return "Пошук в базі даних сайту"
                 }
             },
             // форматування відображення списку авторів із СумДУ в формі додання нового автора СумДУ
@@ -459,7 +459,7 @@
                         return `${name}`
                     }
                 } else {
-                    return "Пошук в базі данних сайту"
+                    return "Пошук в базі даних сайту"
                 }
             },
 
