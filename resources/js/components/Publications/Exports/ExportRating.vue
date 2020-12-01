@@ -265,7 +265,7 @@
             </tr>
             <tr>
                 <td colspan="3">
-                    -  монографії проіндексовані  БД Scopus або WoS за належності до профілю СумДУ
+                    -  монографії проіндексовані БД Scopus або WoS за належності до профілю СумДУ
                 </td>
                 <td>{{ ratingData.monographsIndexedScopusOrWoSNotSSU }}</td>
             </tr>
@@ -449,6 +449,12 @@
             </tr>
             <tr>
                 <td colspan="3">
+                    Загальне значення індексів Гірша без самоцитувань (за БД Scopus  або БД WoS) штатних працівників та докторантів
+                </td>
+                <td>{{ ratingData.countHirschIndexWithoutCitations }}</td>
+            </tr>
+            <tr>
+                <td colspan="3">
                     Кількість тез всього
                 </td>
                 <td>{{ ratingData.these.count }}</td>
@@ -518,10 +524,8 @@
                 <th>Студент</th>
                 <th>Прізвище, ім'я </th>
                 <th>Керівник </th>
-                <th>Індекс Гірша WoS </th>
-                <th>Індекс Гірша WoS більше 10</th>
-                <th>Індекс Гірша Scopus</th>
-                <th>Індекс Гірша Scopus більше 10</th>
+                <th>Максимальний Індекс Гірша</th>
+                <th>Індекс Гірша іноземця більше 10</th>
                 <th>Факультет/країна(для співавторів - громадян інших країн) </th>
                 <th>Рейтинг</th>
                 <th>Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ) </th>
@@ -536,8 +540,9 @@
                 <th>SNIP</th>
                 <th>Імпакт-фактор (БД WoS)</th>
                 <th>Підбаза WoS</th>
-                <!-- <th>Мова</th> -->
+                <th>Nature Index</th>
                 <th>DOI</th>
+                <th>Охоронні документи</th>
                 <th>Дата занесення до бази даних</th>
             </tr>
             <template v-for="(item, ind) in publicationsData">
@@ -560,11 +565,9 @@
                 <td>{{ a.author.name }}</td>
                 <td>{{ a.supervisor ? 'Так' : 'Ні' }}</td>
                 
-                <td>{{ a.author.h_index }}</td>
-                <td>{{ item.authors.map(user => (user.author.h_index > 10) ? +user.author.h_index : '').reduce((a, b) => a > b ? a : b) }}</td>
+                <td>{{ indexHirsha(a.author) }}</td>
 
-                <td>{{ a.author.scopus_autor_id }}</td>
-                <td>{{ item.authors.map(user => (user.author.scopus_autor_id > 10) ? +user.author.scopus_autor_id : '').reduce((a, b) => a > b ? a : b) }}</td>
+                <td>{{ item.authors.map(user => (user.author.scopus_autor_id >= 10 && user.author.country != "Україна") ? +user.author.scopus_autor_id : '').reduce((a, b) => a > b ? a : b) }}</td>
 
                 <td>{{ a.author.faculty ? a.author.faculty : (a.author.categ_1 != 1 ? a.author.country : "") }}</td>
                 <td>{{ a.rating_faculty }}</td>
@@ -579,17 +582,18 @@
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_scopus}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_wos}}</td>
 
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ Math.min(item.quartil_scopus, item.quartil_wos) }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ quartil(item) }}</td>
 
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.snip}}</td>
+                <td>{{item.snip}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.impact_factor}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ 
                     item.sub_db_scie == 1 && item.sub_db_ssci == 0 ? "SCIE" : "" ||
                     item.sub_db_scie == 0 && item.sub_db_ssci == 1 ? "SSCI" : "" ||
                     item.sub_db_scie == 1 && item.sub_db_ssci == 1 ? "SCIE, SSCI" : "" }}
                 </td>
-                <!-- <td v-if="i == 0" :rowspan="item.authors.length">{{ item.languages }}</td> -->
+                <td>{{ item.nature_index == 1 ? "Так" : "Ні" }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.doi }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.applicant }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.date }}</td>
             </tr>
             </template>
@@ -659,6 +663,7 @@
                     citedInternationalPatents: 0,
                     countSnipScopus: 0,
                     countHirschIndex: 0,
+                    countHirschIndexWithoutCitations: 0,
                     countEmployees: 0,
                     these: {
                         count: 0,
@@ -721,6 +726,14 @@
         },
 
         methods: {
+            quartil(item) {
+                var result = Math.min(...[item.quartil_scopus, item.quartil_wos].filter(i => i != null));
+                return isFinite(result) ? result : "";
+            },
+            indexHirsha(item) {
+                var result = Math.max(...[item.h_index, item.scopus_autor_id].filter(i => i != null));
+                return isFinite(result) ? result : "";
+            },
             openTable() {
                 var newWin = window.open("about:blank", "exportRating", "left=300,width=600,height=500");
                 var rating = document.getElementById('exportRating');
@@ -733,7 +746,8 @@
             },
             getExportData() {
                 axios.post('/api/export', this.filters).then(response => {
-                    this.publicationsData = response.data.publications;
+                    console.log(Object.values(response.data.publications))
+                    this.publicationsData = Object.values(response.data.publications);
                     this.ratingData = Object.assign(this.ratingData, response.data.rating);
                 }).then(() => {
                     this.exportRating();
@@ -786,8 +800,6 @@
                         { wch: 5 }, // Керівник
                         { wch: 5 }, // Індекс Гірша WoS
                         { wch: 5 }, // Індекс Гірша WoS
-                        { wch: 5 }, // Індекс Гірша Scopus
-                        { wch: 5 }, // Індекс Гірша Scopus
                         { wch: 15 }, // Факультет/країна(для співавторів - громадян інших країн)
                         { wch: 5 },
                         { wch: 15 }, // Кафедра(для співавторів з інших кафедр)/місце роботи(для співавторів не з СумДУ)
@@ -802,8 +814,9 @@
                         { wch: 3 },  // SNIP
                         { wch: 3 }, // Імпакт-фактор (БД WoS)
                         { wch: 5 }, // Підбаза WoS
-                        // { wch: 5 }, // Мова
+                        { wch: 5 }, // Nature Index
                         { wch: 3 }, // DOI
+                        { wch: 7 }, // DOI
                         { wch: 10 }, // Дата занесення до бази даних
                     ];
                     XLSX.writeFile(wb, 'Rating.xlsx');

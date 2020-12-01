@@ -481,7 +481,7 @@ class PublicationsController extends ASUController
             $model->whereIn('science_type_id', array_column($request->science_types, 'id')); // Індексування БД Scopus/WoS
         }
 
-        if($request->quartil_scopus || $request->quartil_wos && ($request->quartil_scopus != $request->quartil_wos)) {
+        if(($request->quartil_scopus != "" || $request->quartil_wos != "") && ($request->quartil_scopus != $request->quartil_wos)) {
             if($request->quartil_scopus) {
                 $model->where('quartil_scopus', $request->quartil_scopus); // Квартиль журналу SCOPUS
             }
@@ -491,7 +491,7 @@ class PublicationsController extends ASUController
         }
 
         if($request->snip) {
-            $model->where('snip', '>', 1); // Публікації опубліковані у виданнях з показником SNIP більше ніж 1,0
+            $model->where('snip', '>=', 1); // Публікації опубліковані у виданнях з показником SNIP більше ніж 1,0
         }
 
         if($request->abroad == 1) {
@@ -544,7 +544,9 @@ class PublicationsController extends ASUController
             }
             if($request->withForeigners == 10) {
                 $model->whereHas('authors.author', function($q) {
-                    $q->where('country', '!=', "Україна")->where('h_index', '>', 10)->where('scopus_autor_id', '>', 10);
+                    $q->where('country', '!=', "Україна")->where(function($q2) {
+                        $q2->where('h_index', '>=', 10)->orWhere('scopus_autor_id', '>=', 10);
+                    });
                 });
             }
         }
@@ -577,6 +579,14 @@ class PublicationsController extends ASUController
 
         foreach ($data as $key => $publication) {
             $publication['date'] = Carbon::parse($publication['created_at'])->format('m.d.Y');
+        }
+
+        if($request->quartil_scopus && $request->quartil_wos && ($request->quartil_scopus == $request->quartil_wos)) {
+            foreach ($data as $key => $value) {
+                if($request->quartil_scopus != min($value['quartil_scopus'], $value['quartil_wos'])) {
+                    unset($data[$key]);
+                }
+            }
         }
 
         $rating = [
@@ -615,6 +625,7 @@ class PublicationsController extends ASUController
             "countScopusFiveYear" => $countScopusFiveYear, // всього за 5 років за БД Scopus
             "countSnipScopus" => 0, // Кількість публікацій у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
             "countHirschIndex" => 0, //Загальне значення індексів Гірша (за БД Scopus  або БД WoS ) штатних працівників та докторантів (динаміка змін)
+            "countHirschIndexWithoutCitations" => 0,
             "these" => [
                 "count" => 0, // Кількість тез всього
                 "publishedAbroad" => 0, // Тез опублікованих за кордоном
@@ -637,12 +648,6 @@ class PublicationsController extends ASUController
         ];
 
         $authors = [];
-
-        if($request->quartil_scopus && $request->quartil_wos && ($request->quartil_scopus == $request->quartil_wos)) {
-            $data = array_filter($data, function($value) use ($request) {
-                return $request->quartil_scopus == min($value['quartil_scopus'], $value['quartil_wos']);
-            });
-        }
 
         foreach ($data as $key => $value) {
             if($value['publication_type_id'] != 10 && $value['publication_type_id'] != 11) {
@@ -795,7 +800,7 @@ class PublicationsController extends ASUController
                     $articleProfessionalPublicationsUkraine = 1;
                 }
 
-                if($value['science_type_id']) {
+                if($value['science_type_id'] && $v['author']['guid']) {
                     if($value['science_type_id'] == 1 || $value['science_type_id'] == 2) {
                         $publicationsScopusOrAndWoSNotSSU['countReportingYear']['ScopusOrWoS'] = 1;
                     }
@@ -935,9 +940,8 @@ class PublicationsController extends ASUController
 
         foreach ($authors as $key => $value) {
             $rating['countHirschIndex'] += max($value['h_index'], $value['scopus_autor_id']);
+            $rating['countHirschIndexWithoutCitations'] += max($value['without_self_citations_wos'], $value['without_self_citations_scopus']);
         }
-
-
 
         return response()->json([
             "rating" => $rating,

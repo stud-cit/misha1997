@@ -12,28 +12,28 @@
                             <a class="nav-link dropdown-toggle"  href="#" data-toggle="dropdown" >Меню публікацій
                                 <img class="ml-1 pb2" src="/img/arrow-down.svg" alt=""></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <router-link
+                                <a
                                     v-if="userRole == 4 || access == 'open'"
-                                    :to="{name: 'publications-add'}"
+                                    href="/publications/add"
                                     class="dropdown-item"
-                                >Додати нову публікацію</router-link>
+                                >Додати нову публікацію</a>
 
-                                <router-link 
-                                    :to="{name: 'my-publications'}" 
+                                <a 
+                                    href="/my-publications" 
                                     class="dropdown-item"
-                                    >Мої публікації</router-link>
+                                    >Мої публікації</a>
 
-                                <router-link 
-                                    :to="{name: 'publications'}" 
+                                <a 
+                                    href="/publications" 
                                     class="dropdown-item" 
                                     v-if="userRole != 1"
-                                >Cписок усіх публікацій</router-link>
+                                >Cписок усіх публікацій</a>
 
-                                <router-link
+                                <a
                                     v-if="userRole == 4 || (access == 'open' && (userRole == 3 || userRole == 2))"
-                                    :to="{name: 'users'}"
+                                    href="/users"
                                     class="dropdown-item"
-                                >Список усіх користувачів</router-link>
+                                >Список усіх користувачів</a>
 
                                 <button
                                     v-if="userRole == 4 && access == 'close'"

@@ -150,9 +150,10 @@
             nextStep() {
                 this.$v.$touch()
                 if (this.$v.$invalid) {
-                    swal("Не всі поля заповнено!", {
-                        icon: "error",
-                    });
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Не всі поля заповнено!'
+                    })
                     return
                 }
                 // check scopus

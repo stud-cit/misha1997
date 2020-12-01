@@ -7,16 +7,19 @@
 export default {
     methods: {
         close() {
-            swal({
-                text: "Внесені зміни не будуть збережені",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            }).then((willDelete) => {
-                if (willDelete) {
+            swal.fire({
+                title: "Внесені зміни не будуть збережені",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Згоден',
+                cancelButtonText: 'Закрити',
+            }).then((result) => {
+                if (result.isConfirmed) {
                     this.$router.go(-1);
                 }
-            });
+            })
         }
     },
 }
