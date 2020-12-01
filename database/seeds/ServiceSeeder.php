@@ -13,7 +13,7 @@ class ServiceSeeder extends Seeder
     {
         DB::table('service')->insert([
             'key' => 'access',
-            'value' => 'open'
+            'value' => 'close'
         ]);
     }
 }
