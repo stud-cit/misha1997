@@ -229,9 +229,11 @@ class AuthorsController extends ASUController
         if(!Authors::where("guid", $request->guid)->where("name", "like", $request->name)->exists()) {
             $model = new Authors();
             $data = $request->all();
-
-
-            $division = $this->getUserDivision($request->kod_div)->original;
+            $kod_div = $this->getAspirantDepartment($request->guid);
+            if(!$kod_div) {
+                $kod_div = $request->kod_div;
+            }
+            $division = $this->getUserDivision($kod_div)->original;
             $data['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
             $data['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
             

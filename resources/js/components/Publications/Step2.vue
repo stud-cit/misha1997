@@ -466,8 +466,10 @@
             nextStep() {
                 this.$v.publicationData.$touch();
                 if (this.$v.publicationData.$invalid) {
-                    swal("Не всі поля заповнено!", {
-                        icon: "error",
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Помилка',
+                        text: "Не всі поля заповнено!"
                     });
                     return
                 }
@@ -497,8 +499,10 @@
                     this.publicationData.authors.splice(i, 1);
                 }
                 else{
-                    swal("Повинен бути хоча б один автор!", {
-                        icon: "error",
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Помилка',
+                        text: "Повинен бути хоча б один автор!"
                     });
                 }
             },
@@ -574,12 +578,13 @@
                             }
                         })
                         this.publicationData.authors.push(response.data.user);
-                        swal("Автора успішно додано!", {
-                            icon: "success",
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Автора успішно додано!',
                         });
                     } else {
-                        swal({
-                            icon: "error",
+                        swal.fire({
+                            icon: 'error',
                             title: 'Помилка',
                             text: "Автор вже зареєстрований в системі"
                         });
@@ -590,8 +595,9 @@
             addNewAuthor() {
                 this.$v.$touch();
                 if (this.$v.newAuthor.$invalid) {
-                    swal("Не всі поля заповнено!", {
-                        icon: "error",
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Не всі поля заповнено!'
                     });
                     return;
                 }
@@ -628,12 +634,13 @@
                     })
                     this.publicationData.authors.push(response.data.user);
                     this.$v.$reset();
-                    swal("Автора успішно додано!", {
-                        icon: "success",
+                    swal.fire({
+                        icon: 'success',
+                        title: 'Автора успішно додано!',
                     });
                 }).catch((error) => {
-                    swal({
-                        icon: "error",
+                    swal.fire({
+                        icon: 'error',
                         title: 'Помилка',
                         text: error.message
                     });

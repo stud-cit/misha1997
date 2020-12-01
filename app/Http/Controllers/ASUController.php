@@ -17,7 +17,7 @@ class ASUController extends Controller
 
     function getAspirantDepartment($guid) {
         $aspirantData = json_decode(file_get_contents('https://asu.sumdu.edu.ua/api/getAspirantInfo?key=' . $this->asu_key . '&guid=' . $guid), true);
-        if($aspirantData['status'] == 'ok') {
+        if($aspirantData['status'] == 'OK') {
             return count($aspirantData['result']) > 0 ? $aspirantData['result'][0]['KOD_DIV'] : null;
         } else {
             return null;
