@@ -1,5 +1,8 @@
 <template>
     <div class="container page-content general-block">
+        <div class="message-block">
+            <img src="/img/exclamation-mark.png" @click="sendMessage" title="Написати повідомлення авторам публікації">
+        </div>
         <h1 class="page-title">Редагувати публікацію</h1>
         <transition name="component-fade" mode="out-in">
             <keep-alive>
@@ -90,6 +93,40 @@
         },
 
         methods: {
+            sendMessage() {
+                swal.fire({
+                    title: 'Введіть текст повідомлення',
+                    input: 'textarea',
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Надіслати',
+                    cancelButtonText: 'Відміна',
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'Поле не має бути пустим'
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.post(`/api/notifications/${this.$route.params.id}`, {
+                            comment: result.value
+                        })
+                        .then((response) => {
+                            swal.fire({
+                                icon: 'success',
+                                title: "Повідомлення надіслано"
+                            })
+                        }).catch(() => {
+                            swal.fire({
+                                icon: 'error',
+                                title: 'Помилка'
+                            })
+                        });
+                    }
+                })
+            },
             getPublicationData() {
                 axios.get(`/api/publication/${this.$route.params.id}`).then(response => {
                     this.publicationData = Object.assign(this.publicationData, response.data);
@@ -218,6 +255,8 @@
 </script>
 
 <style lang="scss" >
-
-
+    .message-block img {
+        float: right;
+        cursor: pointer;
+    }
 </style>

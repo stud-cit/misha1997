@@ -7,6 +7,7 @@ use App\Models\Authors;
 use App\Models\Users;
 use App\Models\Roles;
 use App\Models\Notifications;
+use App\Models\Publications;
 use Carbon\Carbon;
 use Session;
 
@@ -99,8 +100,6 @@ class AuthorsController extends ASUController
         }
 
         $data = $model->get();
-
-        $divisions = $this->getAllDivision()->original;
 
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
@@ -346,11 +345,16 @@ class AuthorsController extends ASUController
         }
         return response()->json($data);
     }
-    function postNotifications(Request $request, $autors_id) {
-        $model = new Notifications();
-        $data = $request->all();
-        $data["autors_id"] = $autors_id;
-        $model->create($data);
+    function postNotifications(Request $request, $publication_id) {
+        $model = Publications::with('authors')->find($publication_id);
+        $notificationText = "Користувач <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a> залишив коментар до публікації <a href=\"/publications/". $publication_id ."\">" . $model['title'] . "</a>: ";
+        $notificationText .= $request->comment;
+        foreach ($model['authors'] as $key => $value) {
+            Notifications::create([
+                "autors_id" => $value['autors_id'],
+                "text" => $notificationText
+            ]);
+        }
         return response('ok', 200);
     }
     function editNotifications(Request $request, $id, $autors_id) {

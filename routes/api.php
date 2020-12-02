@@ -36,7 +36,7 @@ Route::group(['middleware' => ['web']], function() {
 
     //notifications
     Route::get('notifications/{autors_id}', 'AuthorsController@getNotifications');
-    Route::post('notifications/{autors_id}', 'AuthorsController@postNotifications');
+    Route::post('notifications/{publication_id}', 'AuthorsController@postNotifications');
     Route::post('notifications/{id}/{autors_id}', 'AuthorsController@editNotifications');
 
     //publications
