@@ -24,7 +24,7 @@ class CreateAuthorsTable extends Migration
             $table->string('country')->default("Україна"); // країна
             $table->integer('h_index')->nullable(); // Індекс Гірша БД WoS
             $table->integer('scopus_autor_id')->nullable(); // Індекс Гірша БД Scopus
-            $table->integer('scopus_researcher_id')->nullable(); // Research ID
+            $table->string('scopus_researcher_id')->nullable(); // Research ID
             $table->string('orcid')->nullable(); // ORCID
             $table->string('academic_code')->nullable(); // академічна група
             $table->foreignId('roles_id')->default(1); // роль

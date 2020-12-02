@@ -64,19 +64,17 @@ class AuthController extends ASUController {
 
             if(isset($personCabinet['result']['info1'])) {
                 foreach ($personCabinet['result']['info1'] as $key => $value) {
-                    if($value['KOD_STATE'] == 1) {
+                    if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2) {
                         $data['categ_1'] = $value['CATEG'];
                         $kod_div = $value['KOD_DIV'];
                         $data['academic_code'] = $value['NAME_GROUP'];
-                        if($value['CATEG'] == 2) {
-                            $kod_div = $this->getAspirantDepartment($personCabinet['result']['guid']);
-                        }
+                        $kod_div = $this->getAspirantDepartment($personCabinet['result']['guid']);
                         $isStudent = true;
                     }
                 }
             }
             
-            if(isset($personCabinet['result']['info2']) && $isStudent) {
+            if(isset($personCabinet['result']['info2']) && !$isStudent) {
                 foreach ($personCabinet['result']['info2'] as $key => $value) {
                     if($value['KOD_SYMP'] == 1 && $value['KOD_STATE'] == 1) {
                         $data['categ_2'] = $value['CATEG'];
@@ -130,19 +128,17 @@ class AuthController extends ASUController {
 
                 if(isset($personCabinet['result']['info1'])) {
                     foreach ($personCabinet['result']['info1'] as $key => $value) {
-                        if($value['KOD_STATE'] == 1) {
+                        if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2) {
                             $data['categ_1'] = $value['CATEG'];
                             $kod_div = $value['KOD_DIV'];
                             $data['academic_code'] = $value['NAME_GROUP'];
-                            if($value['CATEG'] == 2) {
-                                $kod_div = $this->getAspirantDepartment($personCabinet['result']['guid']);
-                            }
+                            $kod_div = $this->getAspirantDepartment($personCabinet['result']['guid']);
                             $isStudent = true;
                         }
                     }
                 }
                 
-                if(isset($personCabinet['result']['info2']) && $isStudent) {
+                if(isset($personCabinet['result']['info2']) && !$isStudent) {
                     foreach ($personCabinet['result']['info2'] as $key => $value) {
                         if($value['KOD_SYMP'] == 1 && $value['KOD_STATE'] == 1) {
                             $data['categ_2'] = $value['CATEG'];

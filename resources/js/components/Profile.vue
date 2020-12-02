@@ -101,7 +101,7 @@
             </ul>
             <div class="step-button-group">
                 <back-button></back-button>
-                <save-button v-if="authUser.roles_id == 4" @click.native="save()"></save-button>
+                <save-button @click.native="save()"></save-button>
             </div>
         </div>
     </div>
