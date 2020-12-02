@@ -191,7 +191,7 @@
                         :options="authors"
                         label="name"
                         :searchable="true"
-                        placeholder="Пошук в базі даних сайту"
+                        placeholder="Пошук в базі даних сервісу"
                         selectLabel="Натисніть для вибору"
                         selectedLabel="Вибрано"
                         deselectLabel="Натисніть для видалення"
@@ -221,7 +221,7 @@
                             selectLabel="Натисніть для вибору"
                             selectedLabel="Вибрано"
                             deselectLabel='Натисніть для видалення'
-                            placeholder="Пошук в базі даних сайту"
+                            placeholder="Пошук в базі даних сервісу"
                             :custom-label="nameWithInfo"
                         >
                             <span slot="noResult">По даному запиту немає результатів</span>
@@ -241,14 +241,14 @@
                         <label class="item-title find-author" v-if="!findAuthor">
                             <a href="#" @click.prevent="findAuthor=!findAuthor">Не знайшли потрібного вам автора?</a>
                         </label>
-                        <div class="hint white-hint"><span>Додати авторів з бази даних сайту, якщо їх більше одного</span></div>
+                        <div class="hint white-hint"><span>Додати авторів з бази даних сервісу, якщо їх більше одного</span></div>
                     </div>
                 </div>
             </div>
 
             <transition name="component-fade" mode="out-in">
                 <div class="form-group " v-if="findAuthor">
-                    <label class="item-title">Додати автора в базу даних сайту (якщо ви не знайшли потрібного вам автора) <a href="#" @click="findAuthor = false">закрити</a></label>
+                    <label class="item-title">Додати автора в базу даних сервісу (якщо ви не знайшли потрібного вам автора) <a href="#" @click="findAuthor = false">закрити</a></label>
                     <div class="add-group">
                         <div class="input-container">
                             <button class="add-button btn-blue" @click="showNewAuthor(1)">
@@ -447,7 +447,7 @@
                         return `${name} - ${job}`
                     }
                 } else {
-                    return "Пошук в базі даних сайту"
+                    return "Пошук в базі даних сервісу"
                 }
             },
             // форматування відображення списку авторів із СумДУ в формі додання нового автора СумДУ
@@ -459,7 +459,7 @@
                         return `${name}`
                     }
                 } else {
-                    return "Пошук в базі даних сайту"
+                    return "Пошук в базі даних сервісу"
                 }
             },
 
@@ -482,6 +482,7 @@
                 if(this.publicationData.useSupervisor == '0') {
                     this.publicationData.supervisor = null;
                 }
+                this.publicationData.authors = [];
             },
             // додання автора в список авторів публікації
             addAuthor() {

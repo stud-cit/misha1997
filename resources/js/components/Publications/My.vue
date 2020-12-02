@@ -2,7 +2,7 @@
     <div class="container page-content general-block">
         <h1 class="page-title">Мої публікації</h1>
         <div class="exports">
-            <export-publications class="export-block" :exportList="exportPublication"></export-publications>
+            <export-publications class="export-block" :exportList="data"></export-publications>
         </div>
         <div class="main-content">
             <form class="search-block">
