@@ -10,7 +10,7 @@
                             <input class="item-value" type="text" v-model="data.name">
                         </div>
                         <div v-else>
-                            {{data.name}}
+                            {{data.name}} <img src="/img/update.png" @click="updateCabinetInfo" class="update-cabinet-info">
                         </div>
                     </div>
                 </li>
@@ -314,6 +314,12 @@
             }
         },
         methods: {
+            updateCabinetInfo() {
+                axios.post(`/api/update-cabinet-info/${this.$route.params.id}`)
+                .then(() => {
+                    this.getData();
+                })
+            },
             getData() {
                 this.loading = true;
                 axios.get(`/api/author/${this.$route.params.id}`).then(response => {
@@ -345,3 +351,8 @@
         }
     }
 </script>
+<style lang="css" scoped>
+    .update-cabinet-info {
+        cursor: pointer;
+    }
+</style>

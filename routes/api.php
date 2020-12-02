@@ -27,6 +27,8 @@ Route::group(['middleware' => ['web']], function() {
     Route::post('update-author/{id}','AuthorsController@updateAuthor');
     Route::post('delete-users','AuthorsController@deleteAuthor');
 
+    Route::post('update-cabinet-info/{user_id}','AuthorsController@updateCabinetInfo');
+
     // profile
     Route::post('profile', 'AuthorsController@updateProfile');
     Route::get('profile', 'AuthorsController@profile');
