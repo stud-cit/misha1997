@@ -7,6 +7,7 @@ use App\Models\Authors;
 use App\Models\Users;
 use App\Models\Roles;
 use App\Models\Notifications;
+use App\Models\Publications;
 use Carbon\Carbon;
 use Session;
 
@@ -16,6 +17,8 @@ class AuthorsController extends ASUController
     
     // authors
     function get(Request $request) {
+        $divisions = $this->getAllDivision()->original;
+
         $data = [];
         $model = Authors::with('role')->orderBy('created_at', 'DESC');
 
@@ -31,12 +34,24 @@ class AuthorsController extends ASUController
             $model->where('name', 'like', "%".$request->name."%");
         }
 
-        if($request->faculty_code != '') {
-            $model->where('faculty_code', $request->faculty_code);
-        }
-
         if($request->department_code != '') {
-            $model->where('department_code', $request->department_code);
+            $departments_id = [$request->department_code];
+            foreach($divisions as $k2 => $v2) {
+                if ($v2['ID_PAR'] == $request->department_code) {
+                    array_push($departments_id, $v2['ID_DIV']);
+                }
+            }
+            $model->whereIn('department_code', $departments_id)->where('categ_1', "!=", 1);
+        } else {
+            if($request->faculty_code != '') {
+                $departments_id = [$request->faculty_code];
+                foreach($divisions as $k2 => $v2) {
+                    if ($v2['ID_PAR'] == $request->faculty_code) {
+                        array_push($departments_id, $v2['ID_DIV']);
+                    }
+                }
+                $model->whereIn('faculty_code', $departments_id);
+            }
         }
 
         if($request->country == 'true') {
@@ -79,13 +94,13 @@ class AuthorsController extends ASUController
             });
         }
 
-        if($request->all == 'true') {
-            $data = $model->get();
-        } else {
-            $data = $model->where('categ_1', "!=", 1)->where('guid', "!=", null)->get();
+        if($request->all == 'false') {
+            $data = $model->where(function($query) {
+                $query->where('categ_1', '!=', 1)->orWhere('categ_1', null);
+            })->whereNotNull('guid');
         }
 
-        $divisions = $this->getAllDivision()->original;
+        $data = $model->get();
 
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
@@ -331,11 +346,16 @@ class AuthorsController extends ASUController
         }
         return response()->json($data);
     }
-    function postNotifications(Request $request, $autors_id) {
-        $model = new Notifications();
-        $data = $request->all();
-        $data["autors_id"] = $autors_id;
-        $model->create($data);
+    function postNotifications(Request $request, $publication_id) {
+        $model = Publications::with('authors')->find($publication_id);
+        $notificationText = "Користувач <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a> залишив коментар до публікації <a href=\"/publications/". $publication_id ."\">" . $model['title'] . "</a>: ";
+        $notificationText .= $request->comment;
+        foreach ($model['authors'] as $key => $value) {
+            Notifications::create([
+                "autors_id" => $value['autors_id'],
+                "text" => $notificationText
+            ]);
+        }
         return response('ok', 200);
     }
     function editNotifications(Request $request, $id, $autors_id) {
