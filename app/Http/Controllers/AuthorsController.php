@@ -393,5 +393,53 @@ class AuthorsController extends ASUController
             $age--;
         }
         return $age;
-      }
+    }
+
+    function updateCabinetInfo($user_id) {
+        $model = Authors::find($user_id);
+        if($model['test_data']) {
+            $data = json_decode($model['test_data'], true);
+            $newData = [
+                "categ_1" => null,
+                "categ_2" => null,
+                "academic_code" => null,
+                "department_code" => null,
+                "faculty_code" => null
+            ];
+
+            $kod_div = null;
+            $isStudent = false;
+
+            if(isset($data['info1'])) {
+                foreach ($data['info1'] as $key => $value) {
+                    if($value['KOD_STATE'] == 1) {
+                        $newData['categ_1'] = $value['CATEG'];
+                        $kod_div = $value['KOD_DIV'];
+                        $newData['academic_code'] = $value['NAME_GROUP'];
+                        if($value['CATEG'] == 2) {
+                            $kod_div = $this->getAspirantDepartment($data['guid']);
+                        }
+                        $isStudent = true;
+                    }
+                }
+            }
+            
+            if(isset($data['info2']) && !$isStudent) {
+                foreach ($data['info2'] as $key => $value) {
+                    if($value['KOD_SYMP'] == 1 && $value['KOD_STATE'] == 1) {
+                        $newData['categ_2'] = $value['CATEG'];
+                        $kod_div = $value['KOD_DIV'];
+                    }
+                }
+            }
+
+            $division = $this->getUserDivision($kod_div)->original;
+
+            $newData['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
+            $newData['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+
+            $model->update($newData);
+        }
+        return response('ok', 200);
+    }
 }

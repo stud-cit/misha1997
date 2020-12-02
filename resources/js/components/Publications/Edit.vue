@@ -1,6 +1,6 @@
 <template>
     <div class="container page-content general-block">
-        <div class="message-block">
+        <div class="message-block" v-if="userRole != 1">
             <img src="/img/exclamation-mark.png" @click="sendMessage" title="Написати повідомлення авторам публікації">
         </div>
         <h1 class="page-title">Редагувати публікацію</h1>
@@ -90,6 +90,12 @@
             Step2,
             Step3,
             Step4,
+        },
+
+        computed: {
+            userRole() {
+                return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null
+            }
         },
 
         methods: {
