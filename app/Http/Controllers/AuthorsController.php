@@ -52,14 +52,6 @@ class AuthorsController extends ASUController
                 $model->whereIn('faculty_code', $departments_id);
             }
         }
-
-        if($request->country == 'true') {
-            $model->where('country', '!=', 'Україна');
-        }
-        
-        if($request->five_publications == 'true') {
-            $model->where('five_publications', '1');
-        }
         
         if($request->h_index == '1') {
             $model->where(function($query) {
@@ -89,14 +81,14 @@ class AuthorsController extends ASUController
                     if($value == "Студенти") {
                         $query->orWhere('categ_1', 1);
                     }
+                    if($value == "5 або більше публікацій у періодичних виданнях Scopus та/або WoS") {
+                        $query->orWhere('five_publications', '1');
+                    }
+                    if($value == "Іноземці") {
+                        $query->where('country', '!=', 'Україна');
+                    }
                 }
             });
-        }
-
-        if($request->all == 'false') {
-            $data = $model->where(function($query) {
-                $query->where('categ_1', '!=', 1)->orWhere('categ_1', null);
-            })->whereNotNull('guid');
         }
 
         $data = $model->get();

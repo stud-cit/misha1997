@@ -150,10 +150,11 @@
                         </div>
                     </div>
                 </li>
-                <li class="row" style="border-top: 0">
-                    <div class="col-lg-3 list-item list-title">Без самоцитувань:</div>
+                <li class="row" style="border-bottom: 0">
+                    <div class="col-lg-3 list-item list-title">Індекс Гірша без самоцитувань:</div>
                     <div class="col-lg-9  list-item list-text d-flex">
                         <div class="col-lg-6 two-col pr-2">
+                            <label>БД Scopus</label>
                             <div class="input-container" v-if="authUser.roles_id == 4">
                                 <input class="item-value" type="text" v-model="data.without_self_citations_scopus">
                             </div>
@@ -162,6 +163,7 @@
                             </div>
                         </div>
                         <div class="col-lg-6 two-col">
+                            <label>БД WoS</label>
                             <div class="input-container" v-if="authUser.roles_id == 4">
                                 <input class="item-value" type="text" v-model="data.without_self_citations_wos">
                             </div>

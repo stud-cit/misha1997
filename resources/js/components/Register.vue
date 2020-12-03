@@ -19,13 +19,13 @@
             </div>
             <div class="form-row">
                 <div class="form-group col-6">
-                    <label>Без самоцитувань Scopus</label>
+                    <label>Індекс Гірша Scopus без самоцитувань</label>
                     <div class="input-container">
                         <input class="item-value" type="text" v-model="data.without_self_citations_scopus">
                     </div>
                 </div>
                 <div class="form-group col-6">
-                    <label>Без самоцитувань WoS</label>
+                    <label>Індекс Гірша WoS без самоцитувань</label>
                     <div class="input-container">
                         <input class="item-value" type="text" v-model="data.without_self_citations_wos">
                     </div>

@@ -172,7 +172,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Під керівництвом</label>
+                <label class="item-title">Під керівництвом (Зазначити "Так" у випадку одноосібної публікації студента)</label>
                 <div class="input-container hint-container">
                     <select class="item-value" v-model="publicationData.useSupervisor" @change="changeSupervisor">
                         <option value="1">Так</option>

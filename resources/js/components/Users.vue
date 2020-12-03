@@ -68,22 +68,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group form-check col-lg-6 ml-4">
-                        <input v-model="filters.five_publications" type="checkbox" class="form-check-input" id="FiveOrMore">
-                        <label class="form-check-label" for="FiveOrMore">5 або більше публікацій у періодичних виданнях Scopus та/або WoS</label>
-                    </div>
-                    <div class="form-group col-lg-6 form-check ml-4">
-                        <input v-model="filters.country" type="checkbox" class="form-check-input" id="allForeign">
-                        <label class="form-check-label" for="allForeign">Іноземці</label>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group form-check ml-2">
-                        <input v-model="filters.all" type="checkbox" class="form-check-input" id="allUsers">
-                        <label class="form-check-label" for="allUsers">Всі користувачі</label>
-                    </div>
-                </div>
                 <button type="button" class="export-button" style="display: inline-block" @click="getData(); loadingSearch = true">
                     <span
                         class="spinner-border spinner-border-sm"
@@ -248,17 +232,14 @@
                 data: [],
                 selectUsers: [],
                 filters: {
-                    all: false,
                     name: '',
                     faculty_code: '',
                     department_code: '',
-                    country: false,
-                    five_publications: false,
                     h_index: '',
                     categ_users: []
 
                 },
-                categUsers: ["Користувачі СумДУ", "Зовнішні співавтори", "Студенти"],
+                categUsers: ["Користувачі СумДУ", "Зовнішні співавтори", "Студенти", "Іноземці", "5 або більше публікацій у періодичних виданнях Scopus та/або WoS"],
                 currentPage: 1,
                 perPage: 10,
                 numPage: 1,
@@ -323,9 +304,6 @@
                         name: this.filters.name,
                         faculty_code: this.filters.faculty_code,
                         department_code: this.filters.department_code,
-                        all: this.filters.all,
-                        country: this.filters.country,
-                        five_publications: this.filters.five_publications,
                         h_index: this.filters.h_index,
                         categ_users: this.filters.categ_users
                     }
@@ -401,12 +379,9 @@
             clearFilter() {
                 this.loadingClear = true;
                 this.$store.dispatch('clearFilterPublications');
-                this.filters.all = false;
                 this.filters.name = '';
                 this.filters.faculty_code = '';
                 this.filters.department_code = '';
-                this.filters.country = false;
-                this.filters.five_publications = false;
                 this.filters.h_index = '';
                 this.filters.categ_users = '';
                 this.getData();

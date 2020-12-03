@@ -8,7 +8,7 @@
                 <h2>Стаття у фахових виданнях України, інші статті</h2>
                 <ol>
                     <li v-for="(item, index) in filteredData.articles" :key="index">
-                        {{item.initials}} {{ item.title }}. <i>{{ item.name_magazine }}</i>. {{ item.year }}. № {{ item.number }}. C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
+                        {{item.initials}} {{ item.title }}. <i>{{ item.name_magazine }}</i>. {{ item.year }}. {{ item.number }}. C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
                     </li>
                 </ol>
             </template>

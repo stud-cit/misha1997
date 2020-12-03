@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Номер (том) </label>
+                <label class="item-title">Том (номер) </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.number">
                 </div>

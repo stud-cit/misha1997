@@ -27,16 +27,16 @@ export default new Vuex.Store({
     },
     actions: {
         saveFilterUser: ({commit}, filter) => {
-            localStorage.setItem('filterUsers', JSON.stringify(filter));
+            sessionStorage.setItem('filterUsers', JSON.stringify(filter));
         },
         clearFilterUser: ({commit}) => {
-            localStorage.removeItem('filterUsers');
+            sessionStorage.removeItem('filterUsers');
         },
         saveFilterPublications: ({commit}, filter) => {
-            localStorage.setItem('filterPublications', JSON.stringify(filter));
+            sessionStorage.setItem('filterPublications', JSON.stringify(filter));
         },
         clearFilterPublications: ({commit}) => {
-            localStorage.removeItem('filterPublications');
+            sessionStorage.removeItem('filterPublications');
         },
         setUser({commit}, user) {
             commit('user_data', user)
@@ -62,13 +62,13 @@ export default new Vuex.Store({
         authUser: state => state.user,
         accessMode: state => state.access,
         getFilterUsers() {
-            if(localStorage.getItem('filterUsers')) {
-                return JSON.parse(localStorage.getItem('filterUsers'));
+            if(sessionStorage.getItem('filterUsers')) {
+                return JSON.parse(sessionStorage.getItem('filterUsers'));
             }
         },
         getFilterPublications() {
-            if(localStorage.getItem('filterPublications')) {
-                return JSON.parse(localStorage.getItem('filterPublications'));
+            if(sessionStorage.getItem('filterPublications')) {
+                return JSON.parse(sessionStorage.getItem('filterPublications'));
             }
         },
     }
