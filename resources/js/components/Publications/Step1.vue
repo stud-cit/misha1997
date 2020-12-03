@@ -121,9 +121,13 @@
             },
             // пошук схожих назв публікацій
             findNames() {
-                this.names = this.publicationNames.filter(item => {
-                    return item.title.indexOf(this.publicationData.title) + 1
-                })
+                if(this.publicationData.title.length > 4) {
+                    this.names = this.publicationNames.filter(item => {
+                        return this.parseString(item.title).indexOf(this.parseString(this.publicationData.title)) + 1
+                    })
+                } else {
+                    this.names = [];
+                }
             },
             checkPublicationData() {
                 if(this.publicationData && this.$route.name == 'publications-edit'){
