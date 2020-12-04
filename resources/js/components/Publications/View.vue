@@ -212,10 +212,12 @@
             checkAccess() {
                 if(this.authUser.roles_id == 4) {
                     return true;
-                } else if(this.$store.getters.accessMode == 'open' && (this.data.authors.find(item => item.id == this.authUser.id) || (this.data.supervisor && this.data.supervisor.id == this.authUser.id))) {
+                } else if(this.$store.getters.accessMode == 'open' && (this.data.authors.find(item => item.id == this.authUser.id))) {
+                    return true;
+                } else if(this.$store.getters.accessMode == 'open' && this.authUser.roles_id != 1) {
                     return true;
                 } else {
-                    return true;
+                    return false;
                 }
             }
         },
