@@ -123,7 +123,7 @@
             ></Table>
             <div class="step-button-group">
                 <back-button></back-button>
-                <delete-button  v-if="authUser.roles_id == 4" @click.native="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
+                <delete-button v-if="checkAccess" @click.native="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
             </div>
         </div>
     </div>
@@ -286,6 +286,15 @@
             authUser() {
                 return this.$store.getters.authUser
             },
+            checkAccess() {
+                if(this.authUser.roles_id == 4) {
+                    return true;
+                } else if(this.$store.getters.accessMode == 'open' && this.authUser.roles_id != 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
     }
 </script>
