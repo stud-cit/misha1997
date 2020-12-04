@@ -35,6 +35,12 @@
                                     class="dropdown-item"
                                 >Список усіх користувачів</a>
 
+                                <a
+                                    href="/manual.pdf"
+                                    class="dropdown-item"
+                                    target="_blank"
+                                >Інструкція користувача</a>
+
                                 <button
                                     v-if="userRole == 4 && access == 'close'"
                                     class="dropdown-item success"
