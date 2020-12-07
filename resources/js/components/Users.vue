@@ -201,7 +201,7 @@
                 <td>{{item.name}}</td>
                 <td>{{item.age}}</td>
                 <td>{{item.position}}</td>
-                <td>{{item.academic_code}}</td>
+                <td>'{{item.academic_code}}'</td>
                 <td>{{item.faculty}}</td>
                 <td>{{item.department}}</td>
                 <td>{{item.country}}</td>
@@ -364,15 +364,15 @@
                     { wch: 30 }, // ПІБ
                     { wch: 5 },  // Вік
                     { wch: 10 }, // Посада
-                    { wch: 20 }, // Академічна група
-                    { wch: 40 }, // Факультет/інститут
-                    { wch: 40 }, // Кафедра
-                    { wch: 15 }, // Країна
-                    { wch: 20 }, // Індекс Гірша БД WoS
-                    { wch: 20 }, // Індекс Гірша БД Scopus
-                    { wch: 10 }, // Research ID
-                    { wch: 10 }, // ORCID
-                    { wch: 40 }  // 5 або більше публікацій в Scopus та/або WoS
+                    { wch: 10 }, // Академічна група
+                    { wch: 10 }, // Факультет/інститут
+                    { wch: 10 }, // Кафедра
+                    { wch: 10 }, // Країна
+                    { wch: 5 }, // Індекс Гірша БД WoS
+                    { wch: 5 }, // Індекс Гірша БД Scopus
+                    { wch: 5 }, // Research ID
+                    { wch: 5 }, // ORCID
+                    { wch: 5 }  // 5 або більше публікацій в Scopus та/або WoS
                 ];
                 XLSX.writeFile(wb, 'Authors.xlsx');
             },

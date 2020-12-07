@@ -50,14 +50,14 @@
                         </div>
                         <div class="step-button-group sumdu-base">
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
-                            <button class="next active" @click="addNewAuthorSSU">Додати</button>
+                            <button class="next active" @click="addNewAuthorSSU" :disabled="loading">Додати</button>
                         </div>
                     </template>
 
                     <!--other author-->
                     <template v-if="otherAuthor == 2">
                         <h2 class="popup-title">Створення нового автора</h2>
-                        <ul class=" list-view">
+                        <ul class="list-view">
                             <li class="row">
                                 <div class="col-lg-3 list-item list-title">Прізвище, ім’я, по-батькові *</div>
                                 <div class="col-lg-9 list-item list-text">
@@ -85,6 +85,7 @@
                                             <option value="2">Підприємство</option>
                                             <option value="3">Студент - випускник</option>
                                             <option value="0">Не працює</option>
+                                            <option value="4">СумДУ (для співробітників, які працювали в звітному році та припинили свою діяльність)</option>
                                         </select>
                                     </div>
                                     <div class="error" v-if="$v.jobType.$error">
@@ -103,6 +104,42 @@
                                     </div>
                                 </div>
                             </li>
+
+
+                            <li class="row" v-if="jobType == 4">
+                                <div class="col-lg-3 list-item list-title">Факультет/Інститут *</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <select v-model="newAuthor.faculty_code" @change="getDepartments">
+                                            <option value=""></option>
+                                            <option
+                                                v-for="(item, index) in divisions"
+                                                :key="index"
+                                                :value="item.ID_DIV"
+                                            >{{item.NAME_DIV}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="row" v-if="jobType == 4">
+                                <div class="col-lg-3 list-item list-title">Кафедра *</div>
+                                <div class="col-lg-9 list-item list-text">
+                                    <div class="input-container">
+                                        <select v-model="newAuthor.department_code">
+                                            <option value=""></option>
+                                            <option
+                                                v-for="(item, index) in departments"
+                                                :key="index"
+                                                :value="item.ID_DIV"
+                                            >{{item.NAME_DIV}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </li>
+
+
+
+
                             <li class="row" v-if="jobType == 2">
                                 <div class="col-lg-3 list-item list-title">Входить до списків Forbes та Fortune *</div>
                                 <div class="col-lg-9 list-item list-text">
@@ -117,7 +154,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="row" v-show="jobType != 3">
+                            <li class="row" v-show="jobType != 3 && jobType != 4">
                                 <div class="col-lg-3 list-item list-title">Країна автора *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <Country :data="newAuthor"></Country>
@@ -126,7 +163,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="row">
+                            <li class="row" v-show="jobType != 3">
                                 <div class="col-lg-3 list-item list-title">Індекс Гірша</div>
                                 <div class="col-lg-9  list-item list-text d-flex">
                                     <div class="col-lg-6 two-col pr-2">
@@ -145,7 +182,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="row">
+                            <li class="row" v-show="jobType != 3">
                                 <div class="col-lg-3 list-item list-title">Research ID</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
@@ -154,7 +191,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="row">
+                            <li class="row" v-show="jobType != 3">
                                 <div class="col-lg-3 list-item list-title">ORCID</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
@@ -166,24 +203,22 @@
                         </ul>
                         <div class="step-button-group">
                             <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
-                            <button class="next active" @click="addNewAuthor">Додати </button>
+                            <button class="next active" @click="addNewAuthor" :disabled="loading">Додати </button>
                         </div>
                     </template>
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Під керівництвом (Зазначити "Так" у випадку одноосібної публікації студента)</label>
+                <label class="item-title">Під керівництвом (Зазначити "Так" у випадку одноосібної публікації студента) {{ useSupervisor }}</label>
                 <div class="input-container hint-container">
-                    <select class="item-value" v-model="publicationData.useSupervisor" @change="changeSupervisor">
-                        <option value="1">Так</option>
-                        <option value="0">Ні</option>
+                    <select class="item-value" :value="useSupervisor">
+                        <option value="true">Так</option>
+                        <option value="false">Ні</option>
                     </select>
                     <div class="hint" ><span>Зазначити "Так" у випадку одноосібної публікації студента</span></div>
                 </div>
-
             </div>
-
-            <div class="form-group" v-if="publicationData.useSupervisor == '1'">
+            <div class="form-group" v-if="useSupervisor">
                 <label class="item-title">Керівник *</label>
                 <div class="input-container authors">
                     <multiselect
@@ -289,12 +324,16 @@
 <script>
     import CloseEditButton from "../Buttons/CloseEdit";
     import Country from "../Forms/Country";
+    import divisions from '../mixins/divisions';
     import Multiselect from 'vue-multiselect';
     import {required, requiredIf} from "vuelidate/lib/validators";
     export default {
         name: "Step2",
+        mixins: [divisions],
         data() {
             return {
+                test: false,
+                loading: false,
                 departments: [],
                 divisions: [],
                 jobType: null,
@@ -328,7 +367,6 @@
                 selectCateg: null,
                 loadingPersons: false,
                 persons: [],
-                supervisors: [],
                 authors: [],
                 country: [],
                 otherAuthor: false,
@@ -353,7 +391,9 @@
                     scopus_autor_id: '',
                     scopus_researcher_id: '',
                     orcid: '',
-                    forbes_fortune: 0
+                    forbes_fortune: 0,
+                    faculty_code: '',
+                    department_code: ''
                 }
             }
         },
@@ -373,11 +413,23 @@
             this.getAuthors();
         },
 
+
+        computed: {
+            useSupervisor() {
+                if((this.publicationData.authors.filter(item => item.categ_1 == 1).length == this.publicationData.authors.length)) {
+                    return true;
+                }
+                if(!this.publicationData.authors.find(item => item.categ_1 == 1)) {
+                    return false;
+                }
+            }
+        },
+
         validations: {
             publicationData: {
                 supervisor: {
                     required: requiredIf ( function() {
-                        return this.publicationData.useSupervisor == '1';
+                        return this.useSupervisor;
                     })
                 },
                 authors: {
@@ -398,7 +450,7 @@
             newAuthor: {
                 country: {
                     required: requiredIf(function() {
-                        return this.jobType != 3;
+                        return this.jobType != 3 && this.jobType != 4;
                     })
                 },
                 job: {
@@ -421,16 +473,29 @@
             setJobType() {
                 if(this.jobType == 0 || this.jobType == 3) {
                     this.newAuthor.job = "Не працює";
-                    this.newAuthor.forbes_fortune = 0;
+                    this.newAuthor.country = null;
+                    this.newAuthor.h_index = "";
+                    this.newAuthor.scopus_autor_id = "";
+                    this.newAuthor.scopus_researcher_id = "";
+                    this.newAuthor.orcid = "";
+                    this.newAuthor.faculty_code = "";
+                    this.newAuthor.department_code = "";
+                    if(this.jobType == 3) {
+                        this.newAuthor.country = "";
+                    }
                 } else {
                     this.newAuthor.job = '';
                 }
             },
             // пошук схожих імен авторів не з СумДУ
             findNames() {
-                this.names = this.otherAuthorNames.filter(item => {
-                    return item.name.toLowerCase().indexOf(this.newAuthor.name.toLowerCase()) + 1
-                })
+                if(this.newAuthor.name.length > 3) {
+                    this.names = this.otherAuthorNames.filter(item => {
+                        return item.name.toLowerCase().indexOf(this.newAuthor.name.toLowerCase()) + 1
+                    })
+                } else {
+                    this.names = [];
+                }
             },
             // форматування відображення списку авторів зареєстрованих на сайті (новий автор, керівник)
             nameWithInfo({name, faculty, department, academic_code, job, categ_1, categ_2}) {
@@ -479,7 +544,7 @@
                 this.$emit('prevStep');
             },
             changeSupervisor() {
-                if(this.publicationData.useSupervisor == '0') {
+                if(!this.useSupervisor) {
                     this.publicationData.supervisor = null;
                 }
                 this.publicationData.authors = [];
@@ -564,6 +629,7 @@
             // posts API
             // додання новго автора з СумДУ
             addNewAuthorSSU() {
+                this.loading = true;
                 axios.post('/api/author-ssu', this.newAuthorSSU)
                 .then((response) => {
                     if(response.data.status == 'ok') {
@@ -590,10 +656,14 @@
                             text: "Автор вже зареєстрований в системі"
                         });
                     }
+                    this.loading = false;
+                }).catch(() => {
+                    this.loading = false;
                 })
             },
             // додання нового автора не з СумДУ
             addNewAuthor() {
+                console.log(this.$v.newAuthor)
                 this.$v.$touch();
                 if (this.$v.newAuthor.$invalid) {
                     swal.fire({
@@ -612,6 +682,11 @@
                 if(this.jobType == 3) {
                     this.newAuthor.country = "Україна";
                 }
+                if(this.jobType == 4) {
+                    this.newAuthor.country = "Україна";
+                    this.newAuthor.job = "СумДУ";
+                }
+                this.loading = true;
                 axios.post('/api/author', this.newAuthor)
                 .then((response) => {
                     this.otherAuthor = false;
@@ -639,12 +714,14 @@
                         icon: 'success',
                         title: 'Автора успішно додано!',
                     });
+                    this.loading = false;
                 }).catch((error) => {
                     swal.fire({
                         icon: 'error',
                         title: 'Помилка',
                         text: error.message
                     });
+                    this.loading = false;
                 })
             },
         }
@@ -652,6 +729,13 @@
 </script>
 
 <style lang="scss" scoped>
+    .list-view .row:last-of-type {
+        border-bottom: none;
+    }
+    .list-view {
+        margin-top: -1px;
+        border-bottom: 1px solid #C4C4C4;
+    }
     .find-author {
         margin-left: 10px;
         margin-bottom: 20px;

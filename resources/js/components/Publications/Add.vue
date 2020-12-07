@@ -75,7 +75,6 @@
                     cited_international_patents: "",
                     name_monograph: "",
                     authors: [],
-                    useSupervisor: 0,
                     supervisor: null
                 },
             };

@@ -23,14 +23,14 @@
                 } catch (err) {
                     console.log(err);
                 }
-                if (location.indexOf("scipub.") > 0) {
+                if (location.indexOf("jv.") > 0) {
                     this.auth_window.close();
                     window.location.href = '/home';
                 }
             },
             open_auth() {
                 const strWindowFeatures = "menubar=no,location=no,resizable=no,scrollbars=yes,status=no,width=600,height=600";
-                this.auth_window = window.open("http://cabinet.sumdu.edu.ua/index/service/TNWcmzpZ", "Вход/Реєстрація через Кабинет", strWindowFeatures);
+                this.auth_window = window.open("http://cabinet.sumdu.edu.ua/index/service/7B4DIDiV", "Вход/Реєстрація через Кабинет", strWindowFeatures);
                 setInterval(this.conditional_reload, 250);
                 return false;
             }

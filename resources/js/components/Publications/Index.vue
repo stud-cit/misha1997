@@ -258,9 +258,13 @@
             },
             // пошук публікації по назві
             findNames() {
-                this.names = this.publicationNames.filter(item => {
-                    return item.indexOf(this.filters.title) + 1
-                })
+                if(this.filters.title.length > 3) {
+                    this.names = this.publicationNames.filter(item => {
+                        return item.indexOf(this.filters.title) + 1
+                    })
+                } else {
+                    this.names = [];
+                }
             },
             // форматування назви пулікації для фільтру
             parseString(s) {
