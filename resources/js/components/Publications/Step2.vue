@@ -403,6 +403,7 @@
             Country
         },
         mounted() {
+            console.log(this.publicationData)
             this.defaultNewAuthorSSU = Object.assign(this.defaultNewAuthorSSU, this.newAuthorSSU);
             if(this.publicationData.whose_publication == 'my') {
                 this.publicationData.authors.push(this.$store.getters.authUser);

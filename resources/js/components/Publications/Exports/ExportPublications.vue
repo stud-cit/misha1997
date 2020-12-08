@@ -4,6 +4,16 @@
             <img src="/img/download.png" alt=""> Експорт публікацій Word
         </button>
         <div id="export" v-show="false">
+            <template v-if="filteredData.articles2.length > 0">
+                <h2>Стаття-доповідь у матеріалах наукових конференціях</h2>
+                <ol>
+                    <li v-for="(item, index) in filteredData.articles2" :key="index">
+                        {{item.initials}} {{ item.title }}. <i>{{ item.name_magazine }}</i>. {{ item.year }}. {{ item.number }}. C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
+                    </li>
+                </ol>
+            </template>
+
+
             <template v-if="filteredData.articles.length > 0">
                 <h2>Стаття у фахових виданнях України, інші статті</h2>
                 <ol>
@@ -116,6 +126,7 @@
                 const publications = this.exportList;
                 const exportEmpty = {
                     articles: [],
+                    articles2: [],
                     monograph: [],
                     books: [],
                     patents: [],
@@ -126,6 +137,9 @@
                     parts: []
                 };
                 publications.map(item => {
+                    if(item.publication_type_id == 2) {
+                        exportEmpty.articles2.push(item);
+                    }
                     if(item.publication_type_id == 1 || item.publication_type_id == 3) {
                         exportEmpty.articles.push(item);
                     }

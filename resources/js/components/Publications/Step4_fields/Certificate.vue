@@ -22,7 +22,7 @@
                 <div class="input-container">
                     <select class="item-value" v-model="applicant_id">
                         <option value="0">СумДУ</option>
-                        <option value="1">не  СумДУ</option>
+                        <option value="1">не СумДУ</option>
                     </select>
                 </div>
             </div>
@@ -30,9 +30,6 @@
                 <label class="item-title">Вкажіть власника майнових прав не СумДУ *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="newApplicant">
-                </div>
-                <div class="error" v-if="$v.newApplicant.$error">
-                    Поле обов'язкове для заповнення
                 </div>
             </div>
             <div class="form-group">
@@ -47,9 +44,6 @@
                     ></date-picker>
                     <input style="display:none" class="item-value" type="text" v-model="publicationData.date_application" required>
                 </div>
-                <div class="error" v-if="$v.publicationData.date_application.$error">
-                    Поле обов'язкове для заповнення
-                </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Дата публікації про видачу свідоцтва/рішення *</label>
@@ -62,9 +56,6 @@
                         :popup-style="datepicker.styles"
                     ></date-picker>
                     <input style="display:none" class="item-value" type="text" v-model="publicationData.date_publication" required>
-                </div>
-                <div class="error" v-if="$v.publicationData.date_publication.$error">
-                    Поле обов'язкове для заповнення
                 </div>
             </div>
             <div class="form-group">

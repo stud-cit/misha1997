@@ -8,7 +8,6 @@ use App\Models\Users;
 use App\Models\Roles;
 use App\Models\Notifications;
 use App\Models\Publications;
-use Carbon\Carbon;
 use Session;
 
 class AuthorsController extends ASUController
@@ -207,10 +206,6 @@ class AuthorsController extends ASUController
         $division = $this->getUserDivision($kod_div)->original;
         $data->department = $division['department'] ? $division['department']['NAME_DIV'] : null;
         $data->faculty = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
-
-        foreach ($data['publications'] as $key => $publication) {
-            $publication['publication']['date'] = Carbon::parse($publication['publication']['created_at'])->format('d.m.Y');
-        }
         return response()->json($data);
     }
 
@@ -332,9 +327,6 @@ class AuthorsController extends ASUController
     //notifications
     function getNotifications($autors_id) {
         $data = Notifications::where('autors_id', $autors_id)->orWhere('autors_id', null)->orderBy('created_at', 'DESC')->get();
-        foreach ($data as $key => $value) {
-            $value['date'] = Carbon::parse($value->created_at)->format('d.m.Y H:i');
-        }
         return response()->json($data);
     }
     function postNotifications(Request $request, $publication_id) {

@@ -83,10 +83,6 @@ class PublicationsController extends ASUController
         }
 
         $data = $model->get();
-
-        foreach ($data as $key => $publication) {
-            $publication['date'] = Carbon::parse($publication['created_at'])->format('d.m.Y');
-        }
         return response()->json($data);
     }
 
@@ -136,10 +132,6 @@ class PublicationsController extends ASUController
         }
 
         $data = $model->get();
-
-        foreach ($data as $key => $publication) {
-            $publication['date'] = Carbon::parse($publication['created_at'])->format('m.d.Y');
-        }
         return response()->json($data);
     }
 
@@ -147,7 +139,6 @@ class PublicationsController extends ASUController
     function getId($id) {
         $divisions = $this->getDivisions();
         $data = Publications::with('publicationType', 'scienceType', 'authors.author', 'publicationAdd', 'publicationEdit')->find($id);
-        $data->authors = AuthorsPublications::with('author')->where('publications_id', $id)->get();
         foreach ($data->authors as $key => $value) {
             foreach($divisions->original['department']  as $k => $v) {
                 if ($value['author']['department_code'] == $v['ID_DIV']) {
@@ -576,11 +567,7 @@ class PublicationsController extends ASUController
         }
 
         $data = $model->get();
-
-        foreach ($data as $key => $publication) {
-            $publication['date'] = Carbon::parse($publication['created_at'])->format('m.d.Y');
-        }
-
+        
         if($request->quartil_scopus && $request->quartil_wos && ($request->quartil_scopus == $request->quartil_wos)) {
             foreach ($data as $key => $value) {
                 if($request->quartil_scopus != min($value['quartil_scopus'], $value['quartil_wos'])) {

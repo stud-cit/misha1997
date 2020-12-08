@@ -594,7 +594,7 @@
                 <td>{{ item.nature_index == 1 ? "Так" : "Ні" }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.doi }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.applicant }}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.date }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.created_at }}</td>
             </tr>
             </template>
         </table>

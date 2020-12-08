@@ -13,4 +13,9 @@ class Notifications extends Model
         'autors_id',
         'status'
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime:d.m.Y H:i',
+        'updated_at' => 'datetime:d.m.Y H:i',
+    ];
 }

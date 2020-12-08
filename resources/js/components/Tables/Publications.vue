@@ -52,7 +52,7 @@
                                 <a v-if="author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}}</a>
                             </span>
                         </td>
-                        <td>{{ item.date }}</td>
+                        <td>{{ item.created_at }}</td>
                         <td v-if="checkAccess">
                             <a :href="'/publications/edit/'+item.id"><i class="fa fa-edit fa-2x"></i></a>
                         </td>

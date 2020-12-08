@@ -7,7 +7,7 @@
                 <hr>
                 <ul class="notifications-list mb-50">
                     <li class="notifications-item" v-for="(item, index) in filterList" :key="item.id">
-                        <p class="date">{{ item.date }} 
+                        <p class="date">{{ item.created_at }} 
                             <span v-if="item.autors_id">
                                 <i v-if="item.status" class="fa fa-envelope-o fa-1x"></i>
                                 <i v-else class="fa fa-envelope cursor fa-1x" @click="watchedNotification(item)"></i>
@@ -113,7 +113,6 @@
 
         &.new{
             color: #007BFF;
-
         }
     }
     hr{
@@ -148,36 +147,25 @@
         &.mb-75{
             margin-bottom: 75px;
         }
-
     }
 
     @media (max-width: 575px) {
         .subtitle{
-
             font-size: 20px;
             line-height: 24px;
-
-
-
         }
-
 
         .notifications-list{
             margin-top: 35px;
             .notifications-item{
                 margin-bottom: 15px;
                 .date{
-
                     font-size: 16px;
                     line-height: 18px;
-
                 }
                 .text{
                     font-size: 18px;
                     line-height: 22px;
-
-
-
                 }
             }
             &.mb-75{

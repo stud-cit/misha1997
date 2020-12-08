@@ -53,6 +53,11 @@ class Publications extends Model
         'edit_user_id'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:m.d.Y',
+        'updated_at' => 'datetime:m.d.Y',
+    ];
+
     function authors() {
         return $this->HasMany('App\Models\AuthorsPublications', 'publications_id');
     }
