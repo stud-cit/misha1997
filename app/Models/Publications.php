@@ -54,7 +54,7 @@ class Publications extends Model
     ];
 
     protected $casts = [
-        'created_at' => 'datetime:m.d.Y',
+        'created_at' => 'datetime:d.m.Y',
         'updated_at' => 'datetime:m.d.Y',
     ];
 
