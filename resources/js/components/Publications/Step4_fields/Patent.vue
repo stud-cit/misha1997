@@ -162,14 +162,12 @@
             publicationData: {
                 number_certificate: {
                     required,
-                    validFormat: val => /^\d{1,}$/.test(val),
                 },
                 mpk: {
                     required
                 },
                 application_number: {
                     required,
-                    validFormat: val => /^\d{1,}$/.test(val),
                 },
                 date_publication: {
                     required
