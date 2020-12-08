@@ -75,7 +75,7 @@
                     db_wos_percent: "",
                     name_monograph: "",
                     authors: [],
-                    useSupervisor: 0,
+                    useSupervisor: false,
                     supervisor: null,
                     old_supervisor: null
                 },
@@ -142,7 +142,7 @@
                             this.publicationData.authors.push(item.author);
                         }
                         if(item.supervisor == 1) {
-                            this.publicationData.useSupervisor = 1;
+                            this.publicationData.useSupervisor = true;
                             this.publicationData.supervisor = item.author;
                             this.publicationData.old_supervisor = item.author;
                         }

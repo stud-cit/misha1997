@@ -137,9 +137,6 @@
                                 </div>
                             </li>
 
-
-
-
                             <li class="row" v-if="jobType == 2">
                                 <div class="col-lg-3 list-item list-title">Входить до списків Forbes та Fortune *</div>
                                 <div class="col-lg-9 list-item list-text">
@@ -211,9 +208,9 @@
             <div class="form-group">
                 <label class="item-title">Під керівництвом (Зазначити "Так" у випадку одноосібної публікації студента) {{ useSupervisor }}</label>
                 <div class="input-container hint-container">
-                    <select class="item-value" :value="useSupervisor">
-                        <option value="true">Так</option>
-                        <option value="false">Ні</option>
+                    <select class="item-value" v-model="useSupervisor" @change="changeSupervisor">
+                        <option :value="true">Так</option>
+                        <option :value="false">Ні</option>
                     </select>
                     <div class="hint" ><span>Зазначити "Так" у випадку одноосібної публікації студента</span></div>
                 </div>
@@ -250,6 +247,7 @@
                     <label for="">Прізвище, ім’я, по-батькові автора *</label>
                     <div class="input-container authors">
                         <multiselect
+                            @input="checkStudent"
                             v-model="publicationData.authors[i]"
                             :searchable="true"
                             :options="authors"
@@ -262,7 +260,7 @@
                             <span slot="noResult">По даному запиту немає результатів</span>
                         </multiselect>
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                        <button class="remove-author" @click="removeAuthor(i)" v-if="(publicationData.whose_publication == 'my' && item.id != $store.getters.authUser.id) || publicationData.whose_publication != 'my'">&times;</button>
+                        <button class="remove-author" @click="removeAuthor(i)" v-if="item && ((publicationData.whose_publication == 'my' && item.id != $store.getters.authUser.id) || publicationData.whose_publication != 'my')">&times;</button>
                     </div>
                     <div class="error" v-if="$v.publicationData.authors.$each.$iter[i].$error">
                         Поле обов'язкове для заповнення
@@ -332,7 +330,6 @@
         mixins: [divisions],
         data() {
             return {
-                test: false,
                 loading: false,
                 departments: [],
                 divisions: [],
@@ -413,16 +410,25 @@
             this.getAuthors();
         },
 
-
         computed: {
-            useSupervisor() {
-                if((this.publicationData.authors.filter(item => item.categ_1 == 1).length == this.publicationData.authors.length)) {
-                    return true;
-                }
-                if(!this.publicationData.authors.find(item => item.categ_1 == 1)) {
-                    return false;
+            useSupervisor: {
+                get() {
+                    return this.publicationData.useSupervisor;
+                },
+                set(newValue) {
+                    this.publicationData.useSupervisor = newValue;
                 }
             }
+        },
+
+        watch: {
+            useSupervisor(val) {
+                if(this.publicationData.authors.length > 0 && (this.publicationData.authors.filter(item => item.categ_1 == 1).length == this.publicationData.authors.length)) {
+                    this.publicationData.useSupervisor = true;
+                } else {
+                    this.publicationData.useSupervisor = val;
+                }
+            },
         },
 
         validations: {
@@ -469,6 +475,11 @@
             },
         },
         methods: {
+            checkStudent() {
+                if(this.publicationData.authors.length > 0 && (this.publicationData.authors.filter(item => item.categ_1 == 1).length == this.publicationData.authors.length)) {
+                    this.publicationData.useSupervisor = true;
+                }
+            },
             // задає місце роботи для новго автора не з СумДУ
             setJobType() {
                 if(this.jobType == 0 || this.jobType == 3) {
@@ -561,10 +572,10 @@
             },
             // видалення автора із списку авторів публікації
             removeAuthor(i) {
-                if(this.publicationData.authors.length>1) {
+                if(this.publicationData.authors.length > 1) {
                     this.publicationData.authors.splice(i, 1);
-                }
-                else{
+                    this.checkStudent();
+                } else {
                     swal.fire({
                         icon: 'error',
                         title: 'Помилка',
@@ -645,6 +656,7 @@
                             }
                         })
                         this.publicationData.authors.push(response.data.user);
+                        this.checkStudent();
                         swal.fire({
                             icon: 'success',
                             title: 'Автора успішно додано!',

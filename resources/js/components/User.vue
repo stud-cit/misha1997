@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="row" v-if="data.position">
+                <li class="row" v-if="data.position && data.job != 'Не працює'">
                     <div class="col-lg-3 list-item list-title">Посада:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
