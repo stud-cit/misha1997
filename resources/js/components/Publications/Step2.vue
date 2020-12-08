@@ -206,7 +206,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Під керівництвом (Зазначити "Так" у випадку одноосібної публікації студента) {{ useSupervisor }}</label>
+                <label class="item-title">Під керівництвом (Зазначити "Так" у випадку одноосібної публікації студента)</label>
                 <div class="input-container hint-container">
                     <select class="item-value" v-model="useSupervisor" @change="changeSupervisor">
                         <option :value="true">Так</option>
@@ -403,7 +403,6 @@
             Country
         },
         mounted() {
-            console.log(this.publicationData)
             this.defaultNewAuthorSSU = Object.assign(this.defaultNewAuthorSSU, this.newAuthorSSU);
             if(this.publicationData.whose_publication == 'my') {
                 this.publicationData.authors.push(this.$store.getters.authUser);
@@ -676,7 +675,6 @@
             },
             // додання нового автора не з СумДУ
             addNewAuthor() {
-                console.log(this.$v.newAuthor)
                 this.$v.$touch();
                 if (this.$v.newAuthor.$invalid) {
                     swal.fire({
