@@ -66,7 +66,7 @@ class PublicationsController extends ASUController
                 }
             }
             $model->whereHas('authors.author', function($q) use ($departments_id) {
-                $q->whereIn('department_code', $departments_id)->where('categ_1', "!=", 1);;
+                $q->whereIn('department_code', $departments_id);
             });
         } else {
             if($request->faculty_code != '') {

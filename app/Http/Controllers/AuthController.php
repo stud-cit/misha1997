@@ -55,7 +55,6 @@ class AuthController extends ASUController {
             $data['country'] = "Україна";
             $data['guid'] = $personCabinet['result']['guid'];
             $data['token'] = $personCabinet['result']['token'];
-
             $data['test_data'] = json_encode($personCabinet['result']);
 
             $kod_div = null;
@@ -64,7 +63,7 @@ class AuthController extends ASUController {
 
             if(isset($personCabinet['result']['info1'])) {
                 foreach ($personCabinet['result']['info1'] as $key => $value) {
-                    if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2) {
+                    if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2 && $value['KOD_LEVEL'] == 8) {
                         $data['categ_1'] = $value['CATEG'];
                         $kod_div = $value['KOD_DIV'];
                         $data['academic_code'] = $value['NAME_GROUP'];
@@ -117,9 +116,8 @@ class AuthController extends ASUController {
             if($userModel->exists()) {
                 $person = $userModel->first();
                 $person->name = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
-                $person->job = "СумДУ";
-                $person->token = $personCabinet['result']['token'];
-
+                $person->academic_code = null;
+                $person->categ_1 = null;
                 $person->test_data = json_encode($personCabinet['result']);
 
                 $kod_div = null;
@@ -128,9 +126,9 @@ class AuthController extends ASUController {
 
                 if(isset($personCabinet['result']['info1'])) {
                     foreach ($personCabinet['result']['info1'] as $key => $value) {
-                        if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2) {
-                            $data['categ_1'] = $value['CATEG'];
-                            $data['academic_code'] = $value['NAME_GROUP'];
+                        if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2 && $value['KOD_LEVEL'] == 8) {
+                            $person->categ_1 = $value['CATEG'];
+                            $person->academic_code = $value['NAME_GROUP'];
                             $kod_div = $this->getAspirantDepartment($personCabinet['result']['guid']);
                             $isStudent = true;
                         }
@@ -140,7 +138,7 @@ class AuthController extends ASUController {
                 if(isset($personCabinet['result']['info2']) && !$isStudent) {
                     foreach ($personCabinet['result']['info2'] as $key => $value) {
                         if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && $value['KOD_STATE'] == 1) {
-                            $data['categ_2'] = $value['CATEG'];
+                            $person->categ_2 = $value['CATEG'];
                             $kod_div = $value['KOD_DIV'];
                         }
                     }

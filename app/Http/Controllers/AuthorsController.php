@@ -40,7 +40,7 @@ class AuthorsController extends ASUController
                     array_push($departments_id, $v2['ID_DIV']);
                 }
             }
-            $model->whereIn('department_code', $departments_id)->where('categ_1', "!=", 1);
+            $model->whereIn('department_code', $departments_id);
         } else {
             if($request->faculty_code != '') {
                 $departments_id = [$request->faculty_code];
@@ -404,7 +404,7 @@ class AuthorsController extends ASUController
 
             if(isset($data['info1'])) {
                 foreach ($data['info1'] as $key => $value) {
-                    if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2) {
+                    if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2 && $value['KOD_LEVEL'] == 8) {
                         $newData['categ_1'] = $value['CATEG'];
                         $newData['academic_code'] = $value['NAME_GROUP'];
                         $kod_div = $this->getAspirantDepartment($data['guid']);
