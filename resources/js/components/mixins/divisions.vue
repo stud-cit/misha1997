@@ -16,7 +16,10 @@
                     if(this.authUser.roles_id == 3 && this.authUser.faculty_code) {
                         this.departments = this.divisions.find(item => {
                             return this.authUser.faculty_code == item.ID_DIV;
-                        }).departments;
+                        });
+                    }
+                    if(this.departments) {
+                        this.departments = this.departments.map(item => item.departments)
                     }
                 })
             },

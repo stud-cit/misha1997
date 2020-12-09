@@ -746,7 +746,6 @@
             },
             getExportData() {
                 axios.post('/api/export', this.filters).then(response => {
-                    console.log(Object.values(response.data.publications))
                     this.publicationsData = Object.values(response.data.publications);
                     this.ratingData = Object.assign(this.ratingData, response.data.rating);
                 }).then(() => {

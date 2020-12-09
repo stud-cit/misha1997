@@ -198,7 +198,7 @@
             </ul>
 
             <div class="text-right">
-                <button type="button" class="export-button my-3" @click="showFilter = !showFilter">Фільтр {{ showFilter ? "&and;" : "&or;" }}</button>
+                <button type="button" class="export-button my-3" @click="showFilter = !showFilter">Фільтр</button>
             </div>
 
             <form class="search-block mb-3" v-if="showFilter">
@@ -425,7 +425,7 @@
                         publication_type_id: this.filters.publication_type_id
                     }
                 }).then(response => {
-                    this.publications = response.data;
+                    this.publications = Object.values(response.data);
                     this.loading = false;
                     this.loadingSearch = false;
                 })

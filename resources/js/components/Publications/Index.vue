@@ -13,8 +13,8 @@
         <!---->
         <div class="main-content">
             <form class="search-block">
-                <div class="form-row" v-if="authUser.roles_id != 2">
-                    <div class="form-group col-lg-6" v-if="authUser.roles_id != 3">
+                <div class="form-row" v-show="authUser.roles_id != 2">
+                    <div class="form-group col-lg-6" v-show="authUser.roles_id != 3">
                         <label>Інститут / факультет</label>
                         <div class="input-container">
                             <select v-model="filters.faculty_code" @change="getDepartments">
@@ -86,7 +86,7 @@
                     <label>Вид публікації</label>
                     <PublicationTypes :data="filters"></PublicationTypes>
                 </div>
-                <button type="button" class="export-button" style="display: inline-block" @click="getData(); loadingSearch = true" :disabled="data.length == 0 || loadingSearch || loadingClear">
+                <button type="button" class="export-button" style="display: inline-block" @click="getData(); loadingSearch = true" :disabled="loading || loadingSearch || loadingClear">
                     <span
                         class="spinner-border spinner-border-sm"
                         style="width: 19px; height: 19px;"
@@ -97,7 +97,7 @@
                     <span class="sr-only" v-if="loading">Loading...</span>
                     Пошук
                 </button>
-                <button type="button" class="export-button" style="display: inline-block" @click="clearFilter" :disabled="data.length == 0 || loadingSearch || loadingClear">
+                <button type="button" class="export-button" style="display: inline-block" @click="clearFilter" :disabled="loading || loadingSearch || loadingClear">
                     <span
                         class="spinner-border spinner-border-sm"
                         style="width: 19px; height: 19px"
@@ -144,6 +144,7 @@
                 publicationNames: [],
                 publicationTypes: [],
                 data: [],
+                departments: [],
                 exportData: {},
                 exportPublication: [],
                 loading: true,

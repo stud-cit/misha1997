@@ -22,19 +22,39 @@ class PublicationsController extends ASUController
     // всі публікації
     function getAll(Request $request) {
         $divisions = $this->getDivisions();
-        $data = [];
-        $model = Publications::with('publicationType', 'scienceType', 'authors.author', 'publicationAdd', 'publicationEdit')->whereHas('authors.author', function($q) use ($request) {
+        $model = Publications::with('publicationType', 'scienceType', 'authors.author', 'publicationAdd', 'publicationEdit')->orderBy('created_at', 'DESC');
+
+        if(!$request->author_id) {
             if($request->session()->get('person')['roles_id'] == 2) {
-                $q->where('department_code', $request->session()->get('person')['department_code']);
+                $departments_id = [$request->session()->get('person')['department_code']];
+                foreach($divisions->original['department'] as $k2 => $v2) {
+                    if ($v2['ID_PAR'] == $request->session()->get('person')['department_code']) {
+                        array_push($departments_id, $v2['ID_DIV']);
+                    }
+                }
+                $model->whereHas('authors.author', function($q) use ($departments_id) {
+                    $q->whereIn('department_code', $departments_id)->where('categ_1', '!=', 1);
+                });
+            } else {
+                if($request->session()->get('person')['roles_id'] == 3) {
+                    $departments_id = [$request->session()->get('person')['faculty_code']];
+                    foreach($divisions->original['department'] as $k2 => $v2) {
+                        if ($v2['ID_PAR'] == $request->session()->get('person')['faculty_code']) {
+                            array_push($departments_id, $v2['ID_DIV']);
+                        }
+                    }
+                    $model->whereHas('authors.author', function($q) use ($departments_id) {
+                        $q->whereIn('faculty_code', $departments_id)->where('categ_1', '!=', 1);
+                    });
+                }
             }
-            if($request->session()->get('person')['roles_id'] == 3) {
-                $q->where('faculty_code', $request->session()->get('person')['faculty_code']);
-            }
-        })->orderBy('created_at', 'DESC');
+        }
 
         if($request->author_id) {
-            $model->whereHas('authors.author', function($q) use ($request) {
-                $q->where('id', $request->author_id);
+            $model->whereHas('authors', function($query) use ($request) {
+                $query->whereHas('author', function($query) use ($request) {
+                    $query->where('id', $request->author_id);
+                })->where('supervisor', '!=', 1);
             });
         }
 
@@ -72,7 +92,7 @@ class PublicationsController extends ASUController
                 }
             }
             $model->whereHas('authors.author', function($q) use ($departments_id) {
-                $q->whereIn('department_code', $departments_id);
+                $q->whereIn('department_code', $departments_id)->where('categ_1', '!=', 1);
             });
         } else {
             if($request->faculty_code != '') {
@@ -83,18 +103,18 @@ class PublicationsController extends ASUController
                     }
                 }
                 $model->whereHas('authors.author', function($q) use ($departments_id) {
-                    $q->whereIn('faculty_code', $departments_id)->where('categ_1', "!=", 1);
+                    $q->whereIn('faculty_code', $departments_id)->where('categ_1', '!=', 1);
                 });
             }
         }
 
         $data = $model->get();
+
         return response()->json($data);
     }
 
     // мої публікації
     function getMyPublications(Request $request) {
-        $data = [];
         $model = Publications::with('publicationType', 'scienceType', 'authors.author')->whereHas('authors.author', function($q) use ($request) {
             $q->where('autors_id', $request->session()->get('person')['id']);
         })->orderBy('created_at', 'DESC');
