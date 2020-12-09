@@ -256,6 +256,7 @@
                             deselectLabel='Натисніть для видалення'
                             placeholder="Пошук в базі даних сервісу"
                             :custom-label="nameWithInfo"
+                            :loading="loadingAuthors"
                         >
                             <span slot="noResult">По даному запиту немає результатів</span>
                         </multiselect>
@@ -330,6 +331,7 @@
         mixins: [divisions],
         data() {
             return {
+                loadingAuthors: true,
                 loading: false,
                 departments: [],
                 divisions: [],
@@ -613,6 +615,7 @@
             getAuthors() {
                 axios.get(`/api/authors-all`).then(response => {
                     this.authors = response.data;
+                    this.loadingAuthors = false;
                 })
             },
             // список корисувачів з API ASU по обраній категорії

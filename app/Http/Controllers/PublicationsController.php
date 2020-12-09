@@ -32,6 +32,12 @@ class PublicationsController extends ASUController
             }
         })->orderBy('created_at', 'DESC');
 
+        if($request->author_id) {
+            $model->whereHas('authors.author', function($q) use ($request) {
+                $q->where('id', $request->author_id);
+            });
+        }
+
         if($request->title) {
             $model->where('title', 'like', "%".$request->title."%");
         }

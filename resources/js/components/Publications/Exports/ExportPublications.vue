@@ -1,7 +1,14 @@
 <template>
     <div>
-        <button class="export-button" @click="exportPublications('export')">
-            <img src="/img/download.png" alt=""> Експорт публікацій Word
+        <button class="export-button" @click="exportPublications('export')" :disabled="loading">
+            <span
+                class="spinner-border spinner-border-sm"
+                style="width: 19px; height: 19px; margin-right: 10px"
+                role="status"
+                aria-hidden="true"
+                v-if="loading"
+            ></span>
+            <img v-else src="/img/download.png"> Експорт публікацій Word
         </button>
         <div id="export" v-show="false">
             <template v-if="filteredData.articles2.length > 0">
@@ -102,6 +109,7 @@
     export default {
         props: {
             exportList: Array,
+            loading: Boolean
         },
         methods: {
             exportPublications(id){

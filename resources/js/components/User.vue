@@ -197,9 +197,72 @@
                 </li>
             </ul>
 
+            <div class="text-right">
+                <button type="button" class="export-button my-3" @click="showFilter = !showFilter">Фільтр {{ showFilter ? "&and;" : "&or;" }}</button>
+            </div>
+
+            <form class="search-block mb-3" v-if="showFilter">
+                <div class="form-group">
+                    <label>Назва публікації</label>
+                    <div class="input-container">
+                        <input v-model="filters.title" type="text">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>ПІБ автора</label>
+                    <div class="input-container">
+                        <input type="text" v-model="filters.authors_f">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-4">
+                        <label>БД Scopus/WoS</label>
+                        <div class="input-container">
+                            <select v-model="filters.science_type_id">
+                                <option value=""></option>
+                                <option value="1">Scopus</option>
+                                <option value="2">WoS</option>
+                                <option value="3">Scopus та WoS</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-4">
+                        <label>Рік видання</label>
+                        <div class="input-container">
+                            <select v-model="filters.year">
+                                <option value=""></option>
+                                <option v-for="(item, index) in years" :key="index" :value="item">{{item}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-4">
+                        <label>Країна видання</label>
+                        <Country :data="filters"></Country>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Вид публікації</label>
+                    <PublicationTypes :data="filters"></PublicationTypes>
+                </div>
+                <button type="button" class="export-button" style="display: inline-block" @click="getPublications(); loadingSearch = true" :disabled="data.length == 0 || loadingSearch">
+                    <span
+                        class="spinner-border spinner-border-sm"
+                        style="width: 19px; height: 19px;"
+                        role="status"
+                        aria-hidden="true"
+                        v-if="loadingSearch"
+                    ></span>
+                    <span class="sr-only" v-if="loading">Loading...</span>
+                    Пошук
+                </button>
+            </form>
+
             <div class="table-responsive text-center table-list">
                 <table class="table table-bordered">
                     <thead>
+                        <tr>
+                            <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{publications.length}}</td>
+                        </tr>
                         <tr>
                             <th scope="col">№</th>
                             <th scope="col">Вид публікації</th>
@@ -214,28 +277,31 @@
                     <tbody>
                         <tr v-for="(item, index) in filterList" :key="index">
                             <td scope="row">{{ index + 1 + (pagination.currentPage - 1) * pagination.perPage }}</td>
-                            <td>{{ item.publication.publication_type.title }}</td>
+                            <td>{{ item.publication_type.title }}</td>
                             <td>
-                                <span class="authors" v-for="(author, index) in item.publication.authors" :key="index">
+                                <span class="authors" v-for="(author, index) in item.authors" :key="index">
                                     <a v-if="!author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}} </a>
                                 </span>
                             </td>
-                            <td><a :href="'/publications/'+item.publication.id"> {{ item.publication.title }} </a> </td>
-                            <td>{{ item.publication.year}}</td>
-                            <td>{{ item.publication.science_type ? item.publication.science_type.type : '' }}</td>
+                            <td><a :href="'/publications/'+item.id"> {{ item.title }} </a> </td>
+                            <td>{{ item.year}}</td>
+                            <td>{{ item.science_type ? item.science_type.type : '' }}</td>
                             <td>
-                                <span class="authors" v-for="(author, index) in item.publication.authors" :key="index">
+                                <span class="authors" v-for="(author, index) in item.authors" :key="index">
                                     <a v-if="author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}} </a>
                                 </span>
                             </td>
-                            <td>{{ item.publication.date }}</td>
+                            <td>{{ item.created_at }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" class="text-left">Всього публікацій: {{ publications.length }} </td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="spinner-border my-4" role="status" v-if="loading">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div class="my-4" v-if="data.publications.length == 0">
+                <div class="my-4" v-if="publications.length == 0">
                     Публікації відсутні
                 </div>
             </div>
@@ -260,12 +326,18 @@
     </div>
 </template>
 <script>
+    import years from './mixins/years';
+
     import BackButton from "./Buttons/Back";
     import SaveButton from "./Buttons/Save";
     import Country from "./Forms/Country";
+    import PublicationTypes from "./Forms/PublicationTypes";
     export default {
+        mixins: [years],
         data() {
             return {
+                showFilter: false,
+                loadingSearch: false,
                 data: {
                     name: "",
                     role: {
@@ -285,13 +357,23 @@
                     orcid: "",
                     five_publications: "",
                     without_self_citations_wos: "",
-                    without_self_citations_scopus: "",
-                    publications: []
+                    without_self_citations_scopus: ""                    
                 },
+                publications: [],
                 pagination: {
                     currentPage: 1,
                     perPage: 10,
                     numPage: 1
+                },
+                filters: {
+                    title: '',
+                    authors_f: '',
+                    science_type_id: '',
+                    year: '',
+                    country: '',
+                    publication_type_id: '',
+                    faculty_code: '',
+                    department_code: ''
                 },
                 loading: false,
                 roles: []
@@ -300,10 +382,12 @@
         components: {
             BackButton,
             SaveButton,
-            Country
+            Country,
+            PublicationTypes
         },
         mounted () {
             this.getData();
+            this.getPublications();
             this.getRoles();
         },
         computed: {
@@ -311,8 +395,8 @@
                 return this.$store.getters.authUser
             },
             filterList() {
-                this.pagination.numPage = Math.ceil(this.data.publications.length / this.pagination.perPage);
-                return this.data.publications.slice((this.pagination.currentPage - 1) * this.pagination.perPage, this.pagination.currentPage * this.pagination.perPage);
+                this.pagination.numPage = Math.ceil(this.publications.length / this.pagination.perPage);
+                return this.publications.slice((this.pagination.currentPage - 1) * this.pagination.perPage, this.pagination.currentPage * this.pagination.perPage);
             }
         },
         methods: {
@@ -323,10 +407,27 @@
                 })
             },
             getData() {
-                this.loading = true;
                 axios.get(`/api/author/${this.$route.params.id}`).then(response => {
                     this.data = response.data;
                     this.loading = false;
+                })
+            },
+            getPublications() {
+                this.loading = true;
+                axios.get('/api/publications', {
+                    params: {
+                        author_id: this.$route.params.id,
+                        title: this.filters.title,
+                        authors_f: this.filters.authors_f,
+                        science_type_id: this.filters.science_type_id,
+                        year: this.filters.year,
+                        country: this.filters.country,
+                        publication_type_id: this.filters.publication_type_id
+                    }
+                }).then(response => {
+                    this.publications = response.data;
+                    this.loading = false;
+                    this.loadingSearch = false;
                 })
             },
             getRoles() {
@@ -356,5 +457,8 @@
 <style lang="css" scoped>
     .update-cabinet-info {
         cursor: pointer;
+    }
+    .table-list {
+        margin-top: 10px;
     }
 </style>

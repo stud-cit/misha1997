@@ -8,7 +8,6 @@ use App\Models\Users;
 use App\Models\Roles;
 use App\Models\Notifications;
 use App\Models\Publications;
-use Carbon\Carbon;
 use Session;
 
 class AuthorsController extends ASUController
@@ -194,12 +193,7 @@ class AuthorsController extends ASUController
 
     // getId (Користувач по id)
     function getId($id) {
-        $data = Authors::with(
-            'publications.publication.authors.author',
-            'publications.publication.publicationType',
-            'publications.publication.scienceType',
-            'role'
-        )->find($id);
+        $data = Authors::with('role')->find($id);
         $data->position = $this->getPosition($data);
 
         $kod_div = $data->department_code ? $data->department_code : $data->faculty_code;
@@ -207,10 +201,6 @@ class AuthorsController extends ASUController
         $division = $this->getUserDivision($kod_div)->original;
         $data->department = $division['department'] ? $division['department']['NAME_DIV'] : null;
         $data->faculty = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
-
-        foreach ($data['publications'] as $key => $publication) {
-            $publication['publication']['date'] = Carbon::parse($publication['publication']['created_at'])->format('d.m.Y');
-        }
 
         return response()->json($data);
     }

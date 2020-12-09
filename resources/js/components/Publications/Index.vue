@@ -8,7 +8,7 @@
         <!-- exports-->
         <div class="exports">
             <export-rating v-if="authUser.roles_id != 1" :publicationTypes="publicationTypes" :years="years" class="export-block"></export-rating>
-            <export-publications class="export-block" :exportList="data"></export-publications>
+            <export-publications class="export-block" :exportList="data" :loading="loading"></export-publications>
         </div>
         <!---->
         <div class="main-content">
@@ -83,13 +83,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label >Вид публікації</label>
-                    <div class="input-container">
-                        <select v-model="filters.publication_type_id">
-                            <option value=""></option>
-                            <option v-for="(item, index) in publicationTypes" :value="item.id" :key="index">{{item.title}}</option>
-                        </select>
-                    </div>
+                    <label>Вид публікації</label>
+                    <PublicationTypes :data="filters"></PublicationTypes>
                 </div>
                 <button type="button" class="export-button" style="display: inline-block" @click="getData(); loadingSearch = true" :disabled="data.length == 0 || loadingSearch || loadingClear">
                     <span
@@ -139,6 +134,7 @@
     import BackButton from "../Buttons/Back";
     import DeleteButton from "../Buttons/Delete";
     import Country from "../Forms/Country";
+    import PublicationTypes from "../Forms/PublicationTypes";
     import XLSX from 'xlsx';
     export default {
         mixins: [years, divisions],
@@ -146,8 +142,8 @@
             return {
                 names: [],
                 publicationNames: [],
-                data: [],
                 publicationTypes: [],
+                data: [],
                 exportData: {},
                 exportPublication: [],
                 loading: true,
@@ -172,20 +168,21 @@
             Table,
             BackButton,
             DeleteButton,
-            Country
+            Country,
+            PublicationTypes
         },
         created() {
             if(this.$store.getters.getFilterPublications) {
                 this.filters = this.$store.getters.getFilterPublications;
             }
             this.getData();
-            this.getTypePublications();
             this.getNamesPublications();
         },
         methods: {
             // getters
             // всі публікації
             getData() {
+                this.loading = true;
                 this.$store.dispatch('saveFilterPublications', this.filters);
                 axios.get('/api/publications', {
                     params: {
@@ -207,12 +204,6 @@
                     this.loading = false;
                     this.loadingSearch = false;
                     this.loadingClear = false;
-                })
-            },
-            // всі типи пблікацій
-            getTypePublications() {
-                axios.get(`/api/type-publications`).then(response => {
-                    this.publicationTypes = response.data;
                 })
             },
             // всі назви пцблікацій
