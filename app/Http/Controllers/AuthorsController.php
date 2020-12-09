@@ -9,11 +9,12 @@ use App\Models\Roles;
 use App\Models\Notifications;
 use App\Models\Publications;
 use Session;
+use Config;
 
 class AuthorsController extends ASUController
 {
-    protected $asu_key = 'eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG';
-    
+    protected $asu_key = "eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG";
+
     // authors
     function get(Request $request) {
         $divisions = $this->getAllDivision()->original;

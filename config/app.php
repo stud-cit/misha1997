@@ -1,7 +1,9 @@
 <?php
 
 return [
-    'token' => env('APP_TOKEN'),
+    'token' => env('MIX_APP_TOKEN'),
+
+    'asu_key' => env('ASU_KEY'),
 
     'name' => env('APP_NAME', 'Laravel'),
 

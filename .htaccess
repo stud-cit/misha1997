@@ -1,10 +1,8 @@
 RewriteEngine on
 
 #заглушка
-#RewriteCond %{REMOTE_ADDR} !^194.28.144.192$
-#RewriteCond %{REQUEST_URI} !^index.html
-#RewriteRule ^.*$ index.html
-#RewriteCond %{REMOTE_ADDR} ^194.28.144.192$
+RewriteCond %{REQUEST_URI} !^index.html
+RewriteRule ^.*$ index.html
 #заглушка
 
 RewriteCond %{REQUEST_URI} !^public
@@ -13,4 +11,4 @@ RewriteCond %{HTTPS} off
 RewriteCond %{HTTP:X-Forwarded-Proto} !https
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-RewriteRule ^(.*)$ public/$1 [L]
+#RewriteRule ^(.*)$ public/$1 [L]
