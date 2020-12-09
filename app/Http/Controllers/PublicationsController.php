@@ -119,6 +119,12 @@ class PublicationsController extends ASUController
             $q->where('autors_id', $request->session()->get('person')['id']);
         })->orderBy('created_at', 'DESC');
 
+        $model->whereHas('authors', function($query) use ($request) {
+            $query->whereHas('author', function($query) use ($request) {
+                $query->where('id', $request->session()->get('person')['id']);
+            })->where('supervisor', '!=', 1);
+        });
+
         if($request->title) {
             $model->where('title', 'like', "%".$request->title."%");
         }
