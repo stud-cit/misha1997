@@ -24,7 +24,7 @@ class PublicationsController extends ASUController
         $divisions = $this->getDivisions();
         $model = Publications::with('publicationType', 'scienceType', 'authors.author')->orderBy('created_at', 'DESC');
 
-        if(!$request->author_id) {
+        if(!$author_id) {
             if($request->session()->get('person')['roles_id'] == 2) {
                 $departments_id = [$request->session()->get('person')['department_code']];
                 foreach($divisions->original['department'] as $k2 => $v2) {
