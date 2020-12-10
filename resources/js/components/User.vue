@@ -117,7 +117,6 @@
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4">
                             <select v-model="data.five_publications">
-                                <option value=""></option>
                                 <option value="1">Так</option>
                                 <option value="0">Ні</option>
                             </select>
@@ -355,7 +354,7 @@
                     h_index: "",
                     scopus_researcher_id: "",
                     orcid: "",
-                    five_publications: "",
+                    five_publications: "0",
                     without_self_citations_wos: "",
                     without_self_citations_scopus: ""                    
                 },
