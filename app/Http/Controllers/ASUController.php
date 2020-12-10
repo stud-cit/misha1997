@@ -44,11 +44,19 @@ class ASUController extends Controller
             $departmentId = $sectionId;
             $sectionId = null;
         }
-        return response([
+        $result = [
             "section" => $sectionId ? $divisions[$sectionId] : null,
             "department" => $departmentId ? $divisions[$departmentId] : null,
-            "institute" => $facultyId ? $divisions[$facultyId] : null,
-        ]);
+            "institute" => $facultyId ? $divisions[$facultyId] : null
+        ];
+
+        foreach ($result as $key => $value) {
+            if($value && $value['NAME_TYPE'] == "кафедра") {
+                $result['department'] = $value;
+            }
+        }
+
+        return response($result);
     }
 
     function getDivisions() {
