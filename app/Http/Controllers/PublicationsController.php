@@ -20,9 +20,9 @@ class PublicationsController extends ASUController
     }
 
     // всі публікації
-    function getAll(Request $request) {
+    function getAll(Request $request, $author_id = null) {
         $divisions = $this->getDivisions();
-        $model = Publications::with('publicationType', 'scienceType', 'authors.author', 'publicationAdd', 'publicationEdit')->orderBy('created_at', 'DESC');
+        $model = Publications::with('publicationType', 'scienceType', 'authors.author')->orderBy('created_at', 'DESC');
 
         if(!$request->author_id) {
             if($request->session()->get('person')['roles_id'] == 2) {
@@ -50,11 +50,14 @@ class PublicationsController extends ASUController
             }
         }
 
-        if($request->author_id) {
-            $model->whereHas('authors', function($query) use ($request) {
-                $query->whereHas('author', function($query) use ($request) {
-                    $query->where('id', $request->author_id);
-                })->where('supervisor', '!=', 1);
+        if($author_id) {
+            $model->whereHas('authors', function($query) use ($request, $author_id) {
+                $query->whereHas('author', function($query) use ($request, $author_id) {
+                    $query->where('id', $author_id);
+                });
+                if($request->withSupervisor == "false") {
+                    $query->where('supervisor', '!=', 1);
+                }
             });
         }
 
@@ -110,60 +113,6 @@ class PublicationsController extends ASUController
 
         $data = $model->get();
 
-        return response()->json($data);
-    }
-
-    // мої публікації
-    function getMyPublications(Request $request) {
-        $model = Publications::with('publicationType', 'scienceType', 'authors.author')->whereHas('authors.author', function($q) use ($request) {
-            $q->where('autors_id', $request->session()->get('person')['id']);
-        })->orderBy('created_at', 'DESC');
-
-        $model->whereHas('authors', function($query) use ($request) {
-            $query->whereHas('author', function($query) use ($request) {
-                $query->where('id', $request->session()->get('person')['id']);
-            })->where('supervisor', '!=', 1);
-        });
-
-        if($request->title) {
-            $model->where('title', 'like', "%".$request->title."%");
-        }
-
-        if($request->authors_f) {
-            $model->whereHas('authors.author', function($q) use ($request) {
-                $q->where('name', 'like', "%".$request->authors_f."%");
-            });
-        }
-
-        if($request->science_type_id) {
-            $model->where('science_type_id', $request->science_type_id);
-        }
-
-        if($request->year) {
-            $model->where('year', $request->year);
-        }
-
-        if($request->country) {
-            $model->where('country', 'like', "%".$request->country."%");
-        }
-
-        if($request->publication_type_id) {
-            $model->where('publication_type_id', $request->publication_type_id);
-        }
-
-        if($request->faculty_code) {
-            $model->whereHas('authors.author', function($q) use ($request) {
-                $q->where('faculty_code', $request->faculty_code);
-            });
-        }
-
-        if($request->department_code) {
-            $model->whereHas('authors.author', function($q) use ($request) {
-                $q->where('department_code', $request->department_code);
-            });
-        }
-
-        $data = $model->get();
         return response()->json($data);
     }
 
