@@ -414,8 +414,12 @@ class PublicationsController extends ASUController
             $model->whereIn('publication_type_id', array_column($request->publication_types, 'id')); // Вид публікацій
         }
 
-        if($request->year) {
-            $model->where('year', $request->year); // Рік видання
+        if($request->years) {
+            $model->whereIn('year', $request->years); // Рік видання
+        }
+
+        if($request->not_previous_year == "true") {
+            $model->where('not_previous_year', 1); // Публікації які не враховані в рейтингу попереднього року
         }
 
         if($request->year_db) {

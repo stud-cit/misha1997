@@ -50,7 +50,8 @@ class Publications extends Model
         'cited_international_patents',
         'name_monograph',
         'add_user_id',
-        'edit_user_id'
+        'edit_user_id',
+        'not_previous_year'
     ];
 
     protected $casts = [

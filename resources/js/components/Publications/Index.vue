@@ -7,7 +7,7 @@
 
         <!-- exports-->
         <div class="exports">
-            <export-rating v-if="authUser.roles_id != 1" :publicationTypes="publicationTypes" :years="years" class="export-block"></export-rating>
+            <export-rating v-if="authUser.roles_id != 1" :years="years" class="export-block"></export-rating>
             <export-publications class="export-block" :exportList="data" :loading="loading"></export-publications>
         </div>
         <!---->
@@ -133,7 +133,6 @@
             return {
                 names: [],
                 publicationNames: [],
-                publicationTypes: [],
                 data: [],
                 departments: [],
                 exportData: {},

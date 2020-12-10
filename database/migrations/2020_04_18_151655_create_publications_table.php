@@ -52,6 +52,7 @@ class CreatePublicationsTable extends Migration
             $table->boolean('cited_international_patents')->nullable(); // процитовані у міжнародних патентах
             $table->foreignId('add_user_id')->nullable(); // Користувач, що створив публікацію
             $table->foreignId('edit_user_id')->nullable(); // Користувач, що робив останнє редагування публікації
+            $table->boolean('not_previous_year')->default(0); // Не враховується в рейтингу попередного року
             $table->timestamps();
         });
 
