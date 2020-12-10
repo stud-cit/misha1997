@@ -43,8 +43,7 @@ Route::group(['middleware' => ['web']], function() {
 
     //publications
     Route::get('publications-names', 'PublicationsController@getAllNames'); // всі назви публікацій
-    Route::get('publications', 'PublicationsController@getAll'); // всі публікації з додатковими залежностями
-    Route::get('my-publications', 'PublicationsController@getMyPublications');
+    Route::get('publications/{author_id?}', 'PublicationsController@getAll'); // всі публікації з додатковими залежностями
     Route::get('publication/{id}', 'PublicationsController@getId');
     Route::post('publication', 'PublicationsController@post');
 

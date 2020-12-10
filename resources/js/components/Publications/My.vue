@@ -49,15 +49,24 @@
                 </div>
                 <div class="form-group">
                     <label>Вид публікації</label>
-                    <div class="input-container">
-                        <select  v-model="filters.publication_type_id">
-                            <option value=""></option>
-                            <option v-for="(item, index) in publicationTypes" :value="item.id" :key="index">{{item.title}}</option>
-                        </select>
-                    </div>
+                    <PublicationTypes :data="filters"></PublicationTypes>
                 </div>
-                <button type="button" class="export-button" style="display: inline-block" @click="getData()">Пошук</button>
-                <button type="button" class="export-button" style="display: inline-block" @click="clearFilter">Очистити фільтр</button>
+                <div class="form-group checkbox col-lg-6">
+                    <input v-model="filters.withSupervisor" type="checkbox" class="form-check-input" id="withStudents">
+                    <label class="form-check-label" for="withStudents">Під керівництвом</label>
+                </div>
+                <SearchButton 
+                    @click.native="getData(); loadingSearch = true" 
+                    :disabled="loading || loadingSearch || loadingClear"
+                    :loading="loadingSearch"
+                    title="Пошук"
+                ></SearchButton>
+                <SearchButton 
+                    @click.native="clearFilter" 
+                    :disabled="loading || loadingSearch || loadingClear"
+                    :loading="loadingClear"
+                    title="Очистити фільтр"
+                ></SearchButton>
             </form>
             <Table 
                 @select="selectItem"
@@ -81,19 +90,23 @@
     import ExportPublications from "./Exports/ExportPublications";
     import Table from "../Tables/Publications";
     import BackButton from "../Buttons/Back";
+    import SearchButton from "../Buttons/SearchButton";
     import DeleteButton from "../Buttons/Delete";
     import Country from "../Forms/Country";
+    import PublicationTypes from "../Forms/PublicationTypes";
     export default {
         mixins: [years, country],
         data() {
             return {
+                loading: true,
+                loadingSearch: false,
+                loadingClear: false,
                 names: [],
                 publicationNames: [],
                 selectPublications: [],
                 exportPublication: [],
                 loading: true,
                 data: [],
-                publicationTypes: [],
                 filters: {
                     title: '',
                     authors_f: '',
@@ -102,7 +115,8 @@
                     country: '',
                     publication_type_id: '',
                     faculty_code: '',
-                    department_code: ''
+                    department_code: '',
+                    withSupervisor: false
                 }
             };
         },
@@ -110,15 +124,16 @@
             ExportPublications,
             Table,
             BackButton,
+            SearchButton,
             DeleteButton,
-            Country
+            Country,
+            PublicationTypes
         },
         created() {
             if(this.$store.getters.getFilterPublications) {
                 this.filters = this.$store.getters.getFilterPublications;
             }
             this.getData();
-            this.getTypePublications();
             this.getNamesPublications();
         },
         methods: {
@@ -136,7 +151,7 @@
             },
             getData() {
                 this.$store.dispatch('saveFilterPublications', this.filters);
-                axios.get('/api/my-publications', {
+                axios.get('/api/publications/'+this.authUser.id, {
                     params: {
                         title: this.filters.title,
                         authors_f: this.filters.authors_f,
@@ -145,18 +160,18 @@
                         country: this.filters.country,
                         publication_type_id: this.filters.publication_type_id,
                         faculty_code: this.filters.faculty_code,
-                        department_code: this.filters.department_code
+                        department_code: this.filters.department_code,
+                        withSupervisor: this.filters.withSupervisor
                     }
                 }).then(response => {
                     this.data = response.data;
                     this.loading = false;
+                    this.loadingSearch = false;
+                    this.loadingClear = false;
                 }).catch(() => {
                     this.loading = false;
-                })
-            },
-            getTypePublications() {
-                axios.get(`/api/type-publications`).then(response => {
-                    this.publicationTypes = response.data;
+                    this.loadingSearch = false;
+                    this.loadingClear = false;
                 })
             },
             getNamesPublications() {
@@ -194,6 +209,7 @@
                 return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
             },
             clearFilter() {
+                this.loadingClear = true;
                 this.$store.dispatch('clearFilterPublications');
                 this.filters.title = '';
                 this.filters.authors_f = '';
@@ -203,6 +219,7 @@
                 this.filters.publication_type_id = '';
                 this.filters.faculty_code = '';
                 this.filters.department_code = '';
+                this.filters.withSupervisor = false;
                 this.getData();
             }
         },
@@ -218,6 +235,17 @@
 </script>
 
 <style lang="scss" scoped>
+    .checkbox {
+        padding: 0;
+    }
+    .checkbox input[type=checkbox] {
+        width: 20px; 
+        height: 20px;
+        margin: 0;
+    }
+    .checkbox label {
+        margin-left: 40px;
+    }
     .form-group {
         margin-bottom: 10px;
     }

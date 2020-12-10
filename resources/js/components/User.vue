@@ -244,17 +244,16 @@
                     <label>Вид публікації</label>
                     <PublicationTypes :data="filters"></PublicationTypes>
                 </div>
-                <button type="button" class="export-button" style="display: inline-block" @click="getPublications(); loadingSearch = true" :disabled="data.length == 0 || loadingSearch">
-                    <span
-                        class="spinner-border spinner-border-sm"
-                        style="width: 19px; height: 19px;"
-                        role="status"
-                        aria-hidden="true"
-                        v-if="loadingSearch"
-                    ></span>
-                    <span class="sr-only" v-if="loading">Loading...</span>
-                    Пошук
-                </button>
+                <div class="form-group checkbox col-lg-6">
+                    <input v-model="filters.withSupervisor" type="checkbox" class="form-check-input" id="withStudents">
+                    <label class="form-check-label" for="withStudents">Під керівництвом</label>
+                </div>
+                <SearchButton 
+                    @click.native="getPublications(); loadingSearch = true" 
+                    :disabled="loading || loadingSearch"
+                    :loading="loadingSearch"
+                    title="Пошук"
+                ></SearchButton>
             </form>
 
             <div class="table-responsive text-center table-list">
@@ -330,6 +329,7 @@
 
     import BackButton from "./Buttons/Back";
     import SaveButton from "./Buttons/Save";
+    import SearchButton from "./Buttons/SearchButton";
     import Country from "./Forms/Country";
     import PublicationTypes from "./Forms/PublicationTypes";
     export default {
@@ -373,15 +373,17 @@
                     country: '',
                     publication_type_id: '',
                     faculty_code: '',
-                    department_code: ''
+                    department_code: '',
+                    withSupervisor: false
                 },
-                loading: false,
+                loading: true,
                 roles: []
             };
         },
         components: {
             BackButton,
             SaveButton,
+            SearchButton,
             Country,
             PublicationTypes
         },
@@ -413,16 +415,15 @@
                 })
             },
             getPublications() {
-                this.loading = true;
-                axios.get('/api/publications', {
+                axios.get('/api/publications/'+this.$route.params.id, {
                     params: {
-                        author_id: this.$route.params.id,
                         title: this.filters.title,
                         authors_f: this.filters.authors_f,
                         science_type_id: this.filters.science_type_id,
                         year: this.filters.year,
                         country: this.filters.country,
-                        publication_type_id: this.filters.publication_type_id
+                        publication_type_id: this.filters.publication_type_id,
+                        withSupervisor: this.filters.withSupervisor
                     }
                 }).then(response => {
                     this.publications = Object.values(response.data);
@@ -455,6 +456,20 @@
     }
 </script>
 <style lang="css" scoped>
+    .checkbox {
+        padding: 0;
+    }
+    .checkbox input[type=checkbox] {
+        width: 20px; 
+        height: 20px;
+        margin: 0;
+    }
+    .checkbox label {
+        margin-left: 40px;
+    }
+    .form-group {
+        margin-bottom: 10px;
+    }
     .update-cabinet-info {
         cursor: pointer;
     }

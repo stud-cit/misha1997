@@ -136,6 +136,11 @@
     import {required, requiredIf} from "vuelidate/lib/validators";
     export default {
         name: "Step4",
+        data(){
+            return{
+                clicks: 0,
+            }
+        },
         props: {
             publicationType: Object,
             publicationData: Object
@@ -186,7 +191,14 @@
                 if (this.$v.publicationData.$invalid) {
                     return
                 }
-                this.$emit('getData');
+                // this.clicks++;
+                // if(this.clicks == 1){
+                //     this.$emit('getData');
+                //     setTimeout(()=>{
+                //         this.clicks = 0;
+                //     }, 1000)
+                // }
+                this.$emit('getData',3);
             },
             prevStep(){
                 this.$emit('prevStep');

@@ -86,28 +86,18 @@
                     <label>Вид публікації</label>
                     <PublicationTypes :data="filters"></PublicationTypes>
                 </div>
-                <button type="button" class="export-button" style="display: inline-block" @click="getData(); loadingSearch = true" :disabled="loading || loadingSearch || loadingClear">
-                    <span
-                        class="spinner-border spinner-border-sm"
-                        style="width: 19px; height: 19px;"
-                        role="status"
-                        aria-hidden="true"
-                        v-if="loadingSearch"
-                    ></span>
-                    <span class="sr-only" v-if="loading">Loading...</span>
-                    Пошук
-                </button>
-                <button type="button" class="export-button" style="display: inline-block" @click="clearFilter" :disabled="loading || loadingSearch || loadingClear">
-                    <span
-                        class="spinner-border spinner-border-sm"
-                        style="width: 19px; height: 19px"
-                        role="status"
-                        aria-hidden="true"
-                        v-if="loadingClear"
-                    ></span>
-                    <span class="sr-only" v-if="loading">Loading...</span>
-                    Очистити фільтр
-                </button>
+                <SearchButton 
+                    @click.native="getData(); loadingSearch = true" 
+                    :disabled="loading || loadingSearch || loadingClear"
+                    :loading="loadingSearch"
+                    title="Пошук"
+                ></SearchButton>
+                <SearchButton 
+                    @click.native="clearFilter" 
+                    :disabled="loading || loadingSearch || loadingClear"
+                    :loading="loadingClear"
+                    title="Очистити фільтр"
+                ></SearchButton>
             </form>
             <Table
                 @select="selectItem"
@@ -132,6 +122,7 @@
     import ExportPublications from "./Exports/ExportPublications";
     import Table from "../Tables/Publications";
     import BackButton from "../Buttons/Back";
+    import SearchButton from "../Buttons/SearchButton";
     import DeleteButton from "../Buttons/Delete";
     import Country from "../Forms/Country";
     import PublicationTypes from "../Forms/PublicationTypes";
@@ -168,6 +159,7 @@
             ExportPublications,
             Table,
             BackButton,
+            SearchButton,
             DeleteButton,
             Country,
             PublicationTypes

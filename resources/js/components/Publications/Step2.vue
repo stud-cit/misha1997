@@ -331,6 +331,7 @@
         mixins: [divisions],
         data() {
             return {
+                clicks: 0,
                 loadingAuthors: true,
                 loading: false,
                 departments: [],
@@ -551,7 +552,14 @@
                     });
                     return
                 }
-                this.$emit('getData');
+                // this.clicks++;
+                // if(this.clicks == 1){
+                //     this.$emit('getData');
+                //     setTimeout(()=>{
+                //         this.clicks = 0;
+                //     }, 1000)
+                // }
+                this.$emit('getData',2);
             },
             prevStep() {
                 this.$emit('prevStep');
