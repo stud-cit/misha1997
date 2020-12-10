@@ -73,6 +73,7 @@
                     db_scopus_percent: "",
                     db_wos_percent: "",
                     cited_international_patents: "",
+                    not_previous_year: false,
                     name_monograph: "",
                     authors: [],
                     useSupervisor: false,

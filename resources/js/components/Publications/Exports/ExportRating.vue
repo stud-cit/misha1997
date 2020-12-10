@@ -62,6 +62,9 @@
                                     placeholder=""
                                     label="title"
                                     track-by="id"
+                                    selectLabel="Натисніть для вибору"
+                                    selectedLabel="Вибрано"
+                                    deselectLabel="Натисніть для видалення"
                                     :options="publicationTypes"
                                     :multiple="true"
                                     :taggable="true"
@@ -77,16 +80,21 @@
                                 </select>
                             </div>
                         </div>
-
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
-                            <label >Рік видання</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.year">
-                                    <option value=""></option>
-                                    <option v-for="(item, index) in years" :key="index" :value="item">{{item}}</option>
-                                </select>
+                            <label>Рік видання</label>
+                            <div class="input-container multiselect">
+                                <multiselect
+                                    v-model="filters.years"
+                                    placeholder=""
+                                    selectLabel="Натисніть для вибору"
+                                    selectedLabel="Вибрано"
+                                    deselectLabel="Натисніть для видалення"
+                                    :options="years"
+                                    :multiple="true"
+                                    :taggable="true"
+                                ></multiselect>
                             </div>
                         </div>
 
@@ -139,8 +147,6 @@
                                 </select>
                             </div>
                         </div>
-
-
                     </div>
                     <div class="form-row">
 
@@ -208,6 +214,9 @@
                                     label="title"
                                     track-by="id"
                                     :options="scienceTypes"
+                                    selectLabel="Натисніть для вибору"
+                                    selectedLabel="Вибрано"
+                                    deselectLabel="Натисніть для видалення"
                                     :multiple="true"
                                     :taggable="true"
                                 ></multiselect>
@@ -224,10 +233,13 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group col-lg-6">
+                        <div class="form-group checkbox col-lg-6">
+                            <div class="input-container">
+                                <input v-model="filters.not_previous_year" type="checkbox" class="form-check-input" id="notPreviousYear">
+                                <label class="form-check-label" for="notPreviousYear">Публікації які не враховані в рейтингу попереднього року</label>
+                            </div>
                         </div>
                     </div>
-
                 </form>
                 <div class="step-button-group">
                     <button class="prev" @click="showFilters = false">Назад</button>
@@ -614,6 +626,7 @@
                 departments: [],
                 divisions: [],
                 publicationsData: [],
+                publicationTypes: [],
                 scienceTypes: [
                     {
                         id: 1,
@@ -694,7 +707,7 @@
                     withStudents: false,
                     withForeigners: '',
                     science_types: [],
-                    year: '',
+                    years: '',
                     year_db: new Date().getFullYear(),
                     country: '',
                     quartil_scopus: '',
@@ -709,7 +722,8 @@
                     other_organization: false,
                     abroad: '',
                     applicant: '',
-                    commercial_applicant: ''
+                    commercial_applicant: '',
+                    not_previous_year: false
                 }
             };
         },
@@ -718,14 +732,19 @@
             Multiselect
         },
         props:{
-            publicationTypes: Array,
             years: Array,
         },
         created() {
             this.getDivisions();
+            this.getPublicationTypes();
         },
 
         methods: {
+            getPublicationTypes() {
+                axios.get('/api/type-publications').then(response => {
+                    this.publicationTypes = response.data;
+                })
+            },
             quartil(item) {
                 var result = Math.min(...[item.quartil_scopus, item.quartil_wos].filter(i => i != null));
                 return isFinite(result) ? result : "";
