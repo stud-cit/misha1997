@@ -87,13 +87,13 @@
             Step3,
             Step4,
         },
-        
+
         methods: {
-            getStepData() {
-                if(this.currentStep !== 4) {
+            getStepData(num = 4) {
+                if(num !== 4) {
                     // этот код скрывает 3 шаг
-                    if(!this.isScopus && this.currentStep == 2) {
-                        this.currentStep+=2;
+                    if(!this.isScopus && num == 2) {
+                        this.currentStep = num + 2 ;
                         const falseScinceType = {
                             snip: null,
                             impact_factor: null,
@@ -104,9 +104,10 @@
                         };
                         this.publicationData = Object.assign(this.publicationData, falseScinceType);
                     } else {
-                        this.currentStep++;
+                        this.currentStep = num + 1;
                     }
                 } else {
+
                     this.publicationData.out_data = this.outDataParser(this.publicationData);
                     if(this.publicationData.science_type_id == 1) {
                         this.publicationData.quartil_wos = null;

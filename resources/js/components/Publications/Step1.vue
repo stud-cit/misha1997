@@ -77,6 +77,7 @@
         },
         data() {
             return {
+                clicks: 0,
                 names: [],
                 publicationTypes: [],
                 publicationNames: [],
@@ -181,7 +182,17 @@
                         this.errorName = null;
                     }
                 }
-                this.$emit('getData');
+                // this.clicks++;
+                // if(this.clicks == 1){
+                //     this.$emit('getData');
+                //     setTimeout(()=>{
+                //         this.clicks = 0;
+                //     }, 1000)
+                //
+                //
+                // }
+                this.$emit('getData',1);
+
             },
             parseString(s) {
                 const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
