@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Назва редакції </label>
+                <label class="item-title">Назва видавництва </label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.editor_name">
                 </div>

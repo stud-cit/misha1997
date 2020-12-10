@@ -3,7 +3,7 @@
         computed: {
             years() {
                 const year = new Date().getFullYear();
-                return Array.from({length: year - 2000}, (value, index) => 2001 + index).reverse();
+                return Array.from({length: year - 1969}, (value, index) => 1970 + index).reverse();
             },
         }
     }

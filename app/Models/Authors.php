@@ -32,7 +32,7 @@ class Authors extends Model
         'test_data'
     ];
 
-    protected $hidden = ['created_at', 'updated_at', 'test_data', 'token', 'guid'];
+    protected $hidden = ['created_at', 'updated_at', 'test_data', 'token'];
 
     function role() {
         return $this->belongsTo('App\Models\Roles', 'roles_id');

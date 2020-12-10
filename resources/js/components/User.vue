@@ -209,7 +209,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>ПІБ автора</label>
+                    <label>ПІБ співавтора</label>
                     <div class="input-container">
                         <input type="text" v-model="filters.authors_f">
                     </div>
