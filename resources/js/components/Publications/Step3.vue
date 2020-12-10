@@ -191,14 +191,7 @@
                 if (this.$v.publicationData.$invalid) {
                     return
                 }
-                // this.clicks++;
-                // if(this.clicks == 1){
-                //     this.$emit('getData');
-                //     setTimeout(()=>{
-                //         this.clicks = 0;
-                //     }, 1000)
-                // }
-                this.$emit('getData',3);
+                this.$emit('getData', 3);
             },
             prevStep(){
                 this.$emit('prevStep');

@@ -99,7 +99,7 @@
                     });
                     return
                 }
-                this.$parent.$emit('getData', this.publicationData);
+                this.$parent.$emit('getData', 4);
             },
             prevStep() {
                 this.$parent.$emit('prevStep');

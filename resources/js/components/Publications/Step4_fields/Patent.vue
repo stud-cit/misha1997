@@ -199,7 +199,7 @@
                     return
                 }
                 this.publicationData.applicant = this.applicant_id ? "СумДУ" : this.newApplicant;
-                this.$parent.$emit('getData', this.publicationData);
+                this.$parent.$emit('getData', 4);
             },
             prevStep(){
                 this.$parent.$emit('prevStep');
