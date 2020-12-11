@@ -14,7 +14,7 @@
         <div class="main-content">
             <form class="search-block">
                 <div class="form-row" v-show="authUser.roles_id != 2">
-                    <div class="form-group col-lg-6" v-show="authUser.roles_id != 3">
+                    <div class="form-group col-lg" v-show="authUser.roles_id != 3">
                         <label>Інститут / факультет</label>
                         <div class="input-container">
                             <select v-model="filters.faculty_code" @change="getDepartments">
@@ -27,7 +27,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group col-lg-6">
+                    <div class="form-group col-lg">
                         <label>Кафедра</label>
                         <div class="input-container">
                             <select v-model="filters.department_code">
@@ -148,7 +148,7 @@
                     year: '',
                     country: '',
                     publication_type_id: '',
-                    faculty_code: '',
+                    faculty_code: 341,
                     department_code: ''
                 }
             };
