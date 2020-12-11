@@ -393,7 +393,8 @@
                     orcid: '',
                     forbes_fortune: 0,
                     faculty_code: '',
-                    department_code: ''
+                    department_code: '',
+                    categ_1: ''
                 }
             }
         },
@@ -494,11 +495,14 @@
                     this.newAuthor.orcid = "";
                     this.newAuthor.faculty_code = "";
                     this.newAuthor.department_code = "";
+                    this.newAuthor.categ_1 = "";
                     if(this.jobType == 3) {
                         this.newAuthor.country = "";
+                        this.newAuthor.categ_1 = 3;
                     }
                 } else {
                     this.newAuthor.job = '';
+                    this.newAuthor.categ_1 = "";
                 }
             },
             // пошук схожих імен авторів не з СумДУ
@@ -552,14 +556,7 @@
                     });
                     return
                 }
-                // this.clicks++;
-                // if(this.clicks == 1){
-                //     this.$emit('getData');
-                //     setTimeout(()=>{
-                //         this.clicks = 0;
-                //     }, 1000)
-                // }
-                this.$emit('getData',2);
+                this.$emit('getData', 2);
             },
             prevStep() {
                 this.$emit('prevStep');

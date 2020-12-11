@@ -91,7 +91,6 @@
 
         methods: {
             getStepData(num = 4) {
-                console.log(num)
                 if(num !== 4) {
                     // этот код скрывает 3 шаг
                     if(!this.isScopus && num == 2) {

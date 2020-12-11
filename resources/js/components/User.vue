@@ -31,7 +31,7 @@
                         </template>
                     </div>
                 </li>
-                <li class="row" v-if="data.job">
+                <li class="row" v-if="data.job && data.categ_1 != 3">
                     <div class="col-lg-3 list-item list-title">Місце роботи:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
