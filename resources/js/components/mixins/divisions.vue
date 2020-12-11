@@ -19,7 +19,7 @@
                         });
                     }
                     if(this.departments) {
-                        this.departments = this.departments.map(item => item.departments)
+                        this.departments = this.departments.departments;
                     }
                 })
             },

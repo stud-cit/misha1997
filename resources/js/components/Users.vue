@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div class="form-row" v-if="authUser.roles_id != 2">
-                    <div class="form-group col-lg-6" v-if="authUser.roles_id != 3">
+                    <div class="form-group col-lg" v-if="authUser.roles_id != 3">
                         <label >Інститут / факультет</label>
                         <div class="input-container">
                             <select v-model="filters.faculty_code" @change="getDepartments">
@@ -29,7 +29,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group col-lg-6">
+                    <div class="form-group col-lg">
                         <label >Кафедра</label>
                         <div class="input-container">
                             <select v-model="filters.department_code">
