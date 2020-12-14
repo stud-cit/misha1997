@@ -404,7 +404,7 @@ class AuthorsController extends ASUController
             
             if(isset($data['info2']) && !$isStudent) {
                 foreach ($data['info2'] as $key => $value) {
-                    if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && $value['KOD_STATE'] == 1) {
+                    if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 3)) {
                         $newData['categ_2'] = $value['CATEG'];
                         $kod_div = $value['KOD_DIV'];
                     }
