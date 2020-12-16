@@ -125,7 +125,7 @@ class AuthorsController extends ASUController
 
     // authors All (admin)
     function getAll(Request $request) {
-        $data = Authors::with('role')->get();
+        $data = Authors::with('role')->orderBy('name', 'ASC')->get();
 
         $divisions = $this->getAllDivision()->original;
 
@@ -237,9 +237,9 @@ class AuthorsController extends ASUController
         if(!Authors::where("name", "like", $request->name)->exists()) {
             $model = new Authors();
             $data = $request->all();
-            $kod_div = $this->getAspirantDepartment($request->guid);
-            if(!$kod_div) {
-                $kod_div = $request->kod_div;
+            $kod_div = $request->kod_div;
+            if($request->categ_1 == 2) {
+                $kod_div = $this->getAspirantDepartment($request->guid);
             }
             $division = $this->getUserDivision($kod_div)->original;
             $data['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
@@ -425,10 +425,14 @@ class AuthorsController extends ASUController
                     "categ_2" => $person['CATEG_2'],
                 ]);
 
-                return response('ok', 200);
+                return response()->json([
+                    'status' => 'ok'
+                ]);
             }
         } else {
-            return response('error', 200);
+            return response()->json([
+                'status' => 'error'
+            ]);
         }
     }
 }

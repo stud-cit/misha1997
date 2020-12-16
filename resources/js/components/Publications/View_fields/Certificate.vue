@@ -14,7 +14,7 @@
         </li>
         <li class="row">
             <div class="col-lg-3 list-item list-title">Дата подачі заявки:</div>
-            <div class="col-lg-9 list-item list-text">{{data.applicant ? "Не СумДУ" : "СумДУ"}}</div>
+            <div class="col-lg-9 list-item list-text">{{data.date_application}}</div>
         </li>
         <li class="row">
             <div class="col-lg-3 list-item list-title">Дата публікації про видачу свідоцтва/рішення:</div>

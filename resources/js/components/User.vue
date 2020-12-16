@@ -404,10 +404,19 @@
             updateCabinetInfo() {
                 this.updateLoading = true;
                 axios.post(`/api/update-cabinet-info/${this.$route.params.id}`)
-                .then(() => {
-                    this.getData();
+                .then((response) => {
+                    if(response.data.status == 'ok') {
+                        this.getData();
+                    }
+                    if(response.data.status == 'error') {
+                        swal.fire({
+                            icon: 'error',
+                            title: 'В базі даних СумДУ користувача не знайдено'
+                        });
+                    }
                     this.updateLoading = false;
                 }).catch(() => {
+                    this.updateLoading = false;
                     swal.fire({
                         icon: 'error',
                         title: 'Помилка'
@@ -446,7 +455,6 @@
                 if(!this.data.job) {
                     this.data.job = "Не працює";
                 }
-                console.log(this.data)
                 axios.post(`/api/update-author/${this.$route.params.id}`, this.data)
                     .then((response) => {
                         this.getData();
