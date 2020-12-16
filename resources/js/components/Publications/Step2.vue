@@ -556,7 +556,15 @@
                         title: 'Помилка',
                         text: "Не всі поля заповнено!"
                     });
-                    return
+                    return;
+                }
+                if(this.publicationData.authors.length == 0) {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Помилка',
+                        text: "Повинен бути хоча б один автор!"
+                    });
+                    return;
                 }
                 this.$emit('getData', 2);
             },

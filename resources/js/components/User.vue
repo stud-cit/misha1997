@@ -10,7 +10,7 @@
                             <input class="item-value" type="text" v-model="data.name">
                         </div>
                         <div v-else>
-                            {{data.name}} <img src="/img/update.png" @click="updateCabinetInfo" class="update-cabinet-info">
+                            {{data.name}} <img src="/img/update.png" @click="updateCabinetInfo" :class="['update-cabinet-info', updateLoading ? 'spin' : '']" title="Оновити інформацію з особистого кабінету">
                         </div>
                     </div>
                 </li>
@@ -31,7 +31,7 @@
                         </template>
                     </div>
                 </li>
-                <li class="row" v-if="data.job && data.categ_1 != 3">
+                <li class="row" v-if="data.categ_1 != 3">
                     <div class="col-lg-3 list-item list-title">Місце роботи:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="row" v-if="(data.position && data.guid)">
+                <li class="row" v-if="(data.guid)">
                     <div class="col-lg-3 list-item list-title">Посада:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
@@ -334,6 +334,7 @@
         mixins: [years],
         data() {
             return {
+                updateLoading: false,
                 showFilter: false,
                 loadingSearch: false,
                 data: {
@@ -401,9 +402,16 @@
         },
         methods: {
             updateCabinetInfo() {
+                this.updateLoading = true;
                 axios.post(`/api/update-cabinet-info/${this.$route.params.id}`)
                 .then(() => {
                     this.getData();
+                    this.updateLoading = false;
+                }).catch(() => {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Помилка'
+                    });
                 })
             },
             getData() {
@@ -435,13 +443,22 @@
                 })
             },
             save() {
+                if(!this.data.job) {
+                    this.data.job = "Не працює";
+                }
+                console.log(this.data)
                 axios.post(`/api/update-author/${this.$route.params.id}`, this.data)
                     .then((response) => {
+                        this.getData();
                         swal.fire({
                             icon: 'success',
                             title: 'Інформацію оновлено'
                         });
-                        this.$router.go(-1);
+                }).catch(() => {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Помилка'
+                    });
                 })
             }
         },
@@ -468,10 +485,30 @@
     .form-group {
         margin-bottom: 10px;
     }
-    .update-cabinet-info {
-        cursor: pointer;
-    }
     .table-list {
         margin-top: 10px;
+    }
+    img.update-cabinet-info {
+        cursor: pointer;
+    }
+    .spin {
+        animation: 1s linear 0s normal none infinite running spin;
+        -webkit-animation: 1s linear 0s normal none infinite running spin;
+    }
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    @-webkit-keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
 </style>

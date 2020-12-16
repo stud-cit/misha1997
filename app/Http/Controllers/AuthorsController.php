@@ -13,7 +13,13 @@ use Config;
 
 class AuthorsController extends ASUController
 {
+    protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
     protected $asu_key = "eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG";
+    protected $cabinet_service_token;
+
+    function __construct() {
+        $this->cabinet_service_token = config('app.token');
+    }
 
     // authors
     function get(Request $request) {
@@ -376,48 +382,53 @@ class AuthorsController extends ASUController
         return $age;
     }
 
-    function updateCabinetInfo($user_id) {
+    function updateCabinetInfo(Request $request, $user_id) {
+
+        $key = $request->session()->get('key');
+
         $model = Authors::find($user_id);
-        if($model['test_data']) {
-            $data = json_decode($model['test_data'], true);
-            $newData = [
-                "categ_1" => null,
-                "categ_2" => null,
-                "academic_code" => null,
-                "department_code" => null,
-                "faculty_code" => null
-            ];
 
-            $kod_div = null;
-            $isStudent = false;
+        $getPersons = json_decode(file_get_contents($this->cabinet_api . 'getPersons?key=' . $key . '&token=' . $this->cabinet_service_token . '&search=' . urlencode($model['name'])), true);
 
-            if(isset($data['info1'])) {
-                foreach ($data['info1'] as $key => $value) {
-                    if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2 && $value['KOD_LEVEL'] == 8) {
-                        $newData['categ_1'] = $value['CATEG'];
-                        $newData['academic_code'] = $value['NAME_GROUP'];
-                        $kod_div = $this->getAspirantDepartment($data['guid']);
-                        $isStudent = true;
-                    }
+        if($getPersons['status'] == 'OK' && count($getPersons['result']) > 0) {
+            $mode = 1;
+            $getPersons = array_shift($getPersons['result']);
+            $getContingents = json_decode(file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key=' . $this->asu_key . '&mode=' . $mode . '&categ1=' . $getPersons['categ1'] . '&categ2=' . $getPersons['categ2']), true);
+            if($getContingents['status'] == 'OK') {
+
+                $person = [];
+
+                $aspirant = array_filter($getContingents['result'], function($value) use ($model) {
+                    return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'] && $value['CATEG_1'] == 2 && $value['KOD_LEVEL'] == 8;
+                });
+
+                if(count($aspirant) == 0) {
+                    $anotherUser = array_filter($getContingents['result'], function($value) use ($model) {
+                        return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'] && $value['CATEG_1'] != 2 && $value['KOD_LEVEL'] != 8;
+                    });
+                    $person = array_shift($anotherUser);
+                } else {
+                    $person = array_shift($aspirant);
+                    $person['KOD_DIV'] = $this->getAspirantDepartment($person['ID_FIO']);
                 }
+
+                $division = $this->getUserDivision($person['KOD_DIV'])->original;
+                $person['DEPARTMENT_CODE'] = $division['department'] ? $division['department']['ID_DIV'] : null;
+                $person['FACULTY_CODE'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+
+                $model->update([
+                    "name" => $person['F_FIO'] . ' ' . $person['I_FIO'] . ' ' . $person['O_FIO'],
+                    "faculty_code" => $person['FACULTY_CODE'],
+                    "department_code" => $person['DEPARTMENT_CODE'],
+                    "academic_code" => $person['NAME_GROUP'],
+                    "categ_1" => $person['CATEG_1'],
+                    "categ_2" => $person['CATEG_2'],
+                ]);
+
+                return response('ok', 200);
             }
-            
-            if(isset($data['info2']) && !$isStudent) {
-                foreach ($data['info2'] as $key => $value) {
-                    if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 3)) {
-                        $newData['categ_2'] = $value['CATEG'];
-                        $kod_div = $value['KOD_DIV'];
-                    }
-                }
-            }
-
-            $division = $this->getUserDivision($kod_div)->original;
-
-            $newData['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
-            $newData['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
-
-            $model->update($newData);
+        } else {
+            return response('error', 200);
         }
-        return response('ok', 200);
     }
 }
