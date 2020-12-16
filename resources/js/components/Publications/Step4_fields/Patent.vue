@@ -198,6 +198,7 @@
                     });
                     return
                 }
+                this.publicationData.year = this.publicationData.date_publication.slice(0,4);
                 this.publicationData.applicant = this.applicant_id ? "СумДУ" : this.newApplicant;
                 this.$parent.$emit('getData', 4);
             },

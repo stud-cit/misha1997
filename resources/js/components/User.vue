@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="row" v-if="data.position && data.job != 'Не працює'">
+                <li class="row" v-if="(data.position && data.guid)">
                     <div class="col-lg-3 list-item list-title">Посада:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="row">
+                <li class="row" v-if="(!data.guid && !data.faculty_code) || (!data.guid && !data.department_code)">
                     <div class="col-lg-3 list-item list-title">Країна:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
@@ -96,7 +96,6 @@
                             {{data.country}}
                         </div>
                     </div>
-                    
                 </li>
                 <li class="row" v-if="!data.guid">
                     <div class="col-lg-3 list-item list-title">Входить до списків Forbes та Fortune:</div>

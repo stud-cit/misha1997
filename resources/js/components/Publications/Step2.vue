@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <div class="step-button-group sumdu-base">
-                            <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
+                            <button class="prev" @click="otherAuthor = !otherAuthor; $v.$reset();">Назад</button>
                             <button class="next active" @click="addNewAuthorSSU" :disabled="loading">Додати</button>
                         </div>
                     </template>
@@ -199,7 +199,7 @@
                             </li>
                         </ul>
                         <div class="step-button-group">
-                            <button class="prev" @click="otherAuthor = !otherAuthor">Назад</button>
+                            <button class="prev" @click="otherAuthor = !otherAuthor; $v.$reset();">Назад</button>
                             <button class="next active" @click="addNewAuthor" :disabled="loading">Додати </button>
                         </div>
                     </template>
@@ -526,6 +526,8 @@
                         } else {
                             return `${name} - ${job}`
                         }
+                    } else if(categ_1 ==  3) {
+                        return `${name} - випускник`
                     } else {
                         return `${name} - ${job}`
                     }
@@ -708,32 +710,40 @@
                 this.loading = true;
                 axios.post('/api/author', this.newAuthor)
                 .then((response) => {
-                    this.otherAuthor = false;
-                    this.getAuthors();
-                    this.jobType = null;
-                    this.newAuthor = {
-                        job: '',
-                        name: '',
-                        country: null,
-                        h_index: '',
-                        scopus_autor_id: '',
-                        scopus_researcher_id: '',
-                        orcid: '',
-                        forbes_fortune: 0
-                    };
-                    this.publicationData.authors.map(item => {
-                        if(item.name == "") {
-                            let index = this.publicationData.authors.indexOf(item);
-                            this.publicationData.authors.splice(index, 1);
-                        }
-                    })
-                    this.publicationData.authors.push(response.data.user);
-                    this.$v.$reset();
-                    swal.fire({
-                        icon: 'success',
-                        title: 'Автора успішно додано!',
-                    });
-                    this.loading = false;
+                    if(response.data.status == 'ok') {
+                        this.otherAuthor = false;
+                        this.getAuthors();
+                        this.jobType = null;
+                        this.newAuthor = {
+                            job: '',
+                            name: '',
+                            country: null,
+                            h_index: '',
+                            scopus_autor_id: '',
+                            scopus_researcher_id: '',
+                            orcid: '',
+                            forbes_fortune: 0
+                        };
+                        this.publicationData.authors.map(item => {
+                            if(item.name == "") {
+                                let index = this.publicationData.authors.indexOf(item);
+                                this.publicationData.authors.splice(index, 1);
+                            }
+                        })
+                        this.publicationData.authors.push(response.data.user);
+                        this.$v.$reset();
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Автора успішно додано!',
+                        });
+                        this.loading = false;
+                    } else {
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Помилка',
+                            text: "Автор вже зареєстрований в системі"
+                        });
+                    }
                 }).catch((error) => {
                     swal.fire({
                         icon: 'error',
@@ -741,7 +751,7 @@
                         text: error.message
                     });
                     this.loading = false;
-                })
+                });
             },
         }
     }

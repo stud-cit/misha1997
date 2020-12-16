@@ -213,7 +213,7 @@ class AuthorsController extends ASUController
 
     // додання автора не з СумДУ
     function postAuthor(Request $request) {
-        if(!Authors::where("guid", null)->where("name", "like", $request->name)->where("job", "like", $request->job)->exists()) {
+        if(!Authors::where("name", "like", $request->name)->exists()) {
             $model = new Authors();
             $data = $request->all();
             $response = $model->create($data);
@@ -228,7 +228,7 @@ class AuthorsController extends ASUController
 
     // додання автора з СумДУ
     function postAuthorSSU(Request $request) {
-        if(!Authors::where("guid", $request->guid)->where("name", "like", $request->name)->exists()) {
+        if(!Authors::where("name", "like", $request->name)->exists()) {
             $model = new Authors();
             $data = $request->all();
             $kod_div = $this->getAspirantDepartment($request->guid);
