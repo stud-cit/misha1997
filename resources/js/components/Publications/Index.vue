@@ -148,7 +148,7 @@
                     year: '',
                     country: '',
                     publication_type_id: '',
-                    faculty_code: 341,
+                    faculty_code: '',
                     department_code: ''
                 }
             };
