@@ -178,31 +178,6 @@ class PublicationsController extends ASUController
         $data['edit_user_id'] = $request->session()->get('person')['id'];
         $notificationText = "";
 
-        // check supervisor
-        if($data['supervisor']) {
-            if(AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->exists()) {
-                if(!AuthorsPublications::where('autors_id', $data['supervisor']['id'])->where('publications_id', $id)->where('supervisor', 1)->exists()) {
-                    AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->update([
-                        "autors_id" => $data['supervisor']['id']
-                    ]);
-                    $notificationText .= "змінено керівника: <a href=\"/user/". $data['old_supervisor']['id'] ."\">" . $data['old_supervisor']['name'] . "</a> на <a href=\"/user/". $data['supervisor']['id'] ."\">" . $data['supervisor']['name'] . "</a>;<br>";
-                }
-            } else {
-                $authorsPublications = new AuthorsPublications;
-                $authorsPublications->autors_id = $data['supervisor']['id'];
-                $authorsPublications->publications_id = $id;
-                $authorsPublications->supervisor = 1;
-                $authorsPublications->save();
-                $notificationText .= "додано керівника: <a href=\"/user/". $data['supervisor']['id'] ."\">" . $data['supervisor']['name'] . "</a>;<br>";
-            }
-        } else {
-            if($data['old_supervisor']) {
-                AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->delete();
-                $notificationText .= "видалено керівника: <a href=\"/user/". $data['old_supervisor']['id'] ."\">" . $data['old_supervisor']['name'] . "</a>;<br>";
-            }
-        }
-        // end check
-
         // check authors old or new
         $oldAuthors = [];
         foreach ($model->authors as $key => $value) {
@@ -228,6 +203,35 @@ class PublicationsController extends ASUController
             $notificationText .= "видалено автора: " . $this->test($value) . ";<br>";
         }
         // end check
+
+        // check supervisor
+        if($data['supervisor']) {
+            if(AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->exists()) {
+
+                if(!AuthorsPublications::where('autors_id', $data['supervisor']['id'])->where('publications_id', $id)->where('supervisor', 1)->exists()) {
+                    AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->update([
+                        "autors_id" => $data['supervisor']['id']
+                    ]);
+
+                    $notificationText .= "змінено керівника: <a href=\"/user/". $data['old_supervisor']['id'] ."\">" . $data['old_supervisor']['name'] . "</a> на <a href=\"/user/". $data['supervisor']['id'] ."\">" . $data['supervisor']['name'] . "</a>;<br>";
+                }
+            } else {
+                $authorsPublications = new AuthorsPublications;
+                $authorsPublications->autors_id = $data['supervisor']['id'];
+                $authorsPublications->publications_id = $id;
+                $authorsPublications->supervisor = 1;
+                $authorsPublications->save();
+                $notificationText .= "додано керівника: <a href=\"/user/". $data['supervisor']['id'] ."\">" . $data['supervisor']['name'] . "</a>;<br>";
+            }
+        } else {
+            if($data['old_supervisor']) {
+                AuthorsPublications::where('publications_id', $id)->where('supervisor', 1)->delete();
+                $notificationText .= "видалено керівника: <a href=\"/user/". $data['old_supervisor']['id'] ."\">" . $data['old_supervisor']['name'] . "</a>;<br>";
+            }
+        }
+        // end check
+
+
 
         // перевірка полів
         // Назва
@@ -318,7 +322,7 @@ class PublicationsController extends ASUController
 
         $model->update($data);
 
-        return response('ok', 200);
+//        return response('ok', 200);
     }
 
     function test($id) {
@@ -348,7 +352,7 @@ class PublicationsController extends ASUController
                 return "видалено ".$text.";<br>";
             }
         }
-    }    
+    }
 
     // видалення публікацій
     function deletePublications(Request $request) {
@@ -552,7 +556,7 @@ class PublicationsController extends ASUController
         }
 
         $data = $model->get();
-        
+
         if($request->quartil_scopus && $request->quartil_wos && ($request->quartil_scopus == $request->quartil_wos)) {
             foreach ($data as $key => $value) {
                 if($request->quartil_scopus != min($value['quartil_scopus'], $value['quartil_wos'])) {
@@ -715,7 +719,7 @@ class PublicationsController extends ASUController
                     array_push($testDepartment, $value['authors'][$i]['author']['department_code']);
                 }
             }
-          
+
             foreach ($value['authors'] as $k => $v) {
 
                 if($v['author']['faculty_code'] && $v['author']['categ_1'] != 1) {
@@ -734,7 +738,7 @@ class PublicationsController extends ASUController
                     $v['test_department'] = $res;
                     $value['authors'][array_search($v['author']['department_code'], $testDepartments)]['rating_department'] = round($result, 2);
                 }
-                
+
                 if(!in_array($v['author'], $authors) && $v['author']['categ_1'] != 2) {
                     array_push($authors, $v['author']);
                 }
@@ -750,11 +754,11 @@ class PublicationsController extends ASUController
                     if ($v['author']['faculty_code'] == $institute['ID_DIV']) {
 
                         $v['author']['faculty'] = $institute['ABBR_DIV'];
-                        
+
                     }
                 }
 
-                
+
                 if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3) && $v['author']['categ_1'] == 1) {
                     $withStudent = 1;
                 }
@@ -868,7 +872,7 @@ class PublicationsController extends ASUController
                 }
             }
 
-            
+
 
             $rating["countStudentPublications"] += $withStudent; // Кількість статей за авторством та співавторством студентів
 
