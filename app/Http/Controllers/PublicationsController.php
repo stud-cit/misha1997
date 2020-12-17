@@ -216,7 +216,6 @@ class PublicationsController extends ASUController
                     $notificationText .= "змінено керівника: <a href=\"/user/". $data['old_supervisor']['id'] ."\">" . $data['old_supervisor']['name'] . "</a> на <a href=\"/user/". $data['supervisor']['id'] ."\">" . $data['supervisor']['name'] . "</a>;<br>";
                 }
             } else {
-//                dd(101);
                 $authorsPublications = new AuthorsPublications;
                 $authorsPublications->autors_id = $data['supervisor']['id'];
                 $authorsPublications->publications_id = $id;

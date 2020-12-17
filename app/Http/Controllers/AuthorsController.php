@@ -399,17 +399,19 @@ class AuthorsController extends ASUController
                 $person = [];
 
                 $aspirant = array_filter($getContingents['result'], function($value) use ($model) {
-                    return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'] && $value['CATEG_1'] == 2 && $value['KOD_LEVEL'] == 8;
+                    return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'] && $value['CATEG_1'] == 2 && ($value['KOD_LEVEL'] == 8 || $value['KOD_LEVEL'] == 5);
                 });
 
                 if(count($aspirant) == 0) {
                     $anotherUser = array_filter($getContingents['result'], function($value) use ($model) {
-                        return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'] && $value['CATEG_1'] != 2 && $value['KOD_LEVEL'] != 8;
+                        return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'];
                     });
                     $person = array_shift($anotherUser);
                 } else {
                     $person = array_shift($aspirant);
-                    $person['KOD_DIV'] = $this->getAspirantDepartment($person['ID_FIO']);
+                    if($person['KOD_LEVEL'] == 8) {
+                        $person['KOD_DIV'] = $this->getAspirantDepartment($person['ID_FIO']);
+                    }
                 }
 
                 $division = $this->getUserDivision($person['KOD_DIV'])->original;
