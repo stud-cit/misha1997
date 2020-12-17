@@ -176,8 +176,7 @@
                     required
                 },
                 newsletter_number: {
-                    required,
-                    validFormat: val => /^\d{1,}$/.test(val),
+                    required
                 },
                 country: {
                     required

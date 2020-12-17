@@ -35,6 +35,7 @@ class CreateAuthorsTable extends Migration
             $table->boolean('five_publications')->default(0); // 5 або більше публікацій в Scopus та/або WoS
             $table->integer('without_self_citations_wos')->nullable(); // Без самоцитувань WoS
             $table->integer('without_self_citations_scopus')->nullable(); // Без самоцитувань Scopus
+            $table->integer('add_user_id')->nullable(); // Користувач що додав атора
             $table->timestamps();
         });
 

@@ -200,7 +200,7 @@ class AuthorsController extends ASUController
 
     // getId (Користувач по id)
     function getId($id) {
-        $data = Authors::with('role')->find($id);
+        $data = Authors::with('role', 'user')->find($id);
         $data->position = $this->getPosition($data);
 
         $kod_div = $data->department_code ? $data->department_code : $data->faculty_code;
@@ -222,6 +222,7 @@ class AuthorsController extends ASUController
         if(!Authors::where("name", "like", $request->name)->exists()) {
             $model = new Authors();
             $data = $request->all();
+            $data['add_user_id'] = $request->session()->get('person')['id'];
             $response = $model->create($data);
             return response()->json([
                 "status" => "ok",
@@ -244,6 +245,8 @@ class AuthorsController extends ASUController
             $division = $this->getUserDivision($kod_div)->original;
             $data['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
             $data['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+
+            $data['add_user_id'] = $request->session()->get('person')['id'];
             
             $response = $model->create($data);
 

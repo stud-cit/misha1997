@@ -123,6 +123,7 @@ class AuthController extends ASUController {
                 $person->name = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
                 $person->academic_code = null;
                 $person->categ_1 = null;
+                $person->add_user_id = null;
                 $person->test_data = json_encode($personCabinet['result']);
 
                 $kod_div = null;

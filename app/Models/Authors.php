@@ -29,6 +29,7 @@ class Authors extends Model
         'token',
         'without_self_citations_wos',
         'without_self_citations_scopus',
+        'add_user_id',
         'test_data'
     ];
 
@@ -44,5 +45,9 @@ class Authors extends Model
 
     function publications() {
         return $this->HasMany('App\Models\AuthorsPublications', 'autors_id');
+    }
+
+    function user() {
+        return $this->belongsTo('App\Models\Authors', 'add_user_id');
     }
 }

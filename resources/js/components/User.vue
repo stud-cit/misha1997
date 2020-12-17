@@ -31,7 +31,7 @@
                         </template>
                     </div>
                 </li>
-                <li class="row" v-if="data.categ_1 != 3">
+                <li class="row" v-if="!data.categ_1">
                     <div class="col-lg-3 list-item list-title">Місце роботи:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
@@ -191,6 +191,12 @@
                         <div v-else>
                             {{data.scopus_researcher_id}}
                         </div>
+                    </div>
+                </li>
+                <li class="row" v-if="data.user">
+                    <div class="col-lg-3 list-item list-title">Користувач що зареєстрував атора:</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <a :href="'/user/'+data.user.id">{{data.user.name}}</a>
                     </div>
                 </li>
             </ul>
@@ -356,7 +362,11 @@
                     orcid: "",
                     five_publications: "0",
                     without_self_citations_wos: "",
-                    without_self_citations_scopus: ""                    
+                    without_self_citations_scopus: "",
+                    user: {
+                        id: null,
+                        name: ""
+                    }
                 },
                 publications: [],
                 pagination: {
