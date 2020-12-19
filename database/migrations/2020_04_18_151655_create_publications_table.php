@@ -40,7 +40,7 @@ class CreatePublicationsTable extends Migration
             $table->boolean('access_mode')->nullable(); // Режим доступу
             $table->string('mpk')->nullable(); // МПК
             $table->string('application_number')->nullable(); // № заявки
-            $table->integer('newsletter_number')->nullable(); // № бюлетеня
+            $table->string('newsletter_number')->nullable(); // № бюлетеня
             $table->string('name_conference')->nullable(); // Назва конференції
             $table->string('url')->nullable(); // url електронне видання
             $table->text('out_data')->nullable(); // Вихідні дані
