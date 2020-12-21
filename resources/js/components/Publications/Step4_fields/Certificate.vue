@@ -21,13 +21,13 @@
                 <label class="item-title">Власник майнових прав *</label>
                 <div class="input-container">
                     <select class="item-value" v-model="applicant_id">
-                        <option value="0">СумДУ</option>
-                        <option value="1">не СумДУ</option>
+                        <option :value="true">СумДУ</option>
+                        <option :value="false">не СумДУ</option>
                     </select>
                 </div>
             </div>
-            <div class="form-group" v-if="applicant_id == '1'">
-                <label class="item-title">Вкажіть власника майнових прав не СумДУ *</label>
+            <div class="form-group" v-if="!applicant_id">
+                <label class="item-title">Вкажіть власника майнових прав *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="newApplicant">
                 </div>
@@ -44,6 +44,9 @@
                     ></date-picker>
                     <input style="display:none" class="item-value" type="text" v-model="publicationData.date_application" required>
                 </div>
+                <div class="error" v-if="$v.publicationData.date_application.$error">
+                    Поле обов'язкове для заповнення
+                </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Дата публікації про видачу свідоцтва/рішення *</label>
@@ -56,6 +59,9 @@
                         :popup-style="datepicker.styles"
                     ></date-picker>
                     <input style="display:none" class="item-value" type="text" v-model="publicationData.date_publication" required>
+                </div>
+                <div class="error" v-if="$v.publicationData.date_publication.$error">
+                    Поле обов'язкове для заповнення
                 </div>
             </div>
             <div class="form-group">
@@ -96,7 +102,7 @@
     export default {
         data() {
             return {
-                applicant_id: '0',
+                applicant_id: true,
                 newApplicant: '',
                 datepicker: {
                     lang: {
@@ -126,11 +132,6 @@
                     required,
                     validFormat: val => /^\d{1,}$/.test(val),
                 },
-                applicant: {
-                    required: requiredIf( function() {
-                        return this.applicant_id == '1';
-                    }),
-                },
                 date_publication: {
                     required
                 },
@@ -151,10 +152,7 @@
                     });
                     return
                 }
-                if(this.applicant_id == '0'){
-                    this.publicationData.applicant = 'СумДУ';
-                }
-                this.publicationData.applicant = this.applicant_id ? "СумДУ" : this.newApplicant;
+                this.publicationData.applicant = this.applicant_id ? 'СумДУ' : this.newApplicant;
                 this.$parent.$emit('getData', 4);
             },
             prevStep() {
