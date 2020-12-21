@@ -82,7 +82,7 @@ class AuthorsController extends ASUController
                         $query->orWhere('job', 'СумДУ');
                     }
                     if($value == "Зовнішні співавтори") {
-                        $query->orWhere('guid', null);
+                        $query->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'Сумський державний університет');
                     }
                     if($value == "Студенти") {
                         $query->orWhere('categ_1', 1);

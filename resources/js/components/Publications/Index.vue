@@ -1,7 +1,7 @@
 <template>
     <div class="container page-content general-block">
         <h1 class="page-title">Перегляд публікацій
-            <span v-if="authUser.roles_id == 3"> - {{ authUser.faculty }} }}</span>
+            <span v-if="authUser.roles_id == 3"> - {{ authUser.faculty }}</span>
             <span v-if="authUser.roles_id == 2"> - {{ authUser.department }}</span>
         </h1>
 
