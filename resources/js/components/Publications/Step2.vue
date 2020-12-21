@@ -713,7 +713,7 @@
                 }
                 if(this.jobType == 4) {
                     this.newAuthor.country = "Україна";
-                    this.newAuthor.job = "СумДУ";
+                    this.newAuthor.job = "СумДУ (Не працює)";
                 }
                 this.loading = true;
                 axios.post('/api/author', this.newAuthor)

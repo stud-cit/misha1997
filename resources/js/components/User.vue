@@ -57,7 +57,14 @@
                     <div class="col-lg-3 list-item list-title">Інститут/факультет:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
-                                <input class="item-value" type="text" v-model="data.faculty">
+                            <select v-model="data.faculty_code" @change="getDepartmentsUser">
+                                <option value=""></option>
+                                <option
+                                    v-for="(item, index) in divisions"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
+                            </select>
                         </div>
                         <div v-else>
                             {{data.faculty}}
@@ -68,7 +75,14 @@
                     <div class="col-lg-3 list-item list-title">Кафедра:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
-                                <input class="item-value" type="text" v-model="data.department">
+                            <select v-model="data.department_code">
+                                <option value=""></option>
+                                <option
+                                    v-for="(item, index) in departments2"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
+                            </select>
                         </div>
                         <div v-else>
                             {{data.department}}
@@ -86,7 +100,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="row" v-if="(!data.guid && !data.faculty_code) || (!data.guid && !data.department_code)">
+                <li class="row" v-if="(!data.guid && !data.faculty_code) && (!data.guid && !data.department_code)">
                     <div class="col-lg-3 list-item list-title">Країна:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
@@ -194,9 +208,15 @@
                     </div>
                 </li>
                 <li class="row" v-if="data.user">
-                    <div class="col-lg-3 list-item list-title">Користувач що зареєстрував атора:</div>
+                    <div class="col-lg-3 list-item list-title">Користувач що зареєстрував автора:</div>
                     <div class="col-lg-9 list-item list-text">
                         <a :href="'/user/'+data.user.id">{{data.user.name}}</a>
+                    </div>
+                </li>
+                <li class="row">
+                    <div class="col-lg-3 list-item list-title">Дата реєстрації:</div>
+                    <div class="col-lg-9 list-item list-text">
+                        {{ data.created_at }}
                     </div>
                 </li>
             </ul>
@@ -330,6 +350,7 @@
 </template>
 <script>
     import years from './mixins/years';
+    import divisions from './mixins/divisions';
 
     import BackButton from "./Buttons/Back";
     import SaveButton from "./Buttons/Save";
@@ -337,12 +358,13 @@
     import Country from "./Forms/Country";
     import PublicationTypes from "./Forms/PublicationTypes";
     export default {
-        mixins: [years],
+        mixins: [years, divisions],
         data() {
             return {
                 updateLoading: false,
                 showFilter: false,
                 loadingSearch: false,
+                departments2: [],
                 data: {
                     name: "",
                     role: {
@@ -353,7 +375,9 @@
                     job: "",
                     position: "",
                     faculty: "",
+                    faculty_code: null,
                     department: "",
+                    department_code: null,
                     academic_code: "",
                     country: "",
                     scopus_autor_id: "",
@@ -363,6 +387,7 @@
                     five_publications: "0",
                     without_self_citations_wos: "",
                     without_self_citations_scopus: "",
+                    created_at: "",
                     user: {
                         id: null,
                         name: ""
@@ -411,6 +436,19 @@
             }
         },
         methods: {
+            getDepartmentsUser() {
+                if(this.data.faculty_code) {
+                    this.departments2 = this.divisions.find(item => {
+                        return this.data.faculty_code == item.ID_DIV
+                    });
+                    if(this.departments2) {
+                        this.departments2 = this.departments2.departments;
+                    }
+                } else {
+                    this.departments2 = [];
+                    this.data.department_code = "";
+                }
+            },
             updateCabinetInfo() {
                 this.updateLoading = true;
                 axios.post(`/api/update-cabinet-info/${this.$route.params.id}`)
@@ -436,6 +474,7 @@
             getData() {
                 axios.get(`/api/author/${this.$route.params.id}`).then(response => {
                     this.data = response.data;
+                    this.getDepartmentsUser();
                     this.loading = false;
                 })
             },

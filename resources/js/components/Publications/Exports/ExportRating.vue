@@ -8,9 +8,8 @@
                 <h2 class="popup-title">Фільтри рейтингових показників</h2>
 
                 <form class="search-form">
-                    <div class="form-row">
-
-                        <div class="form-group col-lg-6">
+                    <div class="form-row" v-show="authUser.roles_id != 2">
+                        <div class="form-group col-lg" v-show="authUser.roles_id != 3">
                             <label>Інститут / факультет </label>
                             <div class="input-container">
                                 <select v-model="filters.faculty" @change="getDepartments">
@@ -23,8 +22,7 @@
                                 </select>
                             </div>
                         </div>
-
-                        <div class="form-group col-lg-6">
+                        <div class="form-group col-lg">
                             <label >Кафедра</label>
                             <div class="input-container">
                                 <select v-model="filters.department">
@@ -615,16 +613,17 @@
 </template>
 
 <script>
+    import divisions from '../../mixins/divisions';
     import Multiselect from 'vue-multiselect';
     import Country from "../../Forms/Country";
     import XLSX from 'xlsx';
     export default {
+        mixins: [divisions],
         data() {
             return {
                 loading: false,
                 showFilters: false,
                 departments: [],
-                divisions: [],
                 publicationsData: [],
                 publicationTypes: [],
                 scienceTypes: [
@@ -738,7 +737,11 @@
             this.getDivisions();
             this.getPublicationTypes();
         },
-
+        computed: {
+            authUser() {
+                return this.$store.getters.authUser
+            },
+        },
         methods: {
             getPublicationTypes() {
                 axios.get('/api/type-publications').then(response => {
@@ -753,16 +756,6 @@
                 var result = Math.max(...[item.h_index, item.scopus_autor_id].filter(i => i != null));
                 return isFinite(result) ? result : "";
             },
-            openTable() {
-                var newWin = window.open("about:blank", "exportRating", "left=300,width=600,height=500");
-                var rating = document.getElementById('exportRating');
-                newWin.document.write(rating.toString());
-            },
-            getDivisions() {
-                axios.get('/api/sort-divisions').then(response => {
-                    this.divisions = response.data;
-                })
-            },
             getExportData() {
                 axios.post('/api/export', this.filters).then(response => {
                     this.publicationsData = Object.values(response.data.publications);
@@ -770,15 +763,6 @@
                 }).then(() => {
                     this.exportRating();
                 })
-            },
-            getDepartments() {
-                if(this.filters.faculty == "") {
-                    this.filters.department = ''
-                }
-                let data = this.divisions.find(item => {
-                    return this.filters.faculty == item.ID_DIV
-                });
-                this.departments = data ? data.departments : [];
             },
             openFiltersPopup() {
                 this.showFilters = true;

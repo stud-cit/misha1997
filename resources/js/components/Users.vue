@@ -115,8 +115,8 @@
                         <tr>
                             <th scope="col">№</th>
                             <th scope="col">ПІБ користувача</th>
-                            <th scope="col">Посада</th>
-                            <th scope="col">Кафедра</th>
+                            <th scope="col">Посада/місце роботи</th>
+                            <th scope="col">Кафедра/підрозділ</th>
                             <th scope="col">Інститут/факультет</th>
                             <th scope="col">Індекс Гірша Scopus</th>
                             <th scope="col">Індекс Гірша WoS</th>

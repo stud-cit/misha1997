@@ -1,8 +1,8 @@
 <template>
     <div class="container page-content general-block">
         <h1 class="page-title">Перегляд публікацій
-            <span v-if="authUser.roles_id == 3 && divisions.find(item => item.ID_DIV == authUser.faculty_code)"> - {{ divisions.find(item => item.ID_DIV == authUser.faculty_code).NAME_DIV }}</span>
-            <span v-if="authUser.roles_id == 2 && divisions.find(item => item.ID_DIV == authUser.department_code)"> - {{ divisions.find(item => item.ID_DIV == authUser.department_code).NAME_DIV }}</span>
+            <span v-if="authUser.roles_id == 3"> - {{ authUser.faculty }} }}</span>
+            <span v-if="authUser.roles_id == 2"> - {{ authUser.department }}</span>
         </h1>
 
         <!-- exports-->

@@ -399,16 +399,33 @@ class PublicationsController extends ASUController
     // рейтингові показники
     function export(Request $request) {
         $divisions = $this->getDivisions();
-        $model = Publications::with('authors.author', 'publicationType', 'scienceType')->whereHas('authors.author', function($q) use ($request) {
-            if($request->session()->get('person')['roles_id'] == 2) {
-                $q->where('department_code', $request->session()->get('person')['department_code']);
+        $model = Publications::with('authors.author', 'publicationType', 'scienceType')->orderBy('created_at', 'DESC');
+
+        $model->where('country', 'like', "%".$request->country."%");
+
+        if($request->session()->get('person')['roles_id'] == 2) {
+            $departments_id = [$request->session()->get('person')['department_code']];
+            foreach($divisions->original['department'] as $k2 => $v2) {
+                if ($v2['ID_PAR'] == $request->session()->get('person')['department_code']) {
+                    array_push($departments_id, $v2['ID_DIV']);
+                }
             }
+            $model->whereHas('authors.author', function($q) use ($departments_id) {
+                $q->whereIn('department_code', $departments_id);
+            });
+        } else {
             if($request->session()->get('person')['roles_id'] == 3) {
-                $q->where('faculty_code', $request->session()->get('person')['faculty_code']);
+                $departments_id = [$request->session()->get('person')['faculty_code']];
+                foreach($divisions->original['department'] as $k2 => $v2) {
+                    if ($v2['ID_PAR'] == $request->session()->get('person')['faculty_code']) {
+                        array_push($departments_id, $v2['ID_DIV']);
+                    }
+                }
+                $model->whereHas('authors.author', function($q) use ($departments_id) {
+                    $q->whereIn('faculty_code', $departments_id);
+                });
             }
-            })
-            ->where('country', 'like', "%".$request->country."%") // Країна видання
-            ->orderBy('created_at', 'DESC');
+        }
 
         $todayYear = Carbon::today()->year;
         $countScopusFiveYear = Publications::where('science_type_id', 1)->orWhere('science_type_id', 3)->whereYear('created_at', '>=', $todayYear - 5)->count();
@@ -492,7 +509,7 @@ class PublicationsController extends ASUController
                 }
             }
             $model->whereHas('authors.author', function($q) use ($departments_id) {
-                $q->whereIn('department_code', $departments_id)->where('categ_1', '!=', 1);
+                $q->whereIn('department_code', $departments_id);
             });
         } else {
             if($request->faculty != '') {
@@ -503,7 +520,7 @@ class PublicationsController extends ASUController
                     }
                 }
                 $model->whereHas('authors.author', function($q) use ($departments_id) {
-                    $q->whereIn('faculty_code', $departments_id)->where('categ_1', '!=', 1);
+                    $q->whereIn('faculty_code', $departments_id);
                 });
             }
         }

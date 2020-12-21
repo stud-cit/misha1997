@@ -80,7 +80,7 @@ class AuthController extends ASUController {
             
             if(isset($personCabinet['result']['info2']) && !$isStudent) {
                 foreach ($personCabinet['result']['info2'] as $key => $value) {
-                    if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 3)) {
+                    if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 2 || $value['KOD_STATE'] == 3)) {
                         $data['categ_2'] = $value['CATEG'];
                         $kod_div = $value['KOD_DIV'];
                     }
@@ -143,7 +143,7 @@ class AuthController extends ASUController {
                 
                 if(isset($personCabinet['result']['info2']) && !$isStudent) {
                     foreach ($personCabinet['result']['info2'] as $key => $value) {
-                        if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 3)) {
+                        if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 2 || $value['KOD_STATE'] == 3)) {
                             $person->categ_2 = $value['CATEG'];
                             $kod_div = $value['KOD_DIV'];
                         }
