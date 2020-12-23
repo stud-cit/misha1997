@@ -78,11 +78,14 @@ class AuthorsController extends ASUController
         if(isset($request->categ_users)) {
             $model->where(function($query) use($request) {
                 foreach($request->categ_users as $key => $value) {
-                    if($value == "Користувачі СумДУ") {
+                    if($value == "СумДУ") {
                         $query->orWhere('job', 'СумДУ');
                     }
+                    if($value == "СумДУ (Не працює)") {
+                        $query->orWhere('job', 'СумДУ (Не працює)');
+                    }
                     if($value == "Зовнішні співавтори") {
-                        $query->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'Сумський державний університет');
+                        $query->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'Сумський державний університет')->where('job', '!=', 'СумДУ (Не працює)');
                     }
                     if($value == "Студенти") {
                         $query->orWhere('categ_1', 1);
@@ -239,12 +242,14 @@ class AuthorsController extends ASUController
             $model = new Authors();
             $data = $request->all();
             $kod_div = $request->kod_div;
-            if($request->categ_1 == 2) {
-                $kod_div = $this->getAspirantDepartment($request->guid);
-            }
             $division = $this->getUserDivision($kod_div)->original;
-            $data['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
-            $data['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+            if($request->categ_1 != 1) {
+                if($request->categ_1 == 2) {
+                    $kod_div = $this->getAspirantDepartment($request->guid);
+                }
+                $data['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
+                $data['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+            }
 
             $data['add_user_id'] = $request->session()->get('person')['id'];
             

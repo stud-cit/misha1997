@@ -8,6 +8,11 @@ Route::get('check-user', 'AuthController@checkUser');
 Route::post('register', 'AuthController@register');
 Route::post('logout', 'AuthController@logout');
 
+// dev
+Route::get('check-student', 'DevController@checkStudent');
+Route::get('check-not-work', 'DevController@checkSSUNotWork');
+Route::get('check-division/{department_code}', 'DevController@getUserDivision');
+
 Route::group(['middleware' => ['web']], function() {
 
     // Режим доступа
