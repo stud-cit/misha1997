@@ -86,6 +86,10 @@
                     <label>Вид публікації</label>
                     <PublicationTypes :data="filters"></PublicationTypes>
                 </div>
+                <div class="form-group checkbox col-lg-6">
+                    <input v-model="filters.hasSupervisor" type="checkbox" class="form-check-input" id="hasSupervisor">
+                    <label class="form-check-label" for="hasSupervisor">Під керівництвом</label>
+                </div>
                 <SearchButton 
                     @click.native="getData(); loadingSearch = true" 
                     :disabled="loading || loadingSearch || loadingClear"
@@ -149,7 +153,8 @@
                     country: '',
                     publication_type_id: '',
                     faculty_code: '',
-                    department_code: ''
+                    department_code: '',
+                    hasSupervisor: false
                 }
             };
         },
@@ -185,7 +190,8 @@
                         country: this.filters.country,
                         publication_type_id: this.filters.publication_type_id,
                         faculty_code: this.filters.faculty_code,
-                        department_code: this.filters.department_code
+                        department_code: this.filters.department_code,
+                        hasSupervisor: this.filters.hasSupervisor
                     }
                 }).then(response => {
                     this.data = response.data;
@@ -265,6 +271,7 @@
                 this.filters.publication_type_id = '';
                 this.filters.faculty_code = '';
                 this.filters.department_code = '';
+                this.filters.hasSupervisor = false;
                 this.getData();
             }
         },
@@ -287,6 +294,17 @@
 </script>
 
 <style lang="scss" scoped>
+    .checkbox {
+        padding: 0;
+    }
+    .checkbox input[type=checkbox] {
+        width: 20px; 
+        height: 20px;
+        margin: 0;
+    }
+    .checkbox label {
+        margin-left: 40px;
+    }
     .form-group {
         margin-bottom: 10px;
     }

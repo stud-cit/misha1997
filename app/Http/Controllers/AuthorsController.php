@@ -28,11 +28,11 @@ class AuthorsController extends ASUController
         $model = Authors::with('role')->orderBy('created_at', 'DESC');
 
         if($request->session()->get('person')['roles_id'] == 3) {
-            $model->where('faculty_code', $request->session()->get('person')['faculty_code']);
+            $model->where('faculty_code', $request->session()->get('person')['faculty_code'])->orWhere('categ_1', 1)->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'СумДУ (Не працює)');
         }
         
         if($request->session()->get('person')['roles_id'] == 2) {
-            $model->where('department_code', $request->session()->get('person')['department_code']);
+            $model->where('department_code', $request->session()->get('person')['department_code'])->orWhere('categ_1', 1)->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'СумДУ (Не працює)');
         }
 
         if($request->name != '') {
@@ -85,7 +85,7 @@ class AuthorsController extends ASUController
                         $query->orWhere('job', 'СумДУ (Не працює)');
                     }
                     if($value == "Зовнішні співавтори") {
-                        $query->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'Сумський державний університет')->where('job', '!=', 'СумДУ (Не працює)');
+                        $query->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'СумДУ (Не працює)');
                     }
                     if($value == "Студенти") {
                         $query->orWhere('categ_1', 1);

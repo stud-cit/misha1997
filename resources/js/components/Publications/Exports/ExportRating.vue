@@ -12,7 +12,7 @@
                         <div class="form-group col-lg" v-show="authUser.roles_id != 3">
                             <label>Інститут / факультет </label>
                             <div class="input-container">
-                                <select v-model="filters.faculty" @change="getDepartments">
+                                <select v-model="filters.faculty_code" @change="getDepartments">
                                     <option value=""></option>
                                     <option
                                         v-for="(item, index) in divisions"
@@ -25,7 +25,7 @@
                         <div class="form-group col-lg">
                             <label >Кафедра</label>
                             <div class="input-container">
-                                <select v-model="filters.department">
+                                <select v-model="filters.department_code">
                                     <option value=""></option>
                                     <option
                                         v-for="(item, index) in departments"
@@ -700,9 +700,8 @@
                 },
 
                 filters: {
-                    faculty: '',
-                    university: '',
-                    department: '',
+                    faculty_code: '',
+                    department_code: '',
                     withStudents: false,
                     withForeigners: '',
                     science_types: [],

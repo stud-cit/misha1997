@@ -58,8 +58,8 @@
                     applicant: "",
                     date_application: "",
                     date_publication: "",
-                    commerc_university: "",
-                    commerc_employees: "",
+                    commerc_university: "0",
+                    commerc_employees: "0",
                     access_mode: "",
                     mpk: "",
                     application_number: "",
@@ -188,7 +188,11 @@
                                 timer: 1500
                             })
                             setTimeout(() => {
-                                this.$router.push({path: '/publications'});
+                                if(this.userRole == 1) {
+                                    this.$router.push({path: '/my-publications'});
+                                } else {
+                                    this.$router.push({path: '/publications'});
+                                }
                             }, 1500);
                         })
                         .catch(() => {

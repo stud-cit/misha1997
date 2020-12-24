@@ -61,6 +61,12 @@ class PublicationsController extends ASUController
             });
         }
 
+        if($request->hasSupervisor == "true") {
+            $model->whereHas('authors', function($q) {
+                $q->where('supervisor', 1);
+            });
+        }
+
         if($request->title) {
             $model->where('title', 'like', "%".$request->title."%");
         }
@@ -501,10 +507,10 @@ class PublicationsController extends ASUController
             });
         }
 
-        if($request->department != '') {
-            $departments_id = [$request->department];
+        if($request->department_code != '') {
+            $departments_id = [$request->department_code];
             foreach($divisions->original['department'] as $k2 => $v2) {
-                if ($v2['ID_PAR'] == $request->department) {
+                if ($v2['ID_PAR'] == $request->department_code) {
                     array_push($departments_id, $v2['ID_DIV']);
                 }
             }
@@ -512,10 +518,10 @@ class PublicationsController extends ASUController
                 $q->whereIn('department_code', $departments_id);
             });
         } else {
-            if($request->faculty != '') {
-                $departments_id = [$request->faculty];
+            if($request->faculty_code != '') {
+                $departments_id = [$request->faculty_code];
                 foreach($divisions->original['department'] as $k2 => $v2) {
-                    if ($v2['ID_PAR'] == $request->faculty) {
+                    if ($v2['ID_PAR'] == $request->faculty_code) {
                         array_push($departments_id, $v2['ID_DIV']);
                     }
                 }

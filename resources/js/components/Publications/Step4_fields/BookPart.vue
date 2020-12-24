@@ -94,10 +94,11 @@
             nextStep() {
                 this.$v.$touch();
                 if (this.$v.$invalid) {
-                    swal("Не всі поля заповнено!", {
-                        icon: "error",
-                    });
-                    return;
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Не всі поля заповнено!'
+                    })
+                    return
                 }
                 this.$parent.$emit('getData', 4);
             },

@@ -22,14 +22,14 @@
                 <div class="input-container">
                     <select class="item-value" v-model="applicant_id">
                         <option :value="true">СумДУ</option>
-                        <option :value="false">не СумДУ</option>
+                        <option :value="false">Не СумДУ</option>
                     </select>
                 </div>
             </div>
             <div class="form-group" v-if="!applicant_id">
                 <label class="item-title">Вкажіть власника майнових прав *</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="newApplicant">
+                    <input class="item-value" type="text" v-model="publicationData.applicant">
                 </div>
             </div>
             <div class="form-group">
@@ -103,7 +103,6 @@
         data() {
             return {
                 applicant_id: true,
-                newApplicant: '',
                 datepicker: {
                     lang: {
                         formatLocale: {
@@ -143,16 +142,22 @@
                 },
             },
         },
+        created() {
+            if(this.publicationData.applicant && this.publicationData.applicant != 'СумДУ') {
+                this.applicant_id = false;
+            }
+        },
         methods:{
             nextStep() {
                 this.$v.$touch();
                 if (this.$v.$invalid) {
-                    swal("Не всі поля заповнено!", {
-                        icon: "error",
-                    });
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Не всі поля заповнено!'
+                    })
                     return
                 }
-                this.publicationData.applicant = this.applicant_id ? 'СумДУ' : this.newApplicant;
+                this.publicationData.applicant = this.applicant_id ? 'СумДУ' : this.publicationData.applicant;
                 this.$parent.$emit('getData', 4);
             },
             prevStep() {
