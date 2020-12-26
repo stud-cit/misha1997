@@ -213,12 +213,6 @@
                         <a :href="'/user/'+data.user.id">{{data.user.name}}</a>
                     </div>
                 </li>
-                <li class="row">
-                    <div class="col-lg-3 list-item list-title">Дата реєстрації:</div>
-                    <div class="col-lg-9 list-item list-text">
-                        {{ data.created_at }}
-                    </div>
-                </li>
             </ul>
 
             <div class="text-right">
@@ -387,7 +381,6 @@
                     five_publications: "0",
                     without_self_citations_wos: "",
                     without_self_citations_scopus: "",
-                    created_at: "",
                     user: {
                         id: null,
                         name: ""

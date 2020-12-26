@@ -5,6 +5,9 @@ import store from './store.js'
 import auth from './middleware/auth';
 import guest from './middleware/guest';
 import register from './middleware/register';
+import checkAuthor from './middleware/checkAuthor';
+import checkPublication from './middleware/checkPublicatin';
+import checkAccess from './middleware/checkAccess';
 
 import Home from "./components/Home";
 import Auth from "./components/Auth";
@@ -63,7 +66,7 @@ let router = new Router({
             name: 'user',
             component: User,
             meta: {
-                middleware: auth
+                middleware: [auth, checkAuthor]
             }
         },
         {
@@ -71,7 +74,7 @@ let router = new Router({
             name: 'publications',
             component: Publications,
             meta: {
-                middleware: auth
+                middleware: [auth, checkAuthor]
             }
         },
         {
@@ -99,14 +102,14 @@ let router = new Router({
             name: 'publications-add',
             component: PublicationsAdd,
             meta: {
-                middleware: auth
+                middleware: [auth, checkAccess]
             }
         },
         {
             path: '/publications/:id',
             component: PublicationsView,
             meta: {
-                middleware: auth
+                middleware: [auth, checkPublication]
             }
         },
         {
@@ -114,7 +117,7 @@ let router = new Router({
             name: 'publications-edit',
             component: PublicationsEdit,
             meta: {
-                middleware: auth
+                middleware: [auth, checkPublication, checkAccess]
             }
         },
         {
@@ -130,7 +133,7 @@ let router = new Router({
             name: 'users',
             component: Users,
             meta: {
-                middleware: auth
+                middleware: [auth, checkAuthor]
             }
         },
         {

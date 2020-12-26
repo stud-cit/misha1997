@@ -19,6 +19,21 @@ class PublicationsController extends ASUController
         return response()->json($data);
     }
 
+    function checkPublication($id) {
+        $model = Publications::with('authors.author')->whereHas('authors.author', function($q) use ($request) {
+            $q->whereIn('id', $request->session()->get('person')['id']);
+        })->where('id', $id)->exists();
+        if($model) {
+            return response()->json([
+                "status" => "ok"
+            ]);
+        } else {
+            return response()->json([
+                "status" => "error"
+            ]);
+        }
+    }
+
     // всі публікації
     function getAll(Request $request, $author_id = null) {
         $divisions = $this->getDivisions();

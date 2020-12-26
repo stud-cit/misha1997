@@ -9,10 +9,7 @@
                 <div class="form-group">
                     <label>Назва публікації</label>
                     <div class="input-container">
-                        <input v-model="filters.title" type="text" list="names" @input="findNames">
-                        <datalist id="names">
-                            <option v-for="(item, index) in names" :key="index" :value="item">{{item}}</option>
-                        </datalist>
+                        <input v-model="filters.title" type="text">
                     </div>
                 </div>
                 <div class="form-group">
@@ -101,8 +98,6 @@
                 loading: true,
                 loadingSearch: false,
                 loadingClear: false,
-                names: [],
-                publicationNames: [],
                 selectPublications: [],
                 exportPublication: [],
                 loading: true,
@@ -134,14 +129,8 @@
                 this.filters = this.$store.getters.getFilterPublications;
             }
             this.getData();
-            this.getNamesPublications();
         },
         methods: {
-            findNames() {
-                this.names = this.publicationNames.filter(item => {
-                    return item.indexOf(this.filters.title) + 1
-                })
-            },
             selectItem(item) {
                 if(this.selectPublications.indexOf(item) == -1) {
                     this.selectPublications.push(item);
@@ -172,12 +161,6 @@
                     this.loading = false;
                     this.loadingSearch = false;
                     this.loadingClear = false;
-                })
-            },
-            getNamesPublications() {
-                axios.get(`/api/publications-names`).then(response => {
-                    this.publicationNames = response.data.map(n => this.parseString(n.title));
-
                 })
             },
             deletePublications() {
