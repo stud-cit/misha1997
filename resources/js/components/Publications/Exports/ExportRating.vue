@@ -251,27 +251,33 @@
 
         <table id="exportRating" v-show="false" ref="exportR">
             <tr>
-                <td colspan="4">
+                <td colspan="3">
                     Показники, які визначають рейтинг інститутів, факультетів та кафедр СумДУ
+                </td>
+                <td>
+                    Кількісний показник
+                </td>
+                <td>
+                    Рейтинговий показник
                 </td>
             </tr>
             <tr>
                 <td colspan="3">
                     Кількість статей за авторством та співавторством студентів
                 </td>
-                <td>{{ ratingData.countStudentPublications }}</td>
+                <td>{{ ratingData.studentPublications }}</td>
             </tr>
             <tr>
                 <td colspan="3">
                     Кількість статей та монографій (розділів) у співавторстві з іноземними партнерами, які мають індекс Гірша за БД Scopus або WoS не нижче 10
                 </td>
-                <td>{{ ratingData.countForeignPublications.count }}</td>
+                <td>{{ ratingData.foreignPublications }}</td>
             </tr>
             <tr>
                 <td colspan="3">
                     Кількість публікацій всього у тому числі:
                 </td>
-                <td>{{ ratingData.countPublications }}</td>
+                <td>{{ ratingData.publications }}</td>
             </tr>
             <tr>
                 <td colspan="3">
@@ -283,7 +289,6 @@
                 <td colspan="3">
                     - статей у фахових за статусом виданнях
                 </td>
-
                 <td>{{ ratingData.articleProfessionalPublicationsUkraine }}</td>
             </tr>
             <tr>
@@ -296,31 +301,36 @@
                 <td>
                     за БД Scopus та WoS:
                 </td>
-                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.countReportingYear.ScopusAndWoS }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.countReportingYear.ScopusAndWoS.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.countReportingYear.ScopusAndWoS.rating }}</td>
             </tr>
             <tr>
                 <td>
                     за БД Scopus або WoS:
                 </td>
-                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.countReportingYear.ScopusOrWoS }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.countReportingYear.ScopusOrWoS.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.countReportingYear.ScopusOrWoS.rating }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     у т. ч. у виданні, яке відноситься до квартиля Q3
                 </td>
-                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.quartile3 }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.quartile3.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.quartile3.rating }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     у т. ч. у виданні, яке відноситься до квартиля Q2
                 </td>
-                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.quartile2 }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.quartile2.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.quartile2.rating }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     у т. ч. у виданні, яке відноситься до квартиля Q1
                 </td>
-                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.quartile1 }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.quartile1.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.quartile1.rating }}</td>
             </tr>
             <tr>
                 <td>
@@ -329,37 +339,43 @@
                 <td rowspan="2">
                     - за БД WoS
                 </td>
-                <td>{{ ratingData.articleWoS.scie }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.articleWoS.scie.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.articleWoS.scie.rating }}</td>
             </tr>
             <tr>
                 <td>
                     - у т.ч. статті у виданнях, які входять до SSCI
                 </td>
-                <td>{{ ratingData.articleWoS.ssci }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.articleWoS.ssci.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.articleWoS.ssci.rating }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     - у т.ч. які обліковуються рейтингом Nature Index
                 </td>
-                <td>{{ ratingData.accountedNatureIndex }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.accountedNatureIndex.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.accountedNatureIndex.rating }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     - у т.ч. у журналах Nature або Scince
                 </td>
-                <td>{{ ratingData.journalsNatureOrScience }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.journalsNatureOrScience.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.journalsNatureOrScience.rating }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     - у т.ч. за співавторством з представниками інших організацій
                 </td>
-                <td>{{ ratingData.authorsOtherOrganizations }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.authorsOtherOrganizations.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.authorsOtherOrganizations.rating }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     - у т.ч., що входять до списків Forbes та Fortune
                 </td>
-                <td>{{ ratingData.authorsInForbesFortune }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.authorsInForbesFortune.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.authorsInForbesFortune.rating }}</td>
             </tr>
             <tr>
                 <td rowspan="2">
@@ -368,58 +384,57 @@
                 <td>
                     - до 10% за БД Scopus
                 </td>
-                <td>{{ ratingData.enteredMostCitedSubjectArea.scopus }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.enteredMostCitedSubjectArea.scopus.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.enteredMostCitedSubjectArea.scopus.rating }}</td>
             </tr>
             <tr>
                 <td>
                     - До 1% за БД WoS
                 </td>
-                <td>{{ ratingData.enteredMostCitedSubjectArea.wos }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.enteredMostCitedSubjectArea.wos.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.enteredMostCitedSubjectArea.wos.rating }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     - у т.ч. з цифровим ідентифікатором DOI
                 </td>
-                <td>{{ ratingData.countDOI }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.countDOI.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.countDOI.rating }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     - які процитовані у міжнародних патентах
                 </td>
-                <td>{{ ratingData.citedInternationalPatents }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.citedInternationalPatents.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.citedInternationalPatents.rating }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     - всього за 5 років за БД Scopus
                 </td>
-                <td>{{ ratingData.countScopusFiveYear }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.countScopusFiveYear.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.countScopusFiveYear.rating }}</td>
             </tr>
             <tr>
                 <td rowspan="5">
-                    Кількість охоронних документів щодо об'єктів права інтелектуальної власності, які 
+                    Кількість охоронних документів щодо об'єктів права інтелектуальної власності, які
                 </td>
                 <td colspan="2">
                     - отримано за звітний рік на ім'я СумДУ
                 </td>
-                <td>
-                    {{ ratingData.receivedReportingNameSSU }}
-                </td>
+                <td>{{ ratingData.numberSecurityDocuments.receivedReportingNameSSU }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     - з них за сумісним авторством з представниками бізнесу
                 </td>
-                <td>
-                    {{ ratingData.authorshipBusinessRepresentatives }}
-                </td>
+                <td>{{ ratingData.numberSecurityDocuments.authorshipBusinessRepresentatives }}</td>
             </tr>
             <tr>
                 <td colspan="2">
                     - отримано за звітний рік штатними співробітниками не на ім'я СумДУ
                 </td>
-                <td>
-                    {{ ratingData.receivedReportingEmployeesNotSSU }}
-                </td>
+                <td>{{ ratingData.numberSecurityDocuments.receivedReportingEmployeesNotSSU }}</td>
             </tr>
             <tr>
                 <td rowspan="2">
@@ -428,17 +443,13 @@
                 <td>
                     - університетом
                 </td>
-                <td>
-                    {{ ratingData.commercializedReportingYear.university }}
-                </td>
+                <td>{{ ratingData.numberSecurityDocuments.commercializedReportingYear.university }}</td>
             </tr>
             <tr>
                 <td>
                     - штатним співробітником
                 </td>
-                <td>
-                    {{ ratingData.commercializedReportingYear.employee }}
-                </td>
+                <td>{{ ratingData.numberSecurityDocuments.commercializedReportingYear.employee }}</td>
             </tr>
             <tr>
                 <td colspan="4">
@@ -515,7 +526,8 @@
                 <td colspan="3">
                     Публікації що відноситься до квартиля Q4
                 </td>
-                <td>{{ ratingData.publicationsScopusOrAndWoSNotSSU.quartile4 }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.quartile4.count }}</td>
+                <td>{{ ratingData.publicationsScopusWoSProfileSSU.quartile4.rating }}</td>
             </tr>
         </table>
 
@@ -568,13 +580,15 @@
                 <td v-if="i == 0" :rowspan="item.authors.length">'{{item.number}}'</td>
                 <td v-if="a.author.categ_1 == 1">Студент</td>
                 <td v-else-if="a.author.categ_1 == 2">Аспірант</td>
+                <td v-else-if="a.author.categ_1 == 3">Випускник</td>
                 <td v-else-if="a.author.categ_2 == 1">Співробітник</td>
                 <td v-else-if="a.author.categ_2 == 2">Викладач</td>
+                <td v-else-if="a.author.categ_2 == 3">Менеджер</td>
                 <td v-else></td>
                 <td>{{ item.authors.find(user => user.author.categ_1 == 1) ? "Студент" : "" }}</td>
                 <td>{{ a.author.name }}</td>
                 <td>{{ a.supervisor ? 'Так' : 'Ні' }}</td>
-                
+
                 <td>{{ indexHirsha(a.author) }}</td>
 
                 <td>{{ item.authors.map(user => (user.author.scopus_autor_id >= 10 && user.author.country != "Україна") ? +user.author.scopus_autor_id : '').reduce((a, b) => a > b ? a : b) }}</td>
@@ -583,7 +597,7 @@
                 <td>{{ a.rating_faculty }}</td>
                 <td>{{a.author.department ? a.author.department : a.author.job}}</td>
 
-                <td>{{ item.authors.find(user => user.author.job != 'СумДУ') ? "Так" : "Ні" }}</td>
+                <td>{{ item.authors.find(user => (user.author.job != 'СумДУ' && user.author.job != 'СумДУ (Не працює)' && user.author.job != 'Не працює' && user.author.guid == null)) ? "Так" : "Ні" }}</td>
 
                 <td>{{ a.rating_department }}</td>
                 <td>{{a.author.country == 'Україна' ? 'Ні' : a.author.country ? 'Так' : 'Не вказано'}}</td>
@@ -596,7 +610,7 @@
 
                 <td>{{item.snip}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.impact_factor}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ 
+                <td v-if="i == 0" :rowspan="item.authors.length">{{
                     item.sub_db_scie == 1 && item.sub_db_ssci == 0 ? "SCIE" : "" ||
                     item.sub_db_scie == 0 && item.sub_db_ssci == 1 ? "SSCI" : "" ||
                     item.sub_db_scie == 1 && item.sub_db_ssci == 1 ? "SCIE, SSCI" : "" }}
@@ -623,7 +637,6 @@
             return {
                 loading: false,
                 showFilters: false,
-                departments: [],
                 publicationsData: [],
                 publicationTypes: [],
                 scienceTypes: [
@@ -642,41 +655,99 @@
                 ],
 
                 ratingData: {
-                    countStudentPublications: 0,
-                    countForeignPublications: {
-                        count: 0,
-                        haveIndexScopusWoS: 0
-                    },
+                    studentPublications: 0,
+                    foreignPublications: 0,
+                    publications: 0,
                     monographsIndexedScopusOrWoSNotSSU: 0,
                     articleProfessionalPublicationsUkraine: 0,
-                    publicationsScopusOrAndWoSNotSSU: {
+                    publicationsScopusWoSProfileSSU: {
                         countReportingYear: {
-                            ScopusAndWoS: 0,
-                            ScopusOrWoS: 0
+                            ScopusAndWoS: {
+                                rating: 0,
+                                count: 0
+                            },
+                            ScopusOrWoS: {
+                                rating: 0,
+                                count: 0
+                            }
                         },
-                        quartile1: 0,
-                        quartile2: 0,
-                        quartile3: 0,
-                        quartile4: 0,
+                        quartile1: {
+                            rating: 0,
+                            count: 0
+                        },
+                        quartile2: {
+                            rating: 0,
+                            count: 0
+                        },
+                        quartile3: {
+                            rating: 0,
+                            count: 0
+                        },
+                        quartile4: {
+                            rating: 0,
+                            count: 0
+                        },
+                        articleWoS: {
+                            scie: {
+                                rating: 0,
+                                count: 0
+                            },
+                            ssci: {
+                                rating: 0,
+                                count: 0
+                            }
+                        },
+                        accountedNatureIndex: {
+                            rating: 0,
+                            count: 0
+                        },
+                        journalsNatureOrScience: {
+                            rating: 0,
+                            count: 0
+                        },
+                        authorsOtherOrganizations: {
+                            rating: 0,
+                            count: 0
+                        },
+                        authorsInForbesFortune: {
+                            rating: 0,
+                            count: 0
+                        },
+                        enteredMostCitedSubjectArea: {
+                            scopus: {
+                                rating: 0,
+                                count: 0
+                            },
+                            wos: {
+                                rating: 0,
+                                count: 0
+                            }
+                        },
+                        countDOI: {
+                            rating: 0,
+                            count: 0
+                        },
+                        citedInternationalPatents: {
+                            rating: 0,
+                            count: 0
+                        },
+                        countScopusFiveYear: {
+                            rating: 0,
+                            count: 0
+                        }
                     },
-                    articleWoS: {
-                        scie: 0,
-                        ssci: 0
+                    numberSecurityDocuments: {
+                        receivedReportingNameSSU: 0,
+                        authorshipBusinessRepresentatives: 0,
+                        receivedReportingEmployeesNotSSU: 0,
+                        commercializedReportingYear: {
+                            university: 0,
+                            employee: 0
+                        },
                     },
-                    accountedNatureIndex: 0,
-                    journalsNatureOrScience: 0,
-                    authorsOtherOrganizations: 0,
-                    authorsInForbesFortune: 0,
-                    enteredMostCitedSubjectArea: {
-                        scopus: 0,
-                        wos: 0
-                    },
-                    countDOI: 0,
-                    citedInternationalPatents: 0,
                     countSnipScopus: 0,
                     countHirschIndex: 0,
                     countHirschIndexWithoutCitations: 0,
-                    countEmployees: 0,
                     these: {
                         count: 0,
                         publishedAbroad: 0,
@@ -688,15 +759,7 @@
                         publishedAbroad: 0,
                         publishedWithForeignPartners: 0
                     },
-                    authorsHasfivePublications: 0,
-                    countScopusFiveYear: 0,
-                    receivedReportingNameSSU: 0,
-                    authorshipBusinessRepresentatives: 0,
-                    receivedReportingEmployeesNotSSU: 0,
-                    commercializedReportingYear: {
-                        university: 0,
-                        employee: 0
-                    }
+                    authorsHasfivePublications: 0
                 },
 
                 filters: {
@@ -831,7 +894,7 @@
 
 <style lang="scss" scoped>
     .checkbox input[type=checkbox] {
-        width: 30px; 
+        width: 30px;
         height: 30px;
         margin: 0;
     }

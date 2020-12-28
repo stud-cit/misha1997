@@ -90,14 +90,14 @@
                     <input v-model="filters.hasSupervisor" type="checkbox" class="form-check-input" id="hasSupervisor">
                     <label class="form-check-label" for="hasSupervisor">Під керівництвом</label>
                 </div>
-                <SearchButton 
-                    @click.native="getData(); loadingSearch = true" 
+                <SearchButton
+                    @click.native="getData(); loadingSearch = true"
                     :disabled="loading || loadingSearch || loadingClear"
                     :loading="loadingSearch"
                     title="Пошук"
                 ></SearchButton>
-                <SearchButton 
-                    @click.native="clearFilter" 
+                <SearchButton
+                    @click.native="clearFilter"
                     :disabled="loading || loadingSearch || loadingClear"
                     :loading="loadingClear"
                     title="Очистити фільтр"
@@ -298,7 +298,7 @@
         padding: 0;
     }
     .checkbox input[type=checkbox] {
-        width: 20px; 
+        width: 20px;
         height: 20px;
         margin: 0;
     }

@@ -56,7 +56,7 @@
                 <li class="row" v-if="data.faculty">
                     <div class="col-lg-3 list-item list-title">Інститут/факультет:</div>
                     <div class="col-lg-9 list-item list-text">
-                        <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
+                        <div class="input-container" v-if="data.custom_divisions || (authUser.roles_id == 4 && !data.guid)">
                             <select v-model="data.faculty_code" @change="getDepartmentsUser">
                                 <option value=""></option>
                                 <option
@@ -74,7 +74,7 @@
                 <li class="row" v-if="data.department && (data.faculty != data.department)">
                     <div class="col-lg-3 list-item list-title">Кафедра:</div>
                     <div class="col-lg-9 list-item list-text">
-                        <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
+                        <div class="input-container" v-if="data.custom_divisions || (authUser.roles_id == 4 && !data.guid)">
                             <select v-model="data.department_code">
                                 <option value=""></option>
                                 <option
@@ -89,6 +89,16 @@
                         </div>
                     </div>
                 </li>
+
+                <li class="row" v-if="authUser.roles_id == 4 && data.guid">
+                    <div class="col-lg list-item list-text">
+                        <div class="pl-3">
+                            <input v-model="data.custom_divisions" type="checkbox" class="form-check-input" id="withStudents">
+                            <label class="form-check-label" for="withStudents">Назначити каферу і факультет</label>
+                        </div>
+                    </div>
+                </li>
+
                 <li class="row" v-if="data.academic_code">
                     <div class="col-lg-3 list-item list-title">Академічна група:</div>
                     <div class="col-lg-9 list-item list-text">
@@ -266,8 +276,8 @@
                     <input v-model="filters.withSupervisor" type="checkbox" class="form-check-input" id="withStudents">
                     <label class="form-check-label" for="withStudents">Під керівництвом</label>
                 </div>
-                <SearchButton 
-                    @click.native="getPublications(); loadingSearch = true" 
+                <SearchButton
+                    @click.native="getPublications(); loadingSearch = true"
                     :disabled="loading || loadingSearch"
                     :loading="loadingSearch"
                     title="Пошук"
@@ -381,6 +391,8 @@
                     five_publications: "0",
                     without_self_citations_wos: "",
                     without_self_citations_scopus: "",
+                    created_at: "",
+                    custom_divisions: false,
                     user: {
                         id: null,
                         name: ""
@@ -418,6 +430,7 @@
             this.getData();
             this.getPublications();
             this.getRoles();
+            this.getDepartmentsUser();
         },
         computed: {
             authUser() {
@@ -525,7 +538,7 @@
         padding: 0;
     }
     .checkbox input[type=checkbox] {
-        width: 20px; 
+        width: 20px;
         height: 20px;
         margin: 0;
     }

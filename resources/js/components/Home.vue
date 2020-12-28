@@ -4,7 +4,7 @@
             <a v-if="userRole == 4 || access == 'open'" href="/publications/add" class="page-link">Додати нову публікацію</a>
             <a href="/my-publications" class="page-link">Мої публікації</a>
             <a v-if="userRole != 1" href="/publications" class="page-link">Cписок усіх публікацій</a>
-            <a v-if="userRole == 4 || (access == 'open' && (userRole == 3 || userRole == 2))" href="/users" class="page-link">Список усіх користувачів</a>
+            <a v-if="userRole != 1" href="/users" class="page-link">Список усіх користувачів</a>
             <a href="/manual.pdf" class="page-link" target="_blank">Інструкція користувача</a>
 
             <button
@@ -12,7 +12,7 @@
                 class="page-link success"
                 @click="setAccess('open')"
             >Перевести сервіс в звичайний режим</button>
-            
+
             <button
                 v-if="userRole == 4 && access == 'open'"
                 class="page-link danger"

@@ -11,7 +11,7 @@ class AuthController extends ASUController {
     protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
     protected $cabinet_service = "https://cabinet.sumdu.edu.ua/index/service/";
     protected $cabinet_service_token;
-    
+
     function __construct() {
       $this->cabinet_service_token = config('app.token');
     }
@@ -77,7 +77,7 @@ class AuthController extends ASUController {
                     }
                 }
             }
-            
+
             if(isset($personCabinet['result']['info2']) && !$isStudent) {
                 foreach ($personCabinet['result']['info2'] as $key => $value) {
                     if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 2 || $value['KOD_STATE'] == 3)) {
@@ -140,7 +140,7 @@ class AuthController extends ASUController {
                         }
                     }
                 }
-                
+
                 if(isset($personCabinet['result']['info2']) && !$isStudent) {
                     foreach ($personCabinet['result']['info2'] as $key => $value) {
                         if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 2 || $value['KOD_STATE'] == 3)) {
@@ -150,9 +150,11 @@ class AuthController extends ASUController {
                     }
                 }
 
-                $division = $this->getUserDivision($kod_div)->original;
-                $person->department_code = $division['department'] ? $division['department']['ID_DIV'] : null;
-                $person->faculty_code = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+                if(!$person['custom_divisions']) {
+                    $division = $this->getUserDivision($kod_div)->original;
+                    $person->department_code = $division['department'] ? $division['department']['ID_DIV'] : null;
+                    $person->faculty_code = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+                }
 
                 $userModel->update($person->toArray());
 

@@ -449,7 +449,6 @@ class PublicationsController extends ASUController
         }
 
         $todayYear = Carbon::today()->year;
-        $countScopusFiveYear = Publications::where('science_type_id', 1)->orWhere('science_type_id', 3)->whereYear('created_at', '>=', $todayYear - 5)->count();
         $authorsHasfivePublications = Authors::where('five_publications', 1)->count();
 
         if(count($request->publication_types) > 0) {
@@ -604,41 +603,133 @@ class PublicationsController extends ASUController
         }
 
         $rating = [
-            "countPublications" => 0, // Всього
-            "countStudentPublications" => 0, // Кількість статей за авторством та співавторством студентів
-            "countForeignPublications" => [
-                "count" => 0, // Всього
-                "haveIndexScopusWoS" => 0 // Мають індекс Гірша за БД Scopus або WoS не нижче 10
-            ], // Кількість публікацій статей та монографій (розділів) у співавторстві з іноземними партнерами, які мають індекс Гірша за БД Scopus або WoS не нижче 10
-            "monographsIndexedScopusOrWoSNotSSU" => 0, // монографії проіндексовані  БД Scopus або WoS за належності до профілю СумДУ
-            "articleProfessionalPublicationsUkraine" => 0, // статей у фахових за статусом виданнях
-            "publicationsScopusOrAndWoSNotSSU" => [
+            //Кількість статей за авторством та співавторством студентів
+            "studentPublications" => 0,
+            //Кількість статей та монографій (розділів) у співавторстві з іноземними партнерами, які мають індекс Гірша за БД Scopus або WoS не нижче 10
+            "foreignPublications" => 0,
+            //Кількість публікацій всього у тому числі
+            "publications" => 0,
+            //монографії проіндексовані БД Scopus або WoS за належності до профілю СумДУ
+            "monographsIndexedScopusOrWoSNotSSU" => 0,
+            //статей у фахових за статусом виданнях
+            "articleProfessionalPublicationsUkraine" => 0,
+            //які опубліковані у виданнях, що індексуються БД Scopus та/або WoS за умови належності до профілю СумДУ
+            "publicationsScopusWoSProfileSSU" => [
+                // всього за звітний рік
                 "countReportingYear" => [
-                    "ScopusAndWoS" => 0, // за БД Scopus та WoS:
-                    "ScopusOrWoS" => 0 // за БД Scopus або WoS:
-                ], // всього за звітний рік
-                "quartile1" => 0, // у виданні, яке відноситься до квартиля Q1
-                "quartile2" => 0, // у виданні, яке відноситься до квартиля Q2
-                "quartile3" => 0, // у виданні, яке відноситься до квартиля Q3
-                "quartile4" => 0, // у виданні, яке відноситься до квартиля Q3
-            ], // які опубліковані у виданнях, що індексуються БД Scopus та/або WoS за умови належності до профілю СумДУ
-            "articleWoS" => [
-                "scie" => 0, // статті у виданнях, які входять до SCIE
-                "ssci" => 0 // статті у виданнях, які входять до SSCI
+                    // за БД Scopus та WoS:
+                    "ScopusAndWoS" => [
+                        "rating" => 0,
+                        "count" => 0
+                    ],
+                    // за БД Scopus або WoS:
+                    "ScopusOrWoS" => [
+                        "rating" => 0,
+                        "count" => 0
+                    ]
+                ],
+                 // у виданні, яке відноситься до квартиля Q1
+                "quartile1" => [
+                    "rating" => 0,
+                    "count" => 0
+                ],
+                // у виданні, яке відноситься до квартиля Q2
+                "quartile2" => [
+                    "rating" => 0,
+                    "count" => 0
+                ],
+                // у виданні, яке відноситься до квартиля Q3
+                "quartile3" => [
+                    "rating" => 0,
+                    "count" => 0
+                ],
+                // у виданні, яке відноситься до квартиля Q4
+                "quartile4" => [
+                    "rating" => 0,
+                    "count" => 0
+                ],
+                // за БД WoS
+                "articleWoS" => [
+                    // статті у виданнях, які входять до SCIE
+                    "scie" => [
+                        "rating" => 0,
+                        "count" => 0
+                    ],
+                    // статті у виданнях, які входять до SSCI
+                    "ssci" => [
+                        "rating" => 0,
+                        "count" => 0
+                    ]
+                ],
+                // які обліковуються рейтингом Nature Index
+                "accountedNatureIndex" => [
+                    "rating" => 0,
+                    "count" => 0
+                ],
+                // у журналах Nature або Scince
+                "journalsNatureOrScience" => [
+                    "rating" => 0,
+                    "count" => 0
+                ],
+                // за співавторством з представниками інших організацій
+                "authorsOtherOrganizations" => [
+                    "rating" => 0,
+                    "count" => 0
+                ],
+                // що входять до списків Forbes та Fortune
+                "authorsInForbesFortune" => [
+                    "rating" => 0,
+                    "count" => 0
+                ],
+                // які увійшли до найбільш цитованих для своєї предметної галузі
+                "enteredMostCitedSubjectArea" => [
+                    // до 10% за БД Scopus
+                    "scopus" => [
+                        "rating" => 0,
+                        "count" => 0
+                    ],
+                    // До 1% за БД WoS
+                    "wos" => [
+                        "rating" => 0,
+                        "count" => 0
+                    ]
+                ],
+                // з цифровим ідентифікатором DOI
+                "countDOI" => [
+                    "rating" => 0,
+                    "count" => 0
+                ],
+                // які процитовані у міжнародних патентах
+                "citedInternationalPatents" => [
+                    "rating" => 0,
+                    "count" => 0
+                ],
+                // всього за 5 років за БД Scopus
+                "countScopusFiveYear" => [
+                    "rating" => 0,
+                    "count" => 0
+                ],
             ],
-            "accountedNatureIndex" => 0, // які обліковуються рейтингом Nature Index
-            "journalsNatureOrScience" => 0, // у журналах Nature Scince
-            "authorsOtherOrganizations" => 0, // за співавторством з представниками інших організацій
-            "authorsInForbesFortune" => 0, // що входять до списків Forbes та Fortune
-            "enteredMostCitedSubjectArea" => [
-                "scopus" => 0, // до 10% за БД Scopus
-                "wos" => 0 // До 1% за БД WoS
-            ], // які увійшли до найбільш цитованих для своєї предметної галузі
-            "countDOI" => 0, // - у т.ч. з цифровим ідентифікатором DOI
-            "citedInternationalPatents" => 0, // які процитовані у міжнародних патентах
-            "countScopusFiveYear" => $countScopusFiveYear, // всього за 5 років за БД Scopus
-            "countSnipScopus" => 0, // Кількість публікацій у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
-            "countHirschIndex" => 0, //Загальне значення індексів Гірша (за БД Scopus  або БД WoS ) штатних працівників та докторантів (динаміка змін)
+            // Кількість охоронних документів щодо об'єктів права інтелектуальної власності
+            "numberSecurityDocuments" => [
+                // отримано за звітний рік на ім'я СумДУ
+                "receivedReportingNameSSU" => 0,
+                // з них за сумісним авторством з представниками бізнесу
+                "authorshipBusinessRepresentatives" => 0,
+                // отримано за звітний рік штатними співробітниками не на ім'я СумДУ
+                "receivedReportingEmployeesNotSSU" => 0,
+                // комерціалізовано у звітному році
+                "commercializedReportingYear" => [
+                    // університетом
+                    "university" => 0,
+                    // штатним співробітником
+                    "employee" => 0
+                ]
+            ],
+            // Кількість публікацій у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
+            "countSnipScopus" => 0,
+            //Загальне значення індексів Гірша (за БД Scopus  або БД WoS ) штатних працівників та докторантів (динаміка змін)
+            "countHirschIndex" => 0,
             "countHirschIndexWithoutCitations" => 0,
             "these" => [
                 "count" => 0, // Кількість тез всього
@@ -652,58 +743,17 @@ class PublicationsController extends ASUController
                 "publishedWithForeignPartners" => 0 // статей з іноземними партнерами
             ],
             "authorsHasfivePublications" => $authorsHasfivePublications, // Чисельність штатних працівників, які мають не менше 5-ти публікацій у виданнях, що  індексуються БД Scopus та/або WoS (динаміка змін)
-            "receivedReportingNameSSU" => 0,
-            "authorshipBusinessRepresentatives" => 0,
-            "receivedReportingEmployeesNotSSU" => 0,
-            "commercializedReportingYear" => [
-                "university" => 0,
-                "employee" => 0
-            ]
         ];
 
         $authors = [];
 
         foreach ($data as $key => $value) {
-            if($value['publication_type_id'] != 10 && $value['publication_type_id'] != 11) {
-                $rating['countPublications'] += 1;
-            }
-            if(($value['publication_type_id'] == 10 || $value['publication_type_id'] == 11) && $value['applicant'] == 'СумДУ') {
-                $rating['receivedReportingNameSSU'] += 1;
-                $authorshipBusinessRepresentatives = 0;
-                foreach ($value['authors'] as $k => $v) {
-                    if($v['author']['job'] != 'СумДУ' && $v['author']['job'] != null) {
-                        $authorshipBusinessRepresentatives = 1;
-                    }
-                }
-                $rating['authorshipBusinessRepresentatives'] += $authorshipBusinessRepresentatives;
-            }
-
-            if($value['publication_type_id'] == 10 && $value['applicant'] != 'СумДУ') {
-                $receivedReportingEmployeesNotSSU = 0;
-                foreach ($value['authors'] as $k => $v) {
-                    if($v['author']['job'] == 'СумДУ') {
-                        $receivedReportingEmployeesNotSSU = 1;
-                    }
-                }
-                $rating['receivedReportingEmployeesNotSSU'] += $receivedReportingEmployeesNotSSU;
-            }
-
-            if($value['publication_type_id'] == 10 && $value['commerc_university']) {
-                $rating['commercializedReportingYear']['university'] += 1;
-            }
-
-            if($value['publication_type_id'] == 10 && $value['commerc_employees']) {
-                $rating['commercializedReportingYear']['employee'] += 1;
-            }
-
             $withStudent = 0;
-            $countForeignPublications = [
-                "count" => 0,
-                "haveIndexScopusWoS" => 0
-            ];
+            $foreignPublications = 0;
             $monographsIndexedScopusOrWoSNotSSU = 0;
             $articleProfessionalPublicationsUkraine = 0;
-            $publicationsScopusOrAndWoSNotSSU = [
+
+            $publicationsScopusWoSProfileSSU = [
                 "countReportingYear" => [
                     "ScopusAndWoS" => 0,
                     "ScopusOrWoS" => 0
@@ -727,6 +777,7 @@ class PublicationsController extends ASUController
             ];
             $countDOI = 0;
             $citedInternationalPatents = 0;
+            $countScopusFiveYear = 0;
             $countSnipScopus = 0;
             $these = [
                 "count" => 0,
@@ -796,85 +847,127 @@ class PublicationsController extends ASUController
                     }
                 }
 
-
+                //Кількість статей за авторством та співавторством студентів
                 if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3) && $v['author']['categ_1'] == 1) {
                     $withStudent = 1;
                 }
 
+                //Кількість статей та монографій (розділів) у співавторстві з іноземними партнерами, які мають індекс Гірша за БД Scopus або WoS не нижче 10
                 if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3 || $value['publication_type_id'] == 6 || $value['publication_type_id'] == 7) && $v['author']['country'] != "Україна") {
-                    $countForeignPublications['count'] = 1;
-                    if($v['author']['h_index'] >= 10 || $v['author']['scopus_autor_id'] >= 10) {
-                        $countForeignPublications['haveIndexScopusWoS'] = 1;
-                    }
+                    $foreignPublications = 1;
                 }
+
+                //монографії проіндексовані БД Scopus або WoS за належності до профілю СумДУ
                 if($value['publication_type_id'] == 6 && ($value['science_type_id'] == 1 || $value['science_type_id'] == 2) && $v['author']['guid']) {
                     $monographsIndexedScopusOrWoSNotSSU = 1;
                 }
+
+                //статей у фахових за статусом виданнях
                 if($value['publication_type_id'] == 1) {
                     $articleProfessionalPublicationsUkraine = 1;
                 }
 
+                //які опубліковані у виданнях, що індексуються БД Scopus та/або WoS за умови належності до профілю СумДУ
                 if($value['science_type_id'] && $v['author']['guid']) {
+                    // всього за звітний рік
+                    // за БД Scopus або WoS:
                     if($value['science_type_id'] == 1 || $value['science_type_id'] == 2) {
-                        $publicationsScopusOrAndWoSNotSSU['countReportingYear']['ScopusOrWoS'] = 1;
+                        $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusOrWoS']['rating'] += $v["rating_faculty"];
+                        $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusOrWoS'] = 1;
                     }
+
+                    // за БД Scopus та WoS:
                     if($value['science_type_id'] == 3) {
-                        $publicationsScopusOrAndWoSNotSSU['countReportingYear']['ScopusAndWoS'] = 1;
+                        $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusAndWoS']['rating'] += $v["rating_faculty"];
+                        $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusAndWoS'] = 1;
                     }
+
+                    // у виданні, яке відноситься до квартиля Q4
                     if($value['quartil_scopus'] == 4 || $value['quartil_wos'] == 4) {
-                        $publicationsScopusOrAndWoSNotSSU['quartile4'] = 1;
+                        $rating["publicationsScopusWoSProfileSSU"]['quartile4']['rating'] += $v["rating_faculty"];
+                        $publicationsScopusWoSProfileSSU['quartile4'] = 1;
                     }
+
+                    // у виданні, яке відноситься до квартиля Q3
                     if($value['quartil_scopus'] == 3 || $value['quartil_wos'] == 3) {
-                        $publicationsScopusOrAndWoSNotSSU['quartile3'] = 1;
+                        $rating["publicationsScopusWoSProfileSSU"]['quartile3']['rating'] += $v["rating_faculty"];
+                        $publicationsScopusWoSProfileSSU['quartile3'] = 1;
                     }
+
+                    // у виданні, яке відноситься до квартиля Q2
                     if($value['quartil_scopus'] == 2 || $value['quartil_wos'] == 2) {
-                        $publicationsScopusOrAndWoSNotSSU['quartile2'] = 1;
+                        $rating["publicationsScopusWoSProfileSSU"]['quartile2']['rating'] += $v["rating_faculty"];
+                        $publicationsScopusWoSProfileSSU['quartile2'] = 1;
                     }
+
+                    // у виданні, яке відноситься до квартиля Q1
                     if($value['quartil_scopus'] == 1 || $value['quartil_wos'] == 1) {
-                        $publicationsScopusOrAndWoSNotSSU['quartile1'] = 1;
+                        $rating["publicationsScopusWoSProfileSSU"]['quartile1']['rating'] += $v["rating_faculty"];
+                        $publicationsScopusWoSProfileSSU['quartile1'] = 1;
                     }
                 }
 
+                //статті за БД WoS
                 if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 3) && $value['science_type_id'] == 2) {
+                    //у т.ч. статті у виданнях, які входять до SCIE
                     if($value['sub_db_scie'] == 1) {
+                        $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['scie']['rating'] += $v["rating_faculty"];
                         $articleWoS['scie'] = 1;
                     }
+                    //у т.ч. статті у виданнях, які входять до SSCI
                     if($value['sub_db_ssci'] == 1) {
+                        $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['ssci']['rating'] += $v["rating_faculty"];
                         $articleWoS['ssci'] = 1;
                     }
                 }
 
+                //які обліковуються рейтингом Nature Index
                 if($value['nature_index']) {
+                    $rating["publicationsScopusWoSProfileSSU"]['accountedNatureIndex']['rating'] += $v["rating_faculty"];
                     $accountedNatureIndex = 1;
                 }
 
+                //у журналах Nature або Scince
                 if($value['nature_science'] == 'Nature' || $value['nature_science'] == 'Science') {
+                    $rating["publicationsScopusWoSProfileSSU"]['journalsNatureOrScience']['rating'] += $v["rating_faculty"];
                     $journalsNatureOrScience = 1;
                 }
 
-                if($value['publication_type_id'] != null && $v['author']['job'] != "СумДУ" && $v['author']['job'] != "Не працює" && $v['author']['job'] != null) {
+                //за співавторством з представниками інших організацій
+                if($value['science_type_id'] != null && $v['author']['job'] != "СумДУ" && $v['author']['job'] != "СумДУ (Не працює)" && $v['author']['job'] != "Не працює" && $v['author']['guid'] == null) {
+                    $rating["publicationsScopusWoSProfileSSU"]['authorsOtherOrganizations']['rating'] += $v["rating_faculty"];
                     $authorsOtherOrganizations = 1;
                 }
 
+                // що входять до списків Forbes та Fortune
                 if($v['author']['forbes_fortune']) {
+                    $rating["publicationsScopusWoSProfileSSU"]['authorsInForbesFortune']['rating'] += $v["rating_faculty"];
                     $authorsInForbesFortune = 1;
                 }
 
+                //які увійшли до найбільш цитованих для своєї предметної галузі
+                //до 10% за БД Scopus
                 if($value['db_scopus_percent']) {
+                    $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['scopus']['rating'] += $v["rating_faculty"];
                     $enteredMostCitedSubjectArea['scopus'] = 1;
                 }
 
+                // До 1% за БД WoS
                 if($value['db_wos_percent']) {
+                    $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['wos']['rating'] += $v["rating_faculty"];
                     $enteredMostCitedSubjectArea['wos'] = 1;
                 }
 
                 // - у т.ч. з цифровим ідентифікатором DOI
                 if($value['doi'] && $value['science_type_id']) {
+                    $rating["publicationsScopusWoSProfileSSU"]['countDOI']['rating'] += $v["rating_faculty"];
                     $countDOI = 1;
                 }
 
+                // які процитовані у міжнародних патентах
                 if($value['cited_international_patents']) {
-                    $rating["citedInternationalPatents"] = 1;
+                    $rating["publicationsScopusWoSProfileSSU"]['citedInternationalPatents']['rating'] += $v["rating_faculty"];
+                    $citedInternationalPatents = 1;
                 }
 
                 if($value['science_type_id'] == 1 && ($value['snip'] > 1)) {
@@ -908,38 +1001,76 @@ class PublicationsController extends ASUController
                         $articles['publishedWithForeignPartners'] = 1;
                     }
                 }
+
+                // всього за 5 років за БД Scopus
+                if(($value['science_type_id'] == 1 || $value['science_type_id'] == 3) && $value['created_at']->toDateTimeString() >= $todayYear - 5) {
+                    $rating['publicationsScopusWoSProfileSSU']['countScopusFiveYear']['rating'] += $v['rating_faculty'];
+                    $countScopusFiveYear = 1;
+                }
             }
 
+            //Кількість публікацій всього у тому числі
+            if($value['publication_type_id'] != 10 && $value['publication_type_id'] != 11) {
+                $rating['publications'] += 1;
+            }
 
+            // Кількість охоронних документів щодо об'єктів права інтелектуальної власності
+            // отримано за звітний рік на ім'я СумДУ
+            if(($value['publication_type_id'] == 10 || $value['publication_type_id'] == 11) && $value['applicant'] == 'СумДУ') {
+                $rating['numberSecurityDocuments']['receivedReportingNameSSU'] += 1;
+                $authorshipBusinessRepresentatives = 0;
+                foreach ($value['authors'] as $k => $v) {
+                    if($v['author']['job'] != 'СумДУ' && $v['author']['job'] != null) {
+                        $authorshipBusinessRepresentatives = 1;
+                    }
+                }
+                $rating['numberSecurityDocuments']['authorshipBusinessRepresentatives'] += $authorshipBusinessRepresentatives;
+            }
 
-            $rating["countStudentPublications"] += $withStudent; // Кількість статей за авторством та співавторством студентів
+            // отримано за звітний рік штатними співробітниками не на ім'я СумДУ
+            if($value['publication_type_id'] == 10 && $value['applicant'] != 'СумДУ') {
+                $receivedReportingEmployeesNotSSU = 0;
+                foreach ($value['authors'] as $k => $v) {
+                    if($v['author']['job'] == 'СумДУ') {
+                        $rating['numberSecurityDocuments']['receivedReportingEmployeesNotSSU'] += $v['rating_faculty'];
+                        $receivedReportingEmployeesNotSSU = 1;
+                    }
+                }
+                $rating['numberSecurityDocuments']['receivedReportingEmployeesNotSSU'] += $receivedReportingEmployeesNotSSU;
+            }
 
-            $rating["countForeignPublications"]['count'] += $countForeignPublications['count'];
-            $rating["countForeignPublications"]['haveIndexScopusWoS'] += $countForeignPublications['haveIndexScopusWoS'];
+            // комерціалізовано у звітному році
+            if($value['publication_type_id'] == 10 && $value['commerc_university']) {
+                $rating['numberSecurityDocuments']['commercializedReportingYear']['university'] += 1;
+            }
+
+            // штатним співробітником
+            if($value['publication_type_id'] == 10 && $value['commerc_employees']) {
+                $rating['numberSecurityDocuments']['commercializedReportingYear']['employee'] += 1;
+            }
+
+            $rating["studentPublications"] += $withStudent;
+            $rating["foreignPublications"] += $foreignPublications;
             $rating["monographsIndexedScopusOrWoSNotSSU"] += $monographsIndexedScopusOrWoSNotSSU;
             $rating["articleProfessionalPublicationsUkraine"] += $articleProfessionalPublicationsUkraine;
+            $rating["publicationsScopusWoSProfileSSU"]['quartile4']['count'] += $publicationsScopusWoSProfileSSU['quartile4'];
+            $rating["publicationsScopusWoSProfileSSU"]['quartile3']['count'] += $publicationsScopusWoSProfileSSU['quartile3'];
+            $rating["publicationsScopusWoSProfileSSU"]['quartile2']['count'] += $publicationsScopusWoSProfileSSU['quartile2'];
+            $rating["publicationsScopusWoSProfileSSU"]['quartile1']['count'] += $publicationsScopusWoSProfileSSU['quartile1'];
+            $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusOrWoS']['count'] += $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusOrWoS'];
+            $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusAndWoS']['count'] += $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusAndWoS'];
+            $rating["publicationsScopusWoSProfileSSU"]["articleWoS"]['scie']['count'] += $articleWoS['scie'];
+            $rating["publicationsScopusWoSProfileSSU"]["articleWoS"]['ssci']['count'] += $articleWoS['ssci'];
+            $rating["publicationsScopusWoSProfileSSU"]["accountedNatureIndex"]['count'] += $accountedNatureIndex;
+            $rating["publicationsScopusWoSProfileSSU"]["journalsNatureOrScience"]['count'] += $journalsNatureOrScience;
+            $rating["publicationsScopusWoSProfileSSU"]["authorsOtherOrganizations"]['count'] += $authorsOtherOrganizations;
+            $rating["publicationsScopusWoSProfileSSU"]["authorsInForbesFortune"]['count'] += $authorsInForbesFortune;
+            $rating["publicationsScopusWoSProfileSSU"]["enteredMostCitedSubjectArea"]['scopus']['count'] += $enteredMostCitedSubjectArea['scopus'];
+            $rating["publicationsScopusWoSProfileSSU"]["enteredMostCitedSubjectArea"]['wos']['count'] += $enteredMostCitedSubjectArea['wos'];
+            $rating["publicationsScopusWoSProfileSSU"]["countDOI"]['count'] += $countDOI;
+            $rating["publicationsScopusWoSProfileSSU"]["citedInternationalPatents"]['count'] += $citedInternationalPatents;
+            $rating["publicationsScopusWoSProfileSSU"]["countScopusFiveYear"]['count'] += $countScopusFiveYear;
 
-            $rating["publicationsScopusOrAndWoSNotSSU"]['quartile4'] += $publicationsScopusOrAndWoSNotSSU['quartile4'];
-            $rating["publicationsScopusOrAndWoSNotSSU"]['quartile3'] += $publicationsScopusOrAndWoSNotSSU['quartile3'];
-            $rating["publicationsScopusOrAndWoSNotSSU"]['quartile2'] += $publicationsScopusOrAndWoSNotSSU['quartile2'];
-            $rating["publicationsScopusOrAndWoSNotSSU"]['quartile1'] += $publicationsScopusOrAndWoSNotSSU['quartile1'];
-
-            $rating["publicationsScopusOrAndWoSNotSSU"]['countReportingYear']['ScopusOrWoS'] += $publicationsScopusOrAndWoSNotSSU['countReportingYear']['ScopusOrWoS'];
-            $rating["publicationsScopusOrAndWoSNotSSU"]['countReportingYear']['ScopusAndWoS'] += $publicationsScopusOrAndWoSNotSSU['countReportingYear']['ScopusAndWoS'];
-
-            $rating["articleWoS"]['scie'] += $articleWoS['scie'];
-            $rating["articleWoS"]['ssci'] += $articleWoS['ssci'];
-
-            $rating["accountedNatureIndex"] += $accountedNatureIndex;
-            $rating["journalsNatureOrScience"] += $journalsNatureOrScience;
-            $rating["authorsOtherOrganizations"] += $authorsOtherOrganizations;
-            $rating["authorsInForbesFortune"] += $authorsInForbesFortune;
-
-            $rating["enteredMostCitedSubjectArea"]['scopus'] += $enteredMostCitedSubjectArea['scopus'];
-            $rating["enteredMostCitedSubjectArea"]['wos'] += $enteredMostCitedSubjectArea['wos'];
-
-            $rating["countDOI"] += $countDOI;
-            $rating["citedInternationalPatents"] += $citedInternationalPatents;
             $rating["countSnipScopus"] += $countSnipScopus;
 
             $rating["these"]['count'] += $these['count'];

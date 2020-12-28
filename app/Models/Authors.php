@@ -30,6 +30,7 @@ class Authors extends Model
         'without_self_citations_wos',
         'without_self_citations_scopus',
         'add_user_id',
+        'custom_divisions',
         'test_data'
     ];
 

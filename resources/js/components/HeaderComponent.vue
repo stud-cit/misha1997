@@ -18,19 +18,19 @@
                                     class="dropdown-item"
                                 >Додати нову публікацію</a>
 
-                                <a 
-                                    href="/my-publications" 
+                                <a
+                                    href="/my-publications"
                                     class="dropdown-item"
                                     >Мої публікації</a>
 
-                                <a 
-                                    href="/publications" 
-                                    class="dropdown-item" 
+                                <a
+                                    href="/publications"
+                                    class="dropdown-item"
                                     v-if="userRole != 1"
                                 >Cписок усіх публікацій</a>
 
                                 <a
-                                    v-if="userRole == 4 || (access == 'open' && (userRole == 3 || userRole == 2))"
+                                    v-if="userRole != 1"
                                     href="/users"
                                     class="dropdown-item"
                                 >Список усіх користувачів</a>
@@ -46,7 +46,7 @@
                                     class="dropdown-item success"
                                     @click="setAccess('open')"
                                 >Перевести сервіс в звичайний режим</button>
-                                
+
                                 <button
                                     v-if="userRole == 4 && access == 'open'"
                                     class="dropdown-item danger"
