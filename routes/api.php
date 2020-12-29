@@ -12,6 +12,7 @@ Route::post('logout', 'AuthController@logout');
 Route::get('check-student', 'DevController@checkStudent');
 Route::get('check-not-work', 'DevController@checkSSUNotWork');
 Route::get('check-division/{department_code}', 'DevController@getUserDivision');
+Route::get('check-user/{user_id}', 'DevController@updateCabinetInfo');
 
 Route::group(['middleware' => ['web']], function() {
 

@@ -21,6 +21,113 @@ class DevController extends ASUController
         $this->cabinet_service_token = config('app.token');
     }
 
+    function updateCabinetInfo($user_id) {
+
+        $key = "iYWRu2UbsiXZ3CJUIy77HZ8A2tOnhp3eI2904F0Ih95wJPZfBT42";
+
+        $model = Authors::find($user_id);
+
+
+        if(isset($model['test_data'])) {
+            $getPersons = json_decode($model['test_data'], true);
+            $person = [
+                "department_code" => null,
+                "faculty_code" => null,
+                "categ_1" => 0,
+                "categ_2" => 0,
+                "academic_code" => null
+            ];
+            $isStudent = false;
+            $kod_div = null;
+            if(isset($getPersons['info1'])) {
+                foreach ($getPersons['info1'] as $key => $value) {
+                    if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2 && $value['KOD_LEVEL'] == 8) {
+                        $person['categ_1'] = $value['CATEG'];
+                        $person['academic_code'] = $value['NAME_GROUP'];
+                        $kod_div = $this->getAspirantDepartment($getPersons['guid']);
+                        $isStudent = true;
+                    }
+                }
+            }
+            
+            if(isset($getPersons['info2']) && !$isStudent) {
+                foreach ($getPersons['info2'] as $key => $value) {
+                    if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 2 || $value['KOD_STATE'] == 3)) {
+                        $person['categ_2'] = $value['CATEG'];
+                        $kod_div = $value['KOD_DIV'];
+                    }
+                }
+            }
+
+
+            if($kod_div) {
+                $division = $this->getUserDivision($kod_div)->original;
+                $person['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
+                $person['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+            }
+
+
+            $model->update($person);
+
+            return response()->json([
+                'status' => 'ok'
+            ]);
+        } else {
+            $getPersons = json_decode(file_get_contents($this->cabinet_api . 'getPersons?key=' . $key . '&token=' . $this->cabinet_service_token . '&search=' . urlencode($model['name'])), true);
+
+            if($getPersons['status'] == 'OK' && count($getPersons['result']) > 0) {
+                $mode = 1;
+                $getPersons = array_shift($getPersons['result']);
+                
+                $getContingents = json_decode(file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key=' . $this->asu_key . '&mode=' . $mode . '&categ1=' . $getPersons['categ1'] . '&categ2=' . $getPersons['categ2']), true);
+                
+                return response()->json($getContingents);
+                
+                if($getContingents['status'] == 'OK') {
+    
+                    $person = [];
+    
+                    $aspirant = array_filter($getContingents['result'], function($value) use ($model) {
+                        return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'] && $value['CATEG_1'] == 2 && ($value['KOD_LEVEL'] == 8 || $value['KOD_LEVEL'] == 5);
+                    });
+    
+                    if(count($aspirant) == 0) {
+                        $anotherUser = array_filter($getContingents['result'], function($value) use ($model) {
+                            return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'];
+                        });
+                        $person = array_shift($anotherUser);
+                    } else {
+                        $person = array_shift($aspirant);
+                        if($person['KOD_LEVEL'] == 8) {
+                            $person['KOD_DIV'] = $this->getAspirantDepartment($person['ID_FIO']);
+                        }
+                    }
+    
+                    $division = $this->getUserDivision($person['KOD_DIV'])->original;
+                    $person['DEPARTMENT_CODE'] = $division['department'] ? $division['department']['ID_DIV'] : null;
+                    $person['FACULTY_CODE'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+
+                    $model->update([
+                        "name" => $person['F_FIO'] . ' ' . $person['I_FIO'] . ' ' . $person['O_FIO'],
+                        "faculty_code" => $person['FACULTY_CODE'],
+                        "department_code" => $person['DEPARTMENT_CODE'],
+                        "academic_code" => $person['NAME_GROUP'],
+                        "categ_1" => $person['CATEG_1'],
+                        "categ_2" => $person['CATEG_2'],
+                    ]);
+    
+                    return response()->json([
+                        'status' => 'ok'
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'error'
+                ]);
+            }
+        }
+    }
+
     function checkStudent() {
         $data = Authors::select('name', 'academic_code', 'faculty_code', 'department_code')->orderBy('name', 'ASC')->where('categ_1', 1)->update([
             'faculty_code' => null,

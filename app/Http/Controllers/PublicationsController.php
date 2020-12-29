@@ -425,25 +425,13 @@ class PublicationsController extends ASUController
         $model->where('country', 'like', "%".$request->country."%");
 
         if($request->session()->get('person')['roles_id'] == 2) {
-            $departments_id = [$request->session()->get('person')['department_code']];
-            foreach($divisions->original['department'] as $k2 => $v2) {
-                if ($v2['ID_PAR'] == $request->session()->get('person')['department_code']) {
-                    array_push($departments_id, $v2['ID_DIV']);
-                }
-            }
-            $model->whereHas('authors.author', function($q) use ($departments_id) {
-                $q->whereIn('department_code', $departments_id);
+            $model->whereHas('authors.author', function($q) use ($request) {
+                $q->where('department_code', $request->session()->get('person')['department_code']);
             });
         } else {
             if($request->session()->get('person')['roles_id'] == 3) {
-                $departments_id = [$request->session()->get('person')['faculty_code']];
-                foreach($divisions->original['department'] as $k2 => $v2) {
-                    if ($v2['ID_PAR'] == $request->session()->get('person')['faculty_code']) {
-                        array_push($departments_id, $v2['ID_DIV']);
-                    }
-                }
-                $model->whereHas('authors.author', function($q) use ($departments_id) {
-                    $q->whereIn('faculty_code', $departments_id);
+                $model->whereHas('authors.author', function($q) use ($request) {
+                    $q->where('faculty_code', $request->session()->get('person')['faculty_code']);
                 });
             }
         }
@@ -522,25 +510,13 @@ class PublicationsController extends ASUController
         }
 
         if($request->department_code != '') {
-            $departments_id = [$request->department_code];
-            foreach($divisions->original['department'] as $k2 => $v2) {
-                if ($v2['ID_PAR'] == $request->department_code) {
-                    array_push($departments_id, $v2['ID_DIV']);
-                }
-            }
-            $model->whereHas('authors.author', function($q) use ($departments_id) {
-                $q->whereIn('department_code', $departments_id);
+            $model->whereHas('authors.author', function($q) use ($request) {
+                $q->where('department_code', $request->department_code);
             });
         } else {
             if($request->faculty_code != '') {
-                $departments_id = [$request->faculty_code];
-                foreach($divisions->original['department'] as $k2 => $v2) {
-                    if ($v2['ID_PAR'] == $request->faculty_code) {
-                        array_push($departments_id, $v2['ID_DIV']);
-                    }
-                }
-                $model->whereHas('authors.author', function($q) use ($departments_id) {
-                    $q->whereIn('faculty_code', $departments_id);
+                $model->whereHas('authors.author', function($q) use ($request) {
+                    $q->where('faculty_code', $request->faculty_code);
                 });
             }
         }
