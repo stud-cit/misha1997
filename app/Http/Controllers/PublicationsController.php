@@ -424,16 +424,16 @@ class PublicationsController extends ASUController
 
         $model->where('country', 'like', "%".$request->country."%");
 
+        $department_code = $request->department_code;
+        $faculty_code = $request->faculty_code;
+
         if($request->session()->get('person')['roles_id'] == 2) {
-            $model->whereHas('authors.author', function($q) use ($request) {
-                $q->where('department_code', $request->session()->get('person')['department_code']);
-            });
-        } else {
-            if($request->session()->get('person')['roles_id'] == 3) {
-                $model->whereHas('authors.author', function($q) use ($request) {
-                    $q->where('faculty_code', $request->session()->get('person')['faculty_code']);
-                });
-            }
+            $faculty_code = $request->session()->get('person')['faculty_code'];
+            $department_code = $request->session()->get('person')['department_code'];
+        } 
+
+        if($request->session()->get('person')['roles_id'] == 3) {
+            $department_code = $request->session()->get('person')['faculty_code'];
         }
 
         $todayYear = Carbon::today()->year;
@@ -509,14 +509,14 @@ class PublicationsController extends ASUController
             });
         }
 
-        if($request->department_code != '') {
-            $model->whereHas('authors.author', function($q) use ($request) {
-                $q->where('department_code', $request->department_code);
+        if($department_code != '') {
+            $model->whereHas('authors.author', function($q) use ($department_code) {
+                $q->where('department_code', $department_code);
             });
         } else {
-            if($request->faculty_code != '') {
-                $model->whereHas('authors.author', function($q) use ($request) {
-                    $q->where('faculty_code', $request->faculty_code);
+            if($faculty_code != '') {
+                $model->whereHas('authors.author', function($q) use ($faculty_code) {
+                    $q->where('faculty_code', $faculty_code);
                 });
             }
         }
@@ -848,37 +848,37 @@ class PublicationsController extends ASUController
                     // всього за звітний рік
                     // за БД Scopus або WoS:
                     if($value['science_type_id'] == 1 || $value['science_type_id'] == 2) {
-                        $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusOrWoS']['rating'] += $v["rating_faculty"];
+                        $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusOrWoS']['rating'] += $this->sumRating($request, $v);
                         $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusOrWoS'] = 1;
                     }
 
                     // за БД Scopus та WoS:
                     if($value['science_type_id'] == 3) {
-                        $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusAndWoS']['rating'] += $v["rating_faculty"];
+                        $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusAndWoS']['rating'] += $this->sumRating($request, $v);
                         $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusAndWoS'] = 1;
                     }
 
                     // у виданні, яке відноситься до квартиля Q4
                     if($value['quartil_scopus'] == 4 || $value['quartil_wos'] == 4) {
-                        $rating["publicationsScopusWoSProfileSSU"]['quartile4']['rating'] += $v["rating_faculty"];
+                        $rating["publicationsScopusWoSProfileSSU"]['quartile4']['rating'] += $this->sumRating($request, $v);
                         $publicationsScopusWoSProfileSSU['quartile4'] = 1;
                     }
 
                     // у виданні, яке відноситься до квартиля Q3
                     if($value['quartil_scopus'] == 3 || $value['quartil_wos'] == 3) {
-                        $rating["publicationsScopusWoSProfileSSU"]['quartile3']['rating'] += $v["rating_faculty"];
+                        $rating["publicationsScopusWoSProfileSSU"]['quartile3']['rating'] += $this->sumRating($request, $v);
                         $publicationsScopusWoSProfileSSU['quartile3'] = 1;
                     }
 
                     // у виданні, яке відноситься до квартиля Q2
                     if($value['quartil_scopus'] == 2 || $value['quartil_wos'] == 2) {
-                        $rating["publicationsScopusWoSProfileSSU"]['quartile2']['rating'] += $v["rating_faculty"];
+                        $rating["publicationsScopusWoSProfileSSU"]['quartile2']['rating'] += $this->sumRating($request, $v);
                         $publicationsScopusWoSProfileSSU['quartile2'] = 1;
                     }
 
                     // у виданні, яке відноситься до квартиля Q1
                     if($value['quartil_scopus'] == 1 || $value['quartil_wos'] == 1) {
-                        $rating["publicationsScopusWoSProfileSSU"]['quartile1']['rating'] += $v["rating_faculty"];
+                        $rating["publicationsScopusWoSProfileSSU"]['quartile1']['rating'] += $this->sumRating($request, $v);
                         $publicationsScopusWoSProfileSSU['quartile1'] = 1;
                     }
                 }
@@ -887,62 +887,62 @@ class PublicationsController extends ASUController
                 if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 3) && $value['science_type_id'] == 2) {
                     //у т.ч. статті у виданнях, які входять до SCIE
                     if($value['sub_db_scie'] == 1) {
-                        $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['scie']['rating'] += $v["rating_faculty"];
+                        $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['scie']['rating'] += $this->sumRating($request, $v);
                         $articleWoS['scie'] = 1;
                     }
                     //у т.ч. статті у виданнях, які входять до SSCI
                     if($value['sub_db_ssci'] == 1) {
-                        $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['ssci']['rating'] += $v["rating_faculty"];
+                        $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['ssci']['rating'] += $this->sumRating($request, $v);
                         $articleWoS['ssci'] = 1;
                     }
                 }
 
                 //які обліковуються рейтингом Nature Index
-                if($value['nature_index']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['accountedNatureIndex']['rating'] += $v["rating_faculty"];
+                if($value['nature_index'] == 1) {
+                    $rating["publicationsScopusWoSProfileSSU"]['accountedNatureIndex']['rating'] += $this->sumRating($request, $v);
                     $accountedNatureIndex = 1;
                 }
 
                 //у журналах Nature або Scince
                 if($value['nature_science'] == 'Nature' || $value['nature_science'] == 'Science') {
-                    $rating["publicationsScopusWoSProfileSSU"]['journalsNatureOrScience']['rating'] += $v["rating_faculty"];
+                    $rating["publicationsScopusWoSProfileSSU"]['journalsNatureOrScience']['rating'] += $this->sumRating($request, $v);
                     $journalsNatureOrScience = 1;
                 }
 
                 //за співавторством з представниками інших організацій
                 if($value['science_type_id'] != null && $v['author']['job'] != "СумДУ" && $v['author']['job'] != "СумДУ (Не працює)" && $v['author']['job'] != "Не працює" && $v['author']['guid'] == null) {
-                    $rating["publicationsScopusWoSProfileSSU"]['authorsOtherOrganizations']['rating'] += $v["rating_faculty"];
+                    $rating["publicationsScopusWoSProfileSSU"]['authorsOtherOrganizations']['rating'] += $this->sumRating($request, $v);
                     $authorsOtherOrganizations = 1;
                 }
 
                 // що входять до списків Forbes та Fortune
                 if($v['author']['forbes_fortune']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['authorsInForbesFortune']['rating'] += $v["rating_faculty"];
+                    $rating["publicationsScopusWoSProfileSSU"]['authorsInForbesFortune']['rating'] += $this->sumRating($request, $v);
                     $authorsInForbesFortune = 1;
                 }
 
                 //які увійшли до найбільш цитованих для своєї предметної галузі
                 //до 10% за БД Scopus
                 if($value['db_scopus_percent']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['scopus']['rating'] += $v["rating_faculty"];
+                    $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['scopus']['rating'] += $this->sumRating($request, $v);
                     $enteredMostCitedSubjectArea['scopus'] = 1;
                 }
 
                 // До 1% за БД WoS
                 if($value['db_wos_percent']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['wos']['rating'] += $v["rating_faculty"];
+                    $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['wos']['rating'] += $this->sumRating($request, $v);
                     $enteredMostCitedSubjectArea['wos'] = 1;
                 }
 
                 // - у т.ч. з цифровим ідентифікатором DOI
                 if($value['doi'] && $value['science_type_id']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['countDOI']['rating'] += $v["rating_faculty"];
+                    $rating["publicationsScopusWoSProfileSSU"]['countDOI']['rating'] += $this->sumRating($request, $v);
                     $countDOI = 1;
                 }
 
                 // які процитовані у міжнародних патентах
                 if($value['cited_international_patents']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['citedInternationalPatents']['rating'] += $v["rating_faculty"];
+                    $rating["publicationsScopusWoSProfileSSU"]['citedInternationalPatents']['rating'] += $this->sumRating($request, $v);
                     $citedInternationalPatents = 1;
                 }
 
@@ -980,7 +980,7 @@ class PublicationsController extends ASUController
 
                 // всього за 5 років за БД Scopus
                 if(($value['science_type_id'] == 1 || $value['science_type_id'] == 3) && $value['created_at']->toDateTimeString() >= $todayYear - 5) {
-                    $rating['publicationsScopusWoSProfileSSU']['countScopusFiveYear']['rating'] += $v['rating_faculty'];
+                    $rating['publicationsScopusWoSProfileSSU']['countScopusFiveYear']['rating'] += $this->sumRating($request, $v);
                     $countScopusFiveYear = 1;
                 }
             }
@@ -1008,7 +1008,6 @@ class PublicationsController extends ASUController
                 $receivedReportingEmployeesNotSSU = 0;
                 foreach ($value['authors'] as $k => $v) {
                     if($v['author']['job'] == 'СумДУ') {
-                        $rating['numberSecurityDocuments']['receivedReportingEmployeesNotSSU'] += $v['rating_faculty'];
                         $receivedReportingEmployeesNotSSU = 1;
                     }
                 }
@@ -1068,5 +1067,20 @@ class PublicationsController extends ASUController
             "rating" => $rating,
             "publications" => $data
         ]);
+    }
+    function sumRating($request, $rating) {
+        if($request->department_code != '') {
+            if($request->faculty_code == $rating['author']['faculty_code']) {
+                if($request->department_code == $rating['author']['department_code']) {
+                    return $rating['rating_department'];
+                }
+            }
+        } elseif ($request->faculty_code != '') {
+            if($request->faculty_code == $rating['author']['faculty_code']) {
+                return $rating['rating_department'];
+            }
+        } else {
+            return $rating['rating_department'];
+        }
     }
 }

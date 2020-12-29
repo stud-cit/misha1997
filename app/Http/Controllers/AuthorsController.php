@@ -88,7 +88,7 @@ class AuthorsController extends ASUController
                         $query->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'СумДУ (Не працює)');
                     }
                     if($value == "Студенти") {
-                        $query->orWhere('categ_1', 1);
+                        $query->orWhere('categ_1', 1)->orWhere('categ_1', 3);
                     }
                     if($value == "5 або більше публікацій у періодичних виданнях Scopus та/або WoS") {
                         $query->orWhere('five_publications', '1');

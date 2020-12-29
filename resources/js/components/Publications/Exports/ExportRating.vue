@@ -565,6 +565,7 @@
                 <th>Nature Index</th>
                 <th>DOI</th>
                 <th>Охоронні документи</th>
+                <th>У журналах</th>
                 <th>Дата занесення до бази даних</th>
             </tr>
             <template v-for="(item, ind) in publicationsData">
@@ -618,6 +619,7 @@
                 <td>{{ item.nature_index == 1 ? "Так" : "Ні" }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.doi }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.applicant }}</td>
+                <td v-if="i == 0" :rowspan="item.authors.length">{{ item.nature_science }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.created_at }}</td>
             </tr>
             </template>
@@ -880,6 +882,7 @@
                         { wch: 5 }, // Підбаза WoS
                         { wch: 5 }, // Nature Index
                         { wch: 3 }, // DOI
+                        { wch: 7 }, // DOI
                         { wch: 7 }, // DOI
                         { wch: 10 }, // Дата занесення до бази даних
                     ];
