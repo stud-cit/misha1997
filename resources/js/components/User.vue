@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="row" v-if="data.faculty">
+                <li class="row" v-if="data.custom_divisions || data.faculty">
                     <div class="col-lg-3 list-item list-title">Інститут/факультет:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="data.custom_divisions || (authUser.roles_id == 4 && !data.guid)">
@@ -71,7 +71,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="row" v-if="data.department && (data.faculty != data.department)">
+                <li class="row" v-if="data.custom_divisions || (data.department && (data.faculty != data.department))">
                     <div class="col-lg-3 list-item list-title">Кафедра:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="data.custom_divisions || (authUser.roles_id == 4 && !data.guid)">

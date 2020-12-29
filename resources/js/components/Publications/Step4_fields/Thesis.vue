@@ -35,9 +35,12 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="item-title">Сторінки</label>
+                <label class="item-title">Сторінки *</label>
                 <div class="input-container">
                     <input class="item-value" type="text" v-model="publicationData.pages">
+                </div>
+                <div class="error" v-if="$v.publicationData.pages.$error">
+                    Поле обов'язкове для заповнення
                 </div>
             </div>
             <div class="form-group">
@@ -94,6 +97,9 @@
                 country: {
                     required
                 },
+                pages: {
+                    required
+                }
             }
         },
         methods: {
