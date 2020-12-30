@@ -772,6 +772,8 @@ class PublicationsController extends ASUController
             $testDepartment = [];
             $testDepartments = [];
 
+            $test = true;
+
             for($i = 0; $i < count($value['authors']); $i++) {
 
                 array_push($testFacultys, $value['authors'][$i]['author']['faculty_code']);
@@ -911,7 +913,10 @@ class PublicationsController extends ASUController
 
                 //за співавторством з представниками інших організацій
                 if($value['science_type_id'] != null && $v['author']['job'] != "СумДУ" && $v['author']['job'] != "СумДУ (Не працює)" && $v['author']['job'] != "Не працює" && $v['author']['guid'] == null) {
-                    $rating["publicationsScopusWoSProfileSSU"]['authorsOtherOrganizations']['rating'] += $this->sumRating($request, $v);
+                    if($test) {
+                        $rating["publicationsScopusWoSProfileSSU"]['authorsOtherOrganizations']['rating'] += $this->sumRating2($request, $value);
+                        $test = false;
+                    }
                     $authorsOtherOrganizations = 1;
                 }
 
@@ -1063,6 +1068,8 @@ class PublicationsController extends ASUController
             $rating['countHirschIndexWithoutCitations'] += max($value['without_self_citations_wos'], $value['without_self_citations_scopus']);
         }
 
+        //return;
+
         return response()->json([
             "rating" => $rating,
             "publications" => $data
@@ -1081,6 +1088,25 @@ class PublicationsController extends ASUController
             }
         } else {
             return $rating['rating_department'];
+        }
+    }
+
+    function sumRating2($request, $value) {
+        foreach ($value['authors'] as $k => $v) {
+            if($request->department_code != '') {
+                if($request->faculty_code == $v['author']['faculty_code']) {
+                    if($request->department_code == $v['author']['department_code']) {
+                        //var_dump($value['title'] . "-" . $v['author']['name'] . ' ' . $v['author']['job'] . ' ' . $v['rating_department']);
+                        return $v['rating_department'];
+                    }
+                }
+            } elseif ($request->faculty_code != '') {
+                if($request->faculty_code == $v['author']['faculty_code']) {
+                    return $v['rating_department'];
+                }
+            } else {
+                return $v['rating_department'];
+            }
         }
     }
 }
