@@ -430,14 +430,13 @@ class PublicationsController extends ASUController
         if($request->session()->get('person')['roles_id'] == 2) {
             $faculty_code = $request->session()->get('person')['faculty_code'];
             $department_code = $request->session()->get('person')['department_code'];
-        } 
+        }
 
         if($request->session()->get('person')['roles_id'] == 3) {
             $department_code = $request->session()->get('person')['faculty_code'];
         }
 
         $todayYear = Carbon::today()->year;
-        $authorsHasfivePublications = Authors::where('five_publications', 1)->count();
 
         if(count($request->publication_types) > 0) {
             $model->whereIn('publication_type_id', array_column($request->publication_types, 'id')); // Вид публікацій
@@ -718,7 +717,7 @@ class PublicationsController extends ASUController
                 "publishedAbroad" => 0, // статей опублікованих за кордоном
                 "publishedWithForeignPartners" => 0 // статей з іноземними партнерами
             ],
-            "authorsHasfivePublications" => $authorsHasfivePublications, // Чисельність штатних працівників, які мають не менше 5-ти публікацій у виданнях, що  індексуються БД Scopus та/або WoS (динаміка змін)
+            "authorsHasfivePublications" => 0, // Чисельність штатних працівників, які мають не менше 5-ти публікацій у виданнях, що  індексуються БД Scopus та/або WoS (динаміка змін)
         ];
 
         $authors = [];
@@ -755,6 +754,7 @@ class PublicationsController extends ASUController
             $citedInternationalPatents = 0;
             $countScopusFiveYear = 0;
             $countSnipScopus = 0;
+            $receivedReportingEmployeesNotSSU = 0;
             $these = [
                 "count" => 0,
                 "publishedAbroad" => 0,
@@ -826,12 +826,12 @@ class PublicationsController extends ASUController
                 }
 
                 //Кількість статей за авторством та співавторством студентів
-                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3) && $v['author']['categ_1'] == 1) {
+                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3) && ($v['author']['categ_1'] == 1 || $v['author']['categ_1'] == 3)) {
                     $withStudent = 1;
                 }
 
                 //Кількість статей та монографій (розділів) у співавторстві з іноземними партнерами, які мають індекс Гірша за БД Scopus або WoS не нижче 10
-                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3 || $value['publication_type_id'] == 6 || $value['publication_type_id'] == 7) && $v['author']['country'] != "Україна") {
+                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3 || $value['publication_type_id'] == 6 || $value['publication_type_id'] == 7) && $v['author']['country'] != "Україна" && ($v['author']['h_index'] >= 10 || $v['author']['scopus_researcher_id'] >= 10)) {
                     $foreignPublications = 1;
                 }
 
@@ -922,7 +922,7 @@ class PublicationsController extends ASUController
 
                 // що входять до списків Forbes та Fortune
                 if($v['author']['forbes_fortune']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['authorsInForbesFortune']['rating'] += $this->sumRating($request, $v);
+                    $rating["publicationsScopusWoSProfileSSU"]['authorsInForbesFortune']['rating'] += $this->sumRating2($request, $value);
                     $authorsInForbesFortune = 1;
                 }
 
@@ -951,8 +951,9 @@ class PublicationsController extends ASUController
                     $citedInternationalPatents = 1;
                 }
 
+                // Кількість публікацій у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
                 if($value['science_type_id'] == 1 && ($value['snip'] > 1)) {
-                    $rating["countSnipScopus"] = 1;
+                    $countSnipScopus = 1;
                 }
 
                 if($value['publication_type_id'] == 9) {
@@ -1009,14 +1010,8 @@ class PublicationsController extends ASUController
             }
 
             // отримано за звітний рік штатними співробітниками не на ім'я СумДУ
-            if($value['publication_type_id'] == 10 && $value['applicant'] != 'СумДУ') {
-                $receivedReportingEmployeesNotSSU = 0;
-                foreach ($value['authors'] as $k => $v) {
-                    if($v['author']['job'] == 'СумДУ') {
-                        $receivedReportingEmployeesNotSSU = 1;
-                    }
-                }
-                $rating['numberSecurityDocuments']['receivedReportingEmployeesNotSSU'] += $receivedReportingEmployeesNotSSU;
+            if($value['publication_type_id'] == 10 && $value['applicant'] != 'СумДУ' && $v['author']['job'] == 'СумДУ') {
+                $receivedReportingEmployeesNotSSU = 1;
             }
 
             // комерціалізовано у звітному році
@@ -1050,6 +1045,7 @@ class PublicationsController extends ASUController
             $rating["publicationsScopusWoSProfileSSU"]["countDOI"]['count'] += $countDOI;
             $rating["publicationsScopusWoSProfileSSU"]["citedInternationalPatents"]['count'] += $citedInternationalPatents;
             $rating["publicationsScopusWoSProfileSSU"]["countScopusFiveYear"]['count'] += $countScopusFiveYear;
+            $rating["numberSecurityDocuments"]["receivedReportingEmployeesNotSSU"] += $receivedReportingEmployeesNotSSU;
 
             $rating["countSnipScopus"] += $countSnipScopus;
 
@@ -1064,11 +1060,12 @@ class PublicationsController extends ASUController
         }
 
         foreach ($authors as $key => $value) {
+            if($value['five_publications']) {
+                $rating['authorsHasfivePublications'] += 1;
+            }
             $rating['countHirschIndex'] += max($value['h_index'], $value['scopus_autor_id']);
             $rating['countHirschIndexWithoutCitations'] += max($value['without_self_citations_wos'], $value['without_self_citations_scopus']);
         }
-
-        //return;
 
         return response()->json([
             "rating" => $rating,
@@ -1076,37 +1073,40 @@ class PublicationsController extends ASUController
         ]);
     }
     function sumRating($request, $rating) {
+        $result = 0;
         if($request->department_code != '') {
             if($request->faculty_code == $rating['author']['faculty_code']) {
                 if($request->department_code == $rating['author']['department_code']) {
-                    return $rating['rating_department'];
+                    $result += $rating['rating_department'];
                 }
             }
         } elseif ($request->faculty_code != '') {
             if($request->faculty_code == $rating['author']['faculty_code']) {
-                return $rating['rating_department'];
+                $result += $rating['rating_department'];
             }
         } else {
-            return $rating['rating_department'];
+            $result += $rating['rating_department'];
         }
+        return $result;
     }
 
     function sumRating2($request, $value) {
+        $result = 0;
         foreach ($value['authors'] as $k => $v) {
             if($request->department_code != '') {
                 if($request->faculty_code == $v['author']['faculty_code']) {
                     if($request->department_code == $v['author']['department_code']) {
-                        //var_dump($value['title'] . "-" . $v['author']['name'] . ' ' . $v['author']['job'] . ' ' . $v['rating_department']);
-                        return $v['rating_department'];
+                        $result += $v['rating_department'];
                     }
                 }
             } elseif ($request->faculty_code != '') {
                 if($request->faculty_code == $v['author']['faculty_code']) {
-                    return $v['rating_department'];
+                    $result += $v['rating_department'];
                 }
             } else {
-                return $v['rating_department'];
+                $result += $v['rating_department'];
             }
         }
+        return $result;
     }
 }

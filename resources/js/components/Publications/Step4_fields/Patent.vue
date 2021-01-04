@@ -30,18 +30,15 @@
                 <label class="item-title">Власник майнових прав *</label>
                 <div class="input-container">
                     <select class="item-value" v-model="applicant_id">
-                        <option value="0">СумДУ</option>
-                        <option value="1">Не СумДУ</option>
+                        <option :value="true">СумДУ</option>
+                        <option :value="false">Не СумДУ</option>
                     </select>
                 </div>
             </div>
-            <div class="form-group" v-if="applicant_id == '1'">
-                <label class="item-title">Вкажіть власника майнових прав не СумДУ *</label>
+            <div class="form-group" v-if="!applicant_id">
+                <label class="item-title">Вкажіть власника майнових прав *</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="newApplicant">
-                </div>
-                <div class="error" v-if="$v.newApplicant.$error">
-                    Поле обов'язкове для заповнення
+                    <input class="item-value" type="text" v-model="publicationData.applicant">
                 </div>
             </div>
             <div class="form-group">
@@ -134,8 +131,7 @@
     export default {
         data() {
             return {
-                applicant_id: '0',
-                newApplicant: '',
+                applicant_id: true,
                 datepicker: {
                     lang: {
                         formatLocale: {
@@ -182,11 +178,11 @@
                     required
                 },
             },
-            newApplicant: {
-                required: requiredIf( function() {
-                    return this.applicant_id == '1';
-                }),
-            },
+        },
+        created() {
+            if(this.publicationData.applicant && this.publicationData.applicant != 'СумДУ') {
+                this.applicant_id = false;
+            }
         },
         methods: {
             nextStep() {
@@ -199,7 +195,7 @@
                     return
                 }
                 this.publicationData.year = this.publicationData.date_publication.slice(0,4);
-                this.publicationData.applicant = this.applicant_id ? "СумДУ" : this.newApplicant;
+                this.publicationData.applicant = this.applicant_id ? 'СумДУ' : this.publicationData.applicant;
                 this.$parent.$emit('getData', 4);
             },
             prevStep(){
