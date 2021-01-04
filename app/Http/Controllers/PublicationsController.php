@@ -831,7 +831,7 @@ class PublicationsController extends ASUController
                 }
 
                 //Кількість статей та монографій (розділів) у співавторстві з іноземними партнерами, які мають індекс Гірша за БД Scopus або WoS не нижче 10
-                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3 || $value['publication_type_id'] == 6 || $value['publication_type_id'] == 7) && $v['author']['country'] != "Україна" && ($v['author']['h_index'] >= 10 || $v['author']['scopus_researcher_id'] >= 10)) {
+                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3 || $value['publication_type_id'] == 6 || $value['publication_type_id'] == 7) && ($v['author']['country'] != "Україна" && ($v['author']['h_index'] >= 10 || $v['author']['scopus_autor_id'] >= 10))) {
                     $foreignPublications = 1;
                 }
 
