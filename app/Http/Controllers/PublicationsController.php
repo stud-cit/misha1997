@@ -749,22 +749,9 @@ class PublicationsController extends ASUController
                     "ScopusOrWoS" => 0
                 ],
             ];
-            $articleWoS = [
-                "scie" => 0,
-                "ssci" => 0
-            ];
-            $accountedNatureIndex = 0;
-            $journalsNatureOrScience = 0;
             $authorsOtherOrganizations = false;
             $authorsInForbesFortune = 0;
-            $enteredMostCitedSubjectArea = [
-                "scopus" => 0,
-                "wos" => 0
-            ];
-            $countDOI = 0;
-            $citedInternationalPatents = 0;
             $countScopusFiveYear = 0;
-            $countSnipScopus = 0;
             $receivedReportingEmployeesNotSSU = 0;
             $these = [
                 "count" => 0,
@@ -870,32 +857,6 @@ class PublicationsController extends ASUController
                     }
                 }
 
-                //статті за БД WoS
-                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 3) && $value['science_type_id'] == 2) {
-                    //у т.ч. статті у виданнях, які входять до SCIE
-                    if($value['sub_db_scie'] == 1) {
-                        $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['scie']['rating'] += $this->sumRating($request, $v);
-                        $articleWoS['scie'] = 1;
-                    }
-                    //у т.ч. статті у виданнях, які входять до SSCI
-                    if($value['sub_db_ssci'] == 1) {
-                        $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['ssci']['rating'] += $this->sumRating($request, $v);
-                        $articleWoS['ssci'] = 1;
-                    }
-                }
-
-                //які обліковуються рейтингом Nature Index
-                if($value['nature_index'] == 1) {
-                    $rating["publicationsScopusWoSProfileSSU"]['accountedNatureIndex']['rating'] += $this->sumRating($request, $v);
-                    $accountedNatureIndex = 1;
-                }
-
-                //у журналах Nature або Scince
-                if($value['nature_science'] == 'Nature' || $value['nature_science'] == 'Science') {
-                    $rating["publicationsScopusWoSProfileSSU"]['journalsNatureOrScience']['rating'] += $this->sumRating($request, $v);
-                    $journalsNatureOrScience = 1;
-                }
-
                 //за співавторством з представниками інших організацій
                 if($value['science_type_id'] != null && $v['author']['job'] != "СумДУ" && $v['author']['job'] != "СумДУ (Не працює)" && $v['author']['job'] != "Не працює" && $v['author']['guid'] == null) {
                     $authorsOtherOrganizations = true;
@@ -905,36 +866,6 @@ class PublicationsController extends ASUController
                 if($v['author']['forbes_fortune']) {
                     $rating["publicationsScopusWoSProfileSSU"]['authorsInForbesFortune']['rating'] += $this->sumRating2($request, $value);
                     $authorsInForbesFortune = 1;
-                }
-
-                //які увійшли до найбільш цитованих для своєї предметної галузі
-                //до 10% за БД Scopus
-                if($value['db_scopus_percent']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['scopus']['rating'] += $this->sumRating($request, $v);
-                    $enteredMostCitedSubjectArea['scopus'] = 1;
-                }
-
-                // До 1% за БД WoS
-                if($value['db_wos_percent']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['wos']['rating'] += $this->sumRating($request, $v);
-                    $enteredMostCitedSubjectArea['wos'] = 1;
-                }
-
-                // - у т.ч. з цифровим ідентифікатором DOI
-                if($value['doi'] && $value['science_type_id']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['countDOI']['rating'] += $this->sumRating($request, $v);
-                    $countDOI = 1;
-                }
-
-                // які процитовані у міжнародних патентах
-                if($value['cited_international_patents']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['citedInternationalPatents']['rating'] += $this->sumRating($request, $v);
-                    $citedInternationalPatents = 1;
-                }
-
-                // Кількість публікацій у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
-                if(($value['science_type_id'] == 1 || $value['science_type_id'] == 3) && ($value['snip'] > 1)) {
-                    $countSnipScopus = 1;
                 }
 
                 if($value['publication_type_id'] == 9) {
@@ -996,10 +927,66 @@ class PublicationsController extends ASUController
                 $rating["publicationsScopusWoSProfileSSU"]['quartile1']['count'] += 1;
             }
 
+            //статті за БД WoS
+            if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 3) && $value['science_type_id'] == 2) {
+                //у т.ч. статті у виданнях, які входять до SCIE
+                if($value['sub_db_scie'] == 1) {
+                    $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['scie']['rating'] += $this->sumRating2($request, $value);
+                    $rating["publicationsScopusWoSProfileSSU"]["articleWoS"]['scie']['count'] += 1;
+                }
+                //у т.ч. статті у виданнях, які входять до SSCI
+                if($value['sub_db_ssci'] == 1) {
+                    $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['ssci']['rating'] += $this->sumRating2($request, $value);
+                    $rating["publicationsScopusWoSProfileSSU"]["articleWoS"]['ssci']['count'] += 1;
+                }
+            }
+
+            //які обліковуються рейтингом Nature Index
+            if($value['nature_index'] == 1) {
+                $rating["publicationsScopusWoSProfileSSU"]['accountedNatureIndex']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]["accountedNatureIndex"]['count'] += 1;
+            }
+
+            //у журналах Nature або Scince
+            if($value['nature_science'] == 'Nature' || $value['nature_science'] == 'Science') {
+                $rating["publicationsScopusWoSProfileSSU"]['journalsNatureOrScience']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]["journalsNatureOrScience"]['count'] += 1;
+            }
+
             //за співавторством з представниками інших організацій (підрахунок)
             if($authorsOtherOrganizations) {
                 $rating["publicationsScopusWoSProfileSSU"]["authorsOtherOrganizations"]['count'] += 1;
                 $rating["publicationsScopusWoSProfileSSU"]['authorsOtherOrganizations']['rating'] += $this->sumRating2($request, $value);
+            }
+
+            //які увійшли до найбільш цитованих для своєї предметної галузі
+            //до 10% за БД Scopus
+            if($value['db_scopus_percent']) {
+                $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['scopus']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]["enteredMostCitedSubjectArea"]['scopus']['count'] += 1;
+            }
+
+            // До 1% за БД WoS
+            if($value['db_wos_percent']) {
+                $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['wos']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]["enteredMostCitedSubjectArea"]['wos']['count'] += 1;
+            }
+
+            // - у т.ч. з цифровим ідентифікатором DOI
+            if($value['doi'] && $value['science_type_id']) {
+                $rating["publicationsScopusWoSProfileSSU"]['countDOI']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['countDOI']['count'] += 1;
+            }
+
+            // які процитовані у міжнародних патентах
+            if($value['cited_international_patents']) {
+                $rating["publicationsScopusWoSProfileSSU"]['citedInternationalPatents']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['citedInternationalPatents']['count'] += 1;
+            }
+
+            // Кількість публікацій у виданнях з показником SNIP більше ніж 1,0 за БД Scopus
+            if(($value['science_type_id'] == 1 || $value['science_type_id'] == 3) && ($value['snip'] > 1)) {
+                $rating["countSnipScopus"] += 1;
             }
 
             //Кількість публікацій всього у тому числі
@@ -1040,7 +1027,7 @@ class PublicationsController extends ASUController
             // штатним співробітником
             if($value['publication_type_id'] == 10 && $value['commerc_employees']) {
                 $rating['numberSecurityDocuments']['commercializedReportingYear']['employee']['count'] += 1;
-                $rating['numberSecurityDocuments']['commercializedReportingYear']['employee']['count'] += $this->sumRating2($request, $value);
+                $rating['numberSecurityDocuments']['commercializedReportingYear']['employee']['rating'] += $this->sumRating2($request, $value);
             }
 
             $rating["studentPublications"] += $withStudent;
@@ -1049,18 +1036,8 @@ class PublicationsController extends ASUController
             $rating["articleProfessionalPublicationsUkraine"] += $articleProfessionalPublicationsUkraine;
             $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusOrWoS']['count'] += $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusOrWoS'];
             $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusAndWoS']['count'] += $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusAndWoS'];
-            $rating["publicationsScopusWoSProfileSSU"]["articleWoS"]['scie']['count'] += $articleWoS['scie'];
-            $rating["publicationsScopusWoSProfileSSU"]["articleWoS"]['ssci']['count'] += $articleWoS['ssci'];
-            $rating["publicationsScopusWoSProfileSSU"]["accountedNatureIndex"]['count'] += $accountedNatureIndex;
-            $rating["publicationsScopusWoSProfileSSU"]["journalsNatureOrScience"]['count'] += $journalsNatureOrScience;
             $rating["publicationsScopusWoSProfileSSU"]["authorsInForbesFortune"]['count'] += $authorsInForbesFortune;
-            $rating["publicationsScopusWoSProfileSSU"]["enteredMostCitedSubjectArea"]['scopus']['count'] += $enteredMostCitedSubjectArea['scopus'];
-            $rating["publicationsScopusWoSProfileSSU"]["enteredMostCitedSubjectArea"]['wos']['count'] += $enteredMostCitedSubjectArea['wos'];
-            $rating["publicationsScopusWoSProfileSSU"]["countDOI"]['count'] += $countDOI;
-            $rating["publicationsScopusWoSProfileSSU"]["citedInternationalPatents"]['count'] += $citedInternationalPatents;
             $rating["publicationsScopusWoSProfileSSU"]["countScopusFiveYear"]['count'] += $countScopusFiveYear;
-
-            $rating["countSnipScopus"] += $countSnipScopus;
 
             $rating["these"]['count'] += $these['count'];
             $rating["these"]['publishedAbroad'] += $these['publishedAbroad'];
