@@ -1073,11 +1073,31 @@ class PublicationsController extends ASUController
         }
 
         foreach ($authors as $key => $value) {
-            if($value['five_publications']) {
-                $rating['authorsHasfivePublications'] += 1;
+            if($request->department_code != '') {
+                if($request->faculty_code == $value['faculty_code']) {
+                    if($request->department_code == $value['department_code']) {
+                        if($value['five_publications']) {
+                            $rating['authorsHasfivePublications'] += 1;
+                        }
+                        $rating['countHirschIndex'] += max($value['h_index'], $value['scopus_autor_id']);
+                        $rating['countHirschIndexWithoutCitations'] += max($value['without_self_citations_wos'], $value['without_self_citations_scopus']);
+                    }
+                }
+            } elseif ($request->faculty_code != '') {
+                if($request->faculty_code == $value['faculty_code']) {
+                    if($value['five_publications']) {
+                        $rating['authorsHasfivePublications'] += 1;
+                    }
+                    $rating['countHirschIndex'] += max($value['h_index'], $value['scopus_autor_id']);
+                    $rating['countHirschIndexWithoutCitations'] += max($value['without_self_citations_wos'], $value['without_self_citations_scopus']);
+                }
+            } else {
+                if($value['five_publications']) {
+                    $rating['authorsHasfivePublications'] += 1;
+                }
+                $rating['countHirschIndex'] += max($value['h_index'], $value['scopus_autor_id']);
+                $rating['countHirschIndexWithoutCitations'] += max($value['without_self_citations_wos'], $value['without_self_citations_scopus']);
             }
-            $rating['countHirschIndex'] += max($value['h_index'], $value['scopus_autor_id']);
-            $rating['countHirschIndexWithoutCitations'] += max($value['without_self_citations_wos'], $value['without_self_citations_scopus']);
         }
 
         return response()->json([
