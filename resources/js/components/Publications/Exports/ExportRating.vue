@@ -921,7 +921,36 @@
                         { wch: 7 }, // DOI
                         { wch: 10 }, // Дата занесення до бази даних
                     ];
-                    XLSX.writeFile(wb, 'Rating.xlsx');
+                    var name = "Рейтинг ";
+                    var division = "";
+                    if(this.authUser.roles_id == 3) {
+                        division = authUser.faculty;
+                    }
+                    if(this.authUser.roles_id == 2) {
+                        division = authUser.department;
+                    }
+                    if(this.filters.faculty_code) {
+                        division = this.divisions.find(item => item.ID_DIV == this.filters.faculty_code).NAME_DIV;
+                    }
+                    if(this.filters.department_code) {
+                        division = this.departments.find(item => item.ID_DIV == this.filters.department_code).NAME_DIV;
+                    }
+
+                    if(division) {
+                        name += division;
+                    } else {
+                        name += "Університету";
+                    }
+
+                    var options = {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                        timezone: 'UTC'
+                    };
+
+                    name += " " + new Date().toLocaleString("ru", options);
+                    XLSX.writeFile(wb, name+'.xlsx');
                     this.loading = false;
                 }, 0);
             }
