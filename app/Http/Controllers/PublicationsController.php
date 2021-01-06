@@ -96,8 +96,8 @@ class PublicationsController extends ASUController
             $model->where('science_type_id', $request->science_type_id);
         }
 
-        if($request->year) {
-            $model->where('year', $request->year);
+        if($request->years) {
+            $model->whereIn('year', $request->years);
         }
 
         if($request->country) {
@@ -106,6 +106,10 @@ class PublicationsController extends ASUController
 
         if($request->publication_type_id) {
             $model->where('publication_type_id', $request->publication_type_id);
+        }
+
+        if($request->notPreviousYear) {
+            $model->where('not_previous_year', 1);
         }
 
         if($request->department_code != '') {
@@ -450,8 +454,13 @@ class PublicationsController extends ASUController
             $model->where('not_previous_year', 1); // Публікації які не враховані в рейтингу попереднього року
         }
 
+        // Рік занесення до бази даних
         if($request->year_db) {
-            $model->where('created_at', 'like', "%".$request->year_db."%"); // Рік занесення до бази даних
+            $model->where(function($query) use ($request) {
+                foreach ($request->year_db as $keyYear => $year) {
+                    $query->orWhereYear('created_at', $year);
+                }
+            });
         }
 
         if($request->doi != "") {

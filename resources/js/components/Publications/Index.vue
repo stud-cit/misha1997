@@ -70,12 +70,18 @@
                     </div>
                     <div class="form-group col-lg-4">
                         <label>Рік видання</label>
-                        <div class="input-container">
-                            <select v-model="filters.year">
-                                <option value=""></option>
-                                <option v-for="(item, index) in years" :key="index" :value="item">{{item}}</option>
-                            </select>
-                        </div>
+                            <div class="input-container multiselect">
+                                <multiselect
+                                    v-model="filters.years"
+                                    placeholder=""
+                                    selectLabel="Натисніть для вибору"
+                                    selectedLabel="Вибрано"
+                                    deselectLabel="Натисніть для видалення"
+                                    :options="years"
+                                    :multiple="true"
+                                    :taggable="true"
+                                ></multiselect>
+                            </div>
                     </div>
                     <div class="form-group col-lg-4">
                         <label>Країна видання</label>
@@ -86,9 +92,13 @@
                     <label>Вид публікації</label>
                     <PublicationTypes :data="filters"></PublicationTypes>
                 </div>
-                <div class="form-group checkbox col-lg-6">
+                <div class="form-group checkbox col-lg">
                     <input v-model="filters.hasSupervisor" type="checkbox" class="form-check-input" id="hasSupervisor">
                     <label class="form-check-label" for="hasSupervisor">Під керівництвом</label>
+                </div>
+                <div class="form-group checkbox col-lg">
+                    <input v-model="filters.notPreviousYear" type="checkbox" class="form-check-input" id="notPreviousYear">
+                    <label class="form-check-label" for="notPreviousYear">Публікації які не враховані в рейтингу попереднього року</label>
                 </div>
                 <SearchButton
                     @click.native="getData(); loadingSearch = true"
@@ -119,6 +129,7 @@
 </template>
 
 <script>
+    import Multiselect from 'vue-multiselect';
     import divisions from '../mixins/divisions';
     import years from '../mixins/years';
 
@@ -149,12 +160,13 @@
                     title: '',
                     authors_f: '',
                     science_type_id: '',
-                    year: '',
-                    country: '',
+                    years: [],
+                    country: [],
                     publication_type_id: '',
                     faculty_code: '',
                     department_code: '',
-                    hasSupervisor: false
+                    hasSupervisor: false,
+                    notPreviousYear: false
                 }
             };
         },
@@ -166,7 +178,8 @@
             SearchButton,
             DeleteButton,
             Country,
-            PublicationTypes
+            PublicationTypes,
+            Multiselect
         },
         created() {
             if(this.$store.getters.getFilterPublications) {
@@ -186,12 +199,13 @@
                         title: this.filters.title,
                         authors_f: this.filters.authors_f,
                         science_type_id: this.filters.science_type_id,
-                        year: this.filters.year,
+                        years: this.filters.years,
                         country: this.filters.country,
                         publication_type_id: this.filters.publication_type_id,
                         faculty_code: this.filters.faculty_code,
                         department_code: this.filters.department_code,
-                        hasSupervisor: this.filters.hasSupervisor
+                        hasSupervisor: this.filters.hasSupervisor,
+                        notPreviousYear: this.filters.notPreviousYear
                     }
                 }).then(response => {
                     this.data = response.data;
@@ -266,12 +280,13 @@
                 this.filters.title = '';
                 this.filters.authors_f = '';
                 this.filters.science_type_id = '';
-                this.filters.year = '';
-                this.filters.country = '';
+                this.filters.years = [];
+                this.filters.country = [];
                 this.filters.publication_type_id = '';
                 this.filters.faculty_code = '';
                 this.filters.department_code = '';
                 this.filters.hasSupervisor = false;
+                this.filters.notPreviousYear = false;
                 this.getData();
             }
         },

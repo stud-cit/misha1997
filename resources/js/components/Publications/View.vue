@@ -99,6 +99,10 @@
             <electronic :data="data" v-if="data.publication_type.type == 'electronic'"></electronic>
 
             <ul class="list-view">
+                <li class="row" v-if="authUser.roles_id == 4">
+                    <div class="col-lg-3 list-item list-title">Публікація врахована в рейтингу попереднього року:</div>
+                    <div class="col-lg-9 list-item list-text">{{ data.not_previous_year ? "Так" : "Ні" }}</div>
+                </li>
                 <li class="row" v-if="data.publication_add">
                     <div class="col-lg-3 list-item list-title">Додано:</div>
                     <div class="col-lg-9 list-item list-text"><a :href="'/user/'+data.publication_add.id">{{data.publication_add.name}}</a></div>
@@ -185,7 +189,8 @@
                     db_scopus_percent: "",
                     db_wos_percent: "",
                     authors: [],
-                    supervisor: null
+                    supervisor: null,
+                    not_previous_year: false
                 },
             }
         },

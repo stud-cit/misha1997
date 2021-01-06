@@ -224,11 +224,17 @@
                     <div class="form-row">
                         <div class="form-group col-lg-6">
                             <label>Рік занесення до бази даних</label>
-                            <div class="input-container">
-                                <select v-model="filters.year_db">
-                                    <option value=""></option>
-                                    <option v-for="(item, index) in years" :key="index" :value="item">{{item}}</option>
-                                </select>
+                            <div class="input-container multiselect">
+                                <multiselect
+                                    v-model="filters.year_db"
+                                    placeholder=""
+                                    selectLabel="Натисніть для вибору"
+                                    selectedLabel="Вибрано"
+                                    deselectLabel="Натисніть для видалення"
+                                    :options="years"
+                                    :multiple="true"
+                                    :taggable="true"
+                                ></multiselect>
                             </div>
                         </div>
                         <div class="form-group checkbox col-lg-6">
@@ -792,8 +798,8 @@
                     withStudents: false,
                     withForeigners: '',
                     science_types: [],
-                    years: '',
-                    year_db: new Date().getFullYear(),
+                    years: [],
+                    year_db: [new Date().getFullYear()],
                     country: '',
                     quartil_scopus: '',
                     quartil_wos: '',
