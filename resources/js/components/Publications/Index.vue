@@ -100,6 +100,10 @@
                     <input v-model="filters.notPreviousYear" type="checkbox" class="form-check-input" id="notPreviousYear">
                     <label class="form-check-label" for="notPreviousYear">Публікації які не враховані в рейтингу попереднього року</label>
                 </div>
+                <div class="form-group checkbox col-lg">
+                    <input v-model="filters.notThisYear" type="checkbox" class="form-check-input" id="notThisYear">
+                    <label class="form-check-label" for="notThisYear">Публікації які не враховані в рейтингу цього року</label>
+                </div>
                 <SearchButton
                     @click.native="getData(); loadingSearch = true"
                     :disabled="loading || loadingSearch || loadingClear"
@@ -166,7 +170,8 @@
                     faculty_code: '',
                     department_code: '',
                     hasSupervisor: false,
-                    notPreviousYear: false
+                    notPreviousYear: false,
+                    notThisYear: false
                 }
             };
         },
@@ -205,7 +210,8 @@
                         faculty_code: this.filters.faculty_code,
                         department_code: this.filters.department_code,
                         hasSupervisor: this.filters.hasSupervisor,
-                        notPreviousYear: this.filters.notPreviousYear
+                        notPreviousYear: this.filters.notPreviousYear,
+                        notThisYear: this.filters.notThisYear
                     }
                 }).then(response => {
                     this.data = response.data;
@@ -287,6 +293,7 @@
                 this.filters.department_code = '';
                 this.filters.hasSupervisor = false;
                 this.filters.notPreviousYear = false;
+                this.filters.notThisYear = false;
                 this.getData();
             }
         },

@@ -53,6 +53,7 @@ class CreatePublicationsTable extends Migration
             $table->foreignId('add_user_id')->nullable(); // Користувач, що створив публікацію
             $table->foreignId('edit_user_id')->nullable(); // Користувач, що робив останнє редагування публікації
             $table->boolean('not_previous_year')->default(0); // Не враховується в рейтингу попередного року
+            $table->boolean('not_this_year')->default(0); // Не враховується в рейтингу цього року
             $table->timestamps();
         });
 

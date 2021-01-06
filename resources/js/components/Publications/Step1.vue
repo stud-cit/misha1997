@@ -60,6 +60,10 @@
                 <input v-model="publicationData.not_previous_year" type="checkbox" class="form-check-input" id="withStudents">
                 <label class="form-check-label" for="withStudents">Публікація не враховувалась в рейтингу попереднього року</label>
             </div>
+            <div class="form-group checkbox" v-if="userRole == 4">
+                <input v-model="publicationData.not_this_year" type="checkbox" class="form-check-input" id="withStudents">
+                <label class="form-check-label" for="withStudents">Публікація не враховується в рейтингу цього року</label>
+            </div>
         </div>
         <div class="step-button-group">
             <button @click="$router.go(-1)" class="prev">Назад</button>
@@ -210,7 +214,7 @@
         padding: 0;
     }
     .checkbox input[type=checkbox] {
-        width: 20px; 
+        width: 20px;
         height: 20px;
         margin: 0;
     }

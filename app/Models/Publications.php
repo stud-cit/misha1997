@@ -51,7 +51,8 @@ class Publications extends Model
         'name_monograph',
         'add_user_id',
         'edit_user_id',
-        'not_previous_year'
+        'not_previous_year',
+        'not_this_year'
     ];
 
     protected $casts = [

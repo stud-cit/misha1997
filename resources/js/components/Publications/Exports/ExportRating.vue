@@ -243,6 +243,12 @@
                                 <label class="form-check-label" for="notPreviousYear">Публікації які не враховані в рейтингу попереднього року</label>
                             </div>
                         </div>
+                        <div class="form-group checkbox col-lg-6">
+                            <div class="input-container">
+                                <input v-model="filters.not_this_year" type="checkbox" class="form-check-input" id="notThisYear">
+                                <label class="form-check-label" for="notThisYear">Публікації які не враховані в рейтингу цього року</label>
+                            </div>
+                        </div>
                     </div>
                 </form>
                 <div class="step-button-group">
