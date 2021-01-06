@@ -924,10 +924,10 @@
                     var name = "Рейтинг ";
                     var division = "";
                     if(this.authUser.roles_id == 3) {
-                        division = authUser.faculty;
+                        division = this.authUser.faculty;
                     }
                     if(this.authUser.roles_id == 2) {
-                        division = authUser.department;
+                        division = this.authUser.department;
                     }
                     if(this.filters.faculty_code) {
                         division = this.divisions.find(item => item.ID_DIV == this.filters.faculty_code).NAME_DIV;
@@ -960,6 +960,9 @@
 </script>
 
 <style lang="scss" scoped>
+    .step-button-group {
+        margin-top: 0;
+    }
     .checkbox input[type=checkbox] {
         width: 30px;
         height: 30px;
