@@ -29,7 +29,7 @@
             <div class="form-group">
                 <label class="item-title">Власник майнових прав *</label>
                 <div class="input-container">
-                    <select class="item-value" v-model="applicant_id">
+                    <select class="item-value" v-model="applicant_id" @change="clearApplicant()">
                         <option :value="true">СумДУ</option>
                         <option :value="false">Не СумДУ</option>
                     </select>
@@ -185,6 +185,9 @@
             }
         },
         methods: {
+            clearApplicant() {
+                this.publicationData.applicant = "";
+            },
             nextStep() {
                 this.$v.$touch();
                 if (this.$v.$invalid) {
