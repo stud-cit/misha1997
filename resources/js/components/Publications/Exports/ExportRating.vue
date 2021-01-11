@@ -611,7 +611,7 @@
 
                 <td>{{ indexHirsha(a.author) }}</td>
 
-                <td>{{ item.authors.map(user => (user.author.scopus_autor_id >= 10 && user.author.country != "Україна") ? +user.author.scopus_autor_id : '').reduce((a, b) => a > b ? a : b) }}</td>
+                <td>{{ foreignIndexHirsha(item.authors) ? indexHirsha(a.author) : "" }}</td>
 
                 <td>{{ a.author.faculty ? a.author.faculty : (a.author.categ_1 != 1 ? a.author.country : "") }}</td>
                 <td>{{ a.rating_faculty }}</td>
@@ -853,6 +853,9 @@
             indexHirsha(item) {
                 var result = Math.max(...[item.h_index, item.scopus_autor_id].filter(i => i != null));
                 return isFinite(result) ? result : "";
+            },
+            foreignIndexHirsha(authors) {
+                return authors.find(user => ((user.author.scopus_autor_id >= 10 || user.author.h_index >= 10) && user.author.country != "Україна"));
             },
             getExportData() {
                 axios.post('/api/export', this.filters).then(response => {
