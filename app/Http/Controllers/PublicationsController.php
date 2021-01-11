@@ -460,9 +460,12 @@ class PublicationsController extends ASUController
         }
 
         // Публікації які не враховані в рейтингу цього року
-        if($request->not_this_year == "false") {
-            $model->where('not_this_year', 0);
-        }
+        $model->where(function($query) use ($request) {
+            $query->where('not_this_year', 0);
+            if($request->not_this_year == "true") {
+                $query->orWhere('not_this_year', 1);
+            }
+        });
 
         // Рік занесення до бази даних
         if($request->year_db) {

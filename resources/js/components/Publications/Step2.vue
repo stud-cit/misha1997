@@ -261,7 +261,7 @@
                             <span slot="noResult">По даному запиту немає результатів</span>
                         </multiselect>
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                        <button class="remove-author" @click="removeAuthor(i)" v-if="item && ((publicationData.whose_publication == 'my' && item.id != $store.getters.authUser.id) || publicationData.whose_publication != 'my')">&times;</button>
+                        <button class="remove-author" @click="removeAuthor(i)" v-if="(publicationData.whose_publication == 'my' && item.id != $store.getters.authUser.id) || publicationData.whose_publication != 'my'">&times;</button>
                     </div>
                     <div class="error" v-if="$v.publicationData.authors.$each.$iter[i].$error">
                         Поле обов'язкове для заповнення
@@ -480,7 +480,7 @@
         },
         methods: {
             checkStudent() {
-                if(this.publicationData.authors.length > 0 && (this.publicationData.authors.filter(item => item.categ_1 == 1).length == this.publicationData.authors.length)) {
+                if(this.publicationData.authors.length > 0 && (this.publicationData.authors.filter(item => item && item.categ_1 == 1).length == this.publicationData.authors.length)) {
                     this.publicationData.useSupervisor = true;
                 }
             },
