@@ -12,7 +12,12 @@
                     Поле обов'язкове для заповнення
                 </div>
             </div>
-
+            <div class="form-group">
+                <label class="item-title">Назва книги </label>
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="publicationData.name_monograph">
+                </div>
+            </div>
             <div class="form-group">
                 <label class="item-title">За редакцією (у родовому відмінку)</label>
                 <div class="input-container">
@@ -52,6 +57,13 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label class="item-title">DOI </label>
+                <div class="input-container">
+                    <input class="item-value" type="text" v-model="publicationData.doi">
+                </div>
+            </div>
+
         </div>
         <div class="step-button-group">
             <button class="prev" @click="prevStep">На попередній крок</button>
@@ -80,7 +92,7 @@
             publicationData: {
                 pages: {
                     required,
-                    validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val), 
+                    validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val),
                 },
                 year: {
                     required

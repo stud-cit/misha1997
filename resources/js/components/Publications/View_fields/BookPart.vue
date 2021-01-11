@@ -5,6 +5,10 @@
             <div class="col-lg-9 list-item list-text">{{data.year}}</div>
         </li>
         <li class="row">
+            <div class="col-lg-3 list-item list-title">Назва книги:</div>
+            <div class="col-lg-9 list-item list-text">{{data.name_monograph}}</div>
+        </li>
+        <li class="row">
             <div class="col-lg-3 list-item list-title">За редакцією:</div>
             <div class="col-lg-9 list-item list-text">{{data.by_editing}}</div>
         </li>
@@ -23,6 +27,10 @@
         <li class="row">
             <div class="col-lg-3 list-item list-title">Сторінки:</div>
             <div class="col-lg-9 list-item list-text">{{data.pages}}</div>
+        </li>
+        <li class="row">
+            <div class="col-lg-3 list-item list-title">DOI:</div>
+            <div class="col-lg-9 list-item list-text">{{data.doi}}</div>
         </li>
     </ul>
 </template>

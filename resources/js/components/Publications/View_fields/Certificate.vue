@@ -5,6 +5,10 @@
             <div class="col-lg-9 list-item list-text">{{data.number_certificate}}</div>
         </li>
         <li class="row">
+            <div class="col-lg-3 list-item list-title">Рік видання:</div>
+            <div class="col-lg-9 list-item list-text">{{data.year}}</div>
+        </li>
+        <li class="row">
             <div class="col-lg-3 list-item list-title">Країна, де отриманий патент:</div>
             <div class="col-lg-9 list-item list-text">{{data.country}}</div>
         </li>
