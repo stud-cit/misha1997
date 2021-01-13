@@ -87,7 +87,7 @@
                         prev-text="<"
                         next-text=">"
 
-                        :container-class="'pagination'"
+                        container-class="pagination"
                         page-class="page-item"
                         page-link-class="page-link"
                         prev-class="page-link"
@@ -98,7 +98,7 @@
 
             <div class="table-responsive text-center table-list">
                 <table id="header-table" :class="['table', 'table-bordered', loading ? 'opacityTable' : '']">
-                    <thead id="header-table">
+                    <thead>
                         <tr>
                             <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{countPublications}}</td>
                             <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
@@ -346,7 +346,7 @@
                 this.filters.faculty_code = '';
                 this.filters.department_code = '';
                 this.filters.withSupervisor = false;
-                this.getData();
+                this.getDataFilter();
             }
         },
         computed: {

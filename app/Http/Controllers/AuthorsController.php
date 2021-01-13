@@ -30,13 +30,17 @@ class AuthorsController extends ASUController
         if($request->session()->get('person')['roles_id'] == 3) {
             $model->where('faculty_code', $request->session()->get('person')['faculty_code'])->orWhere('categ_1', 1)->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'СумДУ (Не працює)');
         }
-        
+
         if($request->session()->get('person')['roles_id'] == 2) {
             $model->where('department_code', $request->session()->get('person')['department_code'])->orWhere('categ_1', 1)->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'СумДУ (Не працює)');
         }
 
         if($request->name != '') {
             $model->where('name', 'like', "%".$request->name."%");
+        }
+
+        if($request->role != '') {
+            $model->where('roles_id', $request->role);
         }
 
         if($request->department_code != '') {
@@ -58,7 +62,7 @@ class AuthorsController extends ASUController
                 $model->whereIn('faculty_code', $departments_id);
             }
         }
-        
+
         if($request->h_index == '1') {
             $model->where(function($query) {
                 $query->where('h_index', '!=', null)->orWhere('scopus_autor_id', '!=', null);
@@ -100,7 +104,7 @@ class AuthorsController extends ASUController
             });
         }
 
-        $data = $model->get();
+        $data = $model->paginate($request->size);
 
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
@@ -123,7 +127,13 @@ class AuthorsController extends ASUController
             $value['department'] = $departmentId ? $divisions[$departmentId]['NAME_DIV'] : null;
             $value['faculty'] = $facultyId ? $divisions[$facultyId]['NAME_DIV'] : null;
         }
-        return response()->json($data);
+
+        return response()->json([
+            "currentPage" => $data->currentPage(),
+            "firstItem" => $data->firstItem(),
+            "count" => $data->total(),
+            "users" => $data
+        ]);
     }
 
     // authors All (admin)
@@ -158,7 +168,7 @@ class AuthorsController extends ASUController
 
     // cabinet users (add publication page)
     function getPersons($categ, $id) {
-        
+
         $mode = 1;
         $getPersons = file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key='.$this->asu_key.'&mode='.$mode.'&'.$categ.'='.$id);
         $getPersons = json_decode($getPersons, true);
@@ -252,7 +262,7 @@ class AuthorsController extends ASUController
             }
 
             $data['add_user_id'] = $request->session()->get('person')['id'];
-            
+
             $response = $model->create($data);
 
             $response['department'] = $division['department'] ? $division['department']['NAME_DIV'] : null;
@@ -319,7 +329,7 @@ class AuthorsController extends ASUController
                 return "видалено ".$text.";<br>";
             }
         }
-    }  
+    }
 
     // deleteAuthor
     function deleteAuthor(Request $request) {
@@ -417,7 +427,7 @@ class AuthorsController extends ASUController
                     }
                 }
             }
-            
+
             if(isset($getPersons['info2']) && !$isStudent) {
                 foreach ($getPersons['info2'] as $key => $value) {
                     if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 2 || $value['KOD_STATE'] == 3)) {
@@ -446,13 +456,13 @@ class AuthorsController extends ASUController
                 $getPersons = array_shift($getPersons['result']);
                 $getContingents = json_decode(file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key=' . $this->asu_key . '&mode=' . $mode . '&categ1=' . $getPersons['categ1'] . '&categ2=' . $getPersons['categ2']), true);
                 if($getContingents['status'] == 'OK') {
-    
+
                     $person = [];
-    
+
                     $aspirant = array_filter($getContingents['result'], function($value) use ($model) {
                         return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'] && $value['CATEG_1'] == 2 && ($value['KOD_LEVEL'] == 8 || $value['KOD_LEVEL'] == 5);
                     });
-    
+
                     if(count($aspirant) == 0) {
                         $anotherUser = array_filter($getContingents['result'], function($value) use ($model) {
                             return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'];
@@ -464,7 +474,7 @@ class AuthorsController extends ASUController
                             $person['KOD_DIV'] = $this->getAspirantDepartment($person['ID_FIO']);
                         }
                     }
-    
+
                     $division = $this->getUserDivision($person['KOD_DIV'])->original;
                     $person['DEPARTMENT_CODE'] = $division['department'] ? $division['department']['ID_DIV'] : null;
                     $person['FACULTY_CODE'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
@@ -477,7 +487,7 @@ class AuthorsController extends ASUController
                         "categ_1" => $person['CATEG_1'],
                         "categ_2" => $person['CATEG_2'],
                     ]);
-    
+
                     return response()->json([
                         'status' => 'ok'
                     ]);

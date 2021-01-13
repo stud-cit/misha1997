@@ -1,12 +1,16 @@
 <template>
     <div class="container page-content general-block">
-        <h1 class="page-title">Список авторизованих користувачів
+        <h1 class="page-title">Список користувачів
             <span v-if="authUser.roles_id == 3 && divisions.find(item => item.ID_DIV == authUser.faculty_code)"> - {{ divisions.find(item => item.ID_DIV == authUser.faculty_code).NAME_DIV }}</span>
             <span v-if="authUser.roles_id == 2 && divisions.find(item => item.ID_DIV == authUser.department_code)"> - {{ divisions.find(item => item.ID_DIV == authUser.department_code).NAME_DIV }}</span>
         </h1>
+
+        <!-- exports-->
         <div class="exports">
-            <button class="export-button" @click="exportUsers"><img src="/img/download.png" alt=""> Експорт списку користувачів</button>
+            <export-users :filters="filters" :countUsers="countUsers"></export-users>
         </div>
+        <!---->
+
         <div class="main-content">
             <form class="search-block">
                 <div class="form-group">
@@ -67,8 +71,19 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group col-lg-6" v-if="authUser.roles_id == 4">
+                        <label>Роль</label>
+                        <div class="input-container">
+                            <select v-model="filters.role">
+                                <option value="1">Автор</option>
+                                <option value="2">Модератор кафедрального рівня</option>
+                                <option value="3">Модератор інститутського або факультетського рівня</option>
+                                <option value="4">Адміністратор</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <button type="button" class="export-button" style="display: inline-block" @click="getData(); loadingSearch = true">
+                <button type="button" class="export-button" style="display: inline-block" @click="getDataFilter(); loadingSearch = true">
                     <span
                         class="spinner-border spinner-border-sm"
                         style="width: 19px; height: 19px"
@@ -91,23 +106,40 @@
                     Очистити фільтр
                 </button>
             </form>
-            <paginate
-                v-model="currentPage"
-                :page-count="numPage"
-                @click.native = "scrollHeader()"
 
-                prev-text="<"
-                next-text=">"
+            <div class="row my-4" id="header-table">
+                <div class="col">
+                    <select class="form-control w-50 ml-2" id="sizeTable" v-model="pagination.perPage" @change="getData()">
+                        <option :value="10">10</option>
+                        <option :value="50">50</option>
+                        <option :value="100">100</option>
+                        <option :value="250">250</option>
+                        <option :value="500">500</option>
+                        <option :value="countUsers">Всі</option>
+                    </select>
+                </div>
+                <div class="col text-right">
+                    <paginate
+                        class="paginate-top"
+                        v-model="pagination.currentPage"
+                        :page-count="Math.ceil(countUsers / pagination.perPage)"
+                        @click.native="scrollHeader()"
 
-                container-class="pagination"
-                page-class="page-item"
-                page-link-class="page-link"
-                prev-class="page-link"
-                next-class="page-link">
-            </paginate>
+                        prev-text="<"
+                        next-text=">"
+
+                        container-class="pagination"
+                        page-class="page-item"
+                        page-link-class="page-link"
+                        prev-class="page-link"
+                        next-class="page-link">
+                    </paginate>
+                </div>
+            </div>
+
             <div class="table-responsive text-center table-list">
-                <table class="table table-bordered">
-                    <thead id="header-table">
+                <table :class="['table', 'table-bordered', loading ? 'opacityTable' : '']">
+                    <thead>
                         <tr>
                             <td colspan="8" class="bg-white text-left pr-0 pb-3 pt-0">Всього користувачів: {{ data.length }}</td>
                             <td class="bg-white px-0 pb-3 pt-0" v-if="authUser.roles_id == 4"></td>
@@ -125,8 +157,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in filteredList" :key="item.id">
-                            <td scope="row">{{ index+1+(currentPage-1)*perPage}}</td>
+                        <tr v-for="(item, index) in data" :key="item.id">
+                            <td scope="row">{{ pagination.firstItem + index }}</td>
                             <td><a :href="'/user/'+item.id">{{ item.name }}</a></td>
                             <td>{{ item.position }}</td>
                             <td>{{ item.department }}</td>
@@ -157,14 +189,15 @@
                 <div class="spinner-border my-4" role="status" v-if="loading">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div class="my-4 text-center" v-if="filteredList.length == 0">
+                <div class="my-4 text-center" v-if="data.length == 0">
                     Користувачі відсутні
                 </div>
             </div>
             <paginate
-                @click.native = "scrollHeader()"
-                v-model="currentPage"
-                :page-count="numPage"
+                class="mt-4"
+                v-model="pagination.currentPage"
+                :page-count="Math.ceil(countUsers / pagination.perPage)"
+                @click.native="scrollHeader()"
 
                 prev-text="<"
                 next-text=">"
@@ -180,52 +213,20 @@
                 <delete-button @click.native="deleteItem" :disabled="selectUsers.length == 0"></delete-button>
             </div>
         </div>
-        <table id="exportUsers" v-show="false">
-            <tr>
-                <th>ID</th>
-                <th>ПІБ</th>
-                <th>Вік</th>
-                <th>Посада</th>
-                <th>Академічна група</th>
-                <th>Факультет/інститут</th>
-                <th>Кафедра</th>
-                <th>Країна</th>
-                <th>Індекс Гірша БД WoS</th>
-                <th>Індекс Гірша БД Scopus</th>
-                <th>Research ID</th>
-                <th>ORCID</th>
-                <th>5 або більше публікацій у періодичних виданнях в Scopus та/або WoS</th>
-            </tr>
-            <tr v-for="(item, i) in data" :key="i">
-                <td>{{i+1}}</td>
-                <td>{{item.name}}</td>
-                <td>{{item.age}}</td>
-                <td>{{item.position}}</td>
-                <td>'{{item.academic_code}}'</td>
-                <td>{{item.faculty}}</td>
-                <td>{{item.department}}</td>
-                <td>{{item.country}}</td>
-                <td>{{item.h_index}}</td>
-                <td>{{item.scopus_autor_id}}</td>
-                <td>{{item.scopus_researcher_id}}</td>
-                <td>{{item.orcid}}</td>
-                <td>{{item.five_publications ? "Так" : "Ні"}}</td>
-            </tr>
-        </table>
     </div>
 </template>
 
 <script>
+    import ExportUsers from "./Publications/Exports/ExportUsers";
     import Multiselect from 'vue-multiselect';
     import BackButton from "./Buttons/Back";
     import DeleteButton from "./Buttons/Delete";
     import divisions from './mixins/divisions';
-    import XLSX from 'xlsx';
-    import {required, requiredIf} from "vuelidate/lib/validators";
     export default {
         mixins: [divisions],
         data() {
             return {
+                countUsers: 0,
                 loading: true,
                 loadingSearch: false,
                 loadingClear: false,
@@ -236,20 +237,22 @@
                     faculty_code: '',
                     department_code: '',
                     h_index: '',
-                    categ_users: []
-
+                    categ_users: [],
+                    role: ''
                 },
                 categUsers: ["СумДУ", "СумДУ (Не працює)", "Зовнішні співавтори", "Студенти", "Іноземці", "5 або більше публікацій у періодичних виданнях Scopus та/або WoS"],
-                currentPage: 1,
-                perPage: 10,
-                numPage: 1,
-
+                pagination: {
+                    currentPage: 1,
+                    perPage: 10,
+                    firstItem: 1
+                }
             };
         },
         components: {
             BackButton,
             DeleteButton,
-            Multiselect
+            Multiselect,
+            ExportUsers
         },
         computed: {
             count_scopus_autor_id() {
@@ -281,11 +284,6 @@
             },
             authUser() {
                 return this.$store.getters.authUser
-            },
-            filteredList() {
-                this.numPage = Math.ceil(this.data.length/this.perPage);
-                this.$store.dispatch('saveFilterUser', this.filters);
-                return this.data.slice((this.currentPage-1)*this.perPage, this.currentPage*this.perPage);
             }
         },
         created() {
@@ -297,21 +295,27 @@
         methods: {
             scrollHeader() {
                 document.location = '#header-table';
+                this.getData();
             },
-            getData() {
+            getDataFilter() {
+                this.loading = true;
+                this.$store.dispatch('saveFilterUser', this.filters);
                 axios.get('/api/authors', {
                     params: {
+                        size: this.pagination.perPage,
+                        page: 1,
                         name: this.filters.name,
                         faculty_code: this.filters.faculty_code,
                         department_code: this.filters.department_code,
                         h_index: this.filters.h_index,
-                        categ_users: this.filters.categ_users
+                        categ_users: this.filters.categ_users,
+                        role: this.filters.role
                     }
                 }).then(response => {
-                    this.data = response.data;
-                    this.currentPage = 1;
-                    this.perPage = 10;
-                    this.numPage = 1;
+                    this.countUsers = response.data.count;
+                    this.pagination.currentPage = response.data.currentPage;
+                    this.pagination.firstItem = response.data.firstItem;
+                    this.data = response.data.users.data;
                     this.loading = false;
                     this.loadingSearch = false;
                     this.loadingClear = false;
@@ -321,8 +325,28 @@
                     this.loadingClear = false;
                 })
             },
-            clean() {
-                this.searchAuthor = '';
+            getData() {
+                this.loading = true;
+                axios.get('/api/authors', {
+                    params: {
+                        size: this.pagination.perPage,
+                        page: this.pagination.currentPage,
+                        name: this.filters.name,
+                        faculty_code: this.filters.faculty_code,
+                        department_code: this.filters.department_code,
+                        h_index: this.filters.h_index,
+                        categ_users: this.filters.categ_users,
+                        role: this.filters.role
+                    }
+                }).then(response => {
+                    this.countUsers = response.data.count;
+                    this.pagination.currentPage = response.data.currentPage;
+                    this.pagination.firstItem = response.data.firstItem;
+                    this.data = response.data.users.data;
+                    this.loading = false;
+                }).catch(() => {
+                    this.loading = false;
+                })
             },
 			selectItem(item) {
 				if(this.selectUsers.indexOf(item) == -1) {
@@ -354,43 +378,29 @@
                     }
                 })
             },
-            exportUsers() {
-                const authors = XLSX.utils.table_to_book(document.getElementById('exportUsers'));
-                const wb = XLSX.utils.book_new();
-                wb.SheetNames.push("Authors");
-                wb.Sheets.Authors = authors.Sheets.Sheet1;
-                wb.Sheets.Authors['!cols'] = [
-                    { wch: 5 },  // id
-                    { wch: 30 }, // ПІБ
-                    { wch: 5 },  // Вік
-                    { wch: 10 }, // Посада
-                    { wch: 10 }, // Академічна група
-                    { wch: 10 }, // Факультет/інститут
-                    { wch: 10 }, // Кафедра
-                    { wch: 10 }, // Країна
-                    { wch: 5 }, // Індекс Гірша БД WoS
-                    { wch: 5 }, // Індекс Гірша БД Scopus
-                    { wch: 5 }, // Research ID
-                    { wch: 5 }, // ORCID
-                    { wch: 5 }  // 5 або більше публікацій в Scopus та/або WoS
-                ];
-                XLSX.writeFile(wb, 'Authors.xlsx');
-            },
             clearFilter() {
                 this.loadingClear = true;
-                this.$store.dispatch('clearFilterPublications');
+                this.$store.dispatch('clearFilterUser');
                 this.filters.name = '';
                 this.filters.faculty_code = '';
                 this.filters.department_code = '';
                 this.filters.h_index = '';
                 this.filters.categ_users = '';
-                this.getData();
+                this.filters.role = '';
+                this.getDataFilter();
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
+    .opacityTable {
+        opacity: 0.5;
+    }
+    .paginate-top.pagination {
+        margin: 0;
+        float: right;
+    }
     input[type=checkbox] {
         -ms-transform: scale(1.5); /* IE */
         -moz-transform: scale(1.5); /* FF */
@@ -413,6 +423,9 @@
             display: grid;
             margin-bottom: 20px;
         }
+    }
+    .table-list{
+        margin-top: 0px;
     }
     @media(max-width: 575px){
         .search-block{

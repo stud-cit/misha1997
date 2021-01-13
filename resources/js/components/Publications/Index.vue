@@ -139,7 +139,7 @@
                         prev-text="<"
                         next-text=">"
 
-                        :container-class="'pagination'"
+                        container-class="pagination"
                         page-class="page-item"
                         page-link-class="page-link"
                         prev-class="page-link"
@@ -438,7 +438,7 @@
                 this.filters.hasSupervisor = false;
                 this.filters.notPreviousYear = false;
                 this.filters.notThisYear = false;
-                this.getData();
+                this.getDataFilter();
             }
         },
         computed: {
