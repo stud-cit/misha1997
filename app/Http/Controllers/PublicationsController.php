@@ -849,7 +849,7 @@ class PublicationsController extends ASUController
                 }
 
                 //Кількість статей за авторством та співавторством студентів
-                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3) && ($v['author']['categ_1'] == 1 || $v['author']['categ_1'] == 3)) {
+                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3 || $value['publication_type_id'] == 8) && ($v['author']['categ_1'] == 1 || $v['author']['categ_1'] == 3)) {
                     $withStudent = 1;
                 }
 
@@ -895,6 +895,7 @@ class PublicationsController extends ASUController
                     $authorsInForbesFortune = 1;
                 }
 
+                // Кількість тез всього
                 if($value['publication_type_id'] == 9) {
                     $these['count'] = 1;
                     // Тез опублікованих за кордоном
@@ -911,7 +912,8 @@ class PublicationsController extends ASUController
                     }
                 }
 
-                if($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3 || $value['publication_type_id'] == 7) {
+                // Кількість статей (всього), з них:
+                if($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3 || $value['publication_type_id'] == 7 || $value['publication_type_id'] == 8) {
                     $articles['count'] = 1;
                     // Статті опубліковані за кордоном
                     if($value['country'] != "Україна") {
