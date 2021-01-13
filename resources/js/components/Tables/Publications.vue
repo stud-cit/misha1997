@@ -3,7 +3,7 @@
         <paginate
             v-model="pagination.currentPage"
             :page-count="pagination.numPage"
-            @click.native = "scrollHeader()"
+            @click.native="scrollHeader()"
 
             :prev-text="'<'"
             :next-text="'>'"
@@ -18,7 +18,7 @@
             <table id="header-table" class="table table-bordered">
                 <thead id="header-table">
                     <tr>
-                        <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{publications.length}}</td>
+                        <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{countPublications}}</td>
                         <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
                         <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
                     </tr>
@@ -65,14 +65,14 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="12" class="text-left">Всього публікацій: {{ publications.length }} </td>
+                        <td colspan="12" class="text-left">Всього публікацій: {{ countPublications }} </td>
                     </tr>
                 </tbody>
             </table>
             <div class="spinner-border my-4" role="status" v-if="loading">
                 <span class="sr-only">Loading...</span>
             </div>
-            <div class="my-4" v-if="publications.length == 0">
+            <div class="my-4" v-if="countPublications == 0">
                 Публікації відсутні
             </div>
         </div>
@@ -101,7 +101,8 @@ export default {
         authUser: {
             roles_id: null
         },
-        loading: Boolean
+        loading: Boolean,
+        countPublications: Number
     },
     data() {
         return {
@@ -115,6 +116,7 @@ export default {
     methods: {
         scrollHeader() {
             document.location = '#header-table';
+            this.$emit('page', this.pagination.currentPage);
         },
         selectItem(item) {
             this.$emit('select', item);
@@ -141,7 +143,7 @@ export default {
             }
         },
         filterList() {
-            this.pagination.numPage = Math.ceil(this.publications.length / this.pagination.perPage);
+            this.pagination.numPage = Math.ceil(this.countPublications / this.pagination.perPage);
             return this.publications.slice((this.pagination.currentPage - 1) * this.pagination.perPage, this.pagination.currentPage * this.pagination.perPage);
 
         }

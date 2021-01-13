@@ -247,6 +247,7 @@
                     <label for="">Прізвище, ім’я, по-батькові автора *</label>
                     <div class="input-container authors">
                         <multiselect
+                            :disabled="publicationData.whose_publication == 'my' && publicationData.authors[i].id == authUser.id"
                             @input="checkStudent"
                             v-model="publicationData.authors[i]"
                             :searchable="true"
@@ -261,7 +262,7 @@
                             <span slot="noResult">По даному запиту немає результатів</span>
                         </multiselect>
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові:</span></div>
-                        <button class="remove-author" @click="removeAuthor(i)" v-if="(publicationData.whose_publication == 'my' && item.id != $store.getters.authUser.id) || publicationData.whose_publication != 'my'">&times;</button>
+                        <button class="remove-author" @click="removeAuthor(i)" v-if="(publicationData.whose_publication == 'my' && item.id != authUser.id) || publicationData.whose_publication != 'my'">&times;</button>
                     </div>
                     <div class="error" v-if="$v.publicationData.authors.$each.$iter[i].$error">
                         Поле обов'язкове для заповнення
@@ -409,12 +410,15 @@
         mounted() {
             this.defaultNewAuthorSSU = Object.assign(this.defaultNewAuthorSSU, this.newAuthorSSU);
             if(this.publicationData.whose_publication == 'my') {
-                this.publicationData.authors.push(this.$store.getters.authUser);
+                this.publicationData.authors.push(this.authUser);
             }
             this.getAuthors();
         },
 
         computed: {
+            authUser() {
+                return this.$store.getters.authUser;
+            },
             useSupervisor: {
                 get() {
                     return this.publicationData.useSupervisor;

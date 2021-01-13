@@ -21,6 +21,18 @@ class DevController extends ASUController
         $this->cabinet_service_token = config('app.token');
     }
 
+    function test() {
+        //$data = Publications::where('publication_type_id', 9)->where('name_conference', null)->get();
+        $arr = [];
+        $data = Publications::with('authors')->get();
+        foreach ($data as $key => $value) {
+            if(count($value['authors']) == 0) {
+                array_push($arr, $value['id']);
+            }
+        }
+        return response()->json($arr);
+    }
+
     function updateCabinetInfo($user_id) {
 
         $key = "iYWRu2UbsiXZ3CJUIy77HZ8A2tOnhp3eI2904F0Ih95wJPZfBT42";
@@ -49,7 +61,7 @@ class DevController extends ASUController
                     }
                 }
             }
-            
+
             if(isset($getPersons['info2']) && !$isStudent) {
                 foreach ($getPersons['info2'] as $key => $value) {
                     if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 2 || $value['KOD_STATE'] == 3)) {
@@ -78,19 +90,19 @@ class DevController extends ASUController
             if($getPersons['status'] == 'OK' && count($getPersons['result']) > 0) {
                 $mode = 1;
                 $getPersons = array_shift($getPersons['result']);
-                
+
                 $getContingents = json_decode(file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key=' . $this->asu_key . '&mode=' . $mode . '&categ1=' . $getPersons['categ1'] . '&categ2=' . $getPersons['categ2']), true);
-                
+
                 return response()->json($getContingents);
-                
+
                 if($getContingents['status'] == 'OK') {
-    
+
                     $person = [];
-    
+
                     $aspirant = array_filter($getContingents['result'], function($value) use ($model) {
                         return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'] && $value['CATEG_1'] == 2 && ($value['KOD_LEVEL'] == 8 || $value['KOD_LEVEL'] == 5);
                     });
-    
+
                     if(count($aspirant) == 0) {
                         $anotherUser = array_filter($getContingents['result'], function($value) use ($model) {
                             return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'];
@@ -102,7 +114,7 @@ class DevController extends ASUController
                             $person['KOD_DIV'] = $this->getAspirantDepartment($person['ID_FIO']);
                         }
                     }
-    
+
                     $division = $this->getUserDivision($person['KOD_DIV'])->original;
                     $person['DEPARTMENT_CODE'] = $division['department'] ? $division['department']['ID_DIV'] : null;
                     $person['FACULTY_CODE'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
@@ -115,7 +127,7 @@ class DevController extends ASUController
                         "categ_1" => $person['CATEG_1'],
                         "categ_2" => $person['CATEG_2'],
                     ]);
-    
+
                     return response()->json([
                         'status' => 'ok'
                     ]);

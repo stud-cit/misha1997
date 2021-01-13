@@ -8,7 +8,7 @@
         <!-- exports-->
         <div class="exports">
             <export-rating v-if="authUser.roles_id != 1" :years="years" class="export-block"></export-rating>
-            <export-publications class="export-block" :exportList="data" :loading="loading"></export-publications>
+            <export-publications class="export-block" :filters="filters" :countPublications="countPublications"></export-publications>
         </div>
         <!---->
         <div class="main-content">
@@ -105,7 +105,7 @@
                     <label class="form-check-label" for="notThisYear">Публікації які не враховані в рейтингу цього року</label>
                 </div>
                 <SearchButton
-                    @click.native="getData(); loadingSearch = true"
+                    @click.native="getDataFilter(); loadingSearch = true;"
                     :disabled="loading || loadingSearch || loadingClear"
                     :loading="loadingSearch"
                     title="Пошук"
@@ -117,13 +117,116 @@
                     title="Очистити фільтр"
                 ></SearchButton>
             </form>
-            <Table
-                @select="selectItem"
-                :publications="data"
-                :authUser="authUser"
-                :loading="loading"
-                :selectPublications="selectPublications"
-            ></Table>
+
+            <div class="row my-4">
+                <div class="col">
+                    <select class="form-control w-50 ml-2" id="sizeTable" v-model="pagination.perPage" @change="getData()">
+                        <option :value="10">10</option>
+                        <option :value="50">50</option>
+                        <option :value="100">100</option>
+                        <option :value="250">250</option>
+                        <option :value="500">500</option>
+                        <option :value="countPublications">Всі</option>
+                    </select>
+                </div>
+                <div class="col text-right">
+                    <paginate
+                        class="paginate-top"
+                        v-model="pagination.currentPage"
+                        :page-count="Math.ceil(countPublications / pagination.perPage)"
+                        @click.native="scrollHeader()"
+
+                        prev-text="<"
+                        next-text=">"
+
+                        :container-class="'pagination'"
+                        page-class="page-item"
+                        page-link-class="page-link"
+                        prev-class="page-link"
+                        next-class="page-link">
+                    </paginate>
+                </div>
+            </div>
+
+            <div class="table-responsive text-center table-list">
+                <table id="header-table" :class="['table', 'table-bordered', loading ? 'opacityTable' : '']">
+                    <thead id="header-table">
+                        <tr>
+                            <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{countPublications}}</td>
+                            <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
+                            <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
+                        </tr>
+                        <tr>
+                            <th scope="col">№</th>
+                            <th scope="col">Вид публікації</th>
+                            <th scope="col">ПІБ автора/співавторів</th>
+                            <th scope="col">Назва публікації</th>
+                            <th scope="col">Рік видання</th>
+                            <th scope="col">БД Scopus/WoS</th>
+                            <th scope="col">Науковий керівник</th>
+                            <th scope="col">Дата занесення</th>
+                            <th scope="col" v-if="checkAccess">Редагувати</th>
+                            <th scope="col" v-if="checkAccess">Обрати</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in data" :key="index">
+                            <td scope="row">{{ pagination.firstItem + index }}</td>
+                            <td>{{ item.publication_type.title }}</td>
+                            <td>
+                                <span class="authors" v-for="(author, index) in item.authors" :key="index">
+                                    <a v-if="!author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}} </a>
+                                </span>
+                            </td>
+                            <td><a :href="'/publications/'+item.id"> {{ item.title }} </a> </td>
+                            <td>{{ item.year}}</td>
+                            <td>{{ item.science_type ? item.science_type.type : '' }}</td>
+                            <td>
+                                <span class="authors" v-for="(author, index) in item.authors" :key="index">
+                                    <a v-if="author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}}</a>
+                                </span>
+                            </td>
+                            <td>{{ item.created_at }}</td>
+                            <td v-if="checkAccess">
+                                <a :href="'/publications/edit/'+item.id"><i class="fa fa-edit fa-2x"></i></a>
+                            </td>
+                            <td class="icons" v-if="checkAccess">
+                                <input
+                                    type="checkbox"
+                                    :checked="selectPublications.indexOf(item) != -1 ? true : false"
+                                    @click="selectItem(item)"
+                                >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="12" class="text-left">Всього публікацій: {{ countPublications }} </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="spinner-border my-4" role="status" v-if="loading">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="my-4" v-if="countPublications == 0">
+                    Публікації відсутні
+                </div>
+            </div>
+            <paginate
+                class="mt-4"
+                v-model="pagination.currentPage"
+                :page-count="Math.ceil(countPublications / pagination.perPage)"
+                @click.native="scrollHeader()"
+
+                prev-text="<"
+                next-text=">"
+
+                container-class="pagination"
+                page-class="page-item"
+                page-link-class="page-link"
+                prev-class="page-link"
+                next-class="page-link">
+            </paginate>
+
+
             <div class="step-button-group">
                 <back-button></back-button>
                 <delete-button v-if="checkAccess" @click.native="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
@@ -139,7 +242,6 @@
 
     import ExportRating from "./Exports/ExportRating";
     import ExportPublications from "./Exports/ExportPublications";
-    import Table from "../Tables/Publications";
     import BackButton from "../Buttons/Back";
     import SearchButton from "../Buttons/SearchButton";
     import DeleteButton from "../Buttons/Delete";
@@ -150,6 +252,7 @@
         mixins: [years, divisions],
         data() {
             return {
+                countPublications: 0,
                 names: [],
                 publicationNames: [],
                 data: [],
@@ -172,13 +275,17 @@
                     hasSupervisor: false,
                     notPreviousYear: false,
                     notThisYear: false
-                }
+                },
+                pagination: {
+                    currentPage: 1,
+                    perPage: 10,
+                    firstItem: 1
+                },
             };
         },
         components: {
             ExportRating,
             ExportPublications,
-            Table,
             BackButton,
             SearchButton,
             DeleteButton,
@@ -194,13 +301,19 @@
             this.getNamesPublications();
         },
         methods: {
+            scrollHeader() {
+                document.location = '#header-table';
+                this.getData();
+            },
             // getters
             // всі публікації
-            getData() {
+            getDataFilter() {
                 this.loading = true;
                 this.$store.dispatch('saveFilterPublications', this.filters);
                 axios.get('/api/publications', {
                     params: {
+                        size: this.pagination.perPage,
+                        page: 1,
                         title: this.filters.title,
                         authors_f: this.filters.authors_f,
                         science_type_id: this.filters.science_type_id,
@@ -214,7 +327,10 @@
                         notThisYear: this.filters.notThisYear
                     }
                 }).then(response => {
-                    this.data = response.data;
+                    this.countPublications = response.data.count;
+                    this.pagination.currentPage = response.data.currentPage;
+                    this.pagination.firstItem = response.data.firstItem;
+                    this.data = response.data.publications.data;
                     this.loading = false;
                     this.loadingSearch = false;
                     this.loadingClear = false;
@@ -222,6 +338,34 @@
                     this.loading = false;
                     this.loadingSearch = false;
                     this.loadingClear = false;
+                })
+            },
+            getData() {
+                this.loading = true;
+                axios.get('/api/publications', {
+                    params: {
+                        size: this.pagination.perPage,
+                        page: this.pagination.currentPage,
+                        title: this.filters.title,
+                        authors_f: this.filters.authors_f,
+                        science_type_id: this.filters.science_type_id,
+                        years: this.filters.years,
+                        country: this.filters.country,
+                        publication_type_id: this.filters.publication_type_id,
+                        faculty_code: this.filters.faculty_code,
+                        department_code: this.filters.department_code,
+                        hasSupervisor: this.filters.hasSupervisor,
+                        notPreviousYear: this.filters.notPreviousYear,
+                        notThisYear: this.filters.notThisYear
+                    }
+                }).then(response => {
+                    this.countPublications = response.data.count;
+                    this.pagination.currentPage = response.data.currentPage;
+                    this.pagination.firstItem = response.data.firstItem;
+                    this.data = response.data.publications.data;
+                    this.loading = false;
+                }).catch(() => {
+                    this.loading = false;
                 })
             },
             // всі назви пцблікацій
@@ -310,12 +454,19 @@
                 } else {
                     return false;
                 }
-            }
+            },
         }
     }
 </script>
 
 <style lang="scss" scoped>
+    .opacityTable {
+        opacity: 0.5;
+    }
+    .paginate-top.pagination {
+        margin: 0;
+        float: right;
+    }
     .checkbox {
         padding: 0;
     }
@@ -337,7 +488,7 @@
         margin-top: 20px;
     }
     .table-list{
-        margin-top: 70px;
+        margin-top: 0px;
     }
     .exports{
         display: grid;

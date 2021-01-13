@@ -140,9 +140,14 @@ class PublicationsController extends ASUController
             }
         }
 
-        $data = $model->get();
+        $publications = $model->paginate($request->size);
 
-        return response()->json($data);
+        return response()->json([
+            "currentPage" => $publications->currentPage(),
+            "firstItem" => $publications->firstItem(),
+            "count" => $publications->total(),
+            "publications" => $publications
+        ]);
     }
 
     // публікація по ID
