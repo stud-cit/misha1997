@@ -770,15 +770,8 @@ class PublicationsController extends ASUController
             $monographsIndexedScopusOrWoSNotSSU = 0;
             $articleProfessionalPublicationsUkraine = 0;
 
-            $publicationsScopusWoSProfileSSU = [
-                "countReportingYear" => [
-                    "ScopusAndWoS" => 0,
-                    "ScopusOrWoS" => 0
-                ],
-            ];
             $authorsOtherOrganizations = false;
             $authorsInForbesFortune = 0;
-            $countScopusFiveYear = 0;
             $receivedReportingEmployeesNotSSU = 0;
             $these = [
                 "count" => 0,
@@ -868,22 +861,6 @@ class PublicationsController extends ASUController
                     $articleProfessionalPublicationsUkraine = 1;
                 }
 
-                //які опубліковані у виданнях, що індексуються БД Scopus та/або WoS за умови належності до профілю СумДУ
-                if($value['science_type_id'] && $v['author']['guid']) {
-                    // всього за звітний рік
-                    // за БД Scopus або WoS:
-                    if($value['science_type_id'] == 1 || $value['science_type_id'] == 2) {
-                        $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusOrWoS']['rating'] += $this->sumRating($request, $v);
-                        $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusOrWoS'] = 1;
-                    }
-
-                    // за БД Scopus та WoS:
-                    if($value['science_type_id'] == 3) {
-                        $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusAndWoS']['rating'] += $this->sumRating($request, $v);
-                        $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusAndWoS'] = 1;
-                    }
-                }
-
                 //за співавторством з представниками інших організацій
                 if($value['science_type_id'] != null && $v['author']['job'] != "СумДУ" && $v['author']['job'] != "СумДУ (Не працює)" && $v['author']['job'] != "Не працює" && $v['author']['guid'] == null) {
                     $authorsOtherOrganizations = true;
@@ -891,7 +868,7 @@ class PublicationsController extends ASUController
 
                 // що входять до списків Forbes та Fortune
                 if($v['author']['forbes_fortune']) {
-                    $rating["publicationsScopusWoSProfileSSU"]['authorsInForbesFortune']['rating'] += $this->sumRating2($request, $value);
+                    $rating["publicationsScopusWoSProfileSSU"]['authorsInForbesFortune']['rating'] += $this->sumRating($request, $value);
                     $authorsInForbesFortune = 1;
                 }
 
@@ -924,35 +901,45 @@ class PublicationsController extends ASUController
                         $articles['publishedWithForeignPartners'] = 1;
                     }
                 }
+            }
 
-                // всього за 5 років за БД Scopus
-                if(($value['science_type_id'] == 1 || $value['science_type_id'] == 3) && $value['created_at']->toDateTimeString() >= $todayYear - 5) {
-                    $rating['publicationsScopusWoSProfileSSU']['countScopusFiveYear']['rating'] += $this->sumRating($request, $v);
-                    $countScopusFiveYear = 1;
+            //які опубліковані у виданнях, що індексуються БД Scopus та/або WoS за умови належності до профілю СумДУ
+            if($value['science_type_id']) {
+                // всього за звітний рік
+                // за БД Scopus або WoS:
+                if($value['science_type_id'] == 1 || $value['science_type_id'] == 2) {
+                    $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusOrWoS']['rating'] += $this->sumRating($request, $value);
+                    $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusOrWoS']['count'] += 1;
+                }
+
+                // за БД Scopus та WoS:
+                if($value['science_type_id'] == 3) {
+                    $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusAndWoS']['rating'] += $this->sumRating($request, $value);
+                    $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusAndWoS']['count'] += 1;
                 }
             }
 
             // у виданні, яке відноситься до квартиля Q4
             if($value['quartil_scopus'] == 4 || $value['quartil_wos'] == 4) {
-                $rating["publicationsScopusWoSProfileSSU"]['quartile4']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['quartile4']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]['quartile4']['count'] += 1;
             }
 
             // у виданні, яке відноситься до квартиля Q3
             if($value['quartil_scopus'] == 3 || $value['quartil_wos'] == 3) {
-                $rating["publicationsScopusWoSProfileSSU"]['quartile3']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['quartile3']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]['quartile3']['count'] += 1;
             }
 
             // у виданні, яке відноситься до квартиля Q2
             if($value['quartil_scopus'] == 2 || $value['quartil_wos'] == 2) {
-                $rating["publicationsScopusWoSProfileSSU"]['quartile2']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['quartile2']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]['quartile2']['count'] += 1;
             }
 
             // у виданні, яке відноситься до квартиля Q1
             if($value['quartil_scopus'] == 1 || $value['quartil_wos'] == 1) {
-                $rating["publicationsScopusWoSProfileSSU"]['quartile1']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['quartile1']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]['quartile1']['count'] += 1;
             }
 
@@ -960,56 +947,56 @@ class PublicationsController extends ASUController
             if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 3) && $value['science_type_id'] == 2) {
                 //у т.ч. статті у виданнях, які входять до SCIE
                 if($value['sub_db_scie'] == 1) {
-                    $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['scie']['rating'] += $this->sumRating2($request, $value);
+                    $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['scie']['rating'] += $this->sumRating($request, $value);
                     $rating["publicationsScopusWoSProfileSSU"]["articleWoS"]['scie']['count'] += 1;
                 }
                 //у т.ч. статті у виданнях, які входять до SSCI
                 if($value['sub_db_ssci'] == 1) {
-                    $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['ssci']['rating'] += $this->sumRating2($request, $value);
+                    $rating["publicationsScopusWoSProfileSSU"]['articleWoS']['ssci']['rating'] += $this->sumRating($request, $value);
                     $rating["publicationsScopusWoSProfileSSU"]["articleWoS"]['ssci']['count'] += 1;
                 }
             }
 
             //які обліковуються рейтингом Nature Index
             if($value['nature_index'] == 1) {
-                $rating["publicationsScopusWoSProfileSSU"]['accountedNatureIndex']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['accountedNatureIndex']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]["accountedNatureIndex"]['count'] += 1;
             }
 
             //у журналах Nature або Scince
             if($value['nature_science'] == 'Nature' || $value['nature_science'] == 'Science') {
-                $rating["publicationsScopusWoSProfileSSU"]['journalsNatureOrScience']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['journalsNatureOrScience']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]["journalsNatureOrScience"]['count'] += 1;
             }
 
             //за співавторством з представниками інших організацій (підрахунок)
             if($authorsOtherOrganizations) {
                 $rating["publicationsScopusWoSProfileSSU"]["authorsOtherOrganizations"]['count'] += 1;
-                $rating["publicationsScopusWoSProfileSSU"]['authorsOtherOrganizations']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['authorsOtherOrganizations']['rating'] += $this->sumRating($request, $value);
             }
 
             //які увійшли до найбільш цитованих для своєї предметної галузі
             //до 10% за БД Scopus
             if($value['db_scopus_percent']) {
-                $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['scopus']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['scopus']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]["enteredMostCitedSubjectArea"]['scopus']['count'] += 1;
             }
 
             // До 1% за БД WoS
             if($value['db_wos_percent']) {
-                $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['wos']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['enteredMostCitedSubjectArea']['wos']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]["enteredMostCitedSubjectArea"]['wos']['count'] += 1;
             }
 
             // - у т.ч. з цифровим ідентифікатором DOI
             if($value['doi'] && $value['science_type_id']) {
-                $rating["publicationsScopusWoSProfileSSU"]['countDOI']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['countDOI']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]['countDOI']['count'] += 1;
             }
 
             // які процитовані у міжнародних патентах
             if($value['cited_international_patents']) {
-                $rating["publicationsScopusWoSProfileSSU"]['citedInternationalPatents']['rating'] += $this->sumRating2($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]['citedInternationalPatents']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]['citedInternationalPatents']['count'] += 1;
             }
 
@@ -1027,7 +1014,7 @@ class PublicationsController extends ASUController
             // отримано за звітний рік на ім'я СумДУ
             if(($value['publication_type_id'] == 10 || $value['publication_type_id'] == 11) && $value['applicant'] == 'СумДУ') {
                 $rating['numberSecurityDocuments']['receivedReportingNameSSU']['count'] += 1;
-                $rating['numberSecurityDocuments']['receivedReportingNameSSU']['rating'] += $this->sumRating2($request, $value);
+                $rating['numberSecurityDocuments']['receivedReportingNameSSU']['rating'] += $this->sumRating($request, $value);
                 $authorshipBusinessRepresentatives = false;
                 foreach ($value['authors'] as $k => $v) {
                     // з них за сумісним авторством з представниками бізнесу
@@ -1037,36 +1024,39 @@ class PublicationsController extends ASUController
                 }
                 if($authorshipBusinessRepresentatives) {
                     $rating['numberSecurityDocuments']['authorshipBusinessRepresentatives']['count'] += 1;
-                    $rating['numberSecurityDocuments']['authorshipBusinessRepresentatives']['rating'] += $this->sumRating2($request, $value);
+                    $rating['numberSecurityDocuments']['authorshipBusinessRepresentatives']['rating'] += $this->sumRating($request, $value);
                 }
             }
 
             // отримано за звітний рік штатними співробітниками не на ім'я СумДУ
             if($value['publication_type_id'] == 10 && $value['applicant'] != 'СумДУ' && $v['author']['job'] == 'СумДУ') {
                 $rating['numberSecurityDocuments']['receivedReportingEmployeesNotSSU']['count'] += 1;
-                $rating['numberSecurityDocuments']['receivedReportingEmployeesNotSSU']['rating'] += $this->sumRating2($request, $value);
+                $rating['numberSecurityDocuments']['receivedReportingEmployeesNotSSU']['rating'] += $this->sumRating($request, $value);
             }
 
             // комерціалізовано у звітному році
             if($value['publication_type_id'] == 10 && $value['commerc_university']) {
                 $rating['numberSecurityDocuments']['commercializedReportingYear']['university']['count'] += 1;
-                $rating['numberSecurityDocuments']['commercializedReportingYear']['university']['rating'] += $this->sumRating2($request, $value);
+                $rating['numberSecurityDocuments']['commercializedReportingYear']['university']['rating'] += $this->sumRating($request, $value);
             }
 
             // штатним співробітником
             if($value['publication_type_id'] == 10 && $value['commerc_employees']) {
                 $rating['numberSecurityDocuments']['commercializedReportingYear']['employee']['count'] += 1;
-                $rating['numberSecurityDocuments']['commercializedReportingYear']['employee']['rating'] += $this->sumRating2($request, $value);
+                $rating['numberSecurityDocuments']['commercializedReportingYear']['employee']['rating'] += $this->sumRating($request, $value);
+            }
+
+            // всього за 5 років за БД Scopus
+            if(($value['science_type_id'] == 1 || $value['science_type_id'] == 3) && $value['created_at']->toDateTimeString() >= $todayYear - 5) {
+                $rating['publicationsScopusWoSProfileSSU']['countScopusFiveYear']['rating'] += $this->sumRating($request, $value);
+                $rating["publicationsScopusWoSProfileSSU"]["countScopusFiveYear"]['count'] += 1;
             }
 
             $rating["studentPublications"] += $withStudent;
             $rating["foreignPublications"] += $foreignPublications;
             $rating["monographsIndexedScopusOrWoSNotSSU"] += $monographsIndexedScopusOrWoSNotSSU;
             $rating["articleProfessionalPublicationsUkraine"] += $articleProfessionalPublicationsUkraine;
-            $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusOrWoS']['count'] += $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusOrWoS'];
-            $rating["publicationsScopusWoSProfileSSU"]['countReportingYear']['ScopusAndWoS']['count'] += $publicationsScopusWoSProfileSSU['countReportingYear']['ScopusAndWoS'];
             $rating["publicationsScopusWoSProfileSSU"]["authorsInForbesFortune"]['count'] += $authorsInForbesFortune;
-            $rating["publicationsScopusWoSProfileSSU"]["countScopusFiveYear"]['count'] += $countScopusFiveYear;
 
             $rating["these"]['count'] += $these['count'];
             $rating["these"]['publishedAbroad'] += $these['publishedAbroad'];
@@ -1111,25 +1101,8 @@ class PublicationsController extends ASUController
             "publications" => $data
         ]);
     }
-    function sumRating($request, $rating) {
-        $result = 0;
-        if($request->department_code != '') {
-            if($request->faculty_code == $rating['author']['faculty_code']) {
-                if($request->department_code == $rating['author']['department_code']) {
-                    $result += $rating['rating_department'];
-                }
-            }
-        } elseif ($request->faculty_code != '') {
-            if($request->faculty_code == $rating['author']['faculty_code']) {
-                $result += $rating['rating_department'];
-            }
-        } else {
-            $result += $rating['rating_department'];
-        }
-        return $result;
-    }
 
-    function sumRating2($request, $value) {
+    function sumRating($request, $value) {
         $result = 0;
         foreach ($value['authors'] as $k => $v) {
             if($request->department_code != '') {
