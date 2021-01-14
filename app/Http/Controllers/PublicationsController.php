@@ -97,14 +97,7 @@ class PublicationsController extends ASUController
         }
 
         if($request->years) {
-            $years = $request->years;
-            if($request->notPreviousYear == "true") {
-                unset($years[array_search($request->reporting_year, $years)]);
-            }
-            if($request->notThisYear == "true") {
-                unset($years[array_search($request->reporting_year, $years)]);
-            }
-            $model->whereIn('year', $years);
+            $model->whereIn('year', $request->years);
         }
 
         if($request->country) {
@@ -470,8 +463,16 @@ class PublicationsController extends ASUController
             $model->whereIn('publication_type_id', array_column($request->publication_types, 'id')); // Вид публікацій
         }
 
+         // Рік видання
         if($request->years) {
-            $model->whereIn('year', $request->years); // Рік видання
+            $years = $request->years;
+            if($request->notPreviousYear == "true") {
+                unset($years[array_search($request->reporting_year, $years)]);
+            }
+            if($request->notThisYear == "true") {
+                unset($years[array_search($request->reporting_year, $years)]);
+            }
+            $model->whereIn('year', $years);
         }
 
         // Публікації які не враховані в рейтингу попереднього року
@@ -484,7 +485,7 @@ class PublicationsController extends ASUController
 
         // Публікації які не враховані в рейтингу цього року
         $model->where(function($query) use ($request) {
-            
+
             if($request->not_this_year == "true") {
                 $query->orWhere('not_this_year', 1);
             }
