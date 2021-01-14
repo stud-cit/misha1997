@@ -204,7 +204,7 @@
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
-                            <label >Індексування БД Scopus\WoS</label>
+                            <label >Індексування БД Scopus/WoS</label>
                             <div class="input-container">
                                 <multiselect
                                     v-model="filters.science_types"

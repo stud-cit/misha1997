@@ -112,9 +112,13 @@ class PublicationsController extends ASUController
             $model->where('not_previous_year', 1);
         }
 
-        if($request->notThisYear == 'true') {
-            $model->where('not_this_year', 1);
-        }
+        // Публікації які не враховані в рейтингу цього року
+        $model->where(function($query) use ($request) {
+            $query->where('not_this_year', 0);
+            if($request->notThisYear == "true") {
+                $query->orWhere('not_this_year', 1);
+            }
+        });
 
         if($request->department_code != '') {
             $departments_id = [$request->department_code];
@@ -508,8 +512,9 @@ class PublicationsController extends ASUController
             }
         }
 
+        // Індексування БД Scopus/WoS
         if(count($request->science_types) > 0) {
-            $model->whereIn('science_type_id', array_column($request->science_types, 'id')); // Індексування БД Scopus/WoS
+            $model->whereIn('science_type_id', array_column($request->science_types, 'id'));
         }
 
         if(($request->quartil_scopus != "" || $request->quartil_wos != "") && ($request->quartil_scopus != $request->quartil_wos)) {
