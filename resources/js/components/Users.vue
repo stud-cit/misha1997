@@ -141,7 +141,7 @@
                 <table :class="['table', 'table-bordered', loading ? 'opacityTable' : '']">
                     <thead>
                         <tr>
-                            <td colspan="8" class="bg-white text-left pr-0 pb-3 pt-0">Всього користувачів: {{ data.length }}</td>
+                            <td colspan="8" class="bg-white text-left pr-0 pb-3 pt-0">Всього користувачів: {{ countUsers }}</td>
                             <td class="bg-white px-0 pb-3 pt-0" v-if="authUser.roles_id == 4"></td>
                         </tr>
                         <tr>
@@ -175,7 +175,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2">Всього користувачів: {{ data.length }}</td>
+                            <td colspan="2">Всього користувачів: {{ countUsers }}</td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -189,7 +189,7 @@
                 <div class="spinner-border my-4" role="status" v-if="loading">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div class="my-4 text-center" v-if="data.length == 0">
+                <div class="my-4 text-center" v-if="countUsers == 0">
                     Користувачі відсутні
                 </div>
             </div>
