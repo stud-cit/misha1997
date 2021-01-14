@@ -108,9 +108,13 @@ class PublicationsController extends ASUController
             $model->where('publication_type_id', $request->publication_type_id);
         }
 
-        if($request->notPreviousYear == 'true') {
-            $model->where('not_previous_year', 1);
-        }
+        // Публікації які не враховані в рейтингу попереднього року
+        $model->where(function($query) use ($request) {
+            $query->where('not_previous_year', 0);
+            if($request->notPreviousYear == "true") {
+                $query->orWhere('not_previous_year', 1);
+            }
+        });
 
         // Публікації які не враховані в рейтингу цього року
         $model->where(function($query) use ($request) {
@@ -464,9 +468,12 @@ class PublicationsController extends ASUController
         }
 
         // Публікації які не враховані в рейтингу попереднього року
-        if($request->not_previous_year == "true") {
-            $model->where('not_previous_year', 1);
-        }
+        $model->where(function($query) use ($request) {
+            $query->where('not_previous_year', 0);
+            if($request->not_previous_year == "true") {
+                $query->orWhere('not_previous_year', 1);
+            }
+        });
 
         // Публікації які не враховані в рейтингу цього року
         $model->where(function($query) use ($request) {
