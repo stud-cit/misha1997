@@ -25,7 +25,7 @@
                         <div class="form-group col-lg">
                             <label >Кафедра</label>
                             <div class="input-container">
-                                <select v-model="filters.department_code">
+                                <select v-model="filters.department_code" :disabled="!filters.faculty_code">
                                     <option value=""></option>
                                     <option
                                         v-for="(item, index) in departments"
@@ -36,6 +36,44 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <label>Звітний рік</label>
+                            <div class="input-container multiselect">
+                                <multiselect
+                                    @input="checkYear"
+                                    v-model="filters.reporting_year"
+                                    placeholder=""
+                                    selectLabel="Натисніть для вибору"
+                                    selectedLabel="Вибрано"
+                                    deselectLabel="Натисніть для видалення"
+                                    :options="years"
+                                    :multiple="false"
+                                    :taggable="true"
+                                ></multiselect>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label>Рік видання</label>
+                            <div class="input-container multiselect">
+                                <multiselect
+                                    v-model="filters.years"
+                                    :disabled="!filters.reporting_year"
+                                    placeholder=""
+                                    selectLabel="Натисніть для вибору"
+                                    selectedLabel="Вибрано"
+                                    deselectLabel="Натисніть для видалення"
+                                    :options="new_years.length > 0 ? new_years : years"
+                                    :multiple="true"
+                                    :taggable="true"
+                                ></multiselect>
+                            </div>
+                        </div>
+
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group col-lg-6">
                             <label >Країна видання </label>
@@ -81,35 +119,6 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
-                            <label>Рік видання</label>
-                            <div class="input-container multiselect">
-                                <multiselect
-                                    v-model="filters.years"
-                                    placeholder=""
-                                    selectLabel="Натисніть для вибору"
-                                    selectedLabel="Вибрано"
-                                    deselectLabel="Натисніть для видалення"
-                                    :options="years"
-                                    :multiple="true"
-                                    :taggable="true"
-                                ></multiselect>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-lg-6">
-                            <label >Публікації опубліковані у виданнях з показником SNIP більше ніж 1.0 </label>
-                            <div class="input-container">
-                                <select v-model="filters.snip">
-                                    <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
-                                </select>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-lg-6">
                             <label >Публікації з цифровим ідентифікатором DOI</label>
                             <div class="input-container ">
                                 <select  v-model="filters.doi ">
@@ -120,9 +129,9 @@
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
-                            <label >Статті у виданнях, які входять до підбази WoS - SCIE</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.scie ">
+                            <label >Публікації опубліковані у виданнях з показником SNIP більше ніж 1.0 </label>
+                            <div class="input-container">
+                                <select v-model="filters.snip">
                                     <option value=""></option>
                                     <option value="1">Так</option>
                                     <option value="0">Ні</option>
@@ -136,6 +145,28 @@
                             <label class="form-check-label" for="withStudents">Публікації за авторством та співавторством студентів</label>
                         </div>
                         <div class="form-group col-lg-6">
+                            <label >Статті у виданнях, які входять до підбази WoS - SCIE</label>
+                            <div class="input-container ">
+                                <select  v-model="filters.scie ">
+                                    <option value=""></option>
+                                    <option value="1">Так</option>
+                                    <option value="0">Ні</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <label >Охоронні документи</label>
+                            <div class="input-container ">
+                                <select  v-model="filters.applicant">
+                                    <option value=""></option>
+                                    <option value="СумДУ">Отримані на ім'я СумДУ</option>
+                                    <option value="не СумДУ">Отримані не на ім'я СумДУ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
                             <label >Статті у виданнях, які входять до підбази WoS - SSCI </label>
                             <div class="input-container ">
                                 <select  v-model="filters.ssci">
@@ -147,27 +178,6 @@
                         </div>
                     </div>
                     <div class="form-row">
-
-                        <div class="form-group col-lg-6">
-                            <label >Охоронні документи</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.applicant">
-                                    <option value=""></option>
-                                    <option value="СумДУ">Отримані на ім'я СумДУ</option>
-                                    <option value="не СумДУ">Отримані не на ім'я СумДУ</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group checkbox col-lg-6">
-                            <div class="input-container">
-                                <input v-model="filters.other_organization" type="checkbox" class="form-check-input" id="otherOrganization">
-                                <label class="form-check-label" for="otherOrganization">Публікації за співавторством з представниками інших організацій</label>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="form-row">
                         <div class="form-group col-lg-6">
                             <label >Комерціалізовані охоронні документи</label>
                             <div class="input-container ">
@@ -175,6 +185,25 @@
                                     <option value=""></option>
                                     <option value="1">Університетом</option>
                                     <option value="2">Штатними співробітниками</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group checkbox col-lg-6">
+                            <div class="input-container">
+                                <input v-model="filters.other_organization" type="checkbox" class="form-check-input" id="otherOrganization">
+                                <label class="form-check-label" for="otherOrganization">Публікації за співавторством з представниками інших організацій</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <label >Публікації у співавторстві з іноземними партнерами</label>
+                            <div class="input-container ">
+                                <select  v-model="filters.withForeigners">
+                                    <option value=""></option>
+                                    <option value="1">Так</option>
+                                    <option value="0">Ні</option>
+                                    <option value="10">В тому числі мають індекс Гірша за Scopus та WoS не нижче 10</option>
                                 </select>
                             </div>
                         </div>
@@ -188,19 +217,21 @@
                                 </select>
                             </div>
                         </div>
-
                     </div>
                     <div class="form-row">
                         <div class="form-group col-lg-6">
-                            <label >Публікації у співавторстві з іноземними партнерами</label>
-                            <div class="input-container ">
-                                <select  v-model="filters.withForeigners">
-                                    <option value=""></option>
-                                    <option value="1">Так</option>
-                                    <option value="0">Ні</option>
-                                    <option value="10">В тому числі мають індекс Гірша за Scopus та WoS не нижче 10</option>
-                                </select>
-
+                            <label>Рік занесення до бази даних</label>
+                            <div class="input-container multiselect">
+                                <multiselect
+                                    v-model="filters.year_db"
+                                    placeholder=""
+                                    selectLabel="Натисніть для вибору"
+                                    selectedLabel="Вибрано"
+                                    deselectLabel="Натисніть для видалення"
+                                    :options="years"
+                                    :multiple="true"
+                                    :taggable="true"
+                                ></multiselect>
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
@@ -222,21 +253,6 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-lg-6">
-                            <label>Рік занесення до бази даних</label>
-                            <div class="input-container multiselect">
-                                <multiselect
-                                    v-model="filters.year_db"
-                                    placeholder=""
-                                    selectLabel="Натисніть для вибору"
-                                    selectedLabel="Вибрано"
-                                    deselectLabel="Натисніть для видалення"
-                                    :options="years"
-                                    :multiple="true"
-                                    :taggable="true"
-                                ></multiselect>
-                            </div>
-                        </div>
                         <div class="form-group checkbox col-lg-6">
                             <div class="input-container">
                                 <input v-model="filters.not_previous_year" type="checkbox" class="form-check-input" id="notPreviousYear">
@@ -584,6 +600,8 @@
                 <th>DOI</th>
                 <th>Охоронні документи</th>
                 <th>У журналах</th>
+                <th>Враховується в рейтингу попередного року</th>
+                <th>Враховується в рейтингу цього року</th>
                 <th>Дата занесення до бази даних</th>
             </tr>
             <template v-for="(item, ind) in publicationsData">
@@ -639,6 +657,8 @@
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.doi }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.applicant }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.nature_science }}</td>
+                <td>{{ item.not_previous_year ? "Так" : "Ні" }}</td>
+                <td>{{ item.not_this_year ? "Так" : "Ні" }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{ item.created_at }}</td>
             </tr>
             </template>
@@ -656,6 +676,7 @@
         mixins: [divisions],
         data() {
             return {
+                new_years: [],
                 loading: false,
                 showFilters: false,
                 publicationsData: [],
@@ -806,6 +827,7 @@
                     science_types: [],
                     years: [],
                     year_db: [new Date().getFullYear()],
+                    reporting_year: null,
                     country: '',
                     quartil_scopus: '',
                     quartil_wos: '',
@@ -841,6 +863,15 @@
             },
         },
         methods: {
+            checkYear() {
+                if(this.filters.reporting_year) {
+                    this.new_years = this.years.filter(item => item <= this.filters.reporting_year);
+                    this.filters.years = this.filters.reporting_year;
+                } else {
+                    this.new_years = [];
+                    this.filters.years = [];
+                }
+            },
             getPublicationTypes() {
                 axios.get('/api/type-publications').then(response => {
                     this.publicationTypes = response.data;
@@ -928,6 +959,8 @@
                         { wch: 3 }, // DOI
                         { wch: 7 }, // DOI
                         { wch: 7 }, // DOI
+                        { wch: 5 }, // Враховується в рейтингу попередного року
+                        { wch: 5 }, // Враховується в рейтингу цього року
                         { wch: 10 }, // Дата занесення до бази даних
                     ];
                     var name = "Рейтинг ";

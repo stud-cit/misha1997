@@ -97,7 +97,14 @@ class PublicationsController extends ASUController
         }
 
         if($request->years) {
-            $model->whereIn('year', $request->years);
+            $years = $request->years;
+            if($request->notPreviousYear == "true") {
+                unset($years[array_search($request->reporting_year, $years)]);
+            }
+            if($request->notThisYear == "true") {
+                unset($years[array_search($request->reporting_year, $years)]);
+            }
+            $model->whereIn('year', $years);
         }
 
         if($request->country) {

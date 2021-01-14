@@ -10,7 +10,7 @@ class CreatePublicationsTable extends Migration
     {
         Schema::create('publications', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->text('title');
             $table->foreignId('science_type_id')->nullable(); // Scopus WoS
             $table->foreignId('publication_type_id'); // тип публікації
             $table->float('snip', 8, 2)->nullable(); // Коефіцієнт впливовості SNIP журналу SCOPUS
