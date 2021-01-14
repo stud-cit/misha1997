@@ -277,18 +277,48 @@
                     <label class="form-check-label" for="withStudents">Під керівництвом</label>
                 </div>
                 <SearchButton
-                    @click.native="getPublications(); loadingSearch = true"
+                    @click.native="getFilterPublications(); loadingSearch = true"
                     :disabled="loading || loadingSearch"
                     :loading="loadingSearch"
                     title="Пошук"
                 ></SearchButton>
             </form>
 
+            <div class="row my-4" id="header-table">
+                <div class="col">
+                    <select class="form-control w-50 ml-2" id="sizeTable" v-model="pagination.perPage" @change="getPublications()">
+                        <option :value="10">10</option>
+                        <option :value="50">50</option>
+                        <option :value="100">100</option>
+                        <option :value="250">250</option>
+                        <option :value="500">500</option>
+                        <option :value="countPublications">Всі</option>
+                    </select>
+                </div>
+                <div class="col text-right">
+                    <paginate
+                        class="paginate-top"
+                        v-model="pagination.currentPage"
+                        :page-count="Math.ceil(countPublications / pagination.perPage)"
+                        @click.native="scrollHeader()"
+
+                        prev-text="<"
+                        next-text=">"
+
+                        container-class="pagination"
+                        page-class="page-item"
+                        page-link-class="page-link"
+                        prev-class="page-link"
+                        next-class="page-link">
+                    </paginate>
+                </div>
+            </div>
+
             <div class="table-responsive text-center table-list">
-                <table class="table table-bordered">
+                <table :class="['table', 'table-bordered', loading ? 'opacityTable' : '']">
                     <thead>
                         <tr>
-                            <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{publications.length}}</td>
+                            <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{ countPublications }}</td>
                         </tr>
                         <tr>
                             <th scope="col">№</th>
@@ -302,8 +332,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in filterList" :key="index">
-                            <td scope="row">{{ index + 1 + (pagination.currentPage - 1) * pagination.perPage }}</td>
+                        <tr v-for="(item, index) in publications" :key="index">
+                            <td scope="row">{{ pagination.firstItem + index }}</td>
                             <td>{{ item.publication_type.title }}</td>
                             <td>
                                 <span class="authors" v-for="(author, index) in item.authors" :key="index">
@@ -321,30 +351,34 @@
                             <td>{{ item.created_at }}</td>
                         </tr>
                         <tr>
-                            <td colspan="8" class="text-left">Всього публікацій: {{ publications.length }} </td>
+                            <td colspan="8" class="text-left">Всього публікацій: {{ countPublications }} </td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="spinner-border my-4" role="status" v-if="loading">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div class="my-4" v-if="publications.length == 0">
+                <div class="my-4" v-if="countPublications == 0">
                     Публікації відсутні
                 </div>
             </div>
+
             <paginate
+                class="mt-4"
                 v-model="pagination.currentPage"
-                :page-count="pagination.numPage"
+                :page-count="Math.ceil(countPublications / pagination.perPage)"
+                @click.native="scrollHeader()"
 
-                :prev-text="'<'"
-                :next-text="'>'"
+                prev-text="<"
+                next-text=">"
 
-                :container-class="'pagination'"
+                container-class="pagination"
                 page-class="page-item"
                 page-link-class="page-link"
                 prev-class="page-link"
                 next-class="page-link">
             </paginate>
+
             <div class="step-button-group">
                 <back-button></back-button>
                 <save-button @click.native="save()" v-if="authUser.roles_id == 4"></save-button>
@@ -365,6 +399,7 @@
         mixins: [years, divisions],
         data() {
             return {
+                countPublications: 0,
                 updateLoading: false,
                 showFilter: false,
                 loadingSearch: false,
@@ -402,7 +437,7 @@
                 pagination: {
                     currentPage: 1,
                     perPage: 10,
-                    numPage: 1
+                    firstItem: 1
                 },
                 filters: {
                     title: '',
@@ -435,13 +470,13 @@
         computed: {
             authUser() {
                 return this.$store.getters.authUser
-            },
-            filterList() {
-                this.pagination.numPage = Math.ceil(this.publications.length / this.pagination.perPage);
-                return this.publications.slice((this.pagination.currentPage - 1) * this.pagination.perPage, this.pagination.currentPage * this.pagination.perPage);
             }
         },
         methods: {
+            scrollHeader() {
+                document.location = '#header-table';
+                this.getPublications();
+            },
             getDepartmentsUser() {
                 if(this.data.faculty_code) {
                     this.departments2 = this.divisions.find(item => {
@@ -484,9 +519,12 @@
                     this.loading = false;
                 })
             },
-            getPublications() {
+            getFilterPublications() {
+                this.loading = true;
                 axios.get('/api/publications/'+this.$route.params.id, {
                     params: {
+                        size: this.pagination.perPage,
+                        page: 1,
                         title: this.filters.title,
                         authors_f: this.filters.authors_f,
                         science_type_id: this.filters.science_type_id,
@@ -496,9 +534,34 @@
                         withSupervisor: this.filters.withSupervisor
                     }
                 }).then(response => {
-                    this.publications = Object.values(response.data);
+                    this.countPublications = response.data.count;
+                    this.pagination.currentPage = response.data.currentPage;
+                    this.pagination.firstItem = response.data.firstItem;
+                    this.publications = response.data.publications.data;
                     this.loading = false;
                     this.loadingSearch = false;
+                })
+            },
+            getPublications() {
+                this.loading = true;
+                axios.get('/api/publications/'+this.$route.params.id, {
+                    params: {
+                        size: this.pagination.perPage,
+                        page: this.pagination.currentPage,
+                        title: this.filters.title,
+                        authors_f: this.filters.authors_f,
+                        science_type_id: this.filters.science_type_id,
+                        year: this.filters.year,
+                        country: this.filters.country,
+                        publication_type_id: this.filters.publication_type_id,
+                        withSupervisor: this.filters.withSupervisor
+                    }
+                }).then(response => {
+                    this.countPublications = response.data.count;
+                    this.pagination.currentPage = response.data.currentPage;
+                    this.pagination.firstItem = response.data.firstItem;
+                    this.publications = response.data.publications.data;
+                    this.loading = false;
                 })
             },
             getRoles() {
@@ -534,6 +597,13 @@
     }
 </script>
 <style lang="css" scoped>
+    .opacityTable {
+        opacity: 0.5;
+    }
+    .paginate-top.pagination {
+        margin: 0;
+        float: right;
+    }
     .checkbox {
         padding: 0;
     }

@@ -118,7 +118,7 @@
                 ></SearchButton>
             </form>
 
-            <div class="row my-4">
+            <div class="row my-4" id="header-table">
                 <div class="col">
                     <select class="form-control w-50 ml-2" id="sizeTable" v-model="pagination.perPage" @change="getData()">
                         <option :value="10">10</option>
@@ -149,8 +149,8 @@
             </div>
 
             <div class="table-responsive text-center table-list">
-                <table id="header-table" :class="['table', 'table-bordered', loading ? 'opacityTable' : '']">
-                    <thead id="header-table">
+                <table :class="['table', 'table-bordered', loading ? 'opacityTable' : '']">
+                    <thead>
                         <tr>
                             <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{countPublications}}</td>
                             <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
