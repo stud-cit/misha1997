@@ -477,7 +477,7 @@ class PublicationsController extends ASUController
 
         // Публікації які не враховані в рейтингу цього року
         $model->where(function($query) use ($request) {
-            $query->where('not_this_year', 0);
+            
             if($request->not_this_year == "true") {
                 $query->orWhere('not_this_year', 1);
             }
@@ -1128,7 +1128,7 @@ class PublicationsController extends ASUController
                     $result += $v['rating_department'];
                 }
             } else {
-                $result += $v['rating_department'];
+                $result += $v['rating_faculty'];
             }
         }
         return $result;

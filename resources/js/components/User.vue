@@ -93,8 +93,8 @@
                 <li class="row" v-if="authUser.roles_id == 4 && data.guid">
                     <div class="col-lg list-item list-text">
                         <div class="pl-3">
-                            <input v-model="data.custom_divisions" type="checkbox" class="form-check-input" id="withStudents">
-                            <label class="form-check-label" for="withStudents">Назначити каферу і факультет</label>
+                            <input v-model="data.custom_divisions" type="checkbox" class="form-check-input" id="customDivisions">
+                            <label class="form-check-label" for="customDivisions">Назначити каферу і факультет</label>
                         </div>
                     </div>
                 </li>
