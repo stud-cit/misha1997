@@ -276,6 +276,14 @@
                     <input v-model="filters.withSupervisor" type="checkbox" class="form-check-input" id="withStudents">
                     <label class="form-check-label" for="withStudents">Під керівництвом</label>
                 </div>
+                <div class="form-group checkbox col-lg">
+                    <input v-model="filters.notPreviousYear" type="checkbox" class="form-check-input" id="notPreviousYear">
+                    <label class="form-check-label" for="notPreviousYear">Публікації які не враховані в рейтингу попереднього року</label>
+                </div>
+                <div class="form-group checkbox col-lg">
+                    <input v-model="filters.notThisYear" type="checkbox" class="form-check-input" id="notThisYear">
+                    <label class="form-check-label" for="notThisYear">Публікації які не враховані в рейтингу цього року</label>
+                </div>
                 <SearchButton
                     @click.native="getFilterPublications(); loadingSearch = true"
                     :disabled="loading || loadingSearch"
@@ -448,7 +456,9 @@
                     publication_type_id: '',
                     faculty_code: '',
                     department_code: '',
-                    withSupervisor: false
+                    withSupervisor: false,
+                    notPreviousYear: false,
+                    notThisYear: false
                 },
                 loading: true,
                 roles: []
@@ -531,7 +541,9 @@
                         year: this.filters.year,
                         country: this.filters.country,
                         publication_type_id: this.filters.publication_type_id,
-                        withSupervisor: this.filters.withSupervisor
+                        withSupervisor: this.filters.withSupervisor,
+                        notPreviousYear: this.filters.notPreviousYear,
+                        notThisYear: this.filters.notThisYear
                     }
                 }).then(response => {
                     this.countPublications = response.data.count;
@@ -554,7 +566,9 @@
                         year: this.filters.year,
                         country: this.filters.country,
                         publication_type_id: this.filters.publication_type_id,
-                        withSupervisor: this.filters.withSupervisor
+                        withSupervisor: this.filters.withSupervisor,
+                        notPreviousYear: this.filters.notPreviousYear,
+                        notThisYear: this.filters.notThisYear
                     }
                 }).then(response => {
                     this.countPublications = response.data.count;

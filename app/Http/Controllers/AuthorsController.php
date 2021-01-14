@@ -104,6 +104,12 @@ class AuthorsController extends ASUController
             });
         }
 
+        $model2 = clone $model;
+
+        $scopusAutorId = $model2->sum('scopus_autor_id');
+        $hIndex = $model2->sum('h_index');
+        $fivePublications = $model2->where('five_publications', 1)->count();
+
         $data = $model->paginate($request->size);
 
         foreach ($data as $key => $value) {
@@ -129,6 +135,9 @@ class AuthorsController extends ASUController
         }
 
         return response()->json([
+            "scopusAutorId" => $scopusAutorId,
+            "hIndex" => $hIndex,
+            "fivePublications" => $fivePublications,
             "currentPage" => $data->currentPage(),
             "firstItem" => $data->firstItem(),
             "count" => $data->total(),

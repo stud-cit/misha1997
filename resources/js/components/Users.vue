@@ -179,9 +179,9 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>Всього: {{ count_scopus_autor_id }}</td>
-                            <td>Всього: {{ count_h_index }}</td>
-                            <td>Кількість: {{ count_five_publications }}</td>
+                            <td>Всього: {{ scopusAutorId }}</td>
+                            <td>Всього: {{ hIndex }}</td>
+                            <td>Кількість: {{ fivePublications }}</td>
                             <td v-if="authUser.roles_id == 4"></td>
                         </tr>
                     </tbody>
@@ -227,6 +227,9 @@
         data() {
             return {
                 countUsers: 0,
+                scopusAutorId: 0,
+                hIndex: 0,
+                fivePublications: 0,
                 loading: true,
                 loadingSearch: false,
                 loadingClear: false,
@@ -255,33 +258,6 @@
             ExportUsers
         },
         computed: {
-            count_scopus_autor_id() {
-                let result = 0;
-                this.data.map(item => {
-                    if(item.scopus_autor_id) {
-                        result += +item.scopus_autor_id;
-                    }
-                });
-                return result;
-            },
-            count_h_index() {
-                let result = 0;
-                this.data.map(item => {
-                    if(item.h_index) {
-                        result += +item.h_index;
-                    }
-                });
-                return result;
-            },
-            count_five_publications() {
-                let result = 0;
-                this.data.map(item => {
-                    if(item.five_publications) {
-                        result ++;
-                    }
-                });
-                return result;
-            },
             authUser() {
                 return this.$store.getters.authUser
             }
@@ -313,6 +289,9 @@
                     }
                 }).then(response => {
                     this.countUsers = response.data.count;
+                    this.scopusAutorId = response.data.scopusAutorId;
+                    this.hIndex = response.data.hIndex;
+                    this.fivePublications = response.data.fivePublications;
                     this.pagination.currentPage = response.data.currentPage;
                     this.pagination.firstItem = response.data.firstItem;
                     this.data = response.data.users.data;
@@ -340,6 +319,9 @@
                     }
                 }).then(response => {
                     this.countUsers = response.data.count;
+                    this.scopusAutorId = response.data.scopusAutorId;
+                    this.hIndex = response.data.hIndex;
+                    this.fivePublications = response.data.fivePublications;
                     this.pagination.currentPage = response.data.currentPage;
                     this.pagination.firstItem = response.data.firstItem;
                     this.data = response.data.users.data;
