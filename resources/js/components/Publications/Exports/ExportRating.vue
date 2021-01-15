@@ -269,13 +269,12 @@
                 </form>
                 <div class="step-button-group">
                     <button class="prev" @click="showFilters = false">Назад</button>
-                    <button class="next active" @click="getExportData">
-                        <span class="spinner-border spinner-border-sm" v-show="loading" role="status" aria-hidden="true"></span> Експортувати дані
+                    <button class="next active" :disabled="loading" @click="getExportData">
+                        <span class="spinner-border spinner-border-sm" v-show="loading" role="status" aria-hidden="true"></span> {{ status }}
                     </button>
                 </div>
             </div>
         </div>
-
 
         <table id="exportRating" v-show="false" ref="exportR">
             <tr>
@@ -676,6 +675,7 @@
         mixins: [divisions],
         data() {
             return {
+                status: "Експортувати дані",
                 new_years: [],
                 loading: false,
                 showFilters: false,
@@ -866,7 +866,7 @@
             checkYear() {
                 if(this.filters.reporting_year) {
                     this.new_years = this.years.filter(item => item <= this.filters.reporting_year);
-                    this.filters.years = this.filters.reporting_year;
+                    this.filters.years.push(this.filters.reporting_year);
                 } else {
                     this.new_years = [];
                     this.filters.years = [];
@@ -895,18 +895,29 @@
                 return result;
             },
             getExportData() {
+                this.loading = true;
+                this.status = "Отримання даних";
                 axios.post('/api/export', this.filters).then(response => {
                     this.publicationsData = Object.values(response.data.publications);
                     this.ratingData = Object.assign(this.ratingData, response.data.rating);
+                    this.status = "Створення документу";
                 }).then(() => {
                     this.exportRating();
-                })
+                }).catch(() => {
+                    this.status = "Експортувати дані";
+                    this.loading = false;
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Помилка',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                });
             },
             openFiltersPopup() {
                 this.showFilters = true;
             },
             exportRating() {
-                this.loading = true;
                 setTimeout(() => {
                     const rating = XLSX.utils.table_to_book(document.getElementById('exportRating'));
                     const publications = XLSX.utils.table_to_book(document.getElementById('exportList'));
@@ -994,6 +1005,7 @@
                     name += " " + new Date().toLocaleString("ru", options);
                     XLSX.writeFile(wb, name+'.xlsx');
                     this.loading = false;
+                    this.status = "Експортувати дані";
                 }, 0);
             }
         },
