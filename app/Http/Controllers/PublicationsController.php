@@ -76,51 +76,60 @@ class PublicationsController extends ASUController
             });
         }
 
+        // Під керівництвом
         if($request->hasSupervisor == "true") {
             $model->whereHas('authors', function($q) {
                 $q->where('supervisor', 1);
             });
         }
 
+        // Назва публікації
         if($request->title) {
             $model->where('title', 'like', "%".$request->title."%");
         }
 
+        // ПІБ автора
         if($request->authors_f) {
             $model->whereHas('authors.author', function($q) use ($request) {
                 $q->where('name', 'like', "%".$request->authors_f."%");
             });
         }
 
+        // БД Scopus/WoS
         if($request->science_type_id) {
             $model->where('science_type_id', $request->science_type_id);
         }
 
+        // Рік видання
         if($request->years) {
             $model->whereIn('year', $request->years);
         }
 
+        // Країна видання
         if($request->country) {
             $model->where('country', 'like', "%".$request->country."%");
         }
 
+        // Вид публікації
         if($request->publication_type_id) {
             $model->where('publication_type_id', $request->publication_type_id);
         }
 
         // Публікації які не враховані в рейтингу попереднього року
         $model->where(function($query) use ($request) {
-            $query->where('not_previous_year', 0);
             if($request->notPreviousYear == "true") {
                 $query->orWhere('not_previous_year', 1);
+            } else {
+                $query->where('not_previous_year', 0);
             }
         });
 
         // Публікації які не враховані в рейтингу цього року
         $model->where(function($query) use ($request) {
-            $query->where('not_this_year', 0);
             if($request->notThisYear == "true") {
                 $query->orWhere('not_this_year', 1);
+            } else {
+                $query->where('not_this_year', 0);
             }
         });
 
@@ -443,6 +452,7 @@ class PublicationsController extends ASUController
         $divisions = $this->getDivisions();
         $model = Publications::with('authors.author', 'publicationType', 'scienceType')->orderBy('created_at', 'DESC');
 
+        // Країна видання
         $model->where('country', 'like', "%".$request->country."%");
 
         $department_code = $request->department_code;
@@ -459,28 +469,44 @@ class PublicationsController extends ASUController
 
         $todayYear = Carbon::today()->year;
 
+        // Вид публікацій
         if(count($request->publication_types) > 0) {
-            $model->whereIn('publication_type_id', array_column($request->publication_types, 'id')); // Вид публікацій
+            $model->whereIn('publication_type_id', array_column($request->publication_types, 'id'));
         }
 
-         // Рік видання
-        if($request->years) {
+        // Публікації які не враховані в рейтингу попереднього року
+        if($request->not_previous_year == "true") {
             $years = $request->years;
-            $model->where(function($query) use ($request) {
-                $query->whereIn('year', $years)->where('not_previous_year', 0)->where('not_this_year', 0)->whereIn('publication_type_id', array_column($request->publication_types, 'id'));
+            unset($years[array_search($request->reporting_year, $years)]);
+            $model->where(function($query) use ($request, $years) {
+                $query->where(function($q) use ($request, $years) {
+                    $q->where('not_previous_year', 1)->whereIn('year', $years);
+                })->orWhere(function($q) use ($request) {
+                    $q->where('not_previous_year', 0)->where('year', $request->reporting_year);
+                });
             });
-            if($request->not_previous_year == "true") {
-                unset($years[array_search($request->reporting_year, $years)]);
-                $model->orWhere(function($query) use ($request) {
-                    $query->whereIn('year', $years)->where('not_previous_year', 1)->whereIn('publication_type_id', array_column($request->publication_types, 'id'));
-                });
+        } else {
+            // Рік видання
+            if($request->years) {
+                $model->whereIn('year', $request->years);
             }
+        }
 
-            if($request->not_this_year == "true") {
-                unset($years[array_search($request->reporting_year, $years)]);
-                $model->orWhere(function($query) use ($request) {
-                    $query->whereIn('year', $years)->where('not_this_year', 1)->whereIn('publication_type_id', array_column($request->publication_types, 'id'));
+        // Публікації які не враховані в рейтингу цього року
+        if($request->not_this_year == "true") {
+            $years = $request->years;
+            unset($years[array_search($request->reporting_year, $years)]);
+            $model->where(function($query) use ($request, $years) {
+                $query->where(function($q) use ($request, $years) {
+                    $q->where('not_this_year', 1)->whereIn('year', $years);
+                })->orWhere(function($q) use ($request) {
+                    $q->where('not_this_year', 0)->where('year', $request->reporting_year);
                 });
+            });
+        } else {
+            // Рік видання
+            if($request->years) {
+                $model->whereIn('year', $request->years);
             }
         }
 
@@ -494,11 +520,13 @@ class PublicationsController extends ASUController
         }
 
         if($request->doi != "") {
+            // Публікації з цифровим ідентифікатором DOI
             if($request->doi == 1) {
-                $model->whereNotNull('doi'); // Публікації з цифровим ідентифікатором DOI
+                $model->whereNotNull('doi');
             }
+            // Публікації без цифрового ідентифікатора DOI
             if($request->doi == 0) {
-                $model->whereNull('doi'); // Публікації без цифрового ідентифікатора DOI
+                $model->whereNull('doi');
             }
         }
 

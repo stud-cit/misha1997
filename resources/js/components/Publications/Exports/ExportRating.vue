@@ -842,7 +842,8 @@
                     abroad: '',
                     applicant: '',
                     commercial_applicant: '',
-                    not_previous_year: false
+                    not_previous_year: false,
+                    not_this_year: false
                 }
             };
         },
