@@ -784,8 +784,8 @@ class PublicationsController extends ASUController
             $articleProfessionalPublicationsUkraine = 0;
 
             $authorsOtherOrganizations = false;
+            $receivedReportingEmployeesNotSSU = false;
             $authorsInForbesFortune = 0;
-            $receivedReportingEmployeesNotSSU = 0;
             $these = [
                 "count" => 0,
                 "publishedAbroad" => 0,
@@ -913,6 +913,11 @@ class PublicationsController extends ASUController
                     if($v['author']['country'] != "Україна") {
                         $articles['publishedWithForeignPartners'] = 1;
                     }
+                }
+
+                // отримано за звітний рік штатними співробітниками не на ім'я СумДУ
+                if($value['publication_type_id'] == 10 && $value['applicant'] != 'СумДУ' && $v['author']['job'] == 'СумДУ') {
+                    $receivedReportingEmployeesNotSSU = true;
                 }
             }
 
@@ -1042,7 +1047,7 @@ class PublicationsController extends ASUController
             }
 
             // отримано за звітний рік штатними співробітниками не на ім'я СумДУ
-            if($value['publication_type_id'] == 10 && $value['applicant'] != 'СумДУ' && $v['author']['job'] == 'СумДУ') {
+            if($receivedReportingEmployeesNotSSU) {
                 $rating['numberSecurityDocuments']['receivedReportingEmployeesNotSSU']['count'] += 1;
                 $rating['numberSecurityDocuments']['receivedReportingEmployeesNotSSU']['rating'] += $this->sumRating($request, $value);
             }
