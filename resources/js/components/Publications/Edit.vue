@@ -80,7 +80,8 @@
                     authors: [],
                     useSupervisor: false,
                     supervisor: null,
-                    old_supervisor: null
+                    old_supervisor: null,
+                    default_name_magazine: false
                 },
             };
         },
@@ -174,11 +175,27 @@
                     if(this.publicationData.science_type_id == 1) {
                         this.publicationData.quartil_wos = null;
                         this.publicationData.impact_factor = null;
-                        this.publicationData.sub_db_index = null;
+                        this.publicationData.sub_db_scie = 0;
+                        this.publicationData.sub_db_ssci = 0;
+                        this.publicationData.db_wos_percent = 0;
                     }
                     if(this.publicationData.science_type_id == 2) {
                         this.publicationData.snip = null;
                         this.publicationData.quartil_scopus = null;
+                        this.publicationData.db_scopus_percent = 0;
+                    }
+                    if(this.publicationData.science_type_id == '') {
+                        this.publicationData.snip = null;
+                        this.publicationData.quartil_scopus = null;
+                        this.publicationData.impact_factor = null;
+                        this.publicationData.quartil_wos = null;
+                        this.publicationData.sub_db_scie = 0;
+                        this.publicationData.sub_db_ssci = 0;
+                        this.publicationData.nature_index = 2;
+                        this.publicationData.nature_science = null;
+                        this.publicationData.db_scopus_percent = 0;
+                        this.publicationData.db_wos_percent = 0;
+                        this.publicationData.cited_international_patents = 0;
                     }
                     axios.post(`/api/update-publication/${this.$route.params.id}`, this.publicationData)
                         .then((response) => {

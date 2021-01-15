@@ -639,7 +639,7 @@
                 <td>{{ a.rating_department }}</td>
                 <td>{{a.author.country == 'Україна' ? 'Ні' : a.author.country ? 'Так' : 'Не вказано'}}</td>
                 <td>{{ item.authors.find(user => user.author.country != 'Україна') ? "Так" : "Ні" }}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.year}}</td>
+                <td>{{ item.year }}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_scopus}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_wos}}</td>
 

@@ -466,30 +466,23 @@ class PublicationsController extends ASUController
          // Рік видання
         if($request->years) {
             $years = $request->years;
-            if($request->notPreviousYear == "true") {
-                unset($years[array_search($request->reporting_year, $years)]);
-            }
-            if($request->notThisYear == "true") {
-                unset($years[array_search($request->reporting_year, $years)]);
-            }
-            $model->whereIn('year', $years);
-        }
-
-        // Публікації які не враховані в рейтингу попереднього року
-        $model->where(function($query) use ($request) {
-            $query->where('not_previous_year', 0);
+            $model->where(function($query) use ($request) {
+                $query->whereIn('year', $years)->where('not_previous_year', 0)->where('not_this_year', 0)->whereIn('publication_type_id', array_column($request->publication_types, 'id'));
+            });
             if($request->not_previous_year == "true") {
-                $query->orWhere('not_previous_year', 1);
+                unset($years[array_search($request->reporting_year, $years)]);
+                $model->orWhere(function($query) use ($request) {
+                    $query->whereIn('year', $years)->where('not_previous_year', 1)->whereIn('publication_type_id', array_column($request->publication_types, 'id'));
+                });
             }
-        });
 
-        // Публікації які не враховані в рейтингу цього року
-        $model->where(function($query) use ($request) {
-            $query->where('not_this_year', 0);
             if($request->not_this_year == "true") {
-                $query->orWhere('not_this_year', 1);
+                unset($years[array_search($request->reporting_year, $years)]);
+                $model->orWhere(function($query) use ($request) {
+                    $query->whereIn('year', $years)->where('not_this_year', 1)->whereIn('publication_type_id', array_column($request->publication_types, 'id'));
+                });
             }
-        });
+        }
 
         // Рік занесення до бази даних
         if($request->year_db) {

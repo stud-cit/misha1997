@@ -4,7 +4,12 @@
             <div class="form-group">
                 <label class="item-title">Назва журналу *</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.name_magazine">
+                    <input
+                        :disabled="publicationData.default_name_magazine"
+                        class="item-value"
+                        type="text"
+                        v-model="publicationData.name_magazine"
+                    >
                 </div>
                 <div class="error" v-if="$v.publicationData.name_magazine.$error">
                     Поле обов'язкове для заповнення
@@ -80,7 +85,7 @@
                 },
                 pages: {
                     required,
-                    validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val), 
+                    validFormat: val => /^([^a-za-zа-яіїєё]+)$/.test(val),
                 },
                 year: {
                     required

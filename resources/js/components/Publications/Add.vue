@@ -78,7 +78,8 @@
                     name_monograph: "",
                     authors: [],
                     useSupervisor: false,
-                    supervisor: null
+                    supervisor: null,
+                    default_name_magazine: false
                 },
             };
         },

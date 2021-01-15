@@ -80,7 +80,7 @@
                     <div class="form-group col-lg-6">
                         <label>У журналах (Nature / Science)</label>
                         <div class="input-container">
-                            <select v-model="publicationData.nature_science">
+                            <select v-model="publicationData.nature_science" @change="setNatureScience">
                                 <option value=""></option>
                                 <option value="Nature">Nature</option>
                                 <option value="Science">Science</option>
@@ -186,6 +186,10 @@
             }
         },
         methods:{
+            setNatureScience() {
+                this.publicationData.name_magazine = this.publicationData.nature_science;
+                this.publicationData.default_name_magazine = this.publicationData.nature_science ? true : false;
+            },
             nextStep() {
                this.$v.publicationData.$touch();
                 if (this.$v.publicationData.$invalid) {
