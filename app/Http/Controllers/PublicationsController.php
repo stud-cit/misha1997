@@ -466,19 +466,19 @@ class PublicationsController extends ASUController
          // Рік видання
         if($request->years) {
             $years = $request->years;
-            $model->where(function($query) use ($request) {
+            $model->where(function($query) use ($request, $years) {
                 $query->whereIn('year', $years)->where('not_previous_year', 0)->where('not_this_year', 0)->whereIn('publication_type_id', array_column($request->publication_types, 'id'));
             });
             if($request->not_previous_year == "true") {
                 unset($years[array_search($request->reporting_year, $years)]);
-                $model->orWhere(function($query) use ($request) {
+                $model->orWhere(function($query) use ($request, $years) {
                     $query->whereIn('year', $years)->where('not_previous_year', 1)->whereIn('publication_type_id', array_column($request->publication_types, 'id'));
                 });
             }
 
             if($request->not_this_year == "true") {
                 unset($years[array_search($request->reporting_year, $years)]);
-                $model->orWhere(function($query) use ($request) {
+                $model->orWhere(function($query) use ($request, $years) {
                     $query->whereIn('year', $years)->where('not_this_year', 1)->whereIn('publication_type_id', array_column($request->publication_types, 'id'));
                 });
             }
