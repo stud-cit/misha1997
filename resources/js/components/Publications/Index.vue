@@ -105,7 +105,7 @@
                     <label class="form-check-label" for="notThisYear">Публікації які не враховані в рейтингу цього року</label>
                 </div>
                 <SearchButton
-                    @click.native="getDataFilter(); loadingSearch = true;"
+                    @click.native="getData(1); loadingSearch = true;"
                     :disabled="loading || loadingSearch || loadingClear"
                     :loading="loadingSearch"
                     title="Пошук"
@@ -120,7 +120,7 @@
 
             <div class="row my-4" id="header-table">
                 <div class="col">
-                    <select class="form-control w-50 ml-2" id="sizeTable" v-model="pagination.perPage" @change="getData()">
+                    <select class="form-control w-50 ml-2" id="sizeTable" v-model="pagination.perPage" @change="getData(1)">
                         <option :value="10">10</option>
                         <option :value="50">50</option>
                         <option :value="100">100</option>
@@ -297,23 +297,23 @@
             if(this.$store.getters.getFilterPublications) {
                 this.filters = this.$store.getters.getFilterPublications;
             }
-            this.getData();
+            this.getData(this.pagination.currentPage);
             this.getNamesPublications();
         },
         methods: {
             scrollHeader() {
                 document.location = '#header-table';
-                this.getData();
+                this.getData(this.pagination.currentPage);
             },
             // getters
             // всі публікації
-            getDataFilter() {
+            getData(page) {
                 this.loading = true;
                 this.$store.dispatch('saveFilterPublications', this.filters);
                 axios.get('/api/publications', {
                     params: {
                         size: this.pagination.perPage,
-                        page: 1,
+                        page: page,
                         title: this.filters.title,
                         authors_f: this.filters.authors_f,
                         science_type_id: this.filters.science_type_id,
@@ -338,34 +338,6 @@
                     this.loading = false;
                     this.loadingSearch = false;
                     this.loadingClear = false;
-                })
-            },
-            getData() {
-                this.loading = true;
-                axios.get('/api/publications', {
-                    params: {
-                        size: this.pagination.perPage,
-                        page: this.pagination.currentPage,
-                        title: this.filters.title,
-                        authors_f: this.filters.authors_f,
-                        science_type_id: this.filters.science_type_id,
-                        years: this.filters.years,
-                        country: this.filters.country,
-                        publication_type_id: this.filters.publication_type_id,
-                        faculty_code: this.filters.faculty_code,
-                        department_code: this.filters.department_code,
-                        hasSupervisor: this.filters.hasSupervisor,
-                        notPreviousYear: this.filters.notPreviousYear,
-                        notThisYear: this.filters.notThisYear
-                    }
-                }).then(response => {
-                    this.countPublications = response.data.count;
-                    this.pagination.currentPage = response.data.currentPage;
-                    this.pagination.firstItem = response.data.firstItem;
-                    this.data = response.data.publications.data;
-                    this.loading = false;
-                }).catch(() => {
-                    this.loading = false;
                 })
             },
             // всі назви пцблікацій
@@ -395,7 +367,7 @@
                         })
                         .then(() => {
                             this.selectPublications = [];
-                            this.getData();
+                            this.getData(this.pagination.currentPage);
                             swal.fire("Публікації успішно видалено");
                         });
                     }
@@ -438,7 +410,7 @@
                 this.filters.hasSupervisor = false;
                 this.filters.notPreviousYear = false;
                 this.filters.notThisYear = false;
-                this.getDataFilter();
+                this.getData(1);
             }
         },
         computed: {

@@ -285,7 +285,7 @@
                     <label class="form-check-label" for="notThisYear">Публікації які не враховані в рейтингу цього року</label>
                 </div>
                 <SearchButton
-                    @click.native="getFilterPublications(); loadingSearch = true"
+                    @click.native="getPublications(1); loadingSearch = true"
                     :disabled="loading || loadingSearch"
                     :loading="loadingSearch"
                     title="Пошук"
@@ -294,7 +294,7 @@
 
             <div class="row my-4" id="header-table">
                 <div class="col">
-                    <select class="form-control w-50 ml-2" id="sizeTable" v-model="pagination.perPage" @change="getPublications()">
+                    <select class="form-control w-50 ml-2" id="sizeTable" v-model="pagination.perPage" @change="getPublications(1)">
                         <option :value="10">10</option>
                         <option :value="50">50</option>
                         <option :value="100">100</option>
@@ -473,7 +473,7 @@
         },
         mounted () {
             this.getData();
-            this.getPublications();
+            this.getPublications(this.pagination.currentPage);
             this.getRoles();
             this.getDepartmentsUser();
         },
@@ -485,7 +485,7 @@
         methods: {
             scrollHeader() {
                 document.location = '#header-table';
-                this.getPublications();
+                this.getPublications(this.pagination.currentPage);
             },
             getDepartmentsUser() {
                 if(this.data.faculty_code) {
@@ -529,12 +529,12 @@
                     this.loading = false;
                 })
             },
-            getFilterPublications() {
+            getPublications(page) {
                 this.loading = true;
                 axios.get('/api/publications/'+this.$route.params.id, {
                     params: {
                         size: this.pagination.perPage,
-                        page: 1,
+                        page: page,
                         title: this.filters.title,
                         authors_f: this.filters.authors_f,
                         science_type_id: this.filters.science_type_id,
@@ -552,30 +552,9 @@
                     this.publications = response.data.publications.data;
                     this.loading = false;
                     this.loadingSearch = false;
-                })
-            },
-            getPublications() {
-                this.loading = true;
-                axios.get('/api/publications/'+this.$route.params.id, {
-                    params: {
-                        size: this.pagination.perPage,
-                        page: this.pagination.currentPage,
-                        title: this.filters.title,
-                        authors_f: this.filters.authors_f,
-                        science_type_id: this.filters.science_type_id,
-                        year: this.filters.year,
-                        country: this.filters.country,
-                        publication_type_id: this.filters.publication_type_id,
-                        withSupervisor: this.filters.withSupervisor,
-                        notPreviousYear: this.filters.notPreviousYear,
-                        notThisYear: this.filters.notThisYear
-                    }
-                }).then(response => {
-                    this.countPublications = response.data.count;
-                    this.pagination.currentPage = response.data.currentPage;
-                    this.pagination.firstItem = response.data.firstItem;
-                    this.publications = response.data.publications.data;
+                }).catch(() => {
                     this.loading = false;
+                    this.loadingSearch = false;
                 })
             },
             getRoles() {

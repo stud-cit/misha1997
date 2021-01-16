@@ -83,7 +83,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="export-button" style="display: inline-block" @click="getDataFilter(); loadingSearch = true">
+                <button type="button" class="export-button" style="display: inline-block" @click="getData(1); loadingSearch = true">
                     <span
                         class="spinner-border spinner-border-sm"
                         style="width: 19px; height: 19px"
@@ -109,7 +109,7 @@
 
             <div class="row my-4" id="header-table">
                 <div class="col">
-                    <select class="form-control w-50 ml-2" id="sizeTable" v-model="pagination.perPage" @change="getData()">
+                    <select class="form-control w-50 ml-2" id="sizeTable" v-model="pagination.perPage" @change="getData(1)">
                         <option :value="10">10</option>
                         <option :value="50">50</option>
                         <option :value="100">100</option>
@@ -266,20 +266,20 @@
             if(this.$store.getters.getFilterUsers) {
                 this.filters = this.$store.getters.getFilterUsers;
             }
-            this.getData();
+            this.getData(this.pagination.currentPage);
         },
         methods: {
             scrollHeader() {
                 document.location = '#header-table';
-                this.getData();
+                this.getData(this.pagination.currentPage);
             },
-            getDataFilter() {
+            getData(page) {
                 this.loading = true;
                 this.$store.dispatch('saveFilterUser', this.filters);
                 axios.get('/api/authors', {
                     params: {
                         size: this.pagination.perPage,
-                        page: 1,
+                        page: page,
                         name: this.filters.name,
                         faculty_code: this.filters.faculty_code,
                         department_code: this.filters.department_code,
@@ -302,32 +302,6 @@
                     this.loading = false;
                     this.loadingSearch = false;
                     this.loadingClear = false;
-                })
-            },
-            getData() {
-                this.loading = true;
-                axios.get('/api/authors', {
-                    params: {
-                        size: this.pagination.perPage,
-                        page: this.pagination.currentPage,
-                        name: this.filters.name,
-                        faculty_code: this.filters.faculty_code,
-                        department_code: this.filters.department_code,
-                        h_index: this.filters.h_index,
-                        categ_users: this.filters.categ_users,
-                        role: this.filters.role
-                    }
-                }).then(response => {
-                    this.countUsers = response.data.count;
-                    this.scopusAutorId = response.data.scopusAutorId;
-                    this.hIndex = response.data.hIndex;
-                    this.fivePublications = response.data.fivePublications;
-                    this.pagination.currentPage = response.data.currentPage;
-                    this.pagination.firstItem = response.data.firstItem;
-                    this.data = response.data.users.data;
-                    this.loading = false;
-                }).catch(() => {
-                    this.loading = false;
                 })
             },
 			selectItem(item) {
@@ -354,7 +328,7 @@
 						})
                         .then(() => {
                             this.selectUsers = [];
-                            this.getData();
+                            this.getData(this.pagination.currentPage);
                             swal.fire("Користувачі успішно видалені");
                         });
                     }
@@ -369,7 +343,7 @@
                 this.filters.h_index = '';
                 this.filters.categ_users = '';
                 this.filters.role = '';
-                this.getDataFilter();
+                this.getData(1);
             }
         }
     }
