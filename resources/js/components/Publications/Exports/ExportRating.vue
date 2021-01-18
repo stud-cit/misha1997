@@ -576,7 +576,6 @@
                 <th>Номер (том) </th>
                 <th>Посада</th>
                 <th>Студент</th>
-                <th>Випускник</th>
                 <th>Прізвище, ім'я </th>
                 <th>Керівник </th>
                 <th>Максимальний Індекс Гірша</th>
@@ -621,8 +620,7 @@
                 <td v-else-if="a.author.categ_2 == 2">Викладач</td>
                 <td v-else-if="a.author.categ_2 == 3">Менеджер</td>
                 <td v-else></td>
-                <td>{{ item.authors.find(user => user.author.categ_1 == 1) ? "Студент" : "" }}</td>
-                <td>{{ item.authors.find(user => user.author.categ_1 == 3) ? "Випускник" : "" }}</td>
+                <td>{{ item.authors.find(user => user.author.categ_1 == 1 || user.author.categ_1 == 3) ? "Студент" : "" }}</td>
                 <td>{{ a.author.name }}</td>
                 <td>{{ a.supervisor ? 'Так' : 'Ні' }}</td>
 
@@ -948,7 +946,6 @@
                         { wch: 5 }, // Номер (том)
                         { wch: 10 }, // Посада
                         { wch: 10 }, // Студент
-                        { wch: 10 }, // Випускник
                         { wch: 15 }, // Прізвище, ім'я
                         { wch: 5 }, // Керівник
                         { wch: 5 }, // Індекс Гірша WoS

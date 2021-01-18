@@ -467,39 +467,19 @@ class PublicationsController extends ASUController
         }
 
         // Публікації які не враховані в рейтингу попереднього року
-        if($request->not_previous_year == "true") {
-            $years = $request->years;
-            unset($years[array_search($request->reporting_year, $years)]);
-            $model->where(function($query) use ($request, $years) {
-                $query->where(function($q) use ($request, $years) {
-                    $q->where('not_previous_year', 1)->whereIn('year', $years);
+        if($request->not_previous_year) {
+            $model->where(function($query) use ($request) {
+                $query->where(function($q) use ($request) {
+                    $q->where('not_previous_year', 1)->where('year',  ($request->reporting_year - 1));
                 })->orWhere(function($q) use ($request) {
                     $q->where('not_previous_year', 0)->where('year', $request->reporting_year);
                 });
             });
-        } else {
-            // Рік видання
-            if($request->years) {
-                $model->whereIn('year', $request->years);
-            }
         }
 
-        // Публікації які не враховані в рейтингу цього року
-        if($request->not_this_year == "true") {
-            $years = $request->years;
-            unset($years[array_search($request->reporting_year, $years)]);
-            $model->where(function($query) use ($request, $years) {
-                $query->where(function($q) use ($request, $years) {
-                    $q->where('not_this_year', 1)->whereIn('year', $years);
-                })->orWhere(function($q) use ($request) {
-                    $q->where('not_this_year', 0)->where('year', $request->reporting_year);
-                });
-            });
-        } else {
-            // Рік видання
-            if($request->years) {
-                $model->whereIn('year', $request->years);
-            }
+        // Рік видання
+        if($request->years) {
+            $model->whereIn('year', $request->years);
         }
 
         // Рік занесення до бази даних
@@ -564,7 +544,7 @@ class PublicationsController extends ASUController
 
         if($request->withStudents) { // Публікації за авторством та співавторством студентів
             $model->whereHas('authors.author', function($q) {
-                $q->where('categ_1', 1);
+                $q->where('categ_1', 1)->orWhere('categ_1', 3);
             });
         }
 
@@ -628,6 +608,15 @@ class PublicationsController extends ASUController
         }
 
         $data = $model->get();
+
+        // Публікації які не враховані в рейтингу цього року
+        if($request->not_this_year) {
+            foreach ($data as $key => $value) {
+                if($value['not_this_year'] == 1 && $value['year'] == $request->reporting_year) {
+                    unset($data[$key]);
+                }
+            }
+        }
 
         if($request->quartil_scopus && $request->quartil_wos && ($request->quartil_scopus == $request->quartil_wos)) {
             foreach ($data as $key => $value) {
@@ -875,7 +864,17 @@ class PublicationsController extends ASUController
                 }
 
                 //Кількість статей за авторством та співавторством студентів
-                if(($value['publication_type_id'] == 1 || $value['publication_type_id'] == 2 || $value['publication_type_id'] == 3 || $value['publication_type_id'] == 8) && ($v['author']['categ_1'] == 1 || $v['author']['categ_1'] == 3)) {
+                if(
+                    (
+                        $value['publication_type_id'] == 1 || 
+                        $value['publication_type_id'] == 2 || 
+                        $value['publication_type_id'] == 3 || 
+                        $value['publication_type_id'] == 7 || 
+                        $value['publication_type_id'] == 8
+                    ) && (
+                        $v['author']['categ_1'] == 1 || $v['author']['categ_1'] == 3
+                    )
+                ) {
                     $withStudent = 1;
                 }
 
