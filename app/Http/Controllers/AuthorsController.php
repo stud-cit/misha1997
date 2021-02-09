@@ -384,7 +384,11 @@ class AuthorsController extends ASUController
         if($data->categ_1 == 1) {
             $result = "Студент";
         } elseif ($data->categ_1 == 2) {
-            $result = "Аспірант";
+            if($data->kod_level == 9) {
+                $result = "Докторант";
+            } else {
+                $result = "Аспірант";
+            }
         } elseif ($data->categ_1 == 3) {
             $result = "Випускник";
         } elseif ($data->categ_2 == 1) {
@@ -422,7 +426,8 @@ class AuthorsController extends ASUController
                 "faculty_code" => null,
                 "categ_1" => 0,
                 "categ_2" => 0,
-                "academic_code" => null
+                "academic_code" => null,
+                "kod_level" => null
             ];
             $isStudent = false;
             $kod_div = null;
@@ -431,6 +436,7 @@ class AuthorsController extends ASUController
                     if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2 && $value['KOD_LEVEL'] == 8) {
                         $person['categ_1'] = $value['CATEG'];
                         $person['academic_code'] = $value['NAME_GROUP'];
+                        $person['kod_level'] = $value['KOD_LEVEL'];
                         $kod_div = $this->getAspirantDepartment($getPersons['guid']);
                         $isStudent = true;
                     }
@@ -447,9 +453,11 @@ class AuthorsController extends ASUController
             }
 
             if($kod_div) {
-                $division = $this->getUserDivision($kod_div)->original;
-                $person['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
-                $person['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+                if($person['categ_1'] != 1) {
+                    $division = $this->getUserDivision($kod_div)->original;
+                    $person['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
+                    $person['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+                }
             }
 
             $model->update($person);
@@ -469,7 +477,7 @@ class AuthorsController extends ASUController
                     $person = [];
 
                     $aspirant = array_filter($getContingents['result'], function($value) use ($model) {
-                        return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'] && $value['CATEG_1'] == 2 && ($value['KOD_LEVEL'] == 8 || $value['KOD_LEVEL'] == 5);
+                        return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'] && $value['CATEG_1'] == 2 && ($value['KOD_LEVEL'] == 8 || $value['KOD_LEVEL'] == 9 || $value['KOD_LEVEL'] == 5);
                     });
 
                     if(count($aspirant) == 0) {
@@ -479,22 +487,23 @@ class AuthorsController extends ASUController
                         $person = array_shift($anotherUser);
                     } else {
                         $person = array_shift($aspirant);
-                        if($person['KOD_LEVEL'] == 8) {
+                        if($person['KOD_LEVEL'] == 8 || $person['KOD_LEVEL'] == 9) {
+                            $person['KOD_LEVEL'] = $person['KOD_LEVEL'];
                             $person['KOD_DIV'] = $this->getAspirantDepartment($person['ID_FIO']);
                         }
                     }
-
                     $division = $this->getUserDivision($person['KOD_DIV'])->original;
                     $person['DEPARTMENT_CODE'] = $division['department'] ? $division['department']['ID_DIV'] : null;
                     $person['FACULTY_CODE'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
 
                     $model->update([
                         "name" => $person['F_FIO'] . ' ' . $person['I_FIO'] . ' ' . $person['O_FIO'],
-                        "faculty_code" => $person['FACULTY_CODE'],
-                        "department_code" => $person['DEPARTMENT_CODE'],
+                        "faculty_code" => $person['CATEG_1'] != 1 ? $person['FACULTY_CODE'] : null,
+                        "department_code" => $person['CATEG_1'] != 1 ? $person['DEPARTMENT_CODE'] : null,
                         "academic_code" => $person['NAME_GROUP'],
                         "categ_1" => $person['CATEG_1'],
                         "categ_2" => $person['CATEG_2'],
+                        "kod_level" => $person['KOD_LEVEL'],
                     ]);
 
                     return response()->json([

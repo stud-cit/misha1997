@@ -31,7 +31,8 @@ class Authors extends Model
         'without_self_citations_scopus',
         'add_user_id',
         'custom_divisions',
-        'test_data'
+        'test_data',
+        'kod_level'
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'test_data', 'token'];
