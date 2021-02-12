@@ -590,7 +590,7 @@
                 <th>Рік</th>
                 <th>Квартиль Scopus</th>
                 <th>Квартиль WoS</th>
-                <th>Квартиль</th>
+                <th>Квартиль мінімальний</th>
                 <th>SNIP</th>
                 <th>Імпакт-фактор (БД WoS)</th>
                 <th>Підбаза WoS</th>
@@ -638,10 +638,10 @@
                 <td>{{a.author.country == 'Україна' ? 'Ні' : a.author.country ? 'Так' : 'Не вказано'}}</td>
                 <td>{{ item.authors.find(user => user.author.country != 'Україна') ? "Так" : "Ні" }}</td>
                 <td>{{ item.year }}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_scopus}}</td>
-                <td v-if="i == 0" :rowspan="item.authors.length">{{item.quartil_wos}}</td>
 
-                <td v-if="i == 0" :rowspan="item.authors.length">{{ quartil(item) }}</td>
+                <td>{{ item.quartil_scopus }}</td>
+                <td>{{ item.quartil_wos }}</td>
+                <td>{{ item.quartil_min }}</td>
 
                 <td>{{item.snip}}</td>
                 <td v-if="i == 0" :rowspan="item.authors.length">{{item.impact_factor}}</td>
@@ -875,10 +875,6 @@
                 axios.get('/api/type-publications').then(response => {
                     this.publicationTypes = response.data;
                 })
-            },
-            quartil(item) {
-                var result = Math.min(...[item.quartil_scopus, item.quartil_wos].filter(i => i != null));
-                return isFinite(result) ? result : "";
             },
             indexHirsha(item) {
                 var result = Math.max(...[item.h_index, item.scopus_autor_id].filter(i => i != null));

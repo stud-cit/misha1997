@@ -956,26 +956,35 @@ class PublicationsController extends ASUController
                 }
             }
 
+            $minQuartil = "";
+            $filterQuartil = $this->filterQuartil($value['quartil_scopus'], $value['quartil_wos']);
+
+            if(count($filterQuartil) > 0) {
+                $minQuartil = min($filterQuartil);
+            }
+
+            $value['quartil_min'] = $minQuartil;
+
             // у виданні, яке відноситься до квартиля Q4
-            if($value['quartil_scopus'] == 4 || $value['quartil_wos'] == 4) {
+            if($minQuartil == 4) {
                 $rating["publicationsScopusWoSProfileSSU"]['quartile4']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]['quartile4']['count'] += 1;
             }
 
             // у виданні, яке відноситься до квартиля Q3
-            if($value['quartil_scopus'] == 3 || $value['quartil_wos'] == 3) {
+            if($minQuartil == 3) {
                 $rating["publicationsScopusWoSProfileSSU"]['quartile3']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]['quartile3']['count'] += 1;
             }
 
             // у виданні, яке відноситься до квартиля Q2
-            if($value['quartil_scopus'] == 2 || $value['quartil_wos'] == 2) {
+            if($minQuartil == 2) {
                 $rating["publicationsScopusWoSProfileSSU"]['quartile2']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]['quartile2']['count'] += 1;
             }
 
             // у виданні, яке відноситься до квартиля Q1
-            if($value['quartil_scopus'] == 1 || $value['quartil_wos'] == 1) {
+            if($minQuartil == 1) {
                 $rating["publicationsScopusWoSProfileSSU"]['quartile1']['rating'] += $this->sumRating($request, $value);
                 $rating["publicationsScopusWoSProfileSSU"]['quartile1']['count'] += 1;
             }
@@ -1157,5 +1166,11 @@ class PublicationsController extends ASUController
             }
         }
         return $result;
+    }
+
+    function filterQuartil($quartil_scopus, $quartil_wos) {
+        return array_filter([$quartil_scopus, $quartil_wos], function($value) {
+            return $value != NULL;
+        });
     }
 }
