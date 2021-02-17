@@ -52,7 +52,7 @@ Route::group(['middleware' => ['web']], function() {
     Route::get('publications/{author_id?}', 'PublicationsController@getAll'); // всі публікації з додатковими залежностями
     Route::get('publication/{id}', 'PublicationsController@getId');
     Route::post('publication', 'PublicationsController@post');
-    Route::post('check-publication/{id}', 'PublicationsController@checkPublication');
+    Route::get('check-publication/{id}', 'PublicationsController@checkPublication');
 
     Route::post('update-publication/{id}','PublicationsController@updatePublication');
     Route::post('delete-publications','PublicationsController@deletePublications');

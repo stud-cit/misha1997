@@ -19,9 +19,9 @@ class PublicationsController extends ASUController
         return response()->json($data);
     }
 
-    function checkPublication($id) {
+    function checkPublication(Request $request, $id) {
         $model = Publications::with('authors.author')->whereHas('authors.author', function($q) use ($request) {
-            $q->whereIn('id', $request->session()->get('person')['id']);
+            $q->where('id', $request->session()->get('person')['id']);
         })->where('id', $id)->exists();
         if($model) {
             return response()->json([
