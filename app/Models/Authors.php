@@ -13,6 +13,7 @@ class Authors extends Model
         'name',
         'date_bth',
         'job',
+        'job_type_id',
         'faculty_code',
         'department_code',
         'country',
@@ -51,5 +52,9 @@ class Authors extends Model
 
     function user() {
         return $this->belongsTo('App\Models\Authors', 'add_user_id');
+    }
+
+    function jobType() {
+        return $this->belongsTo('App\Models\JobType', 'job_type_id');
     }
 }

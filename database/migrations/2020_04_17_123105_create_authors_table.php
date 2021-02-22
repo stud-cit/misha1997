@@ -18,7 +18,8 @@ class CreateAuthorsTable extends Migration
             $table->string('guid')->nullable(); // guid кабінету
             $table->string('name'); // ім'я
             $table->string('date_bth')->nullable(); // дата народження
-            $table->string('job')->nullable(); // місце роботи
+            $table->string('job')->nullable(); // назва місця роботи
+            $table->string('job_type_id')->nullable(); // місце роботи
             $table->string('faculty_code')->nullable(); // код факультету
             $table->string('department_code')->nullable(); // код кафедри
             $table->string('country')->default("Україна"); // країна

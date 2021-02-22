@@ -8,6 +8,7 @@ use App\Models\Users;
 use App\Models\Roles;
 use App\Models\Notifications;
 use App\Models\Publications;
+use App\Models\JobType;
 use Session;
 use Config;
 
@@ -25,7 +26,7 @@ class AuthorsController extends ASUController
     function get(Request $request) {
         $divisions = $this->getAllDivision()->original;
         $data = [];
-        $model = Authors::with('role')->orderBy('created_at', 'DESC');
+        $model = Authors::with('role', 'jobType')->orderBy('created_at', 'DESC');
 
         if($request->session()->get('person')['roles_id'] == 3) {
             $model->where('faculty_code', $request->session()->get('person')['faculty_code'])->orWhere('categ_1', 1)->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'СумДУ (Не працює)');
@@ -200,7 +201,7 @@ class AuthorsController extends ASUController
 
     // profile (Сторінка профілю)
     function profile(Request $request) {
-        $data = Authors::with('role')->find($request->session()->get('person')['id']);
+        $data = Authors::with('role', 'jobType')->find($request->session()->get('person')['id']);
         $data->position = $this->getPosition($data);
 
         $kod_div = $data->department_code ? $data->department_code : $data->faculty_code;
@@ -222,7 +223,7 @@ class AuthorsController extends ASUController
 
     // getId (Користувач по id)
     function getId($id) {
-        $data = Authors::with('role', 'user')->find($id);
+        $data = Authors::with('role', 'user', 'jobType')->find($id);
         $data->position = $this->getPosition($data);
 
         $kod_div = $data->department_code ? $data->department_code : $data->faculty_code;
@@ -398,7 +399,7 @@ class AuthorsController extends ASUController
         } elseif ($data->categ_2 == 3) {
             $result = "Менеджер";
         } else {
-            $result = $data->job;
+            $result = $data->job_type['title'];
         }
         return $result;
     }
@@ -411,6 +412,11 @@ class AuthorsController extends ASUController
             $age--;
         }
         return $age;
+    }
+
+    function jobType() {
+        $data = JobType::where('id', '!=', 5)->get();
+        return response()->json($data);
     }
 
     function updateCabinetInfo(Request $request, $user_id) {

@@ -16,6 +16,8 @@ Route::get('check-user/{user_id}', 'DevController@updateCabinetInfo');
 
 Route::group(['middleware' => ['web']], function() {
 
+    Route::get('job-type', 'AuthorsController@jobType');
+
     // Режим доступа
     Route::get('access', 'ServiceController@access');
     Route::post('access', 'ServiceController@changeAccess');

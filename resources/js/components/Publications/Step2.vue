@@ -80,21 +80,17 @@
                                 <div class="col-lg-3 list-item list-title">Місце роботи *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
-                                        <select class="item-value" v-model="jobType" @change="setJobType">
-                                            <option value="1">Учбовий заклад</option>
-                                            <option value="2">Підприємство</option>
-                                            <option value="3">Студент - випускник</option>
-                                            <option value="0">Не працює</option>
-                                            <option value="4">СумДУ (для співробітників, які працювали в звітному році та припинили свою діяльність)</option>
+                                        <select class="item-value" v-model="newAuthor.job_type_id" @change="setJobType">
+                                            <option v-for="job in job_type" :key="job.id" :value="job.id">{{ job.title }}</option>
                                         </select>
                                     </div>
-                                    <div class="error" v-if="$v.jobType.$error">
+                                    <div class="error" v-if="$v.newAuthor.job_type_id.$error">
                                         Поле обов'язкове для заповнення
                                     </div>
                                 </div>
                             </li>
-                            <li class="row" v-if="jobType == 1 || jobType == 2">
-                                <div class="col-lg-3 list-item list-title">{{ jobType == 1 ? 'Назва учбового закладу *' : 'Підприємство *' }}</div>
+                            <li class="row" v-if="newAuthor.job_type_id == 1 || newAuthor.job_type_id == 2">
+                                <div class="col-lg-3 list-item list-title">{{ newAuthor.job_type_id == 1 ? 'Назва учбового закладу *' : 'Підприємство *' }}</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
                                         <input class="item-value" type="text" v-model="newAuthor.job">
@@ -106,7 +102,7 @@
                             </li>
 
 
-                            <li class="row" v-if="jobType == 4">
+                            <li class="row" v-if="newAuthor.job_type_id == 6">
                                 <div class="col-lg-3 list-item list-title">Факультет/Інститут *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
@@ -121,7 +117,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="row" v-if="jobType == 4">
+                            <li class="row" v-if="newAuthor.job_type_id == 6">
                                 <div class="col-lg-3 list-item list-title">Кафедра *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
@@ -137,7 +133,7 @@
                                 </div>
                             </li>
 
-                            <li class="row" v-if="jobType == 2">
+                            <li class="row" v-if="newAuthor.job_type_id == 2">
                                 <div class="col-lg-3 list-item list-title">Входить до списків Forbes та Fortune *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
@@ -151,7 +147,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="row" v-show="jobType != 3 && jobType != 4">
+                            <li class="row" v-show="newAuthor.job_type_id != 3 && newAuthor.job_type_id != 6">
                                 <div class="col-lg-3 list-item list-title">Країна автора *</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <Country :data="newAuthor"></Country>
@@ -160,7 +156,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="row" v-show="jobType != 3">
+                            <li class="row" v-show="newAuthor.job_type_id != 3">
                                 <div class="col-lg-3 list-item list-title">Індекс Гірша</div>
                                 <div class="col-lg-9  list-item list-text d-flex">
                                     <div class="col-lg-6 two-col pr-2">
@@ -179,7 +175,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="row" v-show="jobType != 3">
+                            <li class="row" v-show="newAuthor.job_type_id != 3">
                                 <div class="col-lg-3 list-item list-title">Research ID</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
@@ -188,7 +184,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="row" v-show="jobType != 3">
+                            <li class="row" v-show="newAuthor.job_type_id != 3">
                                 <div class="col-lg-3 list-item list-title">ORCID</div>
                                 <div class="col-lg-9 list-item list-text">
                                     <div class="input-container">
@@ -332,12 +328,11 @@
         mixins: [divisions],
         data() {
             return {
-                clicks: 0,
+                job_type: [],
                 loadingAuthors: true,
                 loading: false,
                 departments: [],
                 divisions: [],
-                jobType: null,
                 findAuthor: false,
                 categ: [
                     {
@@ -395,7 +390,8 @@
                     forbes_fortune: 0,
                     faculty_code: '',
                     department_code: '',
-                    categ_1: ''
+                    categ_1: '',
+                    job_type_id: null
                 }
             }
         },
@@ -458,26 +454,26 @@
                     required
                 },
             },
-            jobType: {
-                required
-            },
             newAuthor: {
                 country: {
                     required: requiredIf(function() {
-                        return this.jobType != 3 && this.jobType != 4;
+                        return this.newAuthor.job_type_id != 3 && this.newAuthor.job_type_id != 6;
                     })
                 },
                 job: {
                     required: requiredIf(function() {
-                        return this.jobType == 1 || this.jobType == 2;
+                        return this.newAuthor.job_type_id == 1 || this.newAuthor.job_type_id == 2;
                     })
+                },
+                job_type_id: {
+                    required
                 },
                 name: {
                     required
                 },
                 forbes_fortune: {
                     required: requiredIf(function() {
-                        return this.jobType == 2;
+                        return this.newAuthor.job_type_id == 2;
                     })
                 }
             },
@@ -490,8 +486,8 @@
             },
             // задає місце роботи для новго автора не з СумДУ
             setJobType() {
-                if(this.jobType == 0 || this.jobType == 3) {
-                    this.newAuthor.job = "Не працює";
+                if(this.newAuthor.job_type_id == 4 || this.newAuthor.job_type_id == 3) {
+                    this.newAuthor.job = null;
                     this.newAuthor.country = null;
                     this.newAuthor.h_index = "";
                     this.newAuthor.scopus_autor_id = "";
@@ -500,12 +496,12 @@
                     this.newAuthor.faculty_code = "";
                     this.newAuthor.department_code = "";
                     this.newAuthor.categ_1 = "";
-                    if(this.jobType == 3) {
-                        this.newAuthor.country = "";
+                    if(this.newAuthor.job_type_id == 3) {
+                        this.newAuthor.country = null;
                         this.newAuthor.categ_1 = 3;
                     }
                 } else {
-                    this.newAuthor.job = '';
+                    this.newAuthor.job = null;
                     this.newAuthor.categ_1 = "";
                 }
             },
@@ -606,11 +602,9 @@
             },
             // відображення форми додання автора з СумДУ (n = 1) та іншого (n = 2)
             showNewAuthor(n) {
-                if(n == 1) {
-                    this.getDivisions();
-                }
                 if(n == 2) {
                     this.getOtherAuthorNames();
+                    this.getJobType();
                 }
                 window.scrollTo(0,0);
                 this.otherAuthor = n;
@@ -652,10 +646,10 @@
                     })
                 }
             },
-            // всі факультети, кафедри
-            getDivisions() {
-                axios.get('/api/sort-divisions').then(response => {
-                    this.divisions = response.data;
+            // місця роботи
+            getJobType() {
+                axios.get('/api/job-type').then(response => {
+                    this.job_type = response.data;
                 })
             },
 
@@ -712,12 +706,11 @@
                 } else {
                     this.errorName = null;
                 }
-                if(this.jobType == 3) {
+                if(this.newAuthor.job_type_id == 3) {
                     this.newAuthor.country = "Україна";
                 }
-                if(this.jobType == 4) {
+                if(this.newAuthor.job_type_id == 6) {
                     this.newAuthor.country = "Україна";
-                    this.newAuthor.job = "СумДУ (Не працює)";
                 }
                 this.loading = true;
                 axios.post('/api/author', this.newAuthor)
@@ -725,7 +718,6 @@
                     if(response.data.status == 'ok') {
                         this.otherAuthor = false;
                         this.getAuthors();
-                        this.jobType = null;
                         this.newAuthor = {
                             job: '',
                             name: '',
@@ -734,7 +726,8 @@
                             scopus_autor_id: '',
                             scopus_researcher_id: '',
                             orcid: '',
-                            forbes_fortune: 0
+                            forbes_fortune: 0,
+                            job_type_id: null
                         };
                         this.publicationData.authors.map(item => {
                             if(item.name == "") {
