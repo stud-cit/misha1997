@@ -9,6 +9,10 @@ Route::post('register', 'AuthController@register');
 Route::post('logout', 'AuthController@logout');
 
 // dev
+Route::get('update-users', 'DevController@updateUsers');
+Route::get('get-users', 'DevController@getUsers');
+Route::get('get-user-id/{id}', 'DevController@getUserId');
+
 Route::get('check-student', 'DevController@checkStudent');
 Route::get('check-not-work', 'DevController@checkSSUNotWork');
 Route::get('check-division/{department_code}', 'DevController@getUserDivision');

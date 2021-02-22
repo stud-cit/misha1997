@@ -36,7 +36,7 @@ class Authors extends Model
         'kod_level'
     ];
 
-    protected $hidden = ['created_at', 'updated_at', 'test_data', 'token'];
+    protected $hidden = ['created_at', 'updated_at', 'token'];
 
     function role() {
         return $this->belongsTo('App\Models\Roles', 'roles_id');
@@ -56,5 +56,9 @@ class Authors extends Model
 
     function jobType() {
         return $this->belongsTo('App\Models\JobType', 'job_type_id');
+    }
+
+    function levelType() {
+        return $this->belongsTo('App\Models\LevelType', 'level_type_id');
     }
 }

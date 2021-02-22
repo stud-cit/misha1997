@@ -23,5 +23,8 @@ class RolesSeeder extends Seeder
         DB::table('roles')->insert([
             'name' => 'Адміністратор'
         ]);
+        DB::table('roles')->insert([
+            'name' => 'Модератор університету'
+        ]);
     }
 }

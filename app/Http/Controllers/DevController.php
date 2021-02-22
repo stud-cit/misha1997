@@ -21,6 +21,58 @@ class DevController extends ASUController
         $this->cabinet_service_token = config('app.token');
     }
 
+    function updateUsers() {
+        Authors::where('categ_1', 1)->update([
+            'job' => null,
+            'level_type_id' => 1
+        ]);
+        return response('ok', 200);
+    }
+
+    function getUsers() {
+        $data = Authors::select('name', 'categ_1', 'guid', 'id', 'job', 'job_type_id', 'level_type_id', 'kod_level', 'test_data')
+            ->where('categ_1', 2)
+            ->get();
+
+        $test = [];
+        foreach ($data as $key => $value) {
+            if(isset($value['test_data'])) {
+                $getPersons = json_decode($value['test_data'], true);
+                if(isset($getPersons['info2'])) {
+                    foreach ($getPersons['info2'] as $k => $v) {
+                        //if($v['KOD_STATE'] == 1) {
+                            $value['test_data'] = array_column($getPersons['info2'], 'NAME_STATE');
+                            // $state = [
+                            //     "id" => $v['KOD_STATE'],
+                            //     "name" => $v['NAME_STATE']
+                            // ];
+                            // if(!in_array($state, $test)) {
+                            //     array_push($test, $state);
+                            // }
+                            //$value['test_data'] = array_column($getPersons['info1'], 'NAME_STATE');
+                        //}
+                    }
+                }
+
+                // foreach ($getPersons['info1'] as $k => $v) {
+                //     if($v['KOD_STATE'] == "1") {
+                //         $value['test_data'] = $v['KOD_LEVEL'];
+                //     }
+                // }
+                // $value['test_data'] = array_column($getPersons['info1'], 'KOD_LEVEL');
+            }
+        }
+        return response()->json($data);
+    }
+
+
+    function getUserId($id) {
+        $data = Authors::find($id);
+        $data['test_data'] = json_decode($data['test_data'], true);
+        return response()->json($data['test_data']['info1']);
+    }
+
+
     function test() {
         //$data = Publications::where('publication_type_id', 9)->where('name_conference', null)->get();
         $arr = [];

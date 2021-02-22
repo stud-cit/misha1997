@@ -56,7 +56,6 @@ class AuthController extends ASUController {
         if(!Authors::where("guid", $personCabinet['result']['guid'])->exists()) {
             $data = $request->all();
             $data['name'] = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
-            $data['job'] = "СумДУ";
             $data['country'] = "Україна";
             $data['guid'] = $personCabinet['result']['guid'];
             $data['token'] = $personCabinet['result']['token'];
@@ -83,6 +82,7 @@ class AuthController extends ASUController {
                     if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 2 || $value['KOD_STATE'] == 3)) {
                         $data['categ_2'] = $value['CATEG'];
                         $kod_div = $value['KOD_DIV'];
+                        $data['job'] = "СумДУ";
                     }
                 }
             }

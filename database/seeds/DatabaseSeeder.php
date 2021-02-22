@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
             ScienceTypeSeeder::class,
             PublicationTypeSeeder::class,
             CountriesSeeder::class,
-            ServiceSeeder::class
+            ServiceSeeder::class,
+            LevelSeeder::class
         ]);
     }
 }
