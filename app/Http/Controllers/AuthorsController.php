@@ -12,8 +12,14 @@ use App\Models\JobType;
 use Session;
 use Config;
 
+use App\Http\Traits\NotificationTrait;
+use App\Http\Traits\AuthorTrait;
+
 class AuthorsController extends ASUController
 {
+    use NotificationTrait;
+    use AuthorTrait;
+
     protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
     protected $asu_key = "eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG";
     protected $cabinet_service_token;
@@ -84,13 +90,13 @@ class AuthorsController extends ASUController
             $model->where(function($query) use($request) {
                 foreach($request->categ_users as $key => $value) {
                     if($value == "СумДУ") {
-                        $query->orWhere('job', 'СумДУ');
+                        $query->orWhere('job_type_id', 5);
                     }
                     if($value == "СумДУ (Не працює)") {
-                        $query->orWhere('job', 'СумДУ (Не працює)');
+                        $query->orWhere('job_type_id', 6);
                     }
                     if($value == "Зовнішні співавтори") {
-                        $query->orWhere('job', '!=', 'СумДУ')->where('job', '!=', 'СумДУ (Не працює)');
+                        $query->orWhere('job_type_id', '!=', 5)->where('job_type_id', '!=', 6);
                     }
                     if($value == "Студенти") {
                         $query->orWhere('categ_1', 1)->orWhere('categ_1', 3);
@@ -150,7 +156,7 @@ class AuthorsController extends ASUController
     function getAll(Request $request) {
         $data = Authors::with('role')->orderBy('name', 'ASC')->get();
 
-        $divisions = $this->getAllDivision()->original;
+        $divisions = $this->getAllDivision();
 
         foreach ($data as $key => $value) {
             $value['position'] = $this->getPosition($value);
@@ -206,7 +212,7 @@ class AuthorsController extends ASUController
 
         $kod_div = $data->department_code ? $data->department_code : $data->faculty_code;
 
-        $division = $this->getUserDivision($kod_div)->original;
+        $division = $this->getUserDivision($kod_div, $this->getAllDivision());
         $data->department = $division['department'] ? $division['department']['NAME_DIV'] : null;
         $data->faculty = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
 
@@ -228,7 +234,7 @@ class AuthorsController extends ASUController
 
         $kod_div = $data->department_code ? $data->department_code : $data->faculty_code;
 
-        $division = $this->getUserDivision($kod_div)->original;
+        $division = $this->getUserDivision($kod_div, $this->getAllDivision());
         $data->department = $division['department'] ? $division['department']['NAME_DIV'] : null;
         $data->faculty = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
 
@@ -262,7 +268,7 @@ class AuthorsController extends ASUController
             $model = new Authors();
             $data = $request->all();
             $kod_div = $request->kod_div;
-            $division = $this->getUserDivision($kod_div)->original;
+            $division = $this->getUserDivision($kod_div, $this->getAllDivision());
             if($request->categ_1 != 1) {
                 if($request->categ_1 == 2) {
                     $kod_div = $this->getAspirantDepartment($request->guid);
@@ -293,12 +299,12 @@ class AuthorsController extends ASUController
         $data = $request->all();
         $model = Authors::with('role')->find($id);
 
-        $roles = [
-            1 => "Автор",
-            2 => "Модератор кафедрального рівня",
-            3 => "Модератор інститутського або факультетського рівня",
-            4 => "Адміністратор"
-        ];
+        $roles = [];
+
+        foreach ($this->getRoles() as $key => $value) {
+            $roles[$value['id']] = $value['name'];
+        }
+
         $notificationText .= $this->notification($data, $model, "roles_id", "роль", $roles);
         $notificationText .= $this->notification($data, $model, "five_publications", "5 або більше публікацій у періодичних виданнях в Scopus та/або WoS");
         $notificationText .= $this->notification($data, $model, "scopus_autor_id", "Індекс Гірша БД Scopus");
@@ -315,30 +321,6 @@ class AuthorsController extends ASUController
         }
         $model->update($data);
         return response('ok', 200);
-    }
-
-    function notification($data, $model, $key, $text, $arr = null) {
-        if($arr) {
-            if($data[$key] && !$model->$key) {
-                return "додано ".$text.": " . $arr[$data[$key]] . ";<br>";
-            }
-            if(($data[$key] != $model->$key) && $data[$key] && $model->$key) {
-                return "змінено ".$text.": " . $arr[$model->$key] . " на " . $arr[$data[$key]] . ";<br>";
-            }
-            if(!$data[$key] && $model->$key) {
-                return "видалено ".$text.";<br>";
-            }
-        } else {
-            if($data[$key] && !$model->$key) {
-                return "додано ".$text.": " . $data[$key] . ";<br>";
-            }
-            if(($data[$key] != $model->$key) && $data[$key] && $model->$key) {
-                return "змінено ".$text.": " . $model->$key . " на " . $data[$key] . ";<br>";
-            }
-            if(!$data[$key] && $model->$key) {
-                return "видалено ".$text.";<br>";
-            }
-        }
     }
 
     // deleteAuthor
@@ -379,129 +361,39 @@ class AuthorsController extends ASUController
         return response('ok', 200);
     }
 
-    // Визначити посаду
-    function getPosition($data) {
-        $result = "";
-        if($data->categ_1 == 1) {
-            $result = "Студент";
-        } elseif ($data->categ_1 == 2) {
-            if($data->kod_level == 9) {
-                $result = "Докторант";
-            } else {
-                $result = "Аспірант";
-            }
-        } elseif ($data->categ_1 == 3) {
-            $result = "Випускник";
-        } elseif ($data->categ_2 == 1) {
-            $result = "Співробітник";
-        } elseif ($data->categ_2 == 2) {
-            $result = "Викладач";
-        } elseif ($data->categ_2 == 3) {
-            $result = "Менеджер";
-        } else {
-            $result = $data->job_type['title'];
-        }
-        return $result;
-    }
-
-    // Визначення віку користувача
-    function calculateAge($birthday) {
-        $birthday_timestamp = strtotime($birthday);
-        $age = date('Y') - date('Y', $birthday_timestamp);
-        if (date('md', $birthday_timestamp) > date('md')) {
-            $age--;
-        }
-        return $age;
-    }
-
     function jobType() {
         $data = JobType::where('id', '!=', 5)->get();
         return response()->json($data);
     }
 
     function updateCabinetInfo(Request $request, $user_id) {
-
         $key = $request->session()->get('key');
-
         $model = Authors::find($user_id);
-
+        $getPersons = json_decode(file_get_contents($this->cabinet_api . 'getPersons?key=' . $key . '&token=' . $this->cabinet_service_token . '&search=' . urlencode($model['name'])), true);
         if(isset($model['test_data'])) {
-            $getPersons = json_decode($model['test_data'], true);
-            $person = [
-                "department_code" => null,
+            $newData = [
+                "job" => null,
+                "job_type_id" => null,
                 "faculty_code" => null,
-                "categ_1" => 0,
-                "categ_2" => 0,
+                "department_code" => null,
                 "academic_code" => null,
-                "kod_level" => null
+                "kod_level" => null,
+                "categ_1" => null,
+                "categ_2" => null
             ];
-            $isStudent = false;
-            $kod_div = null;
-            if(isset($getPersons['info1'])) {
-                foreach ($getPersons['info1'] as $key => $value) {
-                    if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2 && $value['KOD_LEVEL'] == 8) {
-                        $person['categ_1'] = $value['CATEG'];
-                        $person['academic_code'] = $value['NAME_GROUP'];
-                        $person['kod_level'] = $value['KOD_LEVEL'];
-                        $kod_div = $this->getAspirantDepartment($getPersons['guid']);
-                        $isStudent = true;
-                    }
-                }
-            }
-
-            if(isset($getPersons['info2']) && !$isStudent) {
-                foreach ($getPersons['info2'] as $key => $value) {
-                    if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 2 || $value['KOD_STATE'] == 3)) {
-                        $person['categ_2'] = $value['CATEG'];
-                        $kod_div = $value['KOD_DIV'];
-                    }
-                }
-            }
-
-            if($kod_div) {
-                if($person['categ_1'] != 1) {
-                    $division = $this->getUserDivision($kod_div)->original;
-                    $person['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
-                    $person['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
-                }
-            }
-
+            $person = $this->updateAuthUser($model, $newData, $this->getAllDivision());
             $model->update($person);
-
             return response()->json([
                 'status' => 'ok'
             ]);
         } else {
             $getPersons = json_decode(file_get_contents($this->cabinet_api . 'getPersons?key=' . $key . '&token=' . $this->cabinet_service_token . '&search=' . urlencode($model['name'])), true);
-
             if($getPersons['status'] == 'OK' && count($getPersons['result']) > 0) {
                 $mode = 1;
                 $getPersons = array_shift($getPersons['result']);
                 $getContingents = json_decode(file_get_contents('https://asu.sumdu.edu.ua/api/getContingents?key=' . $this->asu_key . '&mode=' . $mode . '&categ1=' . $getPersons['categ1'] . '&categ2=' . $getPersons['categ2']), true);
                 if($getContingents['status'] == 'OK') {
-
-                    $person = [];
-
-                    $aspirant = array_filter($getContingents['result'], function($value) use ($model) {
-                        return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'] && $value['CATEG_1'] == 2 && ($value['KOD_LEVEL'] == 8 || $value['KOD_LEVEL'] == 9 || $value['KOD_LEVEL'] == 5);
-                    });
-
-                    if(count($aspirant) == 0) {
-                        $anotherUser = array_filter($getContingents['result'], function($value) use ($model) {
-                            return ($value['F_FIO'] . ' ' . $value['I_FIO'] . ' ' . $value['O_FIO']) == $model['name'] && $value['ID_FIO'] == $model['guid'];
-                        });
-                        $person = array_shift($anotherUser);
-                    } else {
-                        $person = array_shift($aspirant);
-                        if($person['KOD_LEVEL'] == 8 || $person['KOD_LEVEL'] == 9) {
-                            $person['KOD_LEVEL'] = $person['KOD_LEVEL'];
-                            $person['KOD_DIV'] = $this->getAspirantDepartment($person['ID_FIO']);
-                        }
-                    }
-                    $division = $this->getUserDivision($person['KOD_DIV'])->original;
-                    $person['DEPARTMENT_CODE'] = $division['department'] ? $division['department']['ID_DIV'] : null;
-                    $person['FACULTY_CODE'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
-
+                    $person = $this->UpdateNotAuthUser($getContingents, $this->getAllDivision());
                     $model->update([
                         "name" => $person['F_FIO'] . ' ' . $person['I_FIO'] . ' ' . $person['O_FIO'],
                         "faculty_code" => $person['CATEG_1'] != 1 ? $person['FACULTY_CODE'] : null,
@@ -511,7 +403,6 @@ class AuthorsController extends ASUController
                         "categ_2" => $person['CATEG_2'],
                         "kod_level" => $person['KOD_LEVEL'],
                     ]);
-
                     return response()->json([
                         'status' => 'ok'
                     ]);

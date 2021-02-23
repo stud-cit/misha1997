@@ -11,15 +11,16 @@ use App\Models\Publications;
 use Session;
 use Config;
 
-class DevController extends ASUController
-{
+use App\Http\Traits\AuthorTrait;
+
+class DevController extends ASUController {
+
+    use AuthorTrait;
+
     protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
     protected $asu_key = "eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG";
-    protected $cabinet_service_token;
-
-    function __construct() {
-        $this->cabinet_service_token = config('app.token');
-    }
+    protected $asu_sumdu_api = "http://asu.sumdu.edu.ua/api/getDivisions?key=";
+    protected $cabinet_service_token = "TNWcmzpZ";
 
     function updateUsers() {
         Authors::where('categ_1', 1)->update([
@@ -30,38 +31,20 @@ class DevController extends ASUController
     }
 
     function getUsers() {
-        $data = Authors::select('name', 'categ_1', 'guid', 'id', 'job', 'job_type_id', 'level_type_id', 'kod_level', 'test_data')
-            ->where('categ_1', 2)
-            ->get();
+        $data = Authors::where('test_data', null)
+        ->where('token', null)
+        ->count();
 
-        $test = [];
-        foreach ($data as $key => $value) {
-            if(isset($value['test_data'])) {
-                $getPersons = json_decode($value['test_data'], true);
-                if(isset($getPersons['info2'])) {
-                    foreach ($getPersons['info2'] as $k => $v) {
-                        //if($v['KOD_STATE'] == 1) {
-                            $value['test_data'] = array_column($getPersons['info2'], 'NAME_STATE');
-                            // $state = [
-                            //     "id" => $v['KOD_STATE'],
-                            //     "name" => $v['NAME_STATE']
-                            // ];
-                            // if(!in_array($state, $test)) {
-                            //     array_push($test, $state);
-                            // }
-                            //$value['test_data'] = array_column($getPersons['info1'], 'NAME_STATE');
-                        //}
-                    }
-                }
+        // $key = "g0uCOJAyanWpSflTnr69IZpQ9ptJSrmfI3rFARptPmetc7v83ja2";
 
-                // foreach ($getPersons['info1'] as $k => $v) {
-                //     if($v['KOD_STATE'] == "1") {
-                //         $value['test_data'] = $v['KOD_LEVEL'];
-                //     }
-                // }
-                // $value['test_data'] = array_column($getPersons['info1'], 'KOD_LEVEL');
-            }
-        }
+        // $test = [];
+
+        // foreach ($data as $key => $value) {
+        //     $getPersons = json_decode(file_get_contents($this->cabinet_api . 'getPersons?key=g0uCOJAyanWpSflTnr69IZpQ9ptJSrmfI3rFARptPmetc7v83ja2&token=TNWcmzpZ&search=' . urlencode($value['name'])), true);
+        //     array_push($test, $getPersons['result']);
+        // }
+
+
         return response()->json($data);
     }
 
@@ -125,7 +108,7 @@ class DevController extends ASUController
 
 
             if($kod_div) {
-                $division = $this->getUserDivision($kod_div)->original;
+                $division = $this->getUserDivision($kod_div, $this->getAllDivision());
                 $person['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
                 $person['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
             }
@@ -167,7 +150,7 @@ class DevController extends ASUController
                         }
                     }
 
-                    $division = $this->getUserDivision($person['KOD_DIV'])->original;
+                    $division = $this->getUserDivision($person['KOD_DIV'], $this->getAllDivision());
                     $person['DEPARTMENT_CODE'] = $division['department'] ? $division['department']['ID_DIV'] : null;
                     $person['FACULTY_CODE'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
 

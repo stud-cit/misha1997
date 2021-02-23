@@ -27,11 +27,10 @@ class ASUController extends Controller
 
     function getAllDivision() {
         $divisions = json_decode(file_get_contents($this->asu_sumdu_api . $this->asu_key), true)['result'];
-        return response($divisions);
+        return $divisions;
     }
 
-    function getUserDivision($department_code) {
-        $divisions = json_decode(file_get_contents($this->asu_sumdu_api . $this->asu_key), true)['result'];
+    function getUserDivision($department_code, $divisions) {
         $sectionId = array_search($department_code, array_column($divisions, 'ID_DIV'));
         $departmentId = array_search($divisions[$sectionId]['ID_PAR'], array_column($divisions, 'ID_DIV'));
         $facultyId = array_search($divisions[$departmentId]['ID_PAR'], array_column($divisions, 'ID_DIV'));
@@ -56,7 +55,7 @@ class ASUController extends Controller
             }
         }
 
-        return response($result);
+        return $result;
     }
 
     function getDivisions() {

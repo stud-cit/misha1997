@@ -57,8 +57,4 @@ class Authors extends Model
     function jobType() {
         return $this->belongsTo('App\Models\JobType', 'job_type_id');
     }
-
-    function levelType() {
-        return $this->belongsTo('App\Models\LevelType', 'level_type_id');
-    }
 }

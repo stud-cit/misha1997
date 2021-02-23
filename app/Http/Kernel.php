@@ -42,7 +42,7 @@ class Kernel extends HttpKernel
         'throttle' => ['throttle:99,1'],
 
         'api' => [
-            'throttle:160,1',
+            'throttle:260,1',
             'bindings',
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,

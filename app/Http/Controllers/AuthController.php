@@ -6,8 +6,10 @@ use App\Models\Authors;
 use Illuminate\Http\Request;
 use Session;
 use Config;
+use App\Http\Traits\AuthorTrait;
 
 class AuthController extends ASUController {
+    use AuthorTrait;
     protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
     protected $cabinet_service = "https://cabinet.sumdu.edu.ua/index/service/";
     protected $cabinet_service_token;
@@ -25,7 +27,11 @@ class AuthController extends ASUController {
 
                 $kod_div = $user['department_code'] ? $user['department_code'] : $user['faculty_code'];
 
-                $division = $this->getUserDivision($kod_div)->original;
+                if($kod_div && $user['categ_1'] == 2) {
+                    $kod_div = $this->getAspirantDepartment($kod_div);
+                }
+
+                $division = $this->getUserDivision($kod_div, $this->getAllDivision());
                 $user['department'] = $division['department'] ? $division['department']['NAME_DIV'] : null;
                 $user['faculty'] = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
                 return response()->json([
@@ -52,50 +58,18 @@ class AuthController extends ASUController {
 
     function register(Request $request) {
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token), true);
-
         if(!Authors::where("guid", $personCabinet['result']['guid'])->exists()) {
+            $divisions = $this->getAllDivision();
             $data = $request->all();
+            $this->updateAuthUser($personCabinet['result'], $data, $divisions);
             $data['name'] = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
             $data['country'] = "Україна";
             $data['guid'] = $personCabinet['result']['guid'];
             $data['token'] = $personCabinet['result']['token'];
             $data['test_data'] = json_encode($personCabinet['result']);
 
-            $kod_div = null;
-
-            $isStudent = false;
-
-            if(isset($personCabinet['result']['info1'])) {
-                foreach ($personCabinet['result']['info1'] as $key => $value) {
-                    if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2 && $value['KOD_LEVEL'] == 8) {
-                        $data['categ_1'] = $value['CATEG'];
-                        $kod_div = $value['KOD_DIV'];
-                        $data['academic_code'] = $value['NAME_GROUP'];
-                        $kod_div = $this->getAspirantDepartment($personCabinet['result']['guid']);
-                        $isStudent = true;
-                    }
-                }
-            }
-
-            if(isset($personCabinet['result']['info2']) && !$isStudent) {
-                foreach ($personCabinet['result']['info2'] as $key => $value) {
-                    if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 2 || $value['KOD_STATE'] == 3)) {
-                        $data['categ_2'] = $value['CATEG'];
-                        $kod_div = $value['KOD_DIV'];
-                        $data['job'] = "СумДУ";
-                    }
-                }
-            }
-
-            $division = $this->getUserDivision($kod_div)->original;
-            $data['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
-            $data['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
-
             $userModel = new Authors();
             $newUser = $userModel->create($data);
-
-            $newUser['department'] = $division['department'] ? $division['department']['NAME_DIV'] : null;
-            $newUser['faculty'] = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
 
             $request->session()->put('person', $newUser);
             return response()->json('ok', 200);
@@ -117,46 +91,15 @@ class AuthController extends ASUController {
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->key . '&token=' . $this->cabinet_service_token), true);
         if ($personCabinet['status'] == 'OK') {
             $request->session()->put('key', $request->key);
-            $userModel = Authors::where("guid", $personCabinet['result']['guid'])->where("name", $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic']);
+            $userModel = Authors::where("guid", $personCabinet['result']['guid']);
             if($userModel->exists()) {
-                $person = $userModel->first();
-                $person->name = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
-                $person->academic_code = null;
-                $person->categ_1 = null;
-                $person->add_user_id = null;
-                $person->test_data = json_encode($personCabinet['result']);
+                $divisions = $this->getAllDivision();
+                $data = $userModel->first();
+                $person = $this->updateAuthUser($personCabinet['result'], $data, $divisions);
 
-                $kod_div = null;
+                $person['test_data'] = json_encode($personCabinet['result']);
 
-                $isStudent = false;
-
-                if(isset($personCabinet['result']['info1'])) {
-                    foreach ($personCabinet['result']['info1'] as $key => $value) {
-                        if($value['KOD_STATE'] == 1 && $value['CATEG'] == 2 && $value['KOD_LEVEL'] == 8) {
-                            $person->categ_1 = $value['CATEG'];
-                            $person->academic_code = $value['NAME_GROUP'];
-                            $kod_div = $this->getAspirantDepartment($personCabinet['result']['guid']);
-                            $isStudent = true;
-                        }
-                    }
-                }
-
-                if(isset($personCabinet['result']['info2']) && !$isStudent) {
-                    foreach ($personCabinet['result']['info2'] as $key => $value) {
-                        if(($value['KOD_SYMP'] == 1 || $value['KOD_SYMP'] == 5) && ($value['KOD_STATE'] == 1 || $value['KOD_STATE'] == 2 || $value['KOD_STATE'] == 3)) {
-                            $person->categ_2 = $value['CATEG'];
-                            $kod_div = $value['KOD_DIV'];
-                        }
-                    }
-                }
-
-                if(!$person['custom_divisions']) {
-                    $division = $this->getUserDivision($kod_div)->original;
-                    $person->department_code = $division['department'] ? $division['department']['ID_DIV'] : null;
-                    $person->faculty_code = $division['institute'] ? $division['institute']['ID_DIV'] : null;
-                }
-
-                $userModel->update($person->toArray());
+                $userModel->update($person);
 
                 $request->session()->put('person', $person);
                 return view('app', [
