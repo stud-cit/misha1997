@@ -9,6 +9,7 @@ use App\Models\Roles;
 use App\Models\Notifications;
 use App\Models\Publications;
 use App\Models\JobType;
+use App\Models\Audit;
 use Session;
 use Config;
 
@@ -30,7 +31,7 @@ class AuthorsController extends ASUController
 
     // authors
     function get(Request $request) {
-        $divisions = $this->getAllDivision()->original;
+        $divisions = $this->getAllDivision();
         $data = [];
         $model = Authors::with('role', 'jobType')->orderBy('created_at', 'DESC');
 
@@ -222,8 +223,8 @@ class AuthorsController extends ASUController
     // updateProfile (Оновлення информації профілю)
     function updateProfile(Request $request) {
         $data = $request->all();
-        Authors::find($request->session()->get('person')['id'])->update($data);
         $user = Authors::find($request->session()->get('person')['id']);
+        $user->update($data);
         return response()->json($user);
     }
 
@@ -253,9 +254,20 @@ class AuthorsController extends ASUController
             $data = $request->all();
             $data['add_user_id'] = $request->session()->get('person')['id'];
             $response = $model->create($data);
+            $author = Authors::with('jobType')->find($response['id']); 
+
+            if($author['job_type_id'] == 6) {
+                $kod_div = $author['department_code'] ? $author['department_code'] : $data['faculty_code'];
+
+                $division = $this->getUserDivision($kod_div, $this->getAllDivision());
+    
+                $author['department'] = $division['department'] ? $division['department']['NAME_DIV'] : null;
+                $author['faculty'] = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
+            }
+
             return response()->json([
                 "status" => "ok",
-                "user" => $response
+                "user" => $author
             ]);
         } else {
             return response()->json(["status" => "error"]);
@@ -301,7 +313,7 @@ class AuthorsController extends ASUController
 
         $roles = [];
 
-        foreach ($this->getRoles() as $key => $value) {
+        foreach ($this->getRoles()->original as $key => $value) {
             $roles[$value['id']] = $value['name'];
         }
 
@@ -309,14 +321,20 @@ class AuthorsController extends ASUController
         $notificationText .= $this->notification($data, $model, "five_publications", "5 або більше публікацій у періодичних виданнях в Scopus та/або WoS");
         $notificationText .= $this->notification($data, $model, "scopus_autor_id", "Індекс Гірша БД Scopus");
         $notificationText .= $this->notification($data, $model, "h_index", "Індекс Гірша БД WoS");
-        $notificationText .= $this->notification($data, $model, "scopus_researcher_id", "Research ID");
+        $notificationText .= $this->notification($data, $model, "scopus_autor_id", "Індекс Гірша БД Scopus");
+        $notificationText .= $this->notification($data, $model, "without_self_citations_wos", "Індекс Гірша без самоцитувань БД WoS");
+        $notificationText .= $this->notification($data, $model, "without_self_citations_scopus", "Індекс Гірша без самоцитувань БД Scopus");
         $notificationText .= $this->notification($data, $model, "orcid", "ORCID");
+        $notificationText .= $this->notification($data, $model, "country", "країну");
 
         if($notificationText != "") {
-            $notificationText = "Користувач <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a> вніс наступні зміни в Ваш профіль:<br>" . $notificationText;
             Notifications::create([
                 "autors_id" => $id,
-                "text" => $notificationText
+                "text" => "Користувач <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a> вніс наступні зміни в Ваш профіль:<br>" . $notificationText
+            ]);
+
+            Audit::create([
+                "text" => "Користувач <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a> вніс наступні зміни в профіль автора <a href=\"/user/". $model['id'] ."\">" . $model['name'] . "</a>:<br>" . $notificationText
             ]);
         }
         $model->update($data);
@@ -327,6 +345,9 @@ class AuthorsController extends ASUController
     function deleteAuthor(Request $request) {
         foreach ($request->users as $key => $user) {
             Authors::find($user['id'])->delete();
+            Audit::create([
+                "text" => "Користувач <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a> видалив автора <a href=\"/user/". $user['id'] ."\">" . $user['name'] . "</a>."
+            ]);
         }
         return response('ok', 200);
     }
@@ -338,9 +359,20 @@ class AuthorsController extends ASUController
     }
 
     //notifications
-    function getNotifications($autors_id) {
-        $data = Notifications::where('autors_id', $autors_id)->orWhere('autors_id', null)->orderBy('created_at', 'DESC')->get();
-        return response()->json($data);
+    function getNotifications(Request $request, $autors_id) {
+        $model = Notifications::where('autors_id', $autors_id)->orWhere('autors_id', null)->orderBy('created_at', 'DESC');
+        
+        if(isset($request->search)) {
+            $model = $model->where('text', 'like', '%' . $request->search . '%');
+        }
+
+        $data = $model->paginate($request->size);
+        return response()->json([
+            "currentPage" => $data->currentPage(),
+            "firstItem" => $data->firstItem(),
+            "count" => $data->total(),
+            "data" => $data
+        ]);
     }
     function postNotifications(Request $request, $publication_id) {
         $model = Publications::with('authors')->find($publication_id);
@@ -358,6 +390,22 @@ class AuthorsController extends ASUController
         Notifications::find($id)->update([
             "status" => $request->status
         ]);
+        $count = Notifications::where('autors_id', $autors_id)->where('status', 0)->count();
+        return response()->json([
+            'count' => $count
+        ]);
+    }
+
+    function deleteNotifications($id, $autors_id) {
+        Notifications::find($id)->delete();
+        $count = Notifications::where('autors_id', $autors_id)->where('status', 0)->count();
+        return response()->json([
+            'count' => $count
+        ]);
+    }
+
+    function deleteAllNotifications($autors_id) {
+        Notifications::where('autors_id', $autors_id)->delete();
         return response('ok', 200);
     }
 

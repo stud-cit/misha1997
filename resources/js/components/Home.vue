@@ -6,7 +6,7 @@
             <a v-if="userRole != 1" href="/publications" class="page-link">Cписок усіх публікацій</a>
             <a v-if="userRole != 1" href="/users" class="page-link">Список усіх користувачів</a>
             <a href="/manual.pdf" class="page-link" target="_blank">Інструкція користувача</a>
-
+            <a v-if="userRole == 4" href="/audit" class="page-link">Аудит</a>
             <button
                 v-if="userRole == 4 && access == 'close'"
                 class="page-link success"

@@ -7,6 +7,7 @@ import guest from './middleware/guest';
 import register from './middleware/register';
 import checkAuthor from './middleware/checkAuthor';
 import checkPublication from './middleware/checkPublicatin';
+import checkAdmin from './middleware/checkAdmin';
 import checkAccess from './middleware/checkAccess';
 
 import Home from "./components/Home";
@@ -19,7 +20,7 @@ import PublicationsAdd from "./components/Publications/Add";
 import PublicationsView from "./components/Publications/View";
 import PublicationsEdit from "./components/Publications/Edit";
 import Notifications from "./components/Notifications";
-import ExportTable from "./components/Publications/ExportTable";
+import Audit from "./components/Audit";
 import Users from "./components/Users";
 import Register from "./components/Register";
 import Error404 from './components/Error404';
@@ -78,18 +79,6 @@ let router = new Router({
             }
         },
         {
-            path: '/publications/table',
-            name: 'export-table',
-            component: ExportTable,
-            props: (route) => ({
-                filters: filters,
-                ...route.params
-            }),
-            meta: {
-                middleware: auth
-            }
-        },
-        {
             path: '/my-publications',
             name: 'my-publications',
             component: MyPublications,
@@ -137,6 +126,14 @@ let router = new Router({
             }
         },
         {
+            path: '/audit',
+            name: 'audit',
+            component: Audit,
+            meta: {
+                middleware: [auth, checkAdmin]
+            }
+        },
+        {
             path: '*',
             name: 'error',
             component: Error404,
@@ -148,24 +145,24 @@ let router = new Router({
     ]
 });
 
-// function nextFactory(context, middleware, index) {
-//     const subsequentMiddleware = middleware[index];
-//     if (!subsequentMiddleware) return context.next;
-//     return (...parameters) => {
-//         context.next(...parameters);
-//         const nextMiddleware = nextFactory(context, middleware, index + 1);
-//         subsequentMiddleware({ ...context, next: nextMiddleware });
-//     };
-// }
+function nextFactory(context, middleware, index) {
+    const subsequentMiddleware = middleware[index];
+    if (!subsequentMiddleware) return context.next;
+    return (...parameters) => {
+        context.next(...parameters);
+        const nextMiddleware = nextFactory(context, middleware, index + 1);
+        subsequentMiddleware({ ...context, next: nextMiddleware });
+    };
+}
 
-// router.beforeEach((to, from, next) => {
-//     if (to.meta.middleware) {
-//         const middleware = Array.isArray(to.meta.middleware) ? to.meta.middleware : [to.meta.middleware];
-//         const context = { from, next, router, to, store };
-//         const nextMiddleware = nextFactory(context, middleware, 1);
-//         return middleware[0]({ ...context, next: nextMiddleware });
-//     }
-//     return next();
-// });
+router.beforeEach((to, from, next) => {
+    if (to.meta.middleware) {
+        const middleware = Array.isArray(to.meta.middleware) ? to.meta.middleware : [to.meta.middleware];
+        const context = { from, next, router, to, store };
+        const nextMiddleware = nextFactory(context, middleware, 1);
+        return middleware[0]({ ...context, next: nextMiddleware });
+    }
+    return next();
+});
 
 export default router

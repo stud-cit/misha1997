@@ -8,21 +8,13 @@ Route::get('check-user', 'AuthController@checkUser');
 Route::post('register', 'AuthController@register');
 Route::post('logout', 'AuthController@logout');
 
-// dev
-Route::get('update-users', 'DevController@updateUsers');
-Route::get('get-users', 'DevController@getUsers');
-Route::get('get-user-id/{id}', 'DevController@getUserId');
-
-Route::get('check-student', 'DevController@checkStudent');
-Route::get('check-not-work', 'DevController@checkSSUNotWork');
-Route::get('check-division/{department_code}', 'DevController@getUserDivision');
-Route::get('check-user/{user_id}', 'DevController@updateCabinetInfo');
+Route::post('update-user', 'DevController@updateUsers');
 
 Route::group(['middleware' => ['web']], function() {
 
     Route::get('job-type', 'AuthorsController@jobType');
 
-    // Режим доступа
+    // Режим доступу
     Route::get('access', 'ServiceController@access');
     Route::post('access', 'ServiceController@changeAccess');
 
@@ -52,6 +44,8 @@ Route::group(['middleware' => ['web']], function() {
     Route::get('notifications/{autors_id}', 'AuthorsController@getNotifications');
     Route::post('notifications/{publication_id}', 'AuthorsController@postNotifications');
     Route::post('notifications/{id}/{autors_id}', 'AuthorsController@editNotifications');
+    Route::delete('notifications/{id}/{autors_id}', 'AuthorsController@deleteNotifications');
+    Route::delete('notifications/{autors_id}', 'AuthorsController@deleteAllNotifications');
 
     //publications
     Route::get('publications-names', 'PublicationsController@getAllNames'); // всі назви публікацій
@@ -72,4 +66,7 @@ Route::group(['middleware' => ['web']], function() {
     // ASU
     Route::get('sort-divisions', 'ASUController@getSortDivisions');
     Route::get('divisions', 'ASUController@getDivisions');
+
+    // audit
+    Route::get('audit', 'AuditController@get');
 });

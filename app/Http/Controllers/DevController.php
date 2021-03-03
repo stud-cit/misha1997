@@ -23,10 +23,35 @@ class DevController extends ASUController {
     protected $cabinet_service_token = "TNWcmzpZ";
 
     function updateUsers() {
-        Authors::where('categ_1', 1)->update([
-            'job' => null,
-            'level_type_id' => 1
-        ]);
+        $data = Authors::where('test_data', '!=', null)->get();
+        foreach ($data as $key => $user) {
+            if(isset($user['test_data'])) {
+                $isStudent = false;
+                $getPersons = json_decode($user['test_data'], true);
+                if(isset($getPersons['info1'])) {
+                    foreach ($getPersons['info1'] as $k => $v) {
+                        if($v['KOD_STATE'] == 1) {
+                            $newData['categ_1'] = $v['CATEG'];
+                            if($v['KOD_LEVEL'] == 3 || $v['KOD_LEVEL'] == 5 || $v['KOD_LEVEL'] == 8) {
+                                $user['name_div'] = $v['NAME_DIV'];
+                            }
+                            $isStudent = true;
+                        }
+                    }
+                }
+                if(isset($getPersons['info2']) && !$isStudent) {
+                    foreach ($getPersons['info2'] as $k => $v) {
+                        if(($v['KOD_STATE'] == 1 || $v['KOD_STATE'] == 2 || $v['KOD_STATE'] == 3) && ($v['KOD_SYMP'] == 1 || $v['KOD_SYMP'] == 5)) {
+                            $user['job'] = "СумДУ";
+                            $user['job_type_id'] = 5;
+                            $user['categ_2'] = $v['CATEG'];
+                            $user['name_div'] = $v['NAME_DIV'];
+                        }
+                    }
+                }
+                Authors::find($user['id'])->update($user->toArray());
+            }
+        }
         return response('ok', 200);
     }
 

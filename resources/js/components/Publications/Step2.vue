@@ -524,12 +524,12 @@
                         if(department) {
                             return `${name} - ${department}`
                         } else {
-                            return `${name} - ${job}`
+                            return `${name} - ${job ? job : 'Не працює'}`
                         }
                     } else if(categ_1 ==  3) {
                         return `${name} - випускник`
                     } else {
-                        return `${name} - ${job}`
+                        return `${name} - ${job ? job : 'Не працює'}`
                     }
                 } else {
                     return "Пошук в базі даних сервісу"

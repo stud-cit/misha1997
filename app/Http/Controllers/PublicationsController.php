@@ -10,6 +10,7 @@ use App\Models\Authors;
 use App\Models\Countries;
 use App\Models\PublicationType;
 use App\Models\Notifications;
+use App\Models\Audit;
 
 class PublicationsController extends ASUController
 {
@@ -211,6 +212,11 @@ class PublicationsController extends ASUController
                 ]);
             }
         }
+
+        Audit::create([
+            "text" => "Користувач <a href=\"/user/" . $request->session()->get('person')['id'] . "\">" . $request->session()->get('person')['name'] . "</a> додав публікацію <a href=\"/publications/".$response['id']."\">\"".$response['title']."\"</a>."
+        ]);
+
         return response('ok', 200);
     }
 
@@ -361,6 +367,9 @@ class PublicationsController extends ASUController
                     ]);
                 }
             }
+            Audit::create([
+                "text" => $notificationText
+            ]);
         }
 
         $model->update($data);
@@ -410,6 +419,9 @@ class PublicationsController extends ASUController
             }
             Publications::find($publication['id'])->delete();
         }
+        Audit::create([
+            "text" => "Користувач <a href=\"/user/" . $request->user['id'] . "\">" . $request->user['name'] . "</a> видалив публікацію \"".$publication['title']."\"."
+        ]);
         return response('ok', 200);
     }
 
@@ -424,6 +436,9 @@ class PublicationsController extends ASUController
             }
         }
         Publications::find($id)->delete();
+        Audit::create([
+            "text" => "Користувач <a href=\"/user/" . $request->user['id'] . "\">" . $request->user['name'] . "</a> видалив публікацію \"".$request->publication['title']."\"."
+        ]);
         return response('ok', 200);
     }
 
@@ -1081,13 +1096,13 @@ class PublicationsController extends ASUController
             }
 
             // комерціалізовано у звітному році
-            if($value['publication_type_id'] == 10 && $value['commerc_university']) {
+            if($value['commerc_university']) {
                 $rating['numberSecurityDocuments']['commercializedReportingYear']['university']['count'] += 1;
                 $rating['numberSecurityDocuments']['commercializedReportingYear']['university']['rating'] += $this->sumRating($request, $value);
             }
 
             // штатним співробітником
-            if($value['publication_type_id'] == 10 && $value['commerc_employees']) {
+            if($value['commerc_employees']) {
                 $rating['numberSecurityDocuments']['commercializedReportingYear']['employee']['count'] += 1;
                 $rating['numberSecurityDocuments']['commercializedReportingYear']['employee']['rating'] += $this->sumRating($request, $value);
             }

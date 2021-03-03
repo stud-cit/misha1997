@@ -1,6 +1,6 @@
 <template>
     <div class="container page-content general-block">
-        <div class="message-block" v-if="userRole != 1">
+        <div class="message-block" v-if="userRole != 1 && userRole != 5">
             <img src="/img/exclamation-mark.png" @click="sendMessage" title="Написати повідомлення авторам публікації">
         </div>
         <h1 class="page-title">Редагувати публікацію</h1>

@@ -146,7 +146,7 @@
                                 >
                             </td>
                         </tr>
-                        <tr>
+                        <tr v-if="countPublications != 0">
                             <td colspan="12" class="text-left">Всього публікацій: {{ countPublications }} </td>
                         </tr>
                     </tbody>
@@ -154,7 +154,7 @@
                 <div class="spinner-border my-4" role="status" v-if="loading">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div class="my-4" v-if="countPublications == 0">
+                <div class="my-4" v-if="countPublications == 0 && !loading">
                     Публікації відсутні
                 </div>
             </div>

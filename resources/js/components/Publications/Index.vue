@@ -198,7 +198,7 @@
                                 >
                             </td>
                         </tr>
-                        <tr>
+                        <tr v-if="countPublications != 0">
                             <td colspan="12" class="text-left">Всього публікацій: {{ countPublications }} </td>
                         </tr>
                     </tbody>
@@ -206,7 +206,7 @@
                 <div class="spinner-border my-4" role="status" v-if="loading">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div class="my-4" v-if="countPublications == 0">
+                <div class="my-4" v-if="countPublications == 0 && !loading">
                     Публікації відсутні
                 </div>
             </div>
@@ -421,7 +421,7 @@
             checkAccess() {
                 if(this.authUser.roles_id == 4) {
                     return true;
-                } else if(this.$store.getters.accessMode == 'open' && this.authUser.roles_id != 1) {
+                } else if((this.$store.getters.accessMode == 'open' && this.authUser.roles_id == 1) || this.authUser.roles_id != 5) {
                     return true;
                 } else {
                     return false;

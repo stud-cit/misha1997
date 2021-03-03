@@ -16,6 +16,7 @@ class Authors extends Model
         'job_type_id',
         'faculty_code',
         'department_code',
+        'name_div',
         'country',
         'h_index',
         'scopus_autor_id',

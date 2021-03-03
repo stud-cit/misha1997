@@ -174,7 +174,7 @@
                                 >
                             </td>
                         </tr>
-                        <tr>
+                        <tr v-if="countUsers != 0">
                             <td colspan="2">Всього користувачів: {{ countUsers }}</td>
                             <td></td>
                             <td></td>
@@ -189,7 +189,7 @@
                 <div class="spinner-border my-4" role="status" v-if="loading">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div class="my-4 text-center" v-if="countUsers == 0">
+                <div class="my-4 text-center" v-if="countUsers == 0 && !loading">
                     Користувачі відсутні
                 </div>
             </div>

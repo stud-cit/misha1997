@@ -41,6 +41,12 @@
                                     target="_blank"
                                 >Інструкція користувача</a>
 
+                                <a
+                                    v-if="userRole == 4"
+                                    href="/audit"
+                                    class="dropdown-item"
+                                >Аудит</a>
+
                                 <button
                                     v-if="userRole == 4 && access == 'close'"
                                     class="dropdown-item success"
@@ -58,7 +64,7 @@
                             <router-link class="nav-link" :to="{path: '/profile'}" >Профіль</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link class="nav-link" :to="{path: '/notifications'}" >Повідомлення&nbsp;<span v-if="userNotifications > 0" class="number">{{ userNotifications }}</span></router-link>
+                            <router-link class="nav-link" :to="{path: '/notifications'}" >Повідомлення&nbsp;<span v-if="authUser.notifications_count > 0" class="number">{{ authUser.notifications_count }}</span></router-link>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" @click="exit" style="cursor:pointer">Вихід</a>
@@ -79,8 +85,8 @@
             return {};
         },
         computed: {
-            userNotifications() {
-                return this.$store.getters.getNotifications
+            authUser() {
+                return this.$store.getters.authUser
             },
             userRole() {
                 return this.$store.getters.authUser ? this.$store.getters.authUser.roles_id : null

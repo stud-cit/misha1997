@@ -31,10 +31,30 @@
                         </template>
                     </div>
                 </li>
-                <li class="row" v-if="!data.categ_1">
+
+                <li class="row">
                     <div class="col-lg-3 list-item list-title">Місце роботи:</div>
                     <div class="col-lg-9 list-item list-text">
-                        <div class="input-container" v-if="authUser.roles_id == 4 && !data.guid">
+                        <div class="input-container" v-if="authUser.roles_id == 4 && data.job_type_id != 5">
+                            <select v-model="data.job_type_id">
+                                <option
+                                    v-for="(item, index) in job"
+                                    :key="index"
+                                    :value="item.id"
+                                >{{item.title}}</option>
+                            </select>
+                        </div>
+                        <template v-else>
+                            {{data.job_type.title}}
+                        </template>
+                    </div>
+                </li>
+
+
+                <li class="row" v-if="data.job_type_id == 1">
+                    <div class="col-lg-3 list-item list-title">Навчальний заклад:</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4">
                                 <input class="item-value" type="text" v-model="data.job">
                         </div>
                         <div v-else>
@@ -42,6 +62,19 @@
                         </div>
                     </div>
                 </li>
+
+                <li class="row" v-if="data.job_type_id == 2">
+                    <div class="col-lg-3 list-item list-title">Підприємство:</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4">
+                                <input class="item-value" type="text" v-model="data.job">
+                        </div>
+                        <div v-else>
+                            {{data.job}}
+                        </div>
+                    </div>
+                </li>
+
                 <li class="row" v-if="(data.guid)">
                     <div class="col-lg-3 list-item list-title">Посада:</div>
                     <div class="col-lg-9 list-item list-text">
@@ -358,7 +391,7 @@
                             </td>
                             <td>{{ item.created_at }}</td>
                         </tr>
-                        <tr>
+                        <tr v-if="countPublications != 0">
                             <td colspan="8" class="text-left">Всього публікацій: {{ countPublications }} </td>
                         </tr>
                     </tbody>
@@ -366,7 +399,7 @@
                 <div class="spinner-border my-4" role="status" v-if="loading">
                     <span class="sr-only">Loading...</span>
                 </div>
-                <div class="my-4" v-if="countPublications == 0">
+                <div class="my-4" v-if="countPublications == 0 && !loading">
                     Публікації відсутні
                 </div>
             </div>
@@ -412,6 +445,7 @@
                 showFilter: false,
                 loadingSearch: false,
                 departments2: [],
+                job: [],
                 data: {
                     name: "",
                     role: {
@@ -476,6 +510,7 @@
             this.getPublications(this.pagination.currentPage);
             this.getRoles();
             this.getDepartmentsUser();
+            this.getJob();
         },
         computed: {
             authUser() {
@@ -560,6 +595,11 @@
             getRoles() {
                 axios.get('/api/roles').then(response => {
                     this.roles = response.data;
+                })
+            },
+            getJob() {
+                axios.get('/api/job-type').then(response => {
+                    this.job = response.data;
                 })
             },
             save() {

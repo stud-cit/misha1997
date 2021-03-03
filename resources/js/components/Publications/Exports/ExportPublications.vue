@@ -11,20 +11,29 @@
             <img v-else src="/img/download.png"> Експорт публікацій Word
         </button>
         <div id="export" v-show="false">
-            <template v-if="articles2.length > 0">
+            <template v-if="articleReport.length > 0">
                 <h2>Стаття-доповідь у матеріалах наукових конференціях</h2>
                 <ol>
-                    <li v-for="(item, index) in articles2" :key="index">
+                    <li v-for="(item, index) in articleReport" :key="index">
                         {{item.initials}} {{ item.title }}. <i>{{ item.name_magazine }}</i>. {{ item.year }}. {{ item.number }}. C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
                     </li>
                 </ol>
             </template>
 
 
-            <template v-if="articles.length > 0">
-                <h2>Стаття у фахових виданнях України, інші статті</h2>
+            <template v-if="articleProfessional.length > 0">
+                <h2>Стаття у фахових виданнях України</h2>
                 <ol>
-                    <li v-for="(item, index) in articles" :key="index">
+                    <li v-for="(item, index) in articleProfessional" :key="index">
+                        {{item.initials}} {{ item.title }}. <i>{{ item.name_magazine }}</i>. {{ item.year }}. {{ item.number }}. C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
+                    </li>
+                </ol>
+            </template>
+
+            <template v-if="otherArticles.length > 0">
+                <h2>Інші статті</h2>
+                <ol>
+                    <li v-for="(item, index) in otherArticles" :key="index">
                         {{item.initials}} {{ item.title }}. <i>{{ item.name_magazine }}</i>. {{ item.year }}. {{ item.number }}. C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
                     </li>
                 </ol>
@@ -109,8 +118,9 @@
     export default {
         data() {
             return {
-                articles: [],
-                articles2: [],
+                articleProfessional: [],
+                otherArticles: [],
+                articleReport: [],
                 monograph: [],
                 books: [],
                 patents: [],
@@ -154,10 +164,13 @@
                 }).then(response => {
                     response.data.publications.data.map(item => {
                         if(item.publication_type_id == 2) {
-                            this.articles2.push(item);
+                            this.articleReport.push(item);
                         }
-                        if(item.publication_type_id == 1 || item.publication_type_id == 3) {
-                            this.articles.push(item);
+                        if(item.publication_type_id == 1) {
+                            this.articleProfessional.push(item);
+                        }
+                        if(item.publication_type_id == 3) {
+                            this.otherArticles.push(item);
                         }
                         if(item.publication_type_id == 6) {
                             this.monograph.push(item);

@@ -223,7 +223,7 @@
                     return true;
                 } else if(this.$store.getters.accessMode == 'open' && (this.data.authors.find(item => item.id == this.authUser.id))) {
                     return true;
-                } else if(this.$store.getters.accessMode == 'open' && this.authUser.roles_id != 1 && this.authUser.roles_id != 5) {
+                } else if((this.$store.getters.accessMode == 'open' && this.authUser.roles_id != 1) && this.authUser.roles_id != 5) {
                     return true;
                 } else {
                     return false;

@@ -18,10 +18,12 @@ trait AuthorTrait {
                         $newData['kod_level'] = $v['KOD_LEVEL'];
                         $newData['academic_code'] = $v['NAME_GROUP'];
                         $newData['categ_1'] = $v['CATEG'];
-                        if($v['KOD_LEVEL'] == 8 || $v['KOD_LEVEL'] == 9) {
+                        if($v['KOD_LEVEL'] == 8) {
+                            $newData['name_div'] = $v['NAME_DIV'];
                             $kod_div = $this->getAspirantDepartment($user['guid']);
                         }
                         if($v['KOD_LEVEL'] == 3 || $v['KOD_LEVEL'] == 5) {
+                            $newData['name_div'] = $v['NAME_DIV'];
                             $kod_div = $v['KOD_DIV'];
                         }
                         $isStudent = true;
@@ -34,6 +36,7 @@ trait AuthorTrait {
                             $newData['job'] = "СумДУ";
                             $newData['job_type_id'] = 5;
                             $newData['categ_2'] = $v['CATEG'];
+                            $newData['name_div'] = $v['NAME_DIV'];
                             $kod_div = $v['KOD_DIV'];
                         }
                     }
@@ -44,6 +47,46 @@ trait AuthorTrait {
                 $newData['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
                 $newData['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
             }
+        }
+        return $newData;
+    }
+
+    function registerUser($user, $newData, $divisions) {
+        $kod_div = null;
+        $isStudent = false;
+        if(isset($user['info1'])) {
+            foreach ($user['info1'] as $k => $v) {
+                if($v['KOD_STATE'] == 1) {
+                    $newData['kod_level'] = $v['KOD_LEVEL'];
+                    $newData['academic_code'] = $v['NAME_GROUP'];
+                    $newData['categ_1'] = $v['CATEG'];
+                    if($v['KOD_LEVEL'] == 8) {
+                        $newData['name_div'] = $v['NAME_DIV'];
+                        $kod_div = $this->getAspirantDepartment($user['guid']);
+                    }
+                    if($v['KOD_LEVEL'] == 3 || $v['KOD_LEVEL'] == 5) {
+                        $newData['name_div'] = $v['NAME_DIV'];
+                        $kod_div = $v['KOD_DIV'];
+                    }
+                    $isStudent = true;
+                }
+            }
+        }
+        if(isset($user['info2']) && !$isStudent) {
+            foreach ($user['info2'] as $k => $v) {
+                if(($v['KOD_STATE'] == 1 || $v['KOD_STATE'] == 2 || $v['KOD_STATE'] == 3) && ($v['KOD_SYMP'] == 1 || $v['KOD_SYMP'] == 5)) {
+                    $newData['job'] = "СумДУ";
+                    $newData['job_type_id'] = 5;
+                    $newData['categ_2'] = $v['CATEG'];
+                    $newData['name_div'] = $v['NAME_DIV'];
+                    $kod_div = $v['KOD_DIV'];
+                }
+            }
+        }
+        if($kod_div) {
+            $division = $this->getUserDivision($kod_div, $divisions);
+            $newData['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
+            $newData['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
         }
         return $newData;
     }
@@ -63,8 +106,7 @@ trait AuthorTrait {
                 $person = array_shift($anotherUser);
             } else {
                 $person = array_shift($aspirant);
-                if($person['KOD_LEVEL'] == 8 || $person['KOD_LEVEL'] == 9) {
-                    $person['KOD_LEVEL'] = $person['KOD_LEVEL'];
+                if($person['KOD_LEVEL'] == 8) {
                     $person['KOD_DIV'] = $this->getAspirantDepartment($person['ID_FIO']);
                 }
             }
@@ -96,8 +138,10 @@ trait AuthorTrait {
             $result = "Викладач";
         } elseif ($data->categ_2 == 3) {
             $result = "Менеджер";
+        } elseif ($data->job_type_id == 6) {
+            $result = "СумДУ (не працює)";
         } else {
-            $result = $data->job_type['title'];
+            $result = $data->jobType['title'];
         }
         return $result;
     }

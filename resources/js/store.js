@@ -8,23 +8,19 @@ export default new Vuex.Store({
         user: {
             id: 2,
             roles_id: 4,
-            notifications: []
+            notifications_count: 0
         },
         access: 'open'
     },
     mutations: {
-        updateNotifications(state, item) {
-            var index = state.user.notifications.indexOf(item);
-            state.user.notifications.splice(index, 1);
+        updateNotifications(state, count) {
+            state.user.notifications_count = count;
         },
         user_data(state, user) {
             state.user = user;
         },
         access_mode(state, mode) {
             state.access = mode;
-        },
-        deleteItemNotifications(state, notification) {
-            state.user.notifications.find(item => item.id == notification.id).status;
         },
     },
     actions: {
@@ -58,9 +54,6 @@ export default new Vuex.Store({
         },
     },
     getters: {
-        getNotifications: state => {
-            return state.user.notifications.filter(item => !item.status).length
-        },
         authUser: state => state.user,
         accessMode: state => state.access,
         getFilterUsers() {

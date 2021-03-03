@@ -22,6 +22,7 @@ class CreateAuthorsTable extends Migration
             $table->foreignId('job_type_id')->nullable(); // місце роботи
             $table->string('faculty_code')->nullable(); // код факультету
             $table->string('department_code')->nullable(); // код кафедри
+            $table->string('name_div')->nullable();
             $table->string('country')->default("Україна"); // країна
             $table->integer('h_index')->nullable(); // Індекс Гірша БД WoS
             $table->integer('scopus_autor_id')->nullable(); // Індекс Гірша БД Scopus
@@ -31,7 +32,6 @@ class CreateAuthorsTable extends Migration
             $table->foreignId('roles_id')->default(1); // роль
             $table->foreignId('categ_1')->nullable(); // categ_1 кабінету
             $table->foreignId('categ_2')->nullable(); // categ_2 кабінету
-            $table->foreignId('level_type_id')->nullable(); // посада
             $table->string('token')->nullable(); // token кабінету
             $table->boolean('forbes_fortune')->nullable(); // Входить до списків Forbes та Fortune
             $table->boolean('five_publications')->default(0); // 5 або більше публікацій в Scopus та/або WoS
@@ -40,6 +40,7 @@ class CreateAuthorsTable extends Migration
             $table->integer('add_user_id')->nullable(); // Користувач що додав атора
             $table->text('test_data')->nullable();
             $table->boolean('custom_divisions')->default(0);
+            $table->integer('kod_level')->nullable();
             $table->timestamps();
         });
 
