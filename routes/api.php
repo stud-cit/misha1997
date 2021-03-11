@@ -10,6 +10,8 @@ Route::post('logout', 'AuthController@logout');
 
 Route::post('update-user', 'DevController@updateUsers');
 
+Route::get('save-table', 'DevController@saveTable');
+
 Route::group(['middleware' => ['web']], function() {
 
     Route::get('job-type', 'AuthorsController@jobType');

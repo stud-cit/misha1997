@@ -104,6 +104,9 @@ class AuthController extends ASUController {
                 $person = $this->registerUser($personCabinet['result'], $data, $divisions);
                 $person['test_data'] = json_encode($personCabinet['result']);
 
+                $userModel->update($person->toArray());
+                $request->session()->put('person', $person);
+
                 $notificationText = "";
                 $notificationText .= $this->notification($person, $data2, "name_div", "факультет / кафедру");
                 if($notificationText != "") {
@@ -112,9 +115,6 @@ class AuthController extends ASUController {
                         "text" => $notificationText
                     ]);
                 }
-
-                $userModel->update($person->toArray());
-                $request->session()->put('person', $person);
 
                 return view('app', [
                     "status" => "register",

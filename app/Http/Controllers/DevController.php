@@ -8,6 +8,7 @@ use App\Models\Users;
 use App\Models\Roles;
 use App\Models\Notifications;
 use App\Models\Publications;
+use App\Models\AuthorsPublications;
 use Session;
 use Config;
 
@@ -21,6 +22,16 @@ class DevController extends ASUController {
     protected $asu_key = "eRi1FIAppqFDryG2PFaYw75S1z4q2ZoG";
     protected $asu_sumdu_api = "http://asu.sumdu.edu.ua/api/getDivisions?key=";
     protected $cabinet_service_token = "TNWcmzpZ";
+
+    function saveTable() {
+      $data = json_decode(file_get_contents(public_path() . '/json/authorsHasPublications.json'), TRUE);
+  
+      foreach (array_slice($data, 9379, (count($data) - 9379)) as $key => $value) {
+        AuthorsPublications::create($value);
+      }
+      return response('ok', 200);
+    }
+
 
     function updateUsers() {
         $data = Authors::where('test_data', '!=', null)->get();

@@ -16,16 +16,16 @@ class ServiceController extends Controller
         Service::where('key', 'access')->update([
             'value' => $request->mode
         ]);
-        if($request->mode == 'close') {
-            Notifications::create([
-                "text" => "Сервіс переведено в режим обмеженого доступу."
-            ]);
-        }
-        if($request->mode == 'open') {
-            Notifications::create([
-                "text" => "Сервіс переведено в режим повного доступу."
-            ]);
-        }
+        // if($request->mode == 'close') {
+        //     Notifications::create([
+        //         "text" => "Сервіс переведено в режим обмеженого доступу."
+        //     ]);
+        // }
+        // if($request->mode == 'open') {
+        //     Notifications::create([
+        //         "text" => "Сервіс переведено в режим повного доступу."
+        //     ]);
+        // }
         return response('ok', 200);
     }
 }
