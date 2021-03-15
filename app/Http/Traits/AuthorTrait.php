@@ -141,7 +141,7 @@ trait AuthorTrait {
         } elseif ($data->job_type_id == 6) {
             $result = "СумДУ (не працює)";
         } else {
-            $result = $data->jobType['title'];
+            $result = $data->jobType ? $data->jobType['title'] : "";
         }
         return $result;
     }

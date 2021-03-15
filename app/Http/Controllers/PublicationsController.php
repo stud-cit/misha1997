@@ -600,7 +600,7 @@ class PublicationsController extends ASUController
 
         if($request->other_organization) { // Публікації за співавторством з представниками інших організацій
             $model->whereHas('authors.author', function($q) {
-                $q->where('job', '!=', 'СумДУ')->where('job', '!=', 'Не працює');
+                $q->where('job_type_id', 1)->where('job_type_id', 2);
             });
         }
 
@@ -909,7 +909,7 @@ class PublicationsController extends ASUController
                 }
 
                 //за співавторством з представниками інших організацій
-                if($value['science_type_id'] != null && $v['author']['job'] != "СумДУ" && $v['author']['job'] != "СумДУ (Не працює)" && $v['author']['job'] != "Не працює" && $v['author']['guid'] == null) {
+                if($value['science_type_id'] != null && ($v['author']['job_type_id'] == 1 || $v['author']['job_type_id'] == 2)) {
                     $authorsOtherOrganizations = true;
                 }
 
@@ -950,7 +950,7 @@ class PublicationsController extends ASUController
                 }
 
                 // отримано за звітний рік штатними співробітниками не на ім'я СумДУ
-                if($value['publication_type_id'] == 10 && $value['applicant'] != 'СумДУ' && $v['author']['job'] == 'СумДУ') {
+                if(($value['publication_type_id'] == 10 || $value['publication_type_id'] == 11) && $value['applicant'] != 'СумДУ' && ($v['author']['job_type_id'] == 5 || $v['author']['job_type_id'] == 6)) {
                     $receivedReportingEmployeesNotSSU = true;
                 }
             }
@@ -1079,7 +1079,7 @@ class PublicationsController extends ASUController
                 $authorshipBusinessRepresentatives = false;
                 foreach ($value['authors'] as $k => $v) {
                     // з них за сумісним авторством з представниками бізнесу
-                    if($v['author']['job'] != 'СумДУ' && $v['author']['job'] != null) {
+                    if($v['author']['job_type_id'] == 2) {
                         $authorshipBusinessRepresentatives = true;
                     }
                 }
@@ -1096,13 +1096,13 @@ class PublicationsController extends ASUController
             }
 
             // комерціалізовано у звітному році
-            if($value['commerc_university']) {
+            if($value['commerc_university'] == 1) {
                 $rating['numberSecurityDocuments']['commercializedReportingYear']['university']['count'] += 1;
                 $rating['numberSecurityDocuments']['commercializedReportingYear']['university']['rating'] += $this->sumRating($request, $value);
             }
 
             // штатним співробітником
-            if($value['commerc_employees']) {
+            if($value['commerc_employees'] == 1) {
                 $rating['numberSecurityDocuments']['commercializedReportingYear']['employee']['count'] += 1;
                 $rating['numberSecurityDocuments']['commercializedReportingYear']['employee']['rating'] += $this->sumRating($request, $value);
             }
