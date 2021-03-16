@@ -151,7 +151,9 @@
                             this.publicationData.old_supervisor = item.author;
                         }
                     });
-                });
+                }).catch(() => {
+                  this.$router.push({ name: 'error' })
+                })
             },
             getStepData(num = 4) {
                 if(num !== 4) {

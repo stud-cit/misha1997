@@ -162,6 +162,9 @@ class PublicationsController extends ASUController
 
     // публікація по ID
     function getId($id) {
+      if(!Publications::where('id', $id)->exists()) {
+        return response('Data not fount', 400);
+      } else {
         $divisions = $this->getDivisions();
         $data = Publications::with('publicationType', 'scienceType', 'authors.author', 'publicationAdd', 'publicationEdit')->find($id);
         foreach ($data->authors as $key => $value) {
@@ -176,7 +179,8 @@ class PublicationsController extends ASUController
                 }
             }
         }
-        return response()->json($data);
+        return response()->json(isset($data));
+      }
     }
 
     // додавання публікації
@@ -222,6 +226,9 @@ class PublicationsController extends ASUController
 
     // оновлення публікації
     function updatePublication(Request $request, $id) {
+      if(!Publications::where('id', $id)->exists()) {
+        return response('Data not fount', 400);
+      } else {
         $data = $request->all();
         $model = Publications::with('authors', 'publicationType')->find($id);
         $data['edit_user_id'] = $request->session()->get('person')['id'];
@@ -371,10 +378,8 @@ class PublicationsController extends ASUController
                 "text" => $notificationText
             ]);
         }
-
         $model->update($data);
-
-//        return response('ok', 200);
+      }
     }
 
     function test($id) {

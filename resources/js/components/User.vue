@@ -562,6 +562,8 @@
                     this.data = response.data;
                     this.getDepartmentsUser();
                     this.loading = false;
+                }).catch(() => {
+                  this.$router.push({ name: 'error' })
                 })
             },
             getPublications(page) {

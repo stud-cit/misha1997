@@ -230,6 +230,9 @@ class AuthorsController extends ASUController
 
     // getId (Користувач по id)
     function getId($id) {
+      if(!Authors::where('id', $id)->exists()) {
+        return response('Data not fount', 400);
+      } else {
         $data = Authors::with('role', 'user', 'jobType')->find($id);
         $data->position = $this->getPosition($data);
 
@@ -240,6 +243,7 @@ class AuthorsController extends ASUController
         $data->faculty = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
 
         return response()->json($data);
+      }
     }
 
     function getOtherAuthorNames() {

@@ -243,7 +243,9 @@
                             this.data.supervisor = item.author;
                         }
                     });
-                });
+                }).catch(() => {
+                  this.$router.push({ name: 'error' })
+                })
             },
             editPublication() {
                 this.$router.push({path: `/publications/edit/${this.$route.params.id}`});

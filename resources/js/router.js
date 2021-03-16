@@ -22,6 +22,7 @@ import PublicationsEdit from "./components/Publications/Edit";
 import Notifications from "./components/Notifications";
 import Audit from "./components/Audit";
 import Users from "./components/Users";
+import Scopus from "./components/Scopus";
 import Register from "./components/Register";
 import Error404 from './components/Error404';
 
@@ -133,6 +134,14 @@ let router = new Router({
                 middleware: [auth, checkAdmin]
             }
         },
+        {
+          path: '/scopus',
+          name: 'scopus',
+          component: Scopus,
+          meta: {
+              middleware: []
+          }
+      },
         {
             path: '*',
             name: 'error',
