@@ -23,6 +23,25 @@ class DevController extends ASUController {
     protected $asu_sumdu_api = "http://asu.sumdu.edu.ua/api/getDivisions?key=";
     protected $cabinet_service_token = "TNWcmzpZ";
 
+
+
+    function scopus(Request $request) {
+      $data = json_decode(file_get_contents('https://api.elsevier.com/content/search/scopus?query=af-id(60016511)&start=' . $request->page . '&count=' . $request->size . '&apiKey=01bdf01a22c7c48c8b10fd1dd890e76b'), true);
+      return response()->json($data['search-results']);
+    }
+
+    function scopusTest() {
+      $data = json_decode(file_get_contents('https://api.elsevier.com/content/author/author_id/57194527224?httpAccept=application/json&apiKey=01bdf01a22c7c48c8b10fd1dd890e76b'), true);
+
+      // $data = json_decode(file_get_contents('https://api.elsevier.com/content/abstract/scopus_id/85100005738?field=title,volume,pageRange,doi,publicationName,subtypeDescription,language,coverDate,head,authors&httpAccept=application/json&apiKey=01bdf01a22c7c48c8b10fd1dd890e76b'), true);
+      // foreach ($data['search-results']['entry'] as $key => $value) {
+      //   var_dump($value['prism:url']);
+      // }
+      //array_push($result, json_decode(file_get_contents($value['prism:url'] . '?field=head&apiKey=01bdf01a22c7c48c8b10fd1dd890e76b'), true));
+      return response()->json($data);
+    }
+
+
     function saveTable() {
       $data = json_decode(file_get_contents(public_path() . '/json/authorsHasPublications.json'), TRUE);
   

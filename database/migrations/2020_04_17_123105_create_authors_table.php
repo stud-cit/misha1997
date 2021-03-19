@@ -17,6 +17,7 @@ class CreateAuthorsTable extends Migration
             $table->id();
             $table->string('guid')->nullable(); // guid кабінету
             $table->string('name'); // ім'я
+            $table->string('scopus_id'); // ID Scopus
             $table->string('date_bth')->nullable(); // дата народження
             $table->string('job')->nullable(); // назва місця роботи
             $table->foreignId('job_type_id')->nullable(); // місце роботи

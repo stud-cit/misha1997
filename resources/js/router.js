@@ -139,7 +139,7 @@ let router = new Router({
           name: 'scopus',
           component: Scopus,
           meta: {
-              middleware: []
+              middleware: [auth, checkAdmin]
           }
       },
         {

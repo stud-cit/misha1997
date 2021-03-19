@@ -8,9 +8,8 @@ Route::get('check-user', 'AuthController@checkUser');
 Route::post('register', 'AuthController@register');
 Route::post('logout', 'AuthController@logout');
 
-Route::post('update-user', 'DevController@updateUsers');
-
-Route::get('save-table', 'DevController@saveTable');
+Route::get('scopus', 'DevController@scopus');
+Route::get('scopus-test', 'DevController@scopusTest');
 
 Route::group(['middleware' => ['web']], function() {
 

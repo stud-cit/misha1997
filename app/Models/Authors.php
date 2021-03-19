@@ -11,6 +11,7 @@ class Authors extends Model
     protected $fillable = [
         'guid',
         'name',
+        'scopus_id',
         'date_bth',
         'job',
         'job_type_id',

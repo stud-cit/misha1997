@@ -99,6 +99,14 @@
                         </div>
                     </div>
                 </li>
+                <li class="row">
+                    <div class="col-lg-3 list-item list-title">Scopus ID:</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container">
+                            <input class="item-value" type="text" v-model="data.scopus_id">
+                        </div>
+                    </div>
+                </li>
             </ul>
             <div class="step-button-group">
                 <back-button></back-button>
@@ -116,6 +124,7 @@
             return {
                 data: {
                     name: "",
+                    scopus_id: "",
                     role: {
                         name: ""
                     },

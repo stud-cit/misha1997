@@ -246,7 +246,18 @@
                             <input class="item-value" type="text" v-model="data.orcid">
                         </div>
                         <div v-else>
-                            {{data.scopus_researcher_id}}
+                            {{data.orcid}}
+                        </div>
+                    </div>
+                </li>
+                <li class="row">
+                    <div class="col-lg-3 list-item list-title">Scopus ID:</div>
+                    <div class="col-lg-9 list-item list-text">
+                        <div class="input-container" v-if="authUser.roles_id == 4">
+                            <input class="item-value" type="text" v-model="data.scopus_id">
+                        </div>
+                        <div v-else>
+                            {{data.scopus_id}}
                         </div>
                     </div>
                 </li>
@@ -448,6 +459,7 @@
                 job: [],
                 data: {
                     name: "",
+                    scopus_id: "",
                     role: {
                         name: ""
                     },
