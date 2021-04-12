@@ -23,22 +23,80 @@ class DevController extends ASUController {
     protected $asu_sumdu_api = "http://asu.sumdu.edu.ua/api/getDivisions?key=";
     protected $cabinet_service_token = "TNWcmzpZ";
 
+    protected $scopus_api = 'https://api.elsevier.com/content/';
+    protected $scopus_api_key = '01bdf01a22c7c48c8b10fd1dd890e76b';
 
 
-    function scopus(Request $request) {
-      $data = json_decode(file_get_contents('https://api.elsevier.com/content/search/scopus?query=af-id(60016511)&start=' . $request->page . '&count=' . $request->size . '&apiKey=01bdf01a22c7c48c8b10fd1dd890e76b'), true);
-      return response()->json($data['search-results']);
+    function scopus() {
+      $model = Authors::select('scopus_id', 'id')->where('scopus_id', '!=', null)->get();
+      $result = [];
+      foreach ($model as $key => $user) {
+        $data = json_decode(file_get_contents($this->scopus_api . 'search/scopus?query=au-id(' . $user['scopus_id'] . ')&apiKey=' . $this->scopus_api_key), true);
+        foreach ($data['search-results']['entry'] as $key => $value) {
+          $publicationData = json_decode(file_get_contents($value['prism:url'] . '?field=title,volume,pageRange,doi,publicationName,subtypeDescription,language,coverDate,head,authors&httpAccept=application/json&apiKey=' . $this->scopus_api_key), true);
+          $head = $publicationData['abstracts-retrieval-response']['item']['bibrecord']['head'];
+          $coredata = $publicationData['abstracts-retrieval-response']['coredata'];
+          $authors = $publicationData['abstracts-retrieval-response']['authors']['author'];
+
+          $validData = [
+            "title" => $coredata['dc:title'],
+            "science_type_id" => 'Scopus',
+            "publication_type_id" => isset($coredata['subtypeDescription']) ? $coredata['subtypeDescription'] : null,
+            "year" => isset($head['source']['publicationdate']['year']) ? $head['source']['publicationdate']['year'] : null,
+            "number" => isset($coredata['prism:volume']) ? $coredata['prism:volume'] : null,
+            "pages" => isset($coredata['prism:pageRange']) ? $coredata['prism:pageRange'] : null,
+            "country" => isset($head['correspondence']['affiliation']['country']) ? $head['correspondence']['affiliation']['country'] : null,
+            "name_magazine" => isset($coredata['prism:publicationName']) ? $coredata['prism:publicationName'] : null,
+            "city" => isset($head['correspondence']['affiliation']['city']) ? $head['correspondence']['affiliation']['city'] : null,
+            "languages" => isset($head['citation-info']['abstract-language']['@language']) ? $head['citation-info']['abstract-language']['@language'] : null,
+            "doi" => isset($coredata['prism:doi']) ? $coredata['prism:doi'] : null,
+            "authors" => []
+          ];
+
+          foreach ($authors as $key => $author) {
+            $modelUser = null;
+            if(Authors::where('scopus_id', $author['@auid'])->exists()) {
+              $modelUser = Authors::select('name', 'scopus_id')->where('scopus_id', $author['@auid'])->first();
+              $modelUser['register'] = true;
+            } else {
+              $modelUser = [
+                'name' => $author['ce:indexed-name'],
+                'scopus_id' => $author['@auid'],
+                'register' => false
+              ];
+            }
+            array_push($validData['authors'], $modelUser);
+          }
+          
+          if(!Publications::where('title', $validData['title'])->exists() && array_search($validData['title'], array_column($result, "title")) === false) {
+            array_push($result, $validData);
+          }
+        }
+      }
+      return response()->json($result);
     }
 
+
+    // $data = json_decode(file_get_contents($this->scopus_api . 'search/scopus?query=au-id(' . $scopusId . ')&apiKey=' . $this->scopus_api_key), true);
+    // return response()->json($data);
+
+    // function scopus(Request $request) {
+    //   $data = json_decode(file_get_contents('https://api.elsevier.com/content/search/scopus?query=af-id(60016511)&start=' . $request->page . '&count=' . $request->size . '&apiKey=01bdf01a22c7c48c8b10fd1dd890e76b'), true);
+    //   return response()->json($data['search-results']);
+    // }
+
     function scopusTest() {
-      $data = json_decode(file_get_contents('https://api.elsevier.com/content/author/author_id/57194527224?httpAccept=application/json&apiKey=01bdf01a22c7c48c8b10fd1dd890e76b'), true);
+      $data = json_decode(file_get_contents($this->scopus_api . 'search/scopus?query=au-id(57222178482)&apiKey=' . $this->scopus_api_key), true);
 
       // $data = json_decode(file_get_contents('https://api.elsevier.com/content/abstract/scopus_id/85100005738?field=title,volume,pageRange,doi,publicationName,subtypeDescription,language,coverDate,head,authors&httpAccept=application/json&apiKey=01bdf01a22c7c48c8b10fd1dd890e76b'), true);
-      // foreach ($data['search-results']['entry'] as $key => $value) {
-      //   var_dump($value['prism:url']);
-      // }
-      //array_push($result, json_decode(file_get_contents($value['prism:url'] . '?field=head&apiKey=01bdf01a22c7c48c8b10fd1dd890e76b'), true));
-      return response()->json($data);
+      
+      $result = [];
+      
+      foreach ($data['search-results']['entry'] as $key => $value) {
+        $test = json_decode(file_get_contents($value['prism:url'] . '?field=title,volume,pageRange,doi,publicationName,subtypeDescription,language,coverDate,head,authors&httpAccept=application/json&apiKey=' . $this->scopus_api_key), true);
+        array_push($result, $test);
+      }
+      return response()->json($result);
     }
 
 

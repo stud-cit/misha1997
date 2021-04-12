@@ -179,7 +179,7 @@ class PublicationsController extends ASUController
                 }
             }
         }
-        return response()->json(isset($data));
+        return response()->json($data);
       }
     }
 

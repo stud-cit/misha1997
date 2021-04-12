@@ -33,7 +33,7 @@ class AuthController extends ASUController {
                 $kod_div = $user['department_code'] ? $user['department_code'] : $user['faculty_code'];
 
                 if($kod_div && $user['categ_1'] == 2) {
-                    $kod_div = $this->getAspirantDepartment($kod_div);
+                    $kod_div = $this->getAspirantDepartment($user['guid']);
                 }
 
                 $division = $this->getUserDivision($kod_div, $this->getAllDivision());
