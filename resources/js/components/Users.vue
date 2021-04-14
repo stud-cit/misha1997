@@ -75,10 +75,11 @@
                         <label>Роль</label>
                         <div class="input-container">
                             <select v-model="filters.role">
-                                <option value="1">Автор</option>
-                                <option value="2">Модератор кафедрального рівня</option>
-                                <option value="3">Модератор інститутського або факультетського рівня</option>
-                                <option value="4">Адміністратор</option>
+                                <option
+                                    v-for="(item, index) in roles"
+                                    :key="index"
+                                    :value="item.id"
+                                >{{item.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -235,6 +236,7 @@
                 loadingClear: false,
                 data: [],
                 selectUsers: [],
+                roles: [],
                 filters: {
                     name: '',
                     faculty_code: '',
@@ -267,6 +269,7 @@
                 this.filters = this.$store.getters.getFilterUsers;
             }
             this.getData(this.pagination.currentPage);
+            this.getRoles();
         },
         methods: {
             scrollHeader() {
@@ -304,13 +307,13 @@
                     this.loadingClear = false;
                 })
             },
-			selectItem(item) {
-				if(this.selectUsers.indexOf(item) == -1) {
-					this.selectUsers.push(item);
-				} else {
-					this.selectUsers.splice(this.selectUsers.indexOf(item), 1);
-				}
-			},
+            selectItem(item) {
+              if(this.selectUsers.indexOf(item) == -1) {
+                this.selectUsers.push(item);
+              } else {
+                this.selectUsers.splice(this.selectUsers.indexOf(item), 1);
+              }
+            },
             deleteItem() {
                 swal.fire({
                     title: 'Бажаєте видалити?',
@@ -323,15 +326,20 @@
                     cancelButtonText: 'Відміна',
                 }).then((result) => {
                     if (result.isConfirmed) {
-						axios.post('/api/delete-users', {
-                            users: this.selectUsers
-						})
+                        axios.post('/api/delete-users', {
+                                        users: this.selectUsers
+                        })
                         .then(() => {
                             this.selectUsers = [];
                             this.getData(this.pagination.currentPage);
                             swal.fire("Користувачі успішно видалені");
                         });
                     }
+                })
+            },
+            getRoles() {
+                axios.get('/api/roles').then(response => {
+                    this.roles = response.data;
                 })
             },
             clearFilter() {
