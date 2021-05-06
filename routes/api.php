@@ -3,6 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
+Route::get('test', 'DevController@testUser');
+
+
 // Авторизация юзера
 Route::get('check-user', 'AuthController@checkUser');
 Route::post('register', 'AuthController@register');

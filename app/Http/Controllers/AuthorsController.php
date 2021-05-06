@@ -330,6 +330,7 @@ class AuthorsController extends ASUController
         $notificationText .= $this->notification($data, $model, "without_self_citations_scopus", "Індекс Гірша без самоцитувань БД Scopus");
         $notificationText .= $this->notification($data, $model, "orcid", "ORCID");
         $notificationText .= $this->notification($data, $model, "country", "країну");
+        $notificationText .= $this->notification($data, $model, "scopus_id", "SCOPUS ID");
 
         if($notificationText != "") {
             Notifications::create([
@@ -421,6 +422,7 @@ class AuthorsController extends ASUController
     function updateCabinetInfo(Request $request, $user_id) {
         $key = $request->session()->get('key');
         $model = Authors::find($user_id);
+        $model->makeVisible(['test_data']);
         $getPersons = json_decode(file_get_contents($this->cabinet_api . 'getPersons?key=' . $key . '&token=' . $this->cabinet_service_token . '&search=' . urlencode($model['name'])), true);
         if(isset($model['test_data'])) {
             $newData = [

@@ -483,7 +483,18 @@ class PublicationsController extends ASUController
 
         // Вид публікацій
         if(count($request->publication_types) > 0) {
-            $model->whereIn('publication_type_id', array_column($request->publication_types, 'id'));
+          $model->where('publication_type_id', array_column($request->publication_types, 'id'));
+
+          // if(in_array(1, $request->publication_types)) {
+          //   unset($request->publication_types[array_search(1, $request->publication_types)]);
+          //   $model->where(function($query) {
+          //     $query->where('publication_type_id', 1)->where('science_type_id', '!=', 1)->where('science_type_id', '!=', 3);
+          //   })->orWhere(function($query) use ($request) {
+          //     $query->where('publication_type_id', array_column($request->publication_types, 'id'));
+          //   });
+          // } else {
+          //   $model->where('publication_type_id', array_column($request->publication_types, 'id'));
+          // }
         }
 
         // Публікації які не враховані в рейтингу попереднього року

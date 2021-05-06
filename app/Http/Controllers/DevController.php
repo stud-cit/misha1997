@@ -27,6 +27,23 @@ class DevController extends ASUController {
     protected $scopus_api_key = '01bdf01a22c7c48c8b10fd1dd890e76b';
 
 
+    function testUser() {
+      $key = "YObpRSoU6fmIEXttk69mm5MNYkcxNuoumpPUpyNO54PTKeR9351c";
+      $model = Authors::select('name', 'id')->skip(19)->take(20)->get();
+      $result = [];
+      foreach ($model as $key => $value) {
+        $data = json_decode(file_get_contents($this->cabinet_api . 'getPersons?key=YObpRSoU6fmIEXttk69mm5MNYkcxNuoumpPUpyNO54PTKeR9351c&token=' . $this->cabinet_service_token . '&search=' . urlencode($value['name'])), true);
+        if($data['status'] == 'OK') {
+          array_push($result, [
+            'id' => $value['id'],
+            'name' => $value['name'],
+            'data' => $data['result']
+          ]);
+        }
+      }
+      return response()->json($result);
+    }
+
     function scopus() {
       $model = Authors::select('scopus_id', 'id')->where('scopus_id', '!=', null)->get();
       $result = [];

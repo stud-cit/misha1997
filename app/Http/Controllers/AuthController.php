@@ -108,7 +108,10 @@ class AuthController extends ASUController {
                 $request->session()->put('person', $person);
 
                 $notificationText = "";
-                $notificationText .= $this->notification($person, $data2, "name_div", "факультет / кафедру");
+                if($person['name_div'] != '') {
+                  $notificationText .= $this->notification($person, $data2, "name_div", "факультет / кафедру");
+                }
+
                 if($notificationText != "") {
                     $notificationText = "Оновлено інформацію про автора <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a>:<br>" . $notificationText;
                     Audit::create([
