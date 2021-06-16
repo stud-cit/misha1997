@@ -243,9 +243,22 @@
                     department_code: '',
                     h_index: '',
                     categ_users: [],
-                    role: ''
+                    role: '',
+                    position: ''
                 },
-                categUsers: ["СумДУ", "СумДУ (Не працює)", "Зовнішні співавтори", "Студенти", "Іноземці", "5 або більше публікацій у періодичних виданнях Scopus та/або WoS"],
+                categUsers: [
+                  "Аспіранти", 
+                  "Викладачі",
+                  "Докторанти", 
+                  "Зовнішні співавтори", 
+                  "Іноземці", 
+                  "Менеджери", 
+                  "Співробітники", 
+                  "Студенти", 
+                  "СумДУ", 
+                  "СумДУ (не працює)", 
+                  "5 або більше публікацій у періодичних виданнях Scopus та/або WoS"
+                ],
                 pagination: {
                     currentPage: 1,
                     perPage: 10,
@@ -288,7 +301,8 @@
                         department_code: this.filters.department_code,
                         h_index: this.filters.h_index,
                         categ_users: this.filters.categ_users,
-                        role: this.filters.role
+                        role: this.filters.role,
+                        position: this.filters.position
                     }
                 }).then(response => {
                     this.countUsers = response.data.count;
@@ -351,6 +365,7 @@
                 this.filters.h_index = '';
                 this.filters.categ_users = '';
                 this.filters.role = '';
+                this.filters.position = '';
                 this.getData(1);
             }
         }

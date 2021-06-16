@@ -171,19 +171,12 @@ class DevController extends ASUController {
     }
 
     function getUsers() {
-        $data = Authors::where('test_data', null)
-        ->where('token', null)
-        ->count();
+        $data = Authors::select('name')->where('guid', '!=', null)->skip(0)->take(50)->get();
 
-        // $key = "g0uCOJAyanWpSflTnr69IZpQ9ptJSrmfI3rFARptPmetc7v83ja2";
-
-        // $test = [];
-
-        // foreach ($data as $key => $value) {
-        //     $getPersons = json_decode(file_get_contents($this->cabinet_api . 'getPersons?key=g0uCOJAyanWpSflTnr69IZpQ9ptJSrmfI3rFARptPmetc7v83ja2&token=TNWcmzpZ&search=' . urlencode($value['name'])), true);
-        //     array_push($test, $getPersons['result']);
-        // }
-
+        foreach ($data as $key => $value) {
+            $getPersons = json_decode(file_get_contents($this->cabinet_api . 'getPersons?key=6Ki0BSAZENXWXbIB3KFJbVna0gZuKiEgzysZCsJQFRTXe3pKis35&token=TNWcmzpZ&search=' . urlencode($value['name'])), true);
+            $value['test'] = $getPersons['result'];
+        }
 
         return response()->json($data);
     }

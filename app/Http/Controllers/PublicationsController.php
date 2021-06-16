@@ -230,6 +230,46 @@ class PublicationsController extends ASUController
             $model->where('not_this_year', 1);
         }
 
+        if(isset($request->categ_users)) {
+          $model->whereHas('authors.author', function($q) use ($request) {
+              foreach($request->categ_users as $key => $value) {
+                if($value == "Аспіранти") {
+                  $q->where('categ_1', 2);
+                }
+                if($value == "Викладачі") {
+                  $q->where('categ_2', 2);
+                }
+                if($value == "Докторанти") {
+                  $q->where('kod_level', 9);
+                }
+                if($value == "Зовнішні співавтори") {
+                  $q->where('job_type_id', '!=', 5)->where('job_type_id', '!=', 6);
+                }
+                if($value == "Іноземці") {
+                  $q->where('country', '!=', 'Україна');
+                }
+                if($value == "Менеджери") {
+                  $q->where('categ_2', 3);
+                }
+                if($value == "Співробітники") {
+                  $q->where('categ_2', 1);
+                }
+                if($value == "Студенти") {
+                  $q->where('categ_1', 1)->where('categ_1', 3);
+                }
+                if($value == "СумДУ") {
+                    $q->where('job_type_id', 5);
+                }
+                if($value == "СумДУ (не працює)") {
+                    $q->where('job_type_id', 6);
+                }
+                if($value == "5 або більше публікацій у періодичних виданнях Scopus та/або WoS") {
+                    $q->where('five_publications', '1');
+                }
+              }
+          });
+        }
+
         if($request->department_code != '') {
             $departments_id = [$request->department_code];
             foreach($divisions->original['department'] as $k2 => $v2) {

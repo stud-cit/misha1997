@@ -162,6 +162,15 @@
                         withSupervisor: this.filters.withSupervisor
                     }
                 }).then(response => {
+                  this.articleReport = [];
+                  this.articleProfessional = [];
+                  this.otherArticles = [];
+                  this.monograph = [];
+                  this.books = [];
+                  this.patents = [];
+                  this.methodicals = [];
+                  this.thesis = [];
+                  this.parts = [];
                     response.data.publications.data.map(item => {
                         if(item.publication_type_id == 2) {
                             this.articleReport.push(item);
