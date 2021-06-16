@@ -11,9 +11,102 @@ use App\Models\Countries;
 use App\Models\PublicationType;
 use App\Models\Notifications;
 use App\Models\Audit;
+use App\Models\AuditScopusExport;
 
 class PublicationsController extends ASUController
 {
+    protected $scopus_api = 'https://api.elsevier.com/content/';
+    protected $scopus_api_key = '01bdf01a22c7c48c8b10fd1dd890e76b';
+
+    // імпорт публікацій Scopus
+    function getPublicationsScopus() {
+      $previousDate = date("Y") - 1;
+      $api = $this->scopus_api . 'search/scopus?';
+      if(AuditScopusExport::count() > 0) {
+        $api .= 'start=' . AuditScopusExport::select('last_number')->orderBy('created_at')->first()->last_number;
+      }
+      $api .= '&count=200';
+      $api .= '&query=affil%28Sumy+State+University%29+and+pubyear+%3E+' . $previousDate;
+      $api .= '&apiKey=' . $this->scopus_api_key;
+      $api .= '&field=title,volume,pageRange,doi,publicationName,coverDate,coverDisplayDate,author,subtypeDescription,identifier';
+
+      $data = json_decode(file_get_contents($api), true);
+
+      if(isset($data['search-results']['entry'])) {
+        foreach ($data['search-results']['entry'] as $key => $value) {
+          $hasAuthors = false;
+          $authors = [];
+          foreach ($value['author'] as $key => $author) {
+            if(Authors::where('scopus_id', $author['authid'])->exists()) {
+              $author['scipub_id'] = Authors::select('id')->where('scopus_id', $author['authid'])->first()->id;
+              array_push($authors, $author);
+              $hasAuthors = true;
+            }
+          }
+          if(!Publications::where('scopus_id', $value['dc:identifier'])->exists() && !Publications::where('title', $value['dc:title'])->exists() && $hasAuthors) {
+            $model = new Publications();
+            $response = $model->create([
+              'title' => $value['dc:title'],
+              'science_type_id' => 1,
+              'publication_type_id' => $this->getPublicationType($value['subtypeDescription']),
+              'year' => date_format(date_create($value['prism:coverDate']), 'Y'),
+              'number' => $value['prism:volume'],
+              'pages' => $value['prism:pageRange'],
+              'name_magazine' => $value['prism:publicationName'],
+              'doi' => $value['prism:doi'],
+              'scopus_id' => $value['dc:identifier']
+            ]);
+          }
+          foreach ($authors as $key => $author) {
+            $authorsHasPublicationsModel = new AuthorsPublications();
+            $authorsHasPublicationsModel->create([
+              'publications_id' => $response['id'],
+              'autors_id' => $author['scipub_id']
+            ]);
+          }
+        }
+      }
+      $auditScopusExportModel = new AuditScopusExport();
+      $auditScopusExportModel->create([
+        'last_number' => $data['search-results']['opensearch:itemsPerPage'],
+        'count' => $data['search-results']['opensearch:totalResults']
+      ]);
+
+      return response('ok', 200);
+    }
+
+    // визначення типу публікації відповідно даних Scopus
+    function getPublicationType($type) {
+      switch ($type) {
+        case 'Article':
+          return 3;
+          break;
+        case 'Review':
+          return 3;
+          break;
+        case 'Conference Paper':
+          return 2;
+          break;
+        case 'Book':
+          return 4;
+          break;
+        case 'Editorial':
+          return 9;
+          break;
+        case 'Note':
+          return 9;
+          break;
+        case 'Book Chapper':
+          return 8;
+          break;
+        default:
+          return 3;
+          break;
+      }
+    }
+
+
+
     // всі назви поблікацій
     function getAllNames() {
         $data = Publications::select('title', 'publication_type_id')->with('publicationType')->get();
@@ -37,6 +130,13 @@ class PublicationsController extends ASUController
 
     // всі публікації
     function getAll(Request $request, $author_id = null) {
+
+      $request->session()->put('person', [
+        'roles_id' => 4,
+        'department_code' => 615,
+        'faculty_code' => 1059
+      ]);
+
         $divisions = $this->getDivisions();
         $model = Publications::with('publicationType', 'scienceType', 'authors.author')->orderBy('created_at', 'DESC');
 
@@ -75,6 +175,10 @@ class PublicationsController extends ASUController
                     $query->where('supervisor', '!=', 1);
                 }
             });
+        }
+
+        if($request->scopus == "true") {
+          $model->where('scopus_id', '!=', null);
         }
 
         // Під керівництвом

@@ -43,6 +43,24 @@
 
                                 <a
                                     v-if="userRole == 4"
+                                    href="/scopus"
+                                    class="dropdown-item"
+                                >Публікації Scopus</a>
+
+                                <a
+                                    v-if="userRole == 4"
+                                    href="#"
+                                    class="dropdown-item"
+                                >Архів публікацій</a>
+
+                                <a
+                                    v-if="userRole == 4"
+                                    href="#"
+                                    class="dropdown-item"
+                                >Експорт рейтингових показників</a>
+
+                                <a
+                                    v-if="userRole == 4"
                                     href="/audit"
                                     class="dropdown-item"
                                 >Аудит</a>

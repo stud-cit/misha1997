@@ -52,7 +52,9 @@ class Publications extends Model
         'add_user_id',
         'edit_user_id',
         'not_previous_year',
-        'not_this_year'
+        'not_this_year',
+        'scopus_id',
+        'verification'
     ];
 
     protected $casts = [

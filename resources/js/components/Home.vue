@@ -7,6 +7,9 @@
             <a v-if="userRole != 1" href="/users" class="page-link">Список усіх користувачів</a>
             <a href="/manual.pdf" class="page-link" target="_blank">Інструкція користувача</a>
             <a v-if="userRole == 4" href="/audit" class="page-link">Аудит</a>
+            <a v-if="userRole == 4" href="/scopus" class="page-link">Публікації Scopus</a>
+            <a v-if="userRole == 4" href="#" class="page-link">Архів публікацій</a>
+            <a v-if="userRole == 4" href="#" class="page-link">Експорт рейтингових показників</a>
             <button
                 v-if="userRole == 4 && access == 'close'"
                 class="page-link success"

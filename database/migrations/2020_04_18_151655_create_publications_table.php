@@ -54,6 +54,9 @@ class CreatePublicationsTable extends Migration
             $table->foreignId('edit_user_id')->nullable(); // Користувач, що робив останнє редагування публікації
             $table->boolean('not_previous_year')->default(0); // Не враховується в рейтингу попередного року
             $table->boolean('not_this_year')->default(0); // Не враховується в рейтингу цього року
+
+            $table->string('scopus_id')->nullable(); // ідентифікатор бд скопус
+            $table->boolean('verification')->default(0); // верифіковано для публікацій скопус
             $table->timestamps();
         });
 
