@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('test', 'DevController@testUser');
+Route::get('test', 'DevController@getUsers');
 
 
 // Авторизация юзера

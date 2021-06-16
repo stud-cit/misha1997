@@ -90,24 +90,39 @@ class AuthorsController extends ASUController
         if(isset($request->categ_users)) {
             $model->where(function($query) use($request) {
                 foreach($request->categ_users as $key => $value) {
-                    if($value == "СумДУ") {
-                        $query->orWhere('job_type_id', 5);
-                    }
-                    if($value == "СумДУ (Не працює)") {
-                        $query->orWhere('job_type_id', 6);
-                    }
-                    if($value == "Зовнішні співавтори") {
-                        $query->orWhere('job_type_id', '!=', 5)->where('job_type_id', '!=', 6);
-                    }
-                    if($value == "Студенти") {
-                        $query->orWhere('categ_1', 1)->orWhere('categ_1', 3);
-                    }
-                    if($value == "5 або більше публікацій у періодичних виданнях Scopus та/або WoS") {
-                        $query->orWhere('five_publications', '1');
-                    }
-                    if($value == "Іноземці") {
-                        $query->where('country', '!=', 'Україна');
-                    }
+                  if($value == "Аспіранти") {
+                    $query->orWhere('categ_1', 2);
+                  }
+                  if($value == "Викладачі") {
+                    $query->orWhere('categ_2', 2);
+                  }
+                  if($value == "Докторанти") {
+                    $query->orWhere('kod_level', 9);
+                  }
+                  if($value == "Зовнішні співавтори") {
+                    $query->orWhere('job_type_id', '!=', 5)->where('job_type_id', '!=', 6);
+                  }
+                  if($value == "Іноземці") {
+                    $query->where('country', '!=', 'Україна');
+                  }
+                  if($value == "Менеджери") {
+                    $query->orWhere('categ_2', 3);
+                  }
+                  if($value == "Співробітники") {
+                    $query->orWhere('categ_2', 1);
+                  }
+                  if($value == "Студенти") {
+                    $query->orWhere('categ_1', 1)->orWhere('categ_1', 3);
+                  }
+                  if($value == "СумДУ") {
+                      $query->orWhere('job_type_id', 5);
+                  }
+                  if($value == "СумДУ (не працює)") {
+                      $query->orWhere('job_type_id', 6);
+                  }
+                  if($value == "5 або більше публікацій у періодичних виданнях Scopus та/або WoS") {
+                      $query->orWhere('five_publications', '1');
+                  }
                 }
             });
         }

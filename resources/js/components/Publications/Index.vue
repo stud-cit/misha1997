@@ -50,11 +50,25 @@
                         </datalist>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>ПІБ автора</label>
-                    <div class="input-container">
-                        <input type="text" v-model="filters.authors_f">
-                    </div>
+                <div class="form-row">
+                  <div class="form-group col-lg">
+                      <label>ПІБ автора</label>
+                      <div class="input-container">
+                          <input type="text" v-model="filters.authors_f">
+                      </div>
+                  </div>
+                  <div class="form-group col-lg">
+                      <label>Посада</label>
+                      <div class="input-container multiselect">
+                        <multiselect
+                            v-model="filters.categ_users"
+                            placeholder=""
+                            :options="categUsers"
+                            :multiple="true"
+                            :taggable="true"
+                        ></multiselect>
+                      </div>
+                  </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-lg-4">
@@ -274,8 +288,22 @@
                     department_code: '',
                     hasSupervisor: false,
                     notPreviousYear: false,
+                    categ_users: [],
                     notThisYear: false
                 },
+                categUsers: [
+                  "Аспіранти", 
+                  "Викладачі",
+                  "Докторанти", 
+                  "Зовнішні співавтори", 
+                  "Іноземці", 
+                  "Менеджери", 
+                  "Співробітники", 
+                  "Студенти", 
+                  "СумДУ", 
+                  "СумДУ (не працює)", 
+                  "5 або більше публікацій у періодичних виданнях Scopus та/або WoS"
+                ],
                 pagination: {
                     currentPage: 1,
                     perPage: 10,
@@ -324,7 +352,8 @@
                         department_code: this.filters.department_code,
                         hasSupervisor: this.filters.hasSupervisor,
                         notPreviousYear: this.filters.notPreviousYear,
-                        notThisYear: this.filters.notThisYear
+                        notThisYear: this.filters.notThisYear,
+                        categ_users: this.filters.categ_users
                     }
                 }).then(response => {
                     this.countPublications = response.data.count;
@@ -410,6 +439,7 @@
                 this.filters.hasSupervisor = false;
                 this.filters.notPreviousYear = false;
                 this.filters.notThisYear = false;
+                this.filters.categ_users = [];
                 this.getData(1);
             }
         },
