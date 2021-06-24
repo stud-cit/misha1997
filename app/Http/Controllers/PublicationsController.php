@@ -21,6 +21,7 @@ class PublicationsController extends ASUController
     // імпорт публікацій Scopus
     function getPublicationsScopus() {
       $previousDate = date("Y") - 1;
+      $resultCount = 0;
       $api = $this->scopus_api . 'search/scopus?';
       if(AuditScopusExport::count() > 0) {
         $api .= 'start=' . AuditScopusExport::select('last_number')->orderBy('created_at')->first()->last_number;
@@ -50,26 +51,28 @@ class PublicationsController extends ASUController
               'science_type_id' => 1,
               'publication_type_id' => $this->getPublicationType($value['subtypeDescription']),
               'year' => date_format(date_create($value['prism:coverDate']), 'Y'),
-              'number' => $value['prism:volume'],
-              'pages' => $value['prism:pageRange'],
+              'number' => isset($value['prism:volume']) ? $value['prism:volume'] : null,
+              'pages' => isset($value['prism:pageRange']) ? $value['prism:pageRange'] : null,
               'name_magazine' => $value['prism:publicationName'],
-              'doi' => $value['prism:doi'],
+              'doi' => isset($value['prism:doi']) ? $value['prism:doi'] : null,
               'scopus_id' => $value['dc:identifier']
             ]);
-          }
-          foreach ($authors as $key => $author) {
-            $authorsHasPublicationsModel = new AuthorsPublications();
-            $authorsHasPublicationsModel->create([
-              'publications_id' => $response['id'],
-              'autors_id' => $author['scipub_id']
-            ]);
+            foreach ($authors as $key => $author) {
+              $authorsHasPublicationsModel = new AuthorsPublications();
+              $authorsHasPublicationsModel->create([
+                'publications_id' => $response['id'],
+                'autors_id' => $author['scipub_id']
+              ]);
+            }
+            $resultCount += 1;
           }
         }
       }
       $auditScopusExportModel = new AuditScopusExport();
       $auditScopusExportModel->create([
         'last_number' => $data['search-results']['opensearch:itemsPerPage'],
-        'count' => $data['search-results']['opensearch:totalResults']
+        'total_count' => $data['search-results']['opensearch:totalResults'],
+        'count' => $resultCount
       ]);
 
       return response('ok', 200);
@@ -109,12 +112,12 @@ class PublicationsController extends ASUController
 
     // всі назви поблікацій
     function getAllNames() {
-        $data = Publications::select('title', 'publication_type_id')->with('publicationType')->get();
+        $data = Publications::select('title', 'publication_type_id')->where('status_id', 1)->with('publicationType')->get();
         return response()->json($data);
     }
 
     function checkPublication(Request $request, $id) {
-        $model = Publications::with('authors.author')->whereHas('authors.author', function($q) use ($request) {
+        $model = Publications::with('authors.author')->where('status_id', 1)->whereHas('authors.author', function($q) use ($request) {
             $q->where('id', $request->session()->get('person')['id']);
         })->where('id', $id)->exists();
         if($model) {
@@ -138,7 +141,7 @@ class PublicationsController extends ASUController
       ]);
 
         $divisions = $this->getDivisions();
-        $model = Publications::with('publicationType', 'scienceType', 'authors.author')->orderBy('created_at', 'DESC');
+        $model = Publications::with('publicationType', 'scienceType', 'authors.author')->where('status_id', $request->status_id)->orderBy('created_at', 'DESC');
 
         if(!$author_id) {
             if($request->session()->get('person')['roles_id'] == 2) {
@@ -230,6 +233,21 @@ class PublicationsController extends ASUController
             $model->where('not_this_year', 1);
         }
 
+        // Публікації Scopus
+        if($request->scopus_add_status != "") {
+          if($request->scopus_add_status == '1') {
+            $model->where('scopus_id', null);
+          }
+          if($request->scopus_add_status == '2') {
+            $model->where('scopus_id', '!=', null);
+          }
+        }
+
+        // Верифікація
+        if($request->verification == "true") {
+          $model->where('verification', 1);
+        }
+
         if(isset($request->categ_users)) {
           $model->whereHas('authors.author', function($q) use ($request) {
               foreach($request->categ_users as $key => $value) {
@@ -296,11 +314,14 @@ class PublicationsController extends ASUController
 
         $publications = $model->paginate($request->size);
 
+        $last_date_export = AuditScopusExport::select('created_at')->orderBy('created_at', 'desc')->first();
+
         return response()->json([
             "currentPage" => $publications->currentPage(),
             "firstItem" => $publications->firstItem(),
             "count" => $publications->total(),
-            "publications" => $publications
+            "publications" => $publications,
+            "last_date_export" => $last_date_export
         ]);
     }
 
@@ -376,6 +397,7 @@ class PublicationsController extends ASUController
         $data = $request->all();
         $model = Publications::with('authors', 'publicationType')->find($id);
         $data['edit_user_id'] = $request->session()->get('person')['id'];
+        $data['verification'] = true;
         $notificationText = "";
 
         // check authors old or new
@@ -566,13 +588,36 @@ class PublicationsController extends ASUController
                     ]);
                 }
             }
-            Publications::find($publication['id'])->delete();
+            Publications::where('id', $publication['id'])->update([
+              'status_id' => 2
+            ]);
         }
         Audit::create([
             "text" => "Користувач <a href=\"/user/" . $request->user['id'] . "\">" . $request->user['name'] . "</a> видалив публікацію \"".$publication['title']."\"."
         ]);
         return response('ok', 200);
     }
+
+     // відновлення публікацій
+     function restorePublications(Request $request) {
+      foreach ($request->publications as $key => $publication) {
+          foreach ($publication['authors'] as $k => $author) {
+              if($author['author']['id'] != $request->session()->get('person')['id']) {
+                  Notifications::create([
+                      "autors_id" => $author['author']['id'],
+                      "text" => "Користувач <a href=\"/user/" . $request->user['id'] . "\">" . $request->user['name'] . "</a> відновив Вашу публікацію \"".$publication['title']."\"."
+                  ]);
+              }
+          }
+          Publications::where('id', $publication['id'])->update([
+            'status_id' => 1
+          ]);
+      }
+      Audit::create([
+          "text" => "Користувач <a href=\"/user/" . $request->user['id'] . "\">" . $request->user['name'] . "</a> відновив публікацію \"".$publication['title']."\"."
+      ]);
+      return response('ok', 200);
+  }
 
     // видалення публікації
     function deletePublication(Request $request, $id) {
@@ -584,7 +629,9 @@ class PublicationsController extends ASUController
                 ]);
             }
         }
-        Publications::find($id)->delete();
+        Publications::find($id)->update([
+          'status_id' => 2
+        ]);
         Audit::create([
             "text" => "Користувач <a href=\"/user/" . $request->user['id'] . "\">" . $request->user['name'] . "</a> видалив публікацію \"".$request->publication['title']."\"."
         ]);
@@ -606,7 +653,7 @@ class PublicationsController extends ASUController
     // рейтингові показники
     function export(Request $request) {
         $divisions = $this->getDivisions();
-        $model = Publications::with('authors.author', 'publicationType', 'scienceType')->orderBy('created_at', 'DESC');
+        $model = Publications::with('authors.author', 'publicationType', 'scienceType')->where('status_id', 1)->where('verification', 1)->orderBy('created_at', 'DESC');
 
         // Країна видання
         $model->where('country', 'like', "%".$request->country."%");

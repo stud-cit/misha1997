@@ -4,7 +4,7 @@
             <div class="form-group">
                 <label class="item-title">Рік видання *</label>
                 <div class="input-container">
-                    <select class="item-value" v-model="publicationData.year">
+                    <select :disabled="publicationData.scopus_id" class="item-value" v-model="publicationData.year">
                         <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                     </select>
                 </div>
@@ -31,7 +31,7 @@
             <div class="form-group">
                 <label class="item-title">Назва редакції </label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.editor_name">
+                    <input :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.editor_name">
                 </div>
             </div>
             <div class="form-group">
@@ -46,19 +46,19 @@
             <div class="form-group">
                 <label class="item-title">Кількість томів</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.number_volumes">
+                    <input :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.number_volumes">
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Том</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.number">
+                    <input :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.number">
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">DOI </label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.doi">
+                    <input placeholder="10.30888/2415-7538.2021-20-01-004" :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.doi">
                 </div>
             </div>
         </div>

@@ -71,7 +71,7 @@
                     <div class="form-group col-lg-6">
                         <label>Обліковується рейтингом Nature Index</label>
                         <div class="input-container">
-                            <select v-model="publicationData.nature_index">
+                            <select :disabled="userRole != 4" v-model="publicationData.nature_index">
                                 <option value="1">Так</option>
                                 <option value="2">Ні</option>
                             </select>

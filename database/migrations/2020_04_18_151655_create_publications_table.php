@@ -13,6 +13,7 @@ class CreatePublicationsTable extends Migration
             $table->text('title');
             $table->foreignId('science_type_id')->nullable(); // Scopus WoS
             $table->foreignId('publication_type_id'); // тип публікації
+            $table->integer('status_id')->default(1); // Статус
             $table->float('snip', 8, 2)->nullable(); // Коефіцієнт впливовості SNIP журналу SCOPUS
             $table->string('impact_factor')->nullable(); // Коефіцієнт впливовості імпакт-фактор журналу WoS
             $table->string('quartil_scopus')->nullable(); // Квартиль журналу БД Scopus

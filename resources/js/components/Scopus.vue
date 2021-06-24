@@ -12,6 +12,9 @@
               ></span>
               <img v-else src="/img/download.png"> Отримати публікації Scopus
           </button>
+          <div class="text-center mt-2">
+            Дата останнього оновлення: {{ last_date.created_at }}
+          </div>
         </div>
 
         <div class="main-content">
@@ -115,12 +118,23 @@
                 prev-class="page-link"
                 next-class="page-link">
             </paginate>
+
+            <div class="step-button-group">
+                <back-button></back-button>
+                <delete-button v-if="checkAccess" @click.native="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import BackButton from "./Buttons/Back";
+    import DeleteButton from "./Buttons/Delete";
     export default {
+        components: {
+            BackButton,
+            DeleteButton
+        },
         data() {
             return {
               countPublications: 0,
@@ -128,6 +142,9 @@
               loadingImport: false,
               selectPublications: [],
               data: [],
+              last_date: {
+                created_at: ""
+              },
               pagination: {
                   currentPage: 1,
                   perPage: 10,
@@ -168,8 +185,10 @@
                 })
             },
             getData(page) {
+                this.loading = true;
                 axios.get('/api/publications', {
                     params: {
+                        status_id: 1,
                         size: this.pagination.perPage,
                         page: page,
                         scopus: true
@@ -179,11 +198,45 @@
                     this.pagination.currentPage = response.data.currentPage;
                     this.pagination.firstItem = response.data.firstItem;
                     this.data = response.data.publications.data;
+                    this.last_date = response.data.last_date_export
                     this.loading = false;
                 }).catch(() => {
                     this.loading = false;
                 })
-            }
+            },
+            // видалити обрані публікації
+            deletePublications() {
+                swal.fire({
+                    title: 'Бажаєте видалити?',
+                    text: "Після видалення ви не зможете відновити дані!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Видалити',
+                    cancelButtonText: 'Відміна',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.post('/api/delete-publications', {
+                            publications: this.selectPublications,
+                            user: this.authUser
+                        })
+                        .then(() => {
+                            this.selectPublications = [];
+                            this.getData(this.pagination.currentPage);
+                            swal.fire("Публікації успішно видалено");
+                        });
+                    }
+                })
+            },
+            // обрані публікації
+            selectItem(item) {
+                if(this.selectPublications.indexOf(item) == -1) {
+                    this.selectPublications.push(item);
+                } else {
+                    this.selectPublications.splice(this.selectPublications.indexOf(item), 1);
+                }
+            },
         }
     }
 </script>

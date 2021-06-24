@@ -10,13 +10,14 @@ class AuditScopusExport extends Model
 
     protected $fillable = [
         'last_number',
+        'total_count',
         'count'
     ];
 
     protected $hidden = ['updated_at'];
 
     protected $casts = [
-      'created_at' => 'datetime:d.m.Y'
+      'created_at' => 'datetime:d.m.Y H:m'
     ];
 
 }

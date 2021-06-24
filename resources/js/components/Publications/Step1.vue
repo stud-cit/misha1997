@@ -16,7 +16,7 @@
             <div class="form-group">
                 <label >Назва публікації *</label>
                 <div class="input-container">
-                    <input v-model="publicationData.title" type="text" list="names" @input="findNames">
+                    <input :disabled="publicationData.scopus_id" v-model="publicationData.title" type="text" list="names" @input="findNames">
                     <datalist id="names">
                         <option v-for="(item, index) in names" :key="index" :value="item.title">{{item.publication_type.title}}</option>
                     </datalist>
@@ -35,7 +35,7 @@
                         <select  v-model="publicationData.science_type_id" @change="changeScienceType">
                             <option value=""></option>
                             <option value="1">Scopus</option>
-                            <option value="2">WoS</option>
+                            <option :disabled="publicationData.scopus_id" value="2">WoS</option>
                             <option value="3">Scopus та WoS</option>
                         </select>
                     </div>
@@ -44,10 +44,10 @@
                     <label >Вид публікації *</label>
                     <div class="input-container">
                         <select  v-model="publicationData.publication_type" v-if="publicationData.science_type_id">
-                            <option v-for="(item, i) in publicationTypes" :key="i" v-show="item.scopus_wos" :value="item">{{item.title }}</option>
+                            <option :disabled="publicationData.scopus_id && item.id != 1 && item.id != 2 && item.id != 3" v-for="(item, i) in publicationTypes" :key="i" v-show="item.scopus_wos" :value="item">{{item.title }}</option>
                         </select>
                         <select  v-model="publicationData.publication_type" v-else>
-                            <option v-for="(item, i) in publicationTypes" :key="i" :value="item">{{item.title  }}</option>
+                            <option :disabled="publicationData.scopus_id && item.id != 1 && item.id != 2 && item.id != 3" v-for="(item, i) in publicationTypes" :key="i" :value="item">{{item.title  }}</option>
                         </select>
                         <div class="hint" ><span>Прізвище, ім’я, по-батькові</span></div>
                     </div>

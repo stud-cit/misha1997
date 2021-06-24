@@ -23,6 +23,7 @@ import Notifications from "./components/Notifications";
 import Audit from "./components/Audit";
 import Users from "./components/Users";
 import Scopus from "./components/Scopus";
+import Archive from "./components/Publications/Archive";
 import Register from "./components/Register";
 import Error404 from './components/Error404';
 
@@ -141,7 +142,15 @@ let router = new Router({
           meta: {
               middleware: [auth, checkAdmin]
           }
-      },
+        },
+        {
+          path: '/archive',
+          name: 'archive',
+          component: Archive,
+          meta: {
+              middleware: [auth, checkAdmin]
+          }
+        },
         {
             path: '*',
             name: 'error',

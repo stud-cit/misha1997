@@ -107,6 +107,14 @@
                     <div class="col-lg-3 list-item list-title">Публікація не врахована в рейтингу цього року:</div>
                     <div class="col-lg-9 list-item list-text">{{ data.not_this_year ? "Так" : "Ні" }}</div>
                 </li>
+                <li class="row">
+                    <div class="col-lg-3 list-item list-title">Публікація верифікована:</div>
+                    <div class="col-lg-9 list-item list-text">{{ data.verification ? "Так" : "Ні" }}</div>
+                </li>
+                <li class="row" v-if="data.scopus_id">
+                    <div class="col-lg-3 list-item list-title">Scopus ID:</div>
+                    <div class="col-lg-9 list-item list-text">{{ data.scopus_id }}</div>
+                </li>
                 <li class="row" v-if="data.publication_add">
                     <div class="col-lg-3 list-item list-title">Додано:</div>
                     <div class="col-lg-9 list-item list-text"><a :href="'/user/'+data.publication_add.id">{{data.publication_add.name}}</a></div>
@@ -194,7 +202,9 @@
                     db_wos_percent: "",
                     authors: [],
                     supervisor: null,
-                    not_previous_year: false
+                    not_previous_year: false,
+                    verification: false,
+                    scopus_id: ""
                 },
             }
         },

@@ -1,12 +1,15 @@
 <template>
     <div>
-        <button class="ml-2 delete" :disabled="disabled">Видалити</button>
+        <button class="ml-2 delete" :disabled="disabled">{{ title }}</button>
     </div>
 </template>
 <script>
 export default {
     props: {
-        disabled: Boolean
+        disabled: Boolean,
+        title: {
+          default: "Видалити"
+        }
     }
 }
 </script>

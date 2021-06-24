@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
             PublicationTypeSeeder::class,
             CountriesSeeder::class,
             ServiceSeeder::class,
-            JobTypeSeeder::class
+            JobTypeSeeder::class,
+            PublicationStatusSeeder::class
         ]);
     }
 }

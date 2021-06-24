@@ -49,15 +49,15 @@
 
                                 <a
                                     v-if="userRole == 4"
-                                    href="#"
+                                    href="/archive"
                                     class="dropdown-item"
                                 >Архів публікацій</a>
 
-                                <a
+                                <!-- <a
                                     v-if="userRole == 4"
                                     href="#"
                                     class="dropdown-item"
-                                >Експорт рейтингових показників</a>
+                                >Експорт рейтингових показників</a> -->
 
                                 <a
                                     v-if="userRole == 4"

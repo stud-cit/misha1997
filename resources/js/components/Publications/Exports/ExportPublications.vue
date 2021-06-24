@@ -15,7 +15,7 @@
                 <h2>Стаття-доповідь у матеріалах наукових конференціях</h2>
                 <ol>
                     <li v-for="(item, index) in articleReport" :key="index">
-                        {{item.initials}} {{ item.title }}. <i>{{ item.name_magazine }}</i>. {{ item.year }}. {{ item.number }}. C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
+                        {{item.initials}} {{item.title}}. <i>{{item.name_magazine}}</i>. {{item.year}}. <span v-if="item.number">{{ item.number }}. </span>C. {{item.pages}}. <span v-if="item.doi">DOI: {{item.doi}}.</span>
                     </li>
                 </ol>
             </template>
@@ -25,7 +25,7 @@
                 <h2>Стаття у фахових виданнях України</h2>
                 <ol>
                     <li v-for="(item, index) in articleProfessional" :key="index">
-                        {{item.initials}} {{ item.title }}. <i>{{ item.name_magazine }}</i>. {{ item.year }}. {{ item.number }}. C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
+                        {{item.initials}} {{ item.title }}. <i>{{ item.name_magazine }}</i>. {{ item.year }}. <span v-if="item.number">{{ item.number}}.</span> C. {{item.pages}}. <span v-if="item.doi">DOI: {{item.doi}}.</span>
                     </li>
                 </ol>
             </template>
@@ -34,7 +34,7 @@
                 <h2>Інші статті</h2>
                 <ol>
                     <li v-for="(item, index) in otherArticles" :key="index">
-                        {{item.initials}} {{ item.title }}. <i>{{ item.name_magazine }}</i>. {{ item.year }}. {{ item.number }}. C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
+                        {{item.initials}} {{ item.title }}. <i>{{ item.name_magazine }}</i>. {{ item.year }}. <span v-if="item.number">{{ item.number }}.</span> C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
                     </li>
                 </ol>
             </template>
@@ -43,7 +43,7 @@
                 <h2>Монографії</h2>
                 <ol>
                     <li v-for="(item, index) in monograph" :key="index">
-                    {{ item.initials }} {{ item.title }} : {{ item.publication_type.title.toLowerCase() }}<span v-if="item.by_editing"> / за ред. {{ item.by_editing }}</span>. {{ item.city }} : ПФ «Видавництво «{{ item.editor_name }}», {{ item.year }}. {{ item.pages }} c. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
+                    {{ item.initials }} {{ item.title }}: {{ item.publication_type.title.toLowerCase() }}<span v-if="item.by_editing"> / за ред. {{ item.by_editing }}</span>. {{ item.city }}: ПФ «Видавництво «{{ item.editor_name }}», {{ item.year }}. {{ item.pages }} c. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
                     </li>
                 </ol>
             </template>
@@ -52,7 +52,7 @@
                 <h2>Розділ монографії / розділ книги</h2>
                 <ol>
                     <li v-for="(item, index) in parts" :key="index">
-                    {{ item.initials }} {{ item.title }}. <i>{{ item.name_monograph }}</i> : кол. моногр. / <span v-if="item.by_editing"> / за ред. {{ item.by_editing }}.</span> {{ item.city }} : {{ item.editor_name }}, {{ item.year }}. C. {{ item.pages }}.
+                    {{ item.initials }} {{ item.title }}. <i>{{ item.name_monograph }}</i>: <span v-if="item.by_editing"> / за ред. {{ item.by_editing }}.</span> {{ item.city }}: {{ item.editor_name }}, {{ item.year }}. C. {{ item.pages }}.
                     </li>
                 </ol>
             </template>
@@ -61,7 +61,7 @@
                 <h2>Навчальні посібники, підручники</h2>
                 <ol>
                     <li v-for="(item, index) in books" :key="index">
-                    {{ item.initials }} {{ item.title }} : {{ item.publication_type.title.toLowerCase() }}<span v-if="item.by_editing"> / за ред. {{ item.by_editing }}</span>. {{ item.city }} : {{ item.editor_name }}, {{ item.year }}. {{ item.pages }} c.
+                    {{ item.initials }} {{ item.title }}: {{ item.publication_type.title.toLowerCase() }}<span v-if="item.by_editing"> / за ред. {{ item.by_editing }}</span>. {{ item.city }}: {{ item.editor_name }}, {{ item.year }}. {{ item.pages }} c.
                     </li>
                 </ol>
             </template>
@@ -79,7 +79,7 @@
                 <h2>Свідоцтво про реєстрацію авторських прав на твір / рішення</h2>
                 <ol>
                     <li v-for="(item, index) in certificates" :key="index">
-                    Свідоцтво про реєстрацію авторського права на твір «{{ item.title }}» № {{ item.number_certificate }} {{ item.country }} / {{ item.initials }} ; {{ item.applicant }} ; заяв. {{ item.date_application }} ; опубл. {{ item.date_publication }}.
+                    Свідоцтво про реєстрацію авторського права на твір «{{item.title}}» № {{item.number_certificate}} {{item.country}} / {{item.initials}}; <span v-if="item.applicant">{{item.applicant}};</span> заяв. {{item.date_application}}; опубл. {{item.date_publication}}.
                     </li>
                 </ol>
             </template>
@@ -88,7 +88,7 @@
                 <h2>Методичні вказівки</h2>
                 <ol>
                     <li v-for="(item, index) in methodicals" :key="index">
-                    {{ item.initials }} {{ item.title }}. {{ item.city }} : {{ item.editor_name }}, {{ item.year }}. {{ item.pages }} c.
+                    {{item.initials}} {{item.title}}. {{item.city}}: <span v-if="item.editor_name">{{item.editor_name}}, </span>{{item.year}}. {{item.pages}} c.
                     </li>
                 </ol>
             </template>
@@ -97,7 +97,7 @@
                 <h2>Електронні видання</h2>
                 <ol>
                     <li v-for="(item, index) in electronics" :key="index">
-                    {{ item.initials }}. {{ item.title }}: {{ item.publication_type.title.toLowerCase() }}; [електронний ресурс] / {{ item.initials }}. {{ item.city }}: {{ item.editor_name }}, {{ item.year }}. {{ item.pages }} c. URL: {{ item.url }}.
+                    {{item.initials}}. {{item.title}}: {{item.publication_type.title.toLowerCase()}}; [електронний ресурс] / {{item.initials}}. {{item.city}}: <span v-if="item.editor_name">{{item.editor_name}}, </span>{{item.year}}. {{item.pages}} c. URL: {{item.url}}.
                     </li>
                 </ol>
             </template>
@@ -106,7 +106,7 @@
                 <h2>Тези доповіді</h2>
                 <ol>
                     <li v-for="(item, index) in thesis" :key="index">
-                    {{ item.initials }} {{ item.title }}. <i>{{ item.name_conference }}</i> : тези доповідей <span v-if="item.by_editing"> / за ред. {{ item.by_editing }}</span>. {{ item.city }} : {{ item.editor_name }}, {{ item.year }}. C. {{ item.pages }}. <span v-if="item.doi">DOI: {{ item.doi }}.</span>
+                    {{item.initials}} {{item.title}}. <i>{{item.name_conference}}</i>: тези доповідей<span v-if="item.by_editing"> / за ред. {{item.by_editing}}</span>. {{item.city}}: <span v-if="item.editor_name">{{item.editor_name}},</span> {{item.year}}. C. {{item.pages}}. <span v-if="item.doi">DOI: {{item.doi}}.</span>
                     </li>
                 </ol>
             </template>
@@ -233,3 +233,8 @@
         }
     }
 </script>
+<style lang="css" scoped>
+  li {
+    text-align: justify;
+  }
+</style>

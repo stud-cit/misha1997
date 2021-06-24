@@ -255,6 +255,7 @@
                 this.$store.dispatch('saveFilterPublications', this.filters);
                 axios.get('/api/publications/'+this.authUser.id, {
                     params: {
+                        status_id: 1,
                         size: this.pagination.perPage,
                         page: page,
                         title: this.filters.title,

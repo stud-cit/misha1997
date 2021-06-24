@@ -409,6 +409,7 @@
                 this.publicationData.authors.push(this.authUser);
             }
             this.getAuthors();
+            this.checkStudent();
         },
 
         computed: {
@@ -480,9 +481,21 @@
         },
         methods: {
             checkStudent() {
+                this.publicationData.authors = this.publicationData.authors.filter(item => {
+                  item != null;
+                  return item;
+                })
                 if(this.publicationData.authors.length > 0 && (this.publicationData.authors.filter(item => item && item.categ_1 == 1).length == this.publicationData.authors.length)) {
-                    this.publicationData.useSupervisor = true;
+                  this.publicationData.useSupervisor = true;
                 }
+                this.authors = this.authors.map(item => {
+                  if(this.publicationData.authors.find(author => author.id == item.id)) {
+                    item.$isDisabled = true;
+                  } else {
+                    item.$isDisabled = false;
+                  }
+                  return item;
+                });
             },
             // задає місце роботи для новго автора не з СумДУ
             setJobType() {
@@ -576,6 +589,7 @@
                     this.publicationData.supervisor = null;
                 }
                 this.publicationData.authors = [];
+                this.checkStudent();
             },
             // додання автора в список авторів публікації
             addAuthor() {

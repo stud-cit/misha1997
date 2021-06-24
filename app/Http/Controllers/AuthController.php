@@ -22,9 +22,10 @@ class AuthController extends ASUController {
     }
 
     function checkUser(Request $request) {
-        $request->session()->put('key', '7CHEjzgbMIlikNopcoRWNXyjzQa1fTacdIUoIQYGGq5jh59kWK45');
+        // $request->session()->put('key', 'fU5BDxCaJpKrftQVX20rMJqCX1Oq2ZqZw14wXEA4qhNN482KZc52');
 
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token), true);
+        
         if ($personCabinet['status'] == 'OK') {
             $userModel = Authors::withCount(['notifications' => function ($query) {
                 $query->where('status', '=', 0);

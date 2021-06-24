@@ -105,6 +105,9 @@
                         <div class="input-container">
                             <input class="item-value" type="text" v-model="data.scopus_id">
                         </div>
+                      <div class="error" v-if="$v.data.scopus_id.$error">
+                          Дозволено лише цифри
+                      </div>
                     </div>
                 </li>
             </ul>
@@ -119,6 +122,7 @@
 <script>
     import BackButton from "./Buttons/Back";
     import SaveButton from "./Buttons/Save";
+    import {required} from "vuelidate/lib/validators";
     export default {
         data() {
             return {
@@ -148,6 +152,13 @@
         components: {
             BackButton,
             SaveButton
+        },
+        validations: {
+            data: {
+                scopus_id: {
+                    validFormat: val =>/[0-9]/.test(val),
+                },
+            },
         },
         mounted() {
             this.getData();

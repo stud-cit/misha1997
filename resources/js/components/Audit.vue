@@ -116,7 +116,6 @@
             // всі публікації
             getData(page) {
                 this.loading = true;
-                console.log(this.search)
                 axios.get('/api/audit', {
                     params: {
                         size: this.pagination.perPage,

@@ -4,7 +4,7 @@
             <div class="form-group">
                 <label class="item-title">Назва конференції *</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.name_conference">
+                    <input :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.name_conference">
                     <div class="hint"><span>Вказати повну назву конференції</span></div>
                 </div>
                 <div class="error" v-if="$v.publicationData.name_conference.$error">
@@ -14,7 +14,7 @@
             <div class="form-group">
                 <label class="item-title">Рік видання *</label>
                 <div class="input-container">
-                    <select class="item-value" v-model="publicationData.year">
+                    <select :disabled="publicationData.scopus_id" class="item-value" v-model="publicationData.year">
                         <option v-for="(year, index) in years" :key="index" :value="year">{{ year }}</option>
                     </select>
                 </div>
@@ -25,19 +25,19 @@
             <div class="form-group">
                 <label class="item-title">Видавництво</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.editor_name">
+                    <input :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.editor_name">
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Том</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.number">
+                    <input :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.number">
                 </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Сторінки *</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.pages">
+                    <input :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.pages">
                 </div>
                 <div class="error" v-if="$v.publicationData.pages.$error">
                     Поле обов'язкове для заповнення
@@ -59,7 +59,7 @@
             <div class="form-group">
                 <label class="item-title">DOI</label>
                 <div class="input-container">
-                    <input class="item-value" type="text" v-model="publicationData.doi">
+                    <input placeholder="10.30888/2415-7538.2021-20-01-004" :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.doi">
                 </div>
             </div>
         </div>

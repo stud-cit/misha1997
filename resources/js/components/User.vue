@@ -582,6 +582,7 @@
                 this.loading = true;
                 axios.get('/api/publications/'+this.$route.params.id, {
                     params: {
+                        status_id: 1,
                         size: this.pagination.perPage,
                         page: page,
                         title: this.filters.title,

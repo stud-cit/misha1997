@@ -16,7 +16,8 @@ class CreateAuditScopusExportTable extends Migration
         Schema::create('audit_scopus_export', function (Blueprint $table) {
             $table->id();
             $table->integer('last_number'); // остання сторінка
-            $table->integer('count'); // кількість публікацій
+            $table->integer('total_count'); // кількість публікацій
+            $table->integer('count'); // кількість збережених публікацій
             $table->timestamps();
         });
     }

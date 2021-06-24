@@ -147,7 +147,6 @@
                     status: 1
                 }).then((response) => {
                     item.status = 1;
-                    console.log(response.data.count)
                     this.updateNotifications(response.data.count);
                 });
             },

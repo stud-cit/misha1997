@@ -1,20 +1,11 @@
 <template>
     <div class="container page-content general-block">
-        <h1 class="page-title">Перегляд публікацій
-            <span v-if="authUser.roles_id == 3"> - {{ authUser.faculty }}</span>
-            <span v-if="authUser.roles_id == 2"> - {{ authUser.department }}</span>
-        </h1>
+        <h1 class="page-title">Архів публікацій</h1>
 
-        <!-- exports-->
-        <div class="exports">
-            <export-rating v-if="authUser.roles_id != 1" :years="years" class="export-block"></export-rating>
-            <export-publications class="export-block" :filters="filters" :countPublications="countPublications"></export-publications>
-        </div>
-        <!---->
         <div class="main-content">
             <form class="search-block">
-                <div class="form-row" v-show="authUser.roles_id != 2">
-                    <div class="form-group col-lg" v-show="authUser.roles_id != 3">
+                <div class="form-row">
+                    <div class="form-group col-lg">
                         <label>Інститут / факультет</label>
                         <div class="input-container">
                             <select v-model="filters.faculty_code" @change="getDepartments">
@@ -102,21 +93,9 @@
                         <Country :data="filters"></Country>
                     </div>
                 </div>
-                <div class="form-row">
-                  <div class="form-group col-lg-6">
-                      <label>Вид публікації</label>
-                      <PublicationTypes :data="filters"></PublicationTypes>
-                  </div>
-                  <div class="form-group col-lg-6">
-                      <label>Публікації Scopus</label>
-                      <div class="input-container">
-                          <select v-model="filters.scopus_add_status">
-                              <option value=""></option>
-                              <option value="1">Внесені Автором</option>
-                              <option value="2">Внесені автоматично</option>
-                          </select>
-                      </div>
-                  </div>
+                <div class="form-group">
+                    <label>Вид публікації</label>
+                    <PublicationTypes :data="filters"></PublicationTypes>
                 </div>
                 <div class="form-group checkbox col-lg">
                     <input v-model="filters.hasSupervisor" type="checkbox" class="form-check-input" id="hasSupervisor">
@@ -129,10 +108,6 @@
                 <div class="form-group checkbox col-lg">
                     <input v-model="filters.notThisYear" type="checkbox" class="form-check-input" id="notThisYear">
                     <label class="form-check-label" for="notThisYear">Публікації які не враховані в рейтингу цього року</label>
-                </div>
-                <div class="form-group checkbox col-lg">
-                    <input v-model="filters.verification" type="checkbox" class="form-check-input" id="verification">
-                    <label class="form-check-label" for="verification">Публікації які верифіковані</label>
                 </div>
                 <SearchButton
                     @click.native="getData(1); loadingSearch = true;"
@@ -182,20 +157,19 @@
                 <table :class="['table', 'table-bordered', loading ? 'opacityTable' : '']">
                     <thead>
                         <tr>
-                            <td colspan="7" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{countPublications}}</td>
-                            <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
-                            <td class="bg-white pb-3 pt-0" v-if="checkAccess"></td>
+                            <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{countPublications}}</td>
+                            <td class="bg-white pb-3 pt-0"></td>
                         </tr>
                         <tr>
                             <th scope="col">№</th>
                             <th scope="col">Вид публікації</th>
                             <th scope="col">ПІБ автора/співавторів</th>
                             <th scope="col">Назва публікації</th>
+                            <th scope="col">Рік видання</th>
+                            <th scope="col">БД Scopus/WoS</th>
                             <th scope="col">Науковий керівник</th>
-                            <th scope="col">Верифікація</th>
                             <th scope="col">Дата занесення</th>
-                            <th scope="col" v-if="checkAccess">Редагувати</th>
-                            <th scope="col" v-if="checkAccess">Обрати</th>
+                            <th scope="col">Обрати</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -208,17 +182,16 @@
                                 </span>
                             </td>
                             <td><a :href="'/publications/'+item.id"> {{ item.title }} </a> </td>
+                            <td>{{ item.year}}</td>
+                            <td>{{ item.science_type ? item.science_type.type : '' }}</td>
                             <td>
                                 <span class="authors" v-for="(author, index) in item.authors" :key="index">
                                     <a v-if="author.supervisor" :href="'/user/'+author.author.id">{{author.author.name}}</a>
                                 </span>
                             </td>
-                            <td>{{ item.verification ? 'Так' : 'Ні' }}</td>
                             <td>{{ item.created_at }}</td>
-                            <td v-if="checkAccess">
-                                <a :href="'/publications/edit/'+item.id"><i class="fa fa-edit fa-2x"></i></a>
-                            </td>
-                            <td class="icons" v-if="checkAccess">
+
+                            <td class="icons">
                                 <input
                                     type="checkbox"
                                     :checked="selectPublications.indexOf(item) != -1 ? true : false"
@@ -257,7 +230,7 @@
 
             <div class="step-button-group">
                 <back-button></back-button>
-                <delete-button v-if="checkAccess" @click.native="deletePublications" :disabled="selectPublications.length == 0"></delete-button>
+                <delete-button title="Відновити" @click.native="restorePublications" :disabled="selectPublications.length == 0"></delete-button>
             </div>
         </div>
     </div>
@@ -268,8 +241,6 @@
     import divisions from '../mixins/divisions';
     import years from '../mixins/years';
 
-    import ExportRating from "./Exports/ExportRating";
-    import ExportPublications from "./Exports/ExportPublications";
     import BackButton from "../Buttons/Back";
     import SearchButton from "../Buttons/SearchButton";
     import DeleteButton from "../Buttons/Delete";
@@ -284,8 +255,6 @@
                 publicationNames: [],
                 data: [],
                 departments: [],
-                exportData: {},
-                exportPublication: [],
                 loading: true,
                 loadingSearch: false,
                 loadingClear: false,
@@ -302,9 +271,7 @@
                     hasSupervisor: false,
                     notPreviousYear: false,
                     categ_users: [],
-                    notThisYear: false,
-                    scopus_add_status: "",
-                    verification: false
+                    notThisYear: false
                 },
                 categUsers: [
                   "Аспіранти", 
@@ -327,8 +294,6 @@
             };
         },
         components: {
-            ExportRating,
-            ExportPublications,
             BackButton,
             SearchButton,
             DeleteButton,
@@ -353,13 +318,25 @@
             getData(page) {
                 this.loading = true;
                 this.$store.dispatch('saveFilterPublications', this.filters);
-                var params = Object.assign(this.filters, {
-                  status_id: 1,
-                  size: this.pagination.perPage,
-                  page
-                });
-                axios.get('/api/publications', { params })
-                .then(response => {
+                axios.get('/api/publications', {
+                    params: {
+                        status_id: 2,
+                        size: this.pagination.perPage,
+                        page: page,
+                        title: this.filters.title,
+                        authors_f: this.filters.authors_f,
+                        science_type_id: this.filters.science_type_id,
+                        years: this.filters.years,
+                        country: this.filters.country,
+                        publication_type_id: this.filters.publication_type_id,
+                        faculty_code: this.filters.faculty_code,
+                        department_code: this.filters.department_code,
+                        hasSupervisor: this.filters.hasSupervisor,
+                        notPreviousYear: this.filters.notPreviousYear,
+                        notThisYear: this.filters.notThisYear,
+                        categ_users: this.filters.categ_users
+                    }
+                }).then(response => {
                     this.countPublications = response.data.count;
                     this.pagination.currentPage = response.data.currentPage;
                     this.pagination.firstItem = response.data.firstItem;
@@ -382,26 +359,26 @@
 
             // methods
             // видалити обрані публікації
-            deletePublications() {
+            restorePublications() {
                 swal.fire({
-                    title: 'Бажаєте видалити?',
-                    text: "Після видалення ви не зможете відновити дані!",
+                    title: 'Бажаєте відновити?',
+                    text: "Обрані публікації будуть повернуті до списку всіх публікацій!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Видалити',
+                    confirmButtonText: 'Відновити',
                     cancelButtonText: 'Відміна',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        axios.post('/api/delete-publications', {
+                        axios.post('/api/restore-publications', {
                             publications: this.selectPublications,
                             user: this.authUser
                         })
                         .then(() => {
                             this.selectPublications = [];
                             this.getData(this.pagination.currentPage);
-                            swal.fire("Публікації успішно видалено");
+                            swal.fire("Публікації успішно відновлено");
                         });
                     }
                 })
@@ -451,15 +428,6 @@
             // отримуємо авторизованого користувача із store
             authUser() {
                 return this.$store.getters.authUser
-            },
-            checkAccess() {
-                if(this.authUser.roles_id == 4) {
-                    return true;
-                } else if((this.$store.getters.accessMode == 'open' && this.authUser.roles_id == 1) || this.authUser.roles_id != 5) {
-                    return true;
-                } else {
-                    return false;
-                }
             },
         }
     }
