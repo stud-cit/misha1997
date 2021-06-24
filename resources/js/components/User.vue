@@ -254,10 +254,13 @@
                     <div class="col-lg-3 list-item list-title">Scopus ID:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4">
-                            <input class="item-value" type="text" v-model="data.scopus_id">
+                            <input class="item-value" type="text" v-model="data.scopus_id" @input="$v.$touch()">
                         </div>
                         <div v-else>
                             {{data.scopus_id}}
+                        </div>
+                        <div class="error" v-if="$v.data.scopus_id.$error">
+                            Дозволено лише цифри
                         </div>
                     </div>
                 </li>
@@ -447,6 +450,7 @@
     import SearchButton from "./Buttons/SearchButton";
     import Country from "./Forms/Country";
     import PublicationTypes from "./Forms/PublicationTypes";
+    import {numeric} from "vuelidate/lib/validators";
     export default {
         mixins: [years, divisions],
         data() {
@@ -516,6 +520,13 @@
             SearchButton,
             Country,
             PublicationTypes
+        },
+        validations: {
+            data: {
+                scopus_id: {
+                    numeric
+                },
+            },
         },
         mounted () {
             this.getData();
