@@ -103,7 +103,7 @@
                     <div class="col-lg-3 list-item list-title">Scopus ID:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container">
-                            <input class="item-value" type="text" v-model="data.scopus_id">
+                            <input class="item-value" type="text" v-model="data.scopus_id" @input="$v.$touch()">
                         </div>
                       <div class="error" v-if="$v.data.scopus_id.$error">
                           Дозволено лише цифри
@@ -122,7 +122,7 @@
 <script>
     import BackButton from "./Buttons/Back";
     import SaveButton from "./Buttons/Save";
-    import {required} from "vuelidate/lib/validators";
+    import {numeric} from "vuelidate/lib/validators";
     export default {
         data() {
             return {
@@ -156,7 +156,7 @@
         validations: {
             data: {
                 scopus_id: {
-                    validFormat: val =>/[0-9]/.test(val),
+                    numeric
                 },
             },
         },
@@ -175,6 +175,10 @@
                 })
             },
             save() {
+                this.$v.$touch();
+                if (this.$v.$invalid) {
+                   return
+                }
                 axios.post(`/api/profile`, this.data)
                     .then((response) => {
                         this.$store.dispatch('setUser', response.data)

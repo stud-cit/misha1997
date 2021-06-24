@@ -5,12 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        user: {
-            id: 1,
-            roles_id: 4,
-            notifications_count: 0
-        },
-        access: 'open'
+        user: {},
+        access: 'close'
     },
     mutations: {
         updateNotifications(state, count) {

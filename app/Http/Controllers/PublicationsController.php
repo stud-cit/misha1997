@@ -134,12 +134,6 @@ class PublicationsController extends ASUController
     // всі публікації
     function getAll(Request $request, $author_id = null) {
 
-      $request->session()->put('person', [
-        'roles_id' => 4,
-        'department_code' => 615,
-        'faculty_code' => 1059
-      ]);
-
         $divisions = $this->getDivisions();
         $model = Publications::with('publicationType', 'scienceType', 'authors.author')->where('status_id', $request->status_id)->orderBy('created_at', 'DESC');
 
