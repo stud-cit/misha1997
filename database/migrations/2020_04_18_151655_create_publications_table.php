@@ -58,6 +58,7 @@ class CreatePublicationsTable extends Migration
 
             $table->string('scopus_id')->nullable(); // ідентифікатор бд скопус
             $table->boolean('verification')->default(0); // верифіковано для публікацій скопус
+            $table->string('article_number')->nullable(); // номер статті
             $table->timestamps();
         });
 

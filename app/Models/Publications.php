@@ -54,7 +54,8 @@ class Publications extends Model
         'not_previous_year',
         'not_this_year',
         'scopus_id',
-        'verification'
+        'verification',
+        'article_number'
     ];
 
     protected $casts = [

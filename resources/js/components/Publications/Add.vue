@@ -79,7 +79,8 @@
                     authors: [],
                     useSupervisor: false,
                     supervisor: null,
-                    default_name_magazine: false
+                    default_name_magazine: false,
+                    article_number: "",
                 },
             };
         },

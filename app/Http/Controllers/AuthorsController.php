@@ -87,6 +87,15 @@ class AuthorsController extends ASUController
             });
         }
 
+        if($request->scopus_id != '') {
+          if($request->scopus_id == '1') {
+            $model->whereNotNull('scopus_id');
+          }
+          if($request->scopus_id == '0') {
+            $model->whereNull('scopus_id');
+          }
+        }
+
         if(isset($request->categ_users)) {
             $model->where(function($query) use($request) {
                 foreach($request->categ_users as $key => $value) {

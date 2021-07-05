@@ -82,6 +82,15 @@
                                 >{{item.name}}</option>
                             </select>
                         </div>
+                    <div class="form-group col-lg-6" v-if="authUser.roles_id == 4">
+                        <label>Наявність Scopus ID</label>
+                        <div class="input-container">
+                            <select v-model="filters.scopus_id">
+                                <option value=""></option>
+                                <option value="1">Так</option>
+                                <option value="0">Ні</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <button type="button" class="export-button" style="display: inline-block" @click="getData(1); loadingSearch = true">
@@ -244,7 +253,8 @@
                     h_index: '',
                     categ_users: [],
                     role: '',
-                    position: ''
+                    position: '',
+                    scopus_id: ''
                 },
                 categUsers: [
                   "Аспіранти", 
@@ -292,19 +302,11 @@
             getData(page) {
                 this.loading = true;
                 this.$store.dispatch('saveFilterUser', this.filters);
-                axios.get('/api/authors', {
-                    params: {
-                        size: this.pagination.perPage,
-                        page: page,
-                        name: this.filters.name,
-                        faculty_code: this.filters.faculty_code,
-                        department_code: this.filters.department_code,
-                        h_index: this.filters.h_index,
-                        categ_users: this.filters.categ_users,
-                        role: this.filters.role,
-                        position: this.filters.position
-                    }
-                }).then(response => {
+                var params = Object.assign(this.filters, {
+                  size: this.pagination.perPage,
+                  page
+                });
+                axios.get('/api/authors', { params }).then(response => {
                     this.countUsers = response.data.count;
                     this.scopusAutorId = response.data.scopusAutorId;
                     this.hIndex = response.data.hIndex;
@@ -341,7 +343,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         axios.post('/api/delete-users', {
-                                        users: this.selectUsers
+                          users: this.selectUsers
                         })
                         .then(() => {
                             this.selectUsers = [];
@@ -366,6 +368,7 @@
                 this.filters.categ_users = '';
                 this.filters.role = '';
                 this.filters.position = '';
+                this.filters.scopus_id = '';
                 this.getData(1);
             }
         }
