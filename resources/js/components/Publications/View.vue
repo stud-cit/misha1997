@@ -112,7 +112,7 @@
                     <div class="col-lg-9 list-item list-text">{{ data.verification ? "Так" : "Ні" }}</div>
                 </li>
                 <li class="row" v-if="data.scopus_id">
-                    <div class="col-lg-3 list-item list-title">Scopus ID:</div>
+                    <div class="col-lg-3 list-item list-title">ID публікації в Scopus:</div>
                     <div class="col-lg-9 list-item list-text">{{ data.scopus_id }}</div>
                 </li>
                 <li class="row" v-if="data.publication_add">

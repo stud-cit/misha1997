@@ -34,14 +34,23 @@
                     <input :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.number">
                 </div>
             </div>
-            <div class="form-group">
-                <label class="item-title">Сторінки *</label>
-                <div class="input-container">
-                    <input :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.pages">
-                </div>
-                <div class="error" v-if="$v.publicationData.pages.$error">
-                    Поле обов'язкове для заповнення
-                </div>
+            <div class="form-row">
+              <div class="form-group col-6">
+                  <label class="item-title">Сторінки <span v-if="!publicationData.scopus_id">*</span></label>
+                  <div class="input-container">
+                      <input :disabled="publicationData.scopus_id" class="item-value" type="text" v-model="publicationData.pages">
+                  </div>
+                  <div class="error" v-if="$v.publicationData.pages.$error">
+                      Неправильно введені дані
+                  </div>
+              </div>
+              <div class="form-group col-6">
+                  <label class="item-title">Номер статті</label>
+                  <div class="input-container hint-container">
+                      <input class="item-value" type="text" v-model="publicationData.article_number">
+                      <div class="hint" ><span>Заповнюється у випадку якщи стаття видавалася тільки в електронному журналі</span></div>
+                  </div>
+              </div>
             </div>
             <div class="form-group">
                 <label class="item-title">Країна видання *</label>
@@ -98,7 +107,9 @@
                     required
                 },
                 pages: {
-                    required
+                  isRequired(value) {
+                      return this.publicationData.scopus_id != '' ? true : false
+                  },
                 }
             }
         },

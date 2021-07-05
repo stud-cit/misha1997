@@ -81,6 +81,7 @@
                     supervisor: null,
                     default_name_magazine: false,
                     article_number: "",
+                    scopus_id: null
                 },
             };
         },

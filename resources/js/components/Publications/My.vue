@@ -3,6 +3,16 @@
         <h1 class="page-title">Мої публікації</h1>
         <div class="exports">
             <export-publications class="export-block" :filters="filters" :countPublications="countPublications"></export-publications>
+            <button type="button" class="export-button" @click="scopusExport">
+              <span
+                  class="spinner-border spinner-border-sm"
+                  style="width: 19px; height: 19px; margin-right: 10px"
+                  role="status"
+                  aria-hidden="true"
+                  v-if="loadingImport"
+              ></span>
+              Завантажити з Scopus
+            </button>
         </div>
         <div class="main-content">
             <form class="search-block">
@@ -198,6 +208,7 @@
             return {
                 countPublications: 0,
                 loading: true,
+                loadingImport: false,
                 loadingSearch: false,
                 loadingClear: false,
                 selectPublications: [],
@@ -281,6 +292,20 @@
                     this.loadingSearch = false;
                     this.loadingClear = false;
                 })
+            },
+            scopusExport() {
+              if(!this.authUser.scopus_id) {
+                swal.fire("Помилка. В профілі необхідно додати власний ID Scopus.");
+              }
+              this.loadingImport = true;
+              axios.get('/api/publications-scopus-user').then(() => {
+                this.getData(1);
+                swal.fire("Публікації успішно завантажено");
+                this.loadingImport = false;
+              }).catch(() => {
+                swal.fire("Помилка");
+                this.loadingImport = false;
+              })
             },
             deletePublications() {
                 swal.fire({

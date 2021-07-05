@@ -58,7 +58,7 @@
                                 :multiple="true"
                                 :taggable="true"
                             ></multiselect>
-                            </div>
+                          </div>
                     </div>
                     <div class="form-group col-lg-6">
                         <label>Індекс Гірша</label>
@@ -82,15 +82,16 @@
                                 >{{item.name}}</option>
                             </select>
                         </div>
-                    <div class="form-group col-lg-6" v-if="authUser.roles_id == 4">
-                        <label>Наявність Scopus ID</label>
-                        <div class="input-container">
-                            <select v-model="filters.scopus_id">
-                                <option value=""></option>
-                                <option value="1">Так</option>
-                                <option value="0">Ні</option>
-                            </select>
-                        </div>
+                      </div>
+                      <div class="form-group col-lg-6" v-if="authUser.roles_id == 4">
+                          <label>Наявність Scopus ID</label>
+                          <div class="input-container">
+                              <select v-model="filters.scopus_id">
+                                  <option value=""></option>
+                                  <option value="1">Так</option>
+                                  <option value="0">Ні</option>
+                              </select>
+                          </div>
                     </div>
                 </div>
                 <button type="button" class="export-button" style="display: inline-block" @click="getData(1); loadingSearch = true">

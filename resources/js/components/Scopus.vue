@@ -1,7 +1,7 @@
 <template>
     <div class="container page-content general-block">
 
-        <div class="exports">
+        <div class="exports mb-3">
           <button class="export-button" @click="getDataScopus()">
               <span
                   class="spinner-border spinner-border-sm"
@@ -18,6 +18,92 @@
         </div>
 
         <div class="main-content">
+
+            <form class="search-block">
+                <div class="form-row" v-show="authUser.roles_id != 2">
+                    <div class="form-group col-lg" v-show="authUser.roles_id != 3">
+                        <label>Інститут / факультет</label>
+                        <div class="input-container">
+                            <select v-model="filters.faculty_code" @change="getDepartments">
+                                <option value=""></option>
+                                <option
+                                    v-for="(item, index) in divisions"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg">
+                        <label>Кафедра</label>
+                        <div class="input-container">
+                            <select v-model="filters.department_code">
+                                <option value=""></option>
+                                <option
+                                    v-for="(item, index) in departments"
+                                    :key="index"
+                                    :value="item.ID_DIV"
+                                >{{item.NAME_DIV}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Назва публікації</label>
+                    <div class="input-container">
+                        <input v-model="filters.title" type="text" list="names" @input="findNames">
+                        <datalist id="names">
+                            <option v-for="(item, index) in names" :key="index" :value="item">{{item}}</option>
+                        </datalist>
+                    </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg">
+                      <label>ПІБ автора</label>
+                      <div class="input-container">
+                          <input type="text" v-model="filters.authors_f">
+                      </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                      <label>Вид публікації</label>
+                      <PublicationTypes :data="filters"></PublicationTypes>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Рік видання</label>
+                      <div class="input-container multiselect">
+                        <multiselect
+                            v-model="filters.years"
+                            placeholder=""
+                            selectLabel="Натисніть для вибору"
+                            selectedLabel="Вибрано"
+                            deselectLabel="Натисніть для видалення"
+                            :options="years"
+                            :multiple="true"
+                            :taggable="true"
+                        ></multiselect>
+                      </div>
+                  </div>
+                </div>
+                <div class="form-group checkbox col-lg">
+                    <input v-model="filters.verification" type="checkbox" class="form-check-input" id="verification">
+                    <label class="form-check-label" for="verification">Публікації які верифіковані</label>
+                </div>
+                <SearchButton
+                    @click.native="getData(1); loadingSearch = true;"
+                    :disabled="loading || loadingSearch || loadingClear"
+                    :loading="loadingSearch"
+                    title="Пошук"
+                ></SearchButton>
+                <SearchButton
+                    @click.native="clearFilter"
+                    :disabled="loading || loadingSearch || loadingClear"
+                    :loading="loadingClear"
+                    title="Очистити фільтр"
+                ></SearchButton>
+            </form>
+
             <div class="row my-4" id="header-table">
                 <div class="col">
                     <select class="form-control w-50 ml-2" id="sizeTable" v-model="pagination.perPage" @change="getData(1)">
@@ -130,20 +216,49 @@
 <script>
     import BackButton from "./Buttons/Back";
     import DeleteButton from "./Buttons/Delete";
+    import SearchButton from "./Buttons/SearchButton";
+
+    import Multiselect from 'vue-multiselect';
+    import divisions from './mixins/divisions';
+    import years from './mixins/years';
+    import PublicationTypes from "./Forms/PublicationTypes";
     export default {
+        mixins: [years, divisions],
         components: {
             BackButton,
-            DeleteButton
+            DeleteButton,
+            PublicationTypes,
+            Multiselect,
+            SearchButton
         },
         data() {
             return {
               countPublications: 0,
               loading: true,
+              loadingSearch: false,
+              loadingClear: false,
               loadingImport: false,
               selectPublications: [],
+              names: [],
               data: [],
               last_date: {
                 created_at: ""
+              },
+              filters: {
+                  title: '',
+                  authors_f: '',
+                  science_type_id: '',
+                  years: [],
+                  country: [],
+                  publication_type_id: '',
+                  faculty_code: '',
+                  department_code: '',
+                  hasSupervisor: false,
+                  notPreviousYear: false,
+                  categ_users: [],
+                  notThisYear: false,
+                  scopus_add_status: "",
+                  verification: false
               },
               pagination: {
                   currentPage: 1,
@@ -154,6 +269,7 @@
         },
         created() {
             this.getData(this.pagination.currentPage);
+            this.getNamesPublications();
         },
         computed: {
             // отримуємо авторизованого користувача із store
@@ -171,6 +287,12 @@
             },
         },
         methods: {
+            // всі назви пцблікацій
+            getNamesPublications() {
+                axios.get(`/api/publications-names`).then(response => {
+                    this.publicationNames = response.data.map(n => this.parseString(n.title));
+                })
+            },
             scrollHeader() {
                 document.location = '#header-table';
                 this.getData(this.pagination.currentPage);
@@ -186,22 +308,25 @@
             },
             getData(page) {
                 this.loading = true;
-                axios.get('/api/publications', {
-                    params: {
-                        status_id: 1,
-                        size: this.pagination.perPage,
-                        page: page,
-                        scopus: true
-                    }
-                }).then(response => {
+                var params = Object.assign(this.filters, {
+                  status_id: 1,
+                  size: this.pagination.perPage,
+                  page,
+                  scopus: true
+                });
+                axios.get('/api/publications', { params }).then(response => {
                     this.countPublications = response.data.count;
                     this.pagination.currentPage = response.data.currentPage;
                     this.pagination.firstItem = response.data.firstItem;
                     this.data = response.data.publications.data;
                     this.last_date = response.data.last_date_export
                     this.loading = false;
+                    this.loadingSearch = false;
+                    this.loadingClear = false;
                 }).catch(() => {
                     this.loading = false;
+                    this.loadingSearch = false;
+                    this.loadingClear = false;
                 })
             },
             // видалити обрані публікації
@@ -229,6 +354,16 @@
                     }
                 })
             },
+            // пошук публікації по назві
+            findNames() {
+                if(this.filters.title.length > 3) {
+                    this.names = this.publicationNames.filter(item => {
+                        return item.indexOf(this.filters.title) + 1
+                    })
+                } else {
+                    this.names = [];
+                }
+            },
             // обрані публікації
             selectItem(item) {
                 if(this.selectPublications.indexOf(item) == -1) {
@@ -237,6 +372,28 @@
                     this.selectPublications.splice(this.selectPublications.indexOf(item), 1);
                 }
             },
+            // форматування назви пулікації для фільтру
+            parseString(s) {
+                const punctuation = s.replace(/[.,\/\[\]#!$%\^&\*;:{}=\-_`~()]/g,"");
+                return punctuation.replace(/\s+/g,' ' ).trim().toLowerCase();
+            },
+            clearFilter() {
+                this.loadingClear = true;
+                this.$store.dispatch('clearFilterPublications');
+                this.filters.title = '';
+                this.filters.authors_f = '';
+                this.filters.science_type_id = '';
+                this.filters.years = [];
+                this.filters.country = [];
+                this.filters.publication_type_id = '';
+                this.filters.faculty_code = '';
+                this.filters.department_code = '';
+                this.filters.hasSupervisor = false;
+                this.filters.notPreviousYear = false;
+                this.filters.notThisYear = false;
+                this.filters.categ_users = [];
+                this.getData(1);
+            }
         }
     }
 </script>
@@ -251,6 +408,20 @@
     .paginate-top.pagination {
         margin: 0;
         float: right;
+    }
+    .checkbox {
+        padding: 0;
+    }
+    .checkbox input[type=checkbox] {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+    }
+    .checkbox label {
+        margin-left: 40px;
+    }
+    .form-group {
+        margin-bottom: 10px;
     }
     .exports{
         display: grid;

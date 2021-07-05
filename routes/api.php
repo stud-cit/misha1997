@@ -12,9 +12,6 @@ Route::get('check-user', 'AuthController@checkUser');
 Route::post('register', 'AuthController@register');
 Route::post('logout', 'AuthController@logout');
 
-Route::get('scopus', 'DevController@scopus');
-Route::get('scopus-test', 'DevController@scopusTest');
-
 Route::group(['middleware' => ['web']], function() {
 
     Route::get('job-type', 'AuthorsController@jobType');
@@ -60,6 +57,7 @@ Route::group(['middleware' => ['web']], function() {
     Route::get('check-publication/{id}', 'PublicationsController@checkPublication');
 
     Route::get('publications-scopus', 'PublicationsController@getPublicationsScopus');
+    Route::get('publications-scopus-user', 'PublicationsController@getPublicationsScopusUser');
 
     Route::post('update-publication/{id}','PublicationsController@updatePublication');
     Route::post('delete-publications','PublicationsController@deletePublications');

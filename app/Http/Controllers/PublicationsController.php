@@ -78,6 +78,53 @@ class PublicationsController extends ASUController
       return response('ok', 200);
     }
 
+    function getPublicationsScopusUser(Request $request) {
+      if($request->session()->get('person')['scopus_id']) {
+        $data = json_decode(file_get_contents($this->scopus_api . 'search/scopus?query=au-id(' . $request->session()->get('person')['scopus_id'] . ')&apiKey=' . $this->scopus_api_key), true);
+        foreach ($data['search-results']['entry'] as $key => $value) {
+          $publicationData = json_decode(file_get_contents($value['prism:url'] . '?field=title,volume,pageRange,doi,publicationName,identifier,subtypeDescription,language,coverDate,head,authors&httpAccept=application/json&apiKey=' . $this->scopus_api_key), true);
+  
+          $head = $publicationData['abstracts-retrieval-response']['item']['bibrecord']['head'];
+          $coredata = $publicationData['abstracts-retrieval-response']['coredata'];
+  
+          $hasAuthors = false;
+          $authors = [];
+          
+          foreach ($publicationData['abstracts-retrieval-response']['authors']['author'] as $key => $author) {
+            if(Authors::where('scopus_id', $author['@auid'])->exists()) {
+              $author['scipub_id'] = Authors::select('id')->where('scopus_id', $author['@auid'])->first()->id;
+              array_push($authors, $author);
+              $hasAuthors = true;
+            }
+          }
+  
+          if(!Publications::where('scopus_id', $coredata['dc:identifier'])->exists() && !Publications::where('title', $coredata['dc:title'])->exists() && $hasAuthors) {
+            $model = new Publications();
+            $response = $model->create([
+              "title" => $coredata['dc:title'],
+              "science_type_id" => 1,
+              "publication_type_id" => $this->getPublicationType($value['subtypeDescription']),
+              "year" => isset($head['source']['publicationdate']['year']) ? $head['source']['publicationdate']['year'] : null,
+              "number" => isset($coredata['prism:volume']) ? $coredata['prism:volume'] : null,
+              "pages" => isset($coredata['prism:pageRange']) ? $coredata['prism:pageRange'] : null,
+              "name_magazine" => isset($coredata['prism:publicationName']) ? $coredata['prism:publicationName'] : null,
+              "doi" => isset($coredata['prism:doi']) ? $coredata['prism:doi'] : null,
+              'scopus_id' => $coredata['dc:identifier']
+            ]);
+  
+            foreach ($authors as $key => $author) {
+              $authorsHasPublicationsModel = new AuthorsPublications();
+              $authorsHasPublicationsModel->create([
+                'publications_id' => $response['id'],
+                'autors_id' => $author['scipub_id']
+              ]);
+            }
+          }
+        }
+      }
+      return response('ok', 200);
+    }
+
     // визначення типу публікації відповідно даних Scopus
     function getPublicationType($type) {
       switch ($type) {
