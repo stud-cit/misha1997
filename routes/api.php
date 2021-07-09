@@ -57,7 +57,7 @@ Route::group(['middleware' => ['web']], function() {
     Route::get('check-publication/{id}', 'PublicationsController@checkPublication');
 
     Route::get('publications-scopus', 'PublicationsController@getPublicationsScopus');
-    Route::get('publications-scopus-user', 'PublicationsController@getPublicationsScopusUser');
+    Route::get('publications-scopus-user/{id}', 'PublicationsController@getPublicationsScopusUser');
 
     Route::post('update-publication/{id}','PublicationsController@updatePublication');
     Route::post('delete-publications','PublicationsController@deletePublications');

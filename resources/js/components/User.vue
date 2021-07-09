@@ -376,7 +376,19 @@
                 <table :class="['table', 'table-bordered', loading ? 'opacityTable' : '']">
                     <thead>
                         <tr>
-                            <td colspan="8" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{ countPublications }}</td>
+                            <td colspan="4" class="bg-white text-left pb-3 pt-0">Всього публікацій: {{ countPublications }}</td>
+                            <td colspan="4" class="bg-white text-right pb-3 pt-0">
+                                <button type="button" class="btn btn-primary btn-sm" @click="getScopusPublications" v-if="authUser.roles_id == 4">
+                                    <span
+                                        class="spinner-border spinner-border-sm"
+                                        style="width: 19px; height: 19px; margin-right: 10px"
+                                        role="status"
+                                        aria-hidden="true"
+                                        v-if="loadingImport"
+                                    ></span>
+                                    Отримати публікації Scopus
+                                </button>
+                            </td>
                         </tr>
                         <tr>
                             <th scope="col">№</th>
@@ -462,6 +474,7 @@
                 updateLoading: false,
                 showFilter: false,
                 loadingSearch: false,
+                loadingImport: false,
                 departments2: [],
                 job: [],
                 data: {
@@ -530,7 +543,7 @@
                     numeric
                 },
                 scopus_researcher_id: {
-                  validFormat: val => /(\w+)\-(\d{4})\-(\d{4})/.test(val), 
+                  validFormat: val => val ? /(\w+)\-(\d{4})\-(\d{4})/.test(val) : true, 
                 }
             },
         },
@@ -547,6 +560,23 @@
             }
         },
         methods: {
+            getScopusPublications() {
+                if(!this.data.scopus_id) {
+                    swal.fire("Помилка. В профілі необхідно додати власний ID Scopus.");
+                    return;
+                }
+                this.loadingImport = true;
+                axios.get(`/api/publications-scopus-user/${this.data.id}`).then(() => {
+                    this.getPublications(1);
+                    this.loadingImport = false;
+                }).catch(() => {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Помилка'
+                    });
+                    this.loadingImport = false;
+                })
+            },
             scrollHeader() {
                 document.location = '#header-table';
                 this.getPublications(this.pagination.currentPage);

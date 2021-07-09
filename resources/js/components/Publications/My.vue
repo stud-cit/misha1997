@@ -296,11 +296,11 @@
             scopusExport() {
               if(!this.authUser.scopus_id) {
                 swal.fire("Помилка. В профілі необхідно додати власний ID Scopus.");
+                return;
               }
               this.loadingImport = true;
-              axios.get('/api/publications-scopus-user').then(() => {
+              axios.get('/api/publications-scopus-user/'+this.authUser.id).then(() => {
                 this.getData(1);
-                swal.fire("Публікації успішно завантажено");
                 this.loadingImport = false;
               }).catch(() => {
                 swal.fire("Помилка");

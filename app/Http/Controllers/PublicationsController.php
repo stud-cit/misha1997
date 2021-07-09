@@ -23,9 +23,9 @@ class PublicationsController extends ASUController
       $previousDate = date("Y") - 1;
       $resultCount = 0;
       $api = $this->scopus_api . 'search/scopus?';
-      if(AuditScopusExport::count() > 0) {
-        $api .= 'start=' . AuditScopusExport::select('last_number')->orderBy('created_at')->first()->last_number;
-      }
+    //   if(AuditScopusExport::count() > 0) {
+    //     $api .= 'start=' . AuditScopusExport::select('last_number')->orderBy('created_at')->first()->last_number;
+    //   }
       $api .= '&count=200';
       $api .= '&query=affil%28Sumy+State+University%29+and+pubyear+%3E+' . $previousDate;
       $api .= '&apiKey=' . $this->scopus_api_key;
@@ -78,9 +78,10 @@ class PublicationsController extends ASUController
       return response('ok', 200);
     }
 
-    function getPublicationsScopusUser(Request $request) {
-      if($request->session()->get('person')['scopus_id']) {
-        $data = json_decode(file_get_contents($this->scopus_api . 'search/scopus?query=au-id(' . $request->session()->get('person')['scopus_id'] . ')&apiKey=' . $this->scopus_api_key), true);
+    function getPublicationsScopusUser($id) {
+      $user = Authors::select('scopus_id')->find($id);
+      if(isset($user['scopus_id'])) {
+        $data = json_decode(file_get_contents($this->scopus_api . 'search/scopus?query=au-id(' . $user['scopus_id'] . ')&apiKey=' . $this->scopus_api_key), true);
         foreach ($data['search-results']['entry'] as $key => $value) {
           $publicationData = json_decode(file_get_contents($value['prism:url'] . '?field=title,volume,pageRange,doi,publicationName,identifier,subtypeDescription,language,coverDate,head,authors&httpAccept=application/json&apiKey=' . $this->scopus_api_key), true);
   

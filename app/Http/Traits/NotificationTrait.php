@@ -12,7 +12,7 @@ trait NotificationTrait {
                 return "змінено ".$text.": " . $arr[$model->$key] . " на " . $arr[$data[$key]] . ";<br>";
             }
             if(!$data[$key] && $model->$key) {
-                return "видалено ".$text.";<br>";
+                return "видалено ".$text.": ".$arr[$model->$key].";<br>";
             }
         } else {
             if($data[$key] && !$model->$key) {
@@ -22,7 +22,7 @@ trait NotificationTrait {
                 return "змінено ".$text.": " . $model->$key . " на " . $data[$key] . ";<br>";
             }
             if(!$data[$key] && $model->$key) {
-                return "видалено ".$text.";<br>";
+                return "видалено ".$text.": ".$model->$key.";<br>";
             }
         }
     }

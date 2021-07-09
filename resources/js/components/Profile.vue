@@ -162,7 +162,7 @@
                     numeric
                 },
                 scopus_researcher_id: {
-                  validFormat: val => /(\w+)\-(\d{4})\-(\d{4})/.test(val), 
+                  validFormat: val => val ? /(\w+)\-(\d{4})\-(\d{4})/.test(val) : true, 
                 }
             },
         },
