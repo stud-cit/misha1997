@@ -635,6 +635,10 @@
                 })
             },
             save() {
+                this.$v.$touch();
+                if (this.$v.$invalid) {
+                   return
+                }
                 if(!this.data.job) {
                     this.data.job = "Не працює";
                 }

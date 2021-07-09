@@ -44,6 +44,12 @@
                         <input class="item-value" type="text" v-model="data.orcid">
                     </div>
                 </div>
+                <div class="form-group col-6">
+                    <label>Scopus ID</label>
+                    <div class="input-container">
+                        <input class="item-value" type="text" v-model="data.scopus_id">
+                    </div>
+                </div>
             </div>
         </form>
         <div class="step-button-group">
@@ -73,6 +79,7 @@
                     scopus_autor_id: "",
                     scopus_researcher_id: "",
                     orcid: "",
+                    scopus_id: "",
                     without_self_citations_scopus: "",
                     without_self_citations_wos: ""
                 }
