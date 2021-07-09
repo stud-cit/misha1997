@@ -117,6 +117,18 @@
                           </select>
                       </div>
                   </div>
+
+                  <div class="form-group col-lg-6">
+                      <label>Верифікація</label>
+                      <div class="input-container">
+                          <select v-model="filters.verification">
+                              <option value=""></option>
+                              <option value="1">Так</option>
+                              <option value="2">Ні</option>
+                          </select>
+                      </div>
+                  </div>
+
                 </div>
                 <div class="form-group checkbox col-lg">
                     <input v-model="filters.hasSupervisor" type="checkbox" class="form-check-input" id="hasSupervisor">
@@ -129,10 +141,6 @@
                 <div class="form-group checkbox col-lg">
                     <input v-model="filters.notThisYear" type="checkbox" class="form-check-input" id="notThisYear">
                     <label class="form-check-label" for="notThisYear">Публікації які не враховані в рейтингу цього року</label>
-                </div>
-                <div class="form-group checkbox col-lg">
-                    <input v-model="filters.verification" type="checkbox" class="form-check-input" id="verification">
-                    <label class="form-check-label" for="verification">Публікації які верифіковані</label>
                 </div>
                 <SearchButton
                     @click.native="getData(1); loadingSearch = true;"
@@ -304,7 +312,7 @@
                     categ_users: [],
                     notThisYear: false,
                     scopus_add_status: "",
-                    verification: false
+                    verification: ""
                 },
                 categUsers: [
                   "Аспіранти", 
@@ -444,6 +452,7 @@
                 this.filters.notPreviousYear = false;
                 this.filters.notThisYear = false;
                 this.filters.categ_users = [];
+                this.filters.verification = "";
                 this.getData(1);
             }
         },

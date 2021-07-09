@@ -232,10 +232,13 @@
                     <div class="col-lg-3 list-item list-title">Research ID:</div>
                     <div class="col-lg-9 list-item list-text">
                         <div class="input-container" v-if="authUser.roles_id == 4">
-                            <input class="item-value" type="text" v-model="data.scopus_researcher_id">
+                            <input class="item-value" type="text" v-model="data.scopus_researcher_id" @input="$v.$touch()">
                         </div>
                         <div v-else>
                             {{data.scopus_researcher_id}}
+                        </div>
+                        <div class="error" v-if="$v.data.scopus_researcher_id.$error">
+                            Не коректний формат. Приклад (A-0000-2021)
                         </div>
                     </div>
                 </li>
@@ -526,6 +529,9 @@
                 scopus_id: {
                     numeric
                 },
+                scopus_researcher_id: {
+                  validFormat: val => /(\w+)\-(\d{4})\-(\d{4})/.test(val), 
+                }
             },
         },
         mounted () {

@@ -285,8 +285,13 @@ class PublicationsController extends ASUController
         }
 
         // Верифікація
-        if($request->verification == "true") {
-          $model->where('verification', 1);
+        if($request->verification != "") {
+          if($request->verification == '1') {
+            $model->where('verification', 1);
+          }
+          if($request->verification == '2') {
+            $model->where('verification', 0);
+          }
         }
 
         if(isset($request->categ_users)) {

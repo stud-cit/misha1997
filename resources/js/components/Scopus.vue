@@ -12,7 +12,7 @@
               ></span>
               <img v-else src="/img/download.png"> Отримати публікації Scopus
           </button>
-          <div class="text-center mt-2">
+          <div class="text-center mt-2" v-if="last_date != null">
             Дата останнього оновлення: {{ last_date.created_at }}
           </div>
         </div>
@@ -85,10 +85,16 @@
                         ></multiselect>
                       </div>
                   </div>
-                </div>
-                <div class="form-group checkbox col-lg">
-                    <input v-model="filters.verification" type="checkbox" class="form-check-input" id="verification">
-                    <label class="form-check-label" for="verification">Публікації які верифіковані</label>
+                  <div class="form-group col-lg-6">
+                      <label>Верифікація</label>
+                      <div class="input-container">
+                          <select v-model="filters.verification">
+                              <option value=""></option>
+                              <option value="1">Так</option>
+                              <option value="2">Ні</option>
+                          </select>
+                      </div>
+                  </div>
                 </div>
                 <SearchButton
                     @click.native="getData(1); loadingSearch = true;"
@@ -258,7 +264,7 @@
                   categ_users: [],
                   notThisYear: false,
                   scopus_add_status: "",
-                  verification: false
+                  verification: ""
               },
               pagination: {
                   currentPage: 1,
@@ -392,6 +398,7 @@
                 this.filters.notPreviousYear = false;
                 this.filters.notThisYear = false;
                 this.filters.categ_users = [];
+                this.filters.verification = "";
                 this.getData(1);
             }
         }
