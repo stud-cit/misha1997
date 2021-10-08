@@ -1,14 +1,18 @@
-RewriteEngine on
-#RewriteRule "(^|/).(?!well-known)" - [F]
-#заглушка
-#RewriteCond %{REQUEST_URI} !^index.html
-#RewriteRule ^.*$ index.html
-#заглушка
+<IfModule mod_rewrite.c>
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
 
-RewriteCond %{REQUEST_URI} !^public
+RewriteEngine On
 
-RewriteCond %{HTTPS} off
-RewriteCond %{HTTP:X-Forwarded-Proto} !https
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteCond %{REQUEST_FILENAME} -d [OR]
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ ^$1 [N]
 
-RewriteRule ^(.*)$ public/$1 [L]
+RewriteCond %{REQUEST_URI} (\.\w+$) [NC]
+RewriteRule ^(.*)$ public/$1
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ server.php
+</IfModule>

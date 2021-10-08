@@ -14,4 +14,8 @@ class PublicationType extends Model
         'scopus_wos',
         'type'
     ];
+
+    function publications() {
+      return $this->HasMany('App\Models\Publications', 'publication_type_id');
+  }
 }

@@ -1,30 +1,30 @@
 require('./bootstrap');
 
-window.Vue = require("vue");
+import Vue from 'vue'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import Vuelidate from 'vuelidate'
 
-import router from "./router";
-import store from "./store";
+import router from "./routes"
+import store from "./store"
 
-import Paginate from 'vuejs-paginate'
-Vue.component('paginate', Paginate);
-import 'vue-multiselect/dist/vue-multiselect.min.css';
-import HeaderComponent from "./components/HeaderComponent";
-import Vuelidate from 'vuelidate';
-Vue.use(Vuelidate);
-// Vue.component("page-title", PageTitleComponent);
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'vue-multiselect/dist/vue-multiselect.min.css'
 
-Vue.prototype.$http = axios;
+import AppComponent from './views/App'
 
-const token = localStorage.getItem('key');
-if (token) {
-    Vue.prototype.$http.defaults.headers.common['Authorization'] = token;
-}
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
+Vue.use(Vuelidate)
+
+Vue.prototype.$http = axios
+
+Vue.config.productionTip = false
 
 const app = new Vue({
-    el: "#app",
     components: {
-        HeaderComponent,
+      AppComponent
     },
     store,
     router
-});
+}).$mount('#app');

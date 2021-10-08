@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ScienceTypeSeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class ScienceTypeSeeder extends Seeder
             'type' => 'WoS'
         ]);
         DB::table('science_type')->insert([
-            'type' => 'Scopus, WoS'
+            'type' => 'Scopus та WoS'
         ]);
     }
 }

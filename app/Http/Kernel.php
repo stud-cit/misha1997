@@ -14,10 +14,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        // \App\Http\Middleware\TrustHosts::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \App\Http\Middleware\TrustProxies::class,
         \Fruitcake\Cors\HandleCors::class,
-        \App\Http\Middleware\CheckForMaintenanceMode::class,
+        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
@@ -39,13 +40,10 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-        'throttle' => ['throttle:99,1'],
-
         'api' => [
-            'throttle:260,1',
-            'bindings',
+            // 'throttle:api',
             \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
 
@@ -57,10 +55,14 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'user' => \App\Http\Middleware\AuthUser::class,
+        'checkAdmin' => \App\Http\Middleware\CheckAdmin::class,
+        'checkAuthor' => \App\Http\Middleware\CheckAuthor::class,
+        'checkPublication' => \App\Http\Middleware\CheckPublication::class,
+        'checkAccess' => \App\Http\Middleware\CheckAccess::class,
+        'checkAvailabilityPublication' => \App\Http\Middleware\CheckAvailabilityPublication::class,
+        'checkAvailabilityAuthor' => \App\Http\Middleware\CheckAvailabilityAuthor::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,

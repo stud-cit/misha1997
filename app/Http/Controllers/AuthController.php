@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Authors;
 use Illuminate\Http\Request;
-use Session;
-use Config;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Traits\AuthorTrait;
 use App\Http\Traits\NotificationTrait;
 use App\Models\Audit;
+use App\Models\Service;
 
 class AuthController extends ASUController {
     use AuthorTrait;
@@ -18,68 +18,48 @@ class AuthController extends ASUController {
     protected $cabinet_service_token;
 
     function __construct() {
-        $this->cabinet_service_token = config('app.token');
-    }
-
-    function checkUser(Request $request) {
-        // $request->session()->put('key', 'fU5BDxCaJpKrftQVX20rMJqCX1Oq2ZqZw14wXEA4qhNN482KZc52');
-
-        $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPerson?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token), true);
-        
-        if ($personCabinet['status'] == 'OK') {
-            $userModel = Authors::withCount(['notifications' => function ($query) {
-                $query->where('status', '=', 0);
-            }])->where("name", $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic']);
-            if ($userModel->exists()) {
-                $user = $userModel->first();
-
-                $kod_div = $user['department_code'] ? $user['department_code'] : $user['faculty_code'];
-
-                if($kod_div && $user['categ_1'] == 2) {
-                    $kod_div = $this->getAspirantDepartment($user['guid']);
-                }
-
-                $division = $this->getUserDivision($kod_div, $this->getAllDivision());
-                $user['department'] = $division['department'] ? $division['department']['NAME_DIV'] : null;
-                $user['faculty'] = $division['institute'] ? $division['institute']['NAME_DIV'] : null;
-                return response()->json([
-                    "status" => "register",
-                    "user" => $user
-                ]);
-            } else {
-                return response()->json([
-                    "status" => "login",
-                    "user" => $personCabinet['result']
-                ]);
-            }
-        } else {
-            return response()->json([
-                "status" => "unauthorized"
-            ]);
-        }
+      $this->cabinet_service_token = config('app.token');
     }
 
     function logout(Request $request) {
-        $request->session()->flush();
+        $request->session()->forget('key');
+        $request->session()->forget('person');
         return response('ok', 200);
     }
 
     function register(Request $request) {
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token), true);
+  
         if(!Authors::where("guid", $personCabinet['result']['guid'])->exists()) {
             $divisions = $this->getAllDivision();
-            $data = $request->all();
-            $data = $this->registerUser($personCabinet['result'], $data, $divisions);
-            $data['name'] = $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'];
-            $data['country'] = "Україна";
-            $data['guid'] = $personCabinet['result']['guid'];
-            $data['token'] = $personCabinet['result']['token'];
-            $data['test_data'] = json_encode($personCabinet['result']);
-
             $userModel = new Authors();
-            $newUser = $userModel->create($data);
-
-            $request->session()->put('person', $newUser);
+            $person = $this->registerUser($personCabinet['result'], $userModel, $divisions);
+            $userModel->create([
+              'name' => $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'],
+              'country' => 'Україна',
+              'guid' => $personCabinet['result']['guid'],
+              'token' => $personCabinet['result']['token'],
+              'date_bth' => $personCabinet['result']['birthday'],
+              'job' => $person['job'],
+              'job_type_id' => $person['job_type_id'],
+              'faculty_code' => $person['faculty_code'],
+              'department_code' => $person['department_code'],
+              'name_div' => $person['name_div'],
+              'academic_code' => $person['academic_code'],
+              'categ_1' => $person['categ_1'],
+              'categ_2' => $person['categ_2'],
+              'kod_level' => $person['kod_level'],
+              'scopus_autor_id' => $request->scopus_autor_id,
+              'h_index' => $request->h_index,
+              'without_self_citations_scopus' => $request->without_self_citations_scopus,
+              'without_self_citations_wos' => $request->without_self_citations_wos,
+              'scopus_researcher_id' => $request->scopus_researcher_id,
+              'orcid' => $request->orcid,
+              'scopus_id' => $request->scopus_id,
+              'test_data' => json_encode($personCabinet['result'])
+            ]);
+            $image = file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersonPhoto?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token);
+            Storage::disk('local')->put('public/' . $personCabinet['result']['guid'] . '.png', $image, 'public');  
             return response()->json('ok', 200);
         } else {
             return response()->json([
@@ -89,53 +69,89 @@ class AuthController extends ASUController {
     }
 
     function index(Request $request) {
-        $this->mode($request);
+      $this->mode($request);
 
-        if(!isset($request->key)) {
-            return view('app', [
-                "status" => "unauthorized"
-            ]);
-        }
-        $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->key . '&token=' . $this->cabinet_service_token), true);
-        if ($personCabinet['status'] == 'OK') {
-            $request->session()->put('key', $request->key);
-            $userModel = Authors::where("guid", $personCabinet['result']['guid']);
-            if($userModel->exists()) {
-                $divisions = $this->getAllDivision();
-                $data = $userModel->first();
-                $data2 = clone $userModel->first();
-                $person = $this->registerUser($personCabinet['result'], $data, $divisions);
-                $person['test_data'] = json_encode($personCabinet['result']);
+      $key = "";
 
-                $userModel->update($person->toArray());
-                $request->session()->put('person', $person);
+      if($request->key) {
+        $key = $request->key;
+        $request->session()->put('key', $request->key);
+      }
 
-                $notificationText = "";
-                if($person['name_div'] != '') {
-                  $notificationText .= $this->notification($person, $data2, "name_div", "факультет / кафедру");
-                }
+      if($key == '' && $request->session()->get('key')) {
+        $key = $request->session()->get('key');
+      }
 
-                if($notificationText != "") {
-                    $notificationText = "Оновлено інформацію про автора <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a>:<br>" . $notificationText;
-                    Audit::create([
-                        "text" => $notificationText
-                    ]);
-                }
+      // $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
 
-                return view('app', [
-                    "status" => "register",
-                    "user" => $person
-                ]);
-            } else {
-                return view('app', [
-                    "status" => "login"
-                ]);
+      $personCabinet = json_decode(Storage::get('getPerson.json'), true);
+
+      if ($personCabinet['status'] == 'OK') {
+        $userModel = Authors::where("guid", $personCabinet['result']['guid']);
+        if($userModel->exists()) {
+          $divisions = $this->getAllDivision();
+          $data = $userModel->first();
+          $person = $this->registerUser($personCabinet['result'], $data, $divisions);
+          if(!$request->session()->get('person')) {
+            $newData = clone $userModel->first();
+            $person['test_data'] = json_encode($personCabinet['result']);
+
+            if($key) {
+              $image = file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersonPhoto?key=' . $key . '&token=' . $this->cabinet_service_token);
+              Storage::disk('local')->put('public/' . $personCabinet['result']['guid'] . '.png', $image, 'public');  
             }
-        } else {
-            return view('app', [
-                "status" => "unauthorized"
+
+            $userModel->update([
+              'name' => $person['name'],
+              'date_bth' => $person['date_bth'],
+              'job' => $person['job'],
+              'job_type_id' => $person['job_type_id'],
+              'faculty_code' => $person['faculty_code'],
+              'department_code' => $person['department_code'],
+              'name_div' => $person['name_div'],
+              'academic_code' => $person['academic_code'],
+              'categ_1' => $person['categ_1'],
+              'categ_2' => $person['categ_2'],
+              'kod_level' => $person['kod_level'],
+              'test_data' => $person['test_data']
             ]);
+            $notificationText = "";
+            if($person['name_div'] != '') {
+              $notificationText .= $this->notification($person, $newData, "name_div", "факультет / кафедру");
+            }
+            if($notificationText != "") {
+              $notificationText = "Оновлено інформацію про автора <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a>:<br>" . $notificationText;
+              Audit::create([
+                "text" => $notificationText
+              ]);
+            }
+            $request->session()->put('person', $person);
+          }
+          $access = Service::select('value')->where('key', 'access')->first();
+          return view('app', [
+            "status" => "register",
+            "user" => $person,
+            "access" => $access->value
+          ]);
+        } else {
+          $request->session()->forget('person');
+          return view('app', [
+            "status" => "login",
+            "user" => "{
+              name: \"". $personCabinet['result']['surname'] . ' ' . $personCabinet['result']['name'] . ' ' . $personCabinet['result']['patronymic'] ."\"
+            }",
+            "access" => ""
+          ]);
         }
+      } else {
+        $request->session()->forget('key');
+        $request->session()->forget('person');
+        return view('app', [
+          "status" => "unauthorized",
+          "user" => "{}",
+          "access" => ""
+        ]);
+      }
     }
 
     function mode($request) {

@@ -12,7 +12,8 @@ class AuthorsPublications extends Model
     protected $fillable = [
         'autors_id',
         'publications_id',
-        'supervisor'
+        'supervisor',
+        'student_supervisor'
     ];
 
     function author() {
@@ -20,5 +21,8 @@ class AuthorsPublications extends Model
     }
     function publication() {
         return $this->belongsTo('App\Models\Publications', 'publications_id');
+    }
+    function supervisor() {
+      return $this->belongsTo('App\Models\Authors', 'student_supervisor');
     }
 }

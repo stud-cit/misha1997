@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class CountriesSeeder extends Seeder
 {
@@ -206,5 +207,6 @@ class CountriesSeeder extends Seeder
 		DB::table('countries')->insert(['name' => 'Шрі-Ланка']);
 		DB::table('countries')->insert(['name' => 'Ямайка']);
 		DB::table('countries')->insert(['name' => 'Японія']);
+    DB::table('countries')->insert(['name' => 'ОЕСР']);
     }
 }

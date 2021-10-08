@@ -1,8 +1,268 @@
-//// Fonts
-//@import url('https://fonts.googleapis.com/css?family=Nunito');
-//
-//// Variables
-//@import 'variables';
+body {
+  background: #F8F8F8 url('/img/bg.jpg') no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+}
+.filler {
+  flex-grow: 1;
+}
+.wrapper {
+  background: #FFFFFF;
+  padding: 30px !important;
+  border-radius: 8px;
+  margin-bottom: 33px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+}
+table {
+  font-size: 14px;
+  width: 100%;
+}
+table th, table td {
+  text-align: center;
+  padding: 8px 5px;
+  vertical-align: middle;
+  max-width: 210px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+table th.sorted {
+  cursor: pointer;
+}
+table td .custom-control-inline {
+  margin: 0 !important;
+}
+.select-filter .custom-checkbox {
+  margin-bottom: 5px !important;
+}
+table td .active {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #000;
+}
+table td a {
+  color: #000;
+}
+table tr {
+  border: 1px solid #F5EFEF;
+  box-sizing: border-box;
+}
+table tr.no-verification {
+  background: #fff2f2;
+}
+table tr.header {
+  border: 0;
+  background: #FBFBFB;
+}
+table tr.header th {
+  color: #454545;
+  font-weight: 300;
+}
+table.statistic td, table.statistic th {
+  text-align: left;
+}
+.pagination {
+  margin: 0;
+}
+button.button, a.button {
+  border: 0;
+  outline: none;
+  border-radius: 6px !important;
+  padding: 5px 34px !important;
+  font-size: 13px !important;
+  color: #fff;
+  text-decoration: none;
+}
+a.button:hover {
+  text-decoration: none;
+  color: #fff;
+}
+button.button.blue, a.button.blue {
+  background: #1580CD;
+}
+button.button.grey {
+  background: #828282;
+}
+button.button.white-blue {
+  background: #10A9FF;
+}
+button.button.green {
+  background: #148B3D;
+}
+button.button.red {
+  background: red;
+}
+button.button.white-green, a.button.white-green {
+  background: #26BB0E;
+}
+button.button.transparent {
+  background: #fff;
+  color: #1580CD;
+  border: 1px solid #1580CD;
+  box-sizing: border-box;
+}
+button.button.block {
+  display: block;
+  width: 100% !important;
+  padding: 5px 0 !important;
+}
+button.button:disabled {
+  opacity: 0.4;
+}
+input.input {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid #C4C4C4;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 5px 12px;
+  outline: none;
+  height: 35px;
+  font-size: 14px;
+}
+input.input:disabled {
+  background: #f3f3f3;
+}
 
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
+
+select.select {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid #C4C4C4;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 5px 12px;
+  outline: none;
+  height: 35px;
+  font-size: 14px;
+}
+
+.select-filter {
+  padding: 12px 7px;
+  border-bottom: 1px solid #EAEAEA;
+  font-size: 14px;
+}
+.select-filter .label {
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+}
+.select-filter .form-group {
+  margin-bottom: 0px !important;
+}
+// custon miltiselect
+.select-filter.multiselect {
+  width: auto !important;
+  min-height: auto !important;
+}
+.select-filter.multiselect ul.list-multiselect {
+    background: #fff;
+    position: absolute;
+    width: 95%;
+    z-index: 999;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #EAEAEA;
+    margin: 5px 0 0 0;
+    max-height: 300px;
+    padding: 0;
+    overflow: hidden;
+    overflow-y: auto;
+}
+.select-filter.multiselect ul.list-multiselect::-webkit-scrollbar {
+  width: 5px;
+}
+.select-filter.multiselect ul.list-multiselect::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+.select-filter.multiselect ul.list-multiselect::-webkit-scrollbar-thumb {
+  background-color: #000000;
+  border-radius: 10px;
+}
+.select-filter.multiselect ul.list-multiselect li {
+  list-style: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.select-filter.multiselect ul.list-multiselect li:hover {
+  background: #fafafa;
+}
+// end custon miltiselect
+
+
+.select-filter .limit {
+  column-count: 3;
+  height: 60px;
+  overflow: hidden;
+}
+
+.select-filter .all {
+  column-count: 3;
+  height: auto;
+}
+
+
+.count {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.step .pagin button.button {
+  padding: 10px !important;
+  font-size: 16px !important;
+  width: 186px;
+}
+.error {
+  color: red;
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.multiselect__spinner {
+  z-index: 10;
+}
+
+.multiselect__tags {
+  border: 1px solid #C4C4C4 !important;
+  border-radius: 8px !important;
+  padding: 0 8px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-content: flex-end !important;
+}
+.multiselect__select {
+  background: none !important;
+}
+
+//animation
+.component-fade-enter-active, .component-fade-leave-active {
+  transition: opacity .3s ease;
+}
+.component-fade-enter, .component-fade-leave-to {
+  opacity: 0;
+}
+
+.cursor {
+cursor: pointer;
+}
+
+ul.popover-list {
+  margin: 0;
+  padding: 0;
+}
+
+ul.popover-list li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.opacity-50 {
+  opacity: 0.5;
+}

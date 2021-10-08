@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
             CountriesSeeder::class,
             ServiceSeeder::class,
             JobTypeSeeder::class,
-            PublicationStatusSeeder::class
+            PublicationStatusSeeder::class,
+            PatentType::class
         ]);
     }
 }

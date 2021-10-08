@@ -8,55 +8,55 @@ trait AuthorTrait {
     protected $asu_sumdu_api = "http://asu.sumdu.edu.ua/api/getDivisions?key=";
 
     function updateAuthUser($user, $newData, $divisions) {
-        if(isset($user['test_data'])) {
-            $kod_div = null;
-            $isStudent = false;
-            $getPersons = json_decode($user['test_data'], true);
-            if(isset($getPersons['info1'])) {
-                foreach ($getPersons['info1'] as $k => $v) {
-                    if($v['KOD_STATE'] == 1) {
-                        $newData['kod_level'] = $v['KOD_LEVEL'];
-                        $newData['academic_code'] = $v['NAME_GROUP'];
-                        $newData['categ_1'] = $v['CATEG'];
-                        if($v['KOD_LEVEL'] == 8) {
-                            $newData['name_div'] = $v['NAME_DIV'];
-                            $kod_div = $this->getAspirantDepartment($user['guid']);
-                        }
-                        if($v['KOD_LEVEL'] == 3 || $v['KOD_LEVEL'] == 5) {
-                            $newData['name_div'] = $v['NAME_DIV'];
-                            $kod_div = $v['KOD_DIV'];
-                        }
-                        $isStudent = true;
-                    }
-                }
-            } else {
-                if(isset($getPersons['info2']) && !$isStudent) {
-                    foreach ($getPersons['info2'] as $k => $v) {
-                        if(($v['KOD_STATE'] == 1 || $v['KOD_STATE'] == 2 || $v['KOD_STATE'] == 3) && ($v['KOD_SYMP'] == 1 || $v['KOD_SYMP'] == 5)) {
-                            $newData['job'] = "СумДУ";
-                            $newData['job_type_id'] = 5;
-                            $newData['categ_2'] = $v['CATEG'];
-                            $newData['name_div'] = $v['NAME_DIV'];
-                            $kod_div = $v['KOD_DIV'];
-                        }
-                    }
-                }
+      if(isset($user['test_data'])) {
+        $kod_div = null;
+        $isStudent = false;
+        $getPersons = json_decode($user['test_data'], true);
+        if(isset($getPersons['info1'])) {
+          foreach ($getPersons['info1'] as $k => $v) {
+            if($v['KOD_STATE'] == 1 && $v['KOD_FORM'] == 1) {
+              $newData['kod_level'] = $v['KOD_LEVEL'];
+              $newData['academic_code'] = $v['NAME_GROUP'];
+              $newData['categ_1'] = $v['CATEG'];
+              if($v['KOD_LEVEL'] == 8) {
+                  $newData['name_div'] = $v['NAME_DIV'];
+                  $kod_div = $this->getAspirantDepartment($user['guid']);
+              }
+              if($v['KOD_LEVEL'] == 3 || $v['KOD_LEVEL'] == 5) {
+                  $newData['name_div'] = $v['NAME_DIV'];
+                  $kod_div = $v['KOD_DIV'];
+              }
+              $isStudent = true;
             }
-            if($kod_div) {
-                $division = $this->getUserDivision($kod_div, $divisions);
-                $newData['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
-                $newData['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
-            }
+          }
         }
-        return $newData;
+        if(isset($getPersons['info2']) && !$isStudent) {
+          foreach ($getPersons['info2'] as $k => $v) {
+            if(($v['KOD_STATE'] == 1 || $v['KOD_STATE'] == 2 || $v['KOD_STATE'] == 3) && ($v['KOD_SYMP'] == 1 || $v['KOD_SYMP'] == 5)) {
+              $newData['job'] = "СумДУ";
+              $newData['job_type_id'] = 5;
+              $newData['categ_2'] = $v['CATEG'];
+              $newData['name_div'] = $v['NAME_DIV'];
+              $kod_div = $v['KOD_DIV'];
+            }
+          }
+        }
+        if($kod_div) {
+          $division = $this->getUserDivision($kod_div, $divisions);
+          $newData['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
+          $newData['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
+        }
+      }
+      return $newData;
     }
 
     function registerUser($user, $newData, $divisions) {
         $kod_div = null;
         $isStudent = false;
+
         if(isset($user['info1'])) {
             foreach ($user['info1'] as $k => $v) {
-                if($v['KOD_STATE'] == 1) {
+                if($v['KOD_STATE'] == 1 && $v['KOD_FORM'] == 1) {
                     $newData['kod_level'] = $v['KOD_LEVEL'];
                     $newData['academic_code'] = $v['NAME_GROUP'];
                     $newData['categ_1'] = $v['CATEG'];
@@ -83,11 +83,12 @@ trait AuthorTrait {
                 }
             }
         }
-        if($kod_div) {
+        if($kod_div && !$newData['custom_divisions']) {
             $division = $this->getUserDivision($kod_div, $divisions);
             $newData['department_code'] = $division['department'] ? $division['department']['ID_DIV'] : null;
             $newData['faculty_code'] = $division['institute'] ? $division['institute']['ID_DIV'] : null;
         }
+        $newData['date_bth'] = $user['birthday'];
         return $newData;
     }
 
